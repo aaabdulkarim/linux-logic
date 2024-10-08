@@ -1,6 +1,6 @@
-# Linux Logic | Branch - Web
+# Linux Logic 
 
-**Linux Logic** ist eine App, die Anwendern auf spielerische Weise den Umgang mit Linux und dem Terminal näherbringt. Unsere Lösung richtet sich vor allem an Auszubildende und Berufseinsteiger, die den Einstieg in Linux auf eine intuitive und benutzerfreundliche Art erlernen möchten.
+**Linux Logic** ist eine App, die Anwendern auf spielerische Weise den Umgang mit Linux und dem Terminal näherbringt. Unsere Lösung richtet sich vor allem an Auszubildende und Berufseinsteiger, die den Einstieg in Linux auf eine intuitive und benutzerfreundliche Art erlernen möchten. Die App kann man als mobile App oder Web App benutzen.
 
 ## Zielsetzung
 
