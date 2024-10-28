@@ -23,7 +23,10 @@ Das Backend bleibt gleich für beide Branches, weswegen eine Änderungen immer i
 ## venv
 
 Damit das Projekt ganzohne Dependency Clashes ausgeführt werden kann, wird eine Python Virtual Environment erstellt.
-Diese kann über folgende Commands aktiviert werden
+Diese kann über folgende Commands aktiviert werden.
+
+**Achtung! Zuerst muss man im Backend Folder sein**
+
 
 ### Linux
 ```bash
