@@ -35,9 +35,11 @@ source venv/bin/activate
 ```
 
 ### Windows
-```powershell
+Es ist wichtig den Befehl in einem CMD Terminal auszuführen. In Powershell wird die Virtual Environment nicht aktiviert und das Git Bash akzeptiert die Syntax nicht
+
+```cmd
 python -m venv venv  # zum Erstellen
-venv\Scripts\activate
+.\venv\Scripts\activate
 ```
 
 ---
