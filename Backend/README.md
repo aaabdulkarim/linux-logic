@@ -62,4 +62,4 @@ pip freeze > requirements.txt
 
 # Ausführen der API
 
-Solange man im Backen Folder ist, die Virtual Environment mit ihren requirements installiert hat, sollte man fastapi dev main.py ausführen können
+Solange man im Backend Folder ist, die Virtual Environment mit ihren requirements installiert hat, sollte man fastapi dev main.py ausführen können
