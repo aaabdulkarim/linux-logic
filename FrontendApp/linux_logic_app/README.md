@@ -1,6 +1,6 @@
 # linux_logic_app
 
-Dies ist der Ordner für das Diplomprojekt Linux-Logic des Frontends der mobilen App.
+Dies ist der Ordner für das Diplomprojekt Linux Logic der mobilen App in Flutter. TGM 5CHIT
 
 ## Getting Started
 
