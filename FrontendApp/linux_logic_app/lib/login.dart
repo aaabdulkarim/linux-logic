@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(LoginPage());
+  runApp(const LoginPage());
 }
 
 class LoginPage extends StatelessWidget {
@@ -10,15 +10,19 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginContent(),
+      home: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/linux_logic_login.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: const Center(
+            child: Text("Hi"),
+          ),
+        ),
+      ),
     );
   }
-}
-
-class LoginContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    throw UnimplementedError();
-  }
-
 }
