@@ -14,14 +14,50 @@ class LoginPage extends StatelessWidget {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("images/linux_logic_login.png"),
-              fit: BoxFit.cover,
+              image: AssetImage("assets/linux_logic_login.png"),
+              fit: BoxFit.fill,
             ),
           ),
-          child: const Center(
-            child: Text("Hi"),
-          ),
         ),
+        bottomNavigationBar: Footer(),
+      ),
+    );
+  }
+}
+
+class Footer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color(0xff559191), // Hintergrundfarbe für den Footer
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Webseitenlink
+          GestureDetector(
+            onTap: () {
+
+            },
+            child: const Text(
+              'www.linux-logic.com',
+              style: TextStyle(
+                color: Colors.white, // Linkfarbe
+                decoration: TextDecoration.underline, // Unterstreichung für Link
+              ),
+            ),
+          ),
+          // Rechtsbündiger Text
+          const Text(
+            'TGM 2024/25',
+            style: TextStyle(
+              fontFamily: 'UbuntuMono',
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }
