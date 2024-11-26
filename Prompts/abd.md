@@ -3,9 +3,9 @@
 
 ## Ansatz Websocke in einem Debian Image/Container
 
-### prompt link
+### [privater link](https://chatgpt.com/c/67458403-24d8-8001-8b11-20383989b56b)
 
-[privater link](https://chatgpt.com/c/67458403-24d8-8001-8b11-20383989b56b)
+
 
 ### prompt text
 
