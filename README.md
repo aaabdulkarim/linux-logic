@@ -19,7 +19,7 @@ Durch die Integration von Docker wird sichergestellt, dass die Aufgaben in einer
 - **Benutzerfreundlichkeit**: Einfache und intuitive Bedienung, sodass auch Einsteiger ohne große Vorkenntnisse direkt loslegen können.
 - **Kein Installationsaufwand**: Dank Docker kann Linux ohne aufwendige Installationen ausprobiert und ausgeführt werden.
 
----
+
 
 Mit **Linux Logic** bieten wir eine praktische und benutzerfreundliche Lösung, um den Einstieg in Linux so einfach wie möglich zu gestalten – ideal für diejenigen, die Linux durch echte Aufgaben und Herausforderungen meistern wollen.
 
