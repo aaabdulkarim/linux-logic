@@ -1,36 +1,21 @@
-<template>  
-    <div class="Meilenstein grid">
-      <div class="col-12">
-        <h1>Meilensteinplan</h1>
-        <Badge value="1" size="xlarge" severity="success"></Badge>
-        <Badge value="2" size="xlarge" severity="success"></Badge>
-        <Badge value="3" size="xlarge" severity="success"></Badge>
-        <Badge value="4" size="xlarge" severity="danger"></Badge>
-        <Badge value="5" size="xlarge" severity="danger"></Badge>
-        <Badge value="6" size="xlarge" severity="danger"></Badge>
-        <Badge value="7" size="xlarge" severity="danger"></Badge>
-        
-        <Timeline :value="events" layout="horizontal" align="alternate" class="pt-8">
-            <!-- Optional: Opposite Slot -->
-            <template #opposite> &nbsp; </template>
-      
-            <!-- Content Slot -->
-            <template #content="slotProps">
-              <div>
-                <div class="date">
-                 <u>{{ slotProps.item.date }}</u>
-                </div>
-                <div class="event">
-                  <b>{{ slotProps.item.event }}</b>
-                </div>
-                <div class="details">
-                  {{ slotProps.item.details }}
-                </div>
-              </div>
-            </template>
-          </Timeline>
-        </div>
+<template>
+  <div class="Meilenstein grid">
+    <div class="col-12">
+      <h1>Meilensteinplan</h1>
+
+      <Timeline :value="events">
+        <template #opposite="slotProps">
+          <small class="text-surface-500 dark:text-surface-400">{{ slotProps.item.date }}</small>
+        </template>
+        <template #content="slotProps">
+          {{ slotProps.item.event }}
+          <br>
+          {{ slotProps.item.details }}
+        </template>
+      </Timeline>
+
     </div>
+  </div>
 </template>
 
 <script>
@@ -42,11 +27,13 @@ import StepItem from 'primevue/stepitem';
 import Step from 'primevue/step';
 import StepPanel from 'primevue/steppanel';
 import Timeline from 'primevue/timeline';
+
+
 export default {
-    name: 'Meilenstein',
-    data() {
-        return {
-            events: [
+  name: 'Meilenstein',
+  data() {
+    return {
+      events: [
         {
           date: "09.09.24",
           event: "PROJEKTSTART",
@@ -83,9 +70,9 @@ export default {
           details: "Abschluss des Projekts, Einreichung der Diplomarbeit"
         },
       ]
-        }
-    },
-    methods: {
+    }
+  },
+  methods: {
     extractDate(item) {
       // Ersten Teil (Datum) extrahieren
       const match = item.match(/^\S+/);
@@ -102,22 +89,20 @@ export default {
       return parts.slice(2).join(' ');
     },
   },
-    components: {
-        Badge,
-        Stepper,
-        StepList,
-        Step,
-        Timeline,
-    }
+  components: {
+    Badge,
+    Stepper,
+    StepList,
+    Step,
+    Timeline,
+  }
 }
 </script>
 
 <style scoped>
-    .Meilenstein{
-        background-color: white;
-        height: 102vh;
-        color: #3D525C;
-    }
-
-    
+.Meilenstein {
+  background-color: white;
+  height: 102vh;
+  color: #3D525C;
+}
 </style>
