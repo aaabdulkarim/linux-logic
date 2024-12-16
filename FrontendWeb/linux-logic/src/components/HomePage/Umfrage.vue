@@ -1,7 +1,7 @@
 <template>  
     <div class="Umfrage grid">
     <div class="oben col-12">
-        <h1>Umfrage Linux-Kenntnisse</h1>
+        <h1 style="color: white;">Umfrage Linux-Kenntnisse</h1>
         <p>In einer groß angelegten Studie am TGM wurden 20 Schülerinnen und Schüler nach ihren Linux-Kenntnissen und wie sie diese erlangt haben befragt. Sie sollten auf einer Skala von 1 bis 10 ihre Linux Kenntnisse bewerten und angeben wie sie diese Kenntnisse erworben haben. </p>
     </div>
     <div class="UmfrageBild col-12">
@@ -37,12 +37,28 @@
     .oben {
         color: white;
         background-color: #569191;
+        text-align: left; 
+        padding-left: 20rem;
+        padding-right: 20rem;
+        padding-top: 8rem;
+        padding-bottom: 3rem;
+
+    }
+    .unten {
+        color: #3D525C;
+        background-color:white ;
+        text-align: left; 
+        padding-left: 20rem;
+        padding-right: 20rem;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
     }
     .bild {
         width: 100%;
-        height: 60%;
+        height: 100%;
     }
     .Umfrage{
-        height: 102vh;
+        color: #569191;
+        background-color:white ;;
     }
 </style>

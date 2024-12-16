@@ -2,7 +2,7 @@
     <div class="Infos grid">
         <div class="col-7 my-4 p-4">
             <h1>Diplomprojekt Linux Logic</h1>
-            <p>ist ein  Diplomprojekt eines Schülerteams des TGM's bestehend aus Amadeus Abdulkarim, Benjamin Eder, Batschana Gogoladze, André Karakassoglou und Sergej Rychkov</p>
+            <p>Linux Logicist ein  Diplomprojekt eines Schülerteams des TGM's bestehend aus Amadeus Abdulkarim, Benjamin Eder, Batschana Gogoladze, André Karakassoglou und Sergej Rychkov</p>
             <h1>Ausgangslage</h1>
             <p>In IT-Kreisen steigt die Nachfrage nach Linux-Experten und deren Fachwissen, vor allem wegen des Potenzials in den Bereichen Sicherheit, Datenbanken und Administration. Viele scheitern jedoch am schwierigen Einstieg. Fehlendes Know-how führt zu Frustration, da eine passende Einführung fehlt. Dieser Mangel sorgt für ein Defizit an IT-Fachkräften mit Linux-Spezialisierung.</p>
             <h1>Zielsetzung</h1>
@@ -27,16 +27,13 @@ export default {
 <style scoped>
     .Infos {
         background-color: white;
-        height: 102vh;
-    }
-    .h1 {
-        color: black;
-    }
-    .p {
         color: #3D525C;
+        text-align: left; 
+        padding-left: 20rem;
+        padding-right: 4rem;
     }
-    .bild {
-        max-width: 70%;
-        height: auto;
-    }
+    
+
+    
+
 </style>

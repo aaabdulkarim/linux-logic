@@ -3,6 +3,8 @@
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -10,6 +12,23 @@
   text-align: center;
   color: #2c3e50;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Ubuntu Mono', monospace; 
+  font-weight: 300; 
+}
+
+h1 {
+  font-size: 3rem;
+  color:  #569191;
+}
+h4 {
+  color: #3D525C;  
+}
+p {
+  font-size: 1.2rem;
+}
+
 
 nav {
   padding: 30px;
