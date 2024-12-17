@@ -22,8 +22,21 @@ h1 {
   font-size: 3rem;
   color:  #569191;
 }
+h2 {
+  font-size: 2.5rem;
+  color: #569191;
+}
+h3 {
+  font-size: 2rem;
+  color: #569191;
+}
 h4 {
+  font-size: 1.5rem;
   color: #3D525C;  
+}
+h5 {
+  font-size: 1.2rem;
+  color: #3D525C;
 }
 p {
   font-size: 1.2rem;

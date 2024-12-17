@@ -1,7 +1,7 @@
 <template>
   <div class="Meilenstein grid">
     <div class="col-12">
-      <h1 style="padding-top: 10rem; padding-left: 20rem; padding-bottom: 4rem;">Meilensteinplan</h1>
+      <h1 style="padding-top: 10rem; padding-left: 10rem; padding-bottom: 4rem;">Meilensteinplan</h1>
 
       <Timeline :value="events" class="customized-timeline">
         <!-- Linkes Datum -->
@@ -169,6 +169,8 @@ export default {
   margin-left: 1rem;
   margin-right: 1rem;
 }
-
+.customized-timeline >>> .p-timeline-event-connector {
+  background-color: #808080;
+}
 
 </style>
