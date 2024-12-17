@@ -15,10 +15,14 @@ export default {
       terminal: null,
       fitAddon: null,
       messages: [
+        'Willkommen bei Linux Logic!',
         'Linux Leicht Lernen!',
         'Hallo Welt!',
-        'Yo',
-        'bam',
+        'Linux-Logic: Dein Einsieg in Linux!',
+        'Befehle schreiben. Probleme lösen.',
+        'Learning by Doing!',
+        'Willkommen im Linux-Universum!',
+
       ],
       currentMessageIndex: 0,
       typingInterval: null, // Timer für Buchstabe-für-Buchstabe-Anzeige
