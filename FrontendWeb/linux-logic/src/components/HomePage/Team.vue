@@ -1,10 +1,10 @@
 <template>  
-    <div class="TeamOben">
+    <div class="TeamOben grid" >
         <h1 style="color: white;">Team</h1>
     </div>
 
-    <div class="TeamUnten">
-        <div class="cards-container">
+    <div class="TeamUnten grid">
+        <div class="col-12 cards-container">
             <Card 
                 style="width: 20rem; overflow: hidden;" 
                 v-for="member in teamMembers" 
@@ -85,9 +85,15 @@ export default {
 
 <style scoped>
 .TeamOben {
+    justify-content: center;
     text-align: center;
     background-color: #569191;
     padding: 2rem 0;
+}
+.TeamUnten {
+    background-color: white;
+    padding: 2rem 0;
+    position:static;
 }
 
 .cards-container {
@@ -114,14 +120,14 @@ export default {
     height: 100%;
 }
 .cards-container >>> .p-button {
-    border: 1px solid #3D525C; /* Weiße Rahmenlinie */
-    color: #3D525C; /* Weiße Schriftfarbe */
-    background-color: transparent; /* Hintergrund transparent */
+    border: 1px solid #3D525C; 
+    color: #3D525C; 
+    background-color: transparent; 
 }
 .cards-container >>> .p-button:hover {
     border: 1px solid white !important;
-    color: white !important; /* Schriftfarbe wird weiß beim Hover */
-    background-color: #3D525C !important; /* Hintergrund wird weiß beim Hover */
+    color: white !important; 
+    background-color: #3D525C !important; 
     
 }
 .cards-container .m-0{
