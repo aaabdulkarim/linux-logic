@@ -3,11 +3,12 @@
         <div class="col-12">
         <img src="..\..\assets\LogoLinuxLogic.webp" alt="Logo" class="LogoLinuxLogic pl-5">
         </div> 
+        <!--
         <div class="button-container">
             <button class="col-2 m-2 mt-3 text-lg">Anmelden</button>
         </div>
         <span class="m-2 mt-3 button-container text-sm"><u>Registrieren</u></span>
-
+        -->
     </div>
 </template>
 
