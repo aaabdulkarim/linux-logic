@@ -1,20 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from dotenv import load_dotenv, get_key
+
+# Laden des Connection Strings
+load_dotenv()
+connectionString = get_key(".env", "CONNECTION_STRING")
+
 
 app = FastAPI()
-
-fakeProgress = [
-    {
-        "userId": 0,
-        "scenarioId": 14
-    },
-    {
-        "userId": 1,
-        "scenarioId": 4
-    }
-]
-
-
 
 
 @app.get("/progress")
