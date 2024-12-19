@@ -1,4 +1,5 @@
 <template>
+    <Header/>
     <Kopfzeile/>
     <Infos/>
     <Meilenstein/>
@@ -17,6 +18,7 @@ import Meilenstein from '@/components/HomePage/Meilenstein.vue';
 import Umfrage from '@/components/HomePage/Umfrage.vue';
 import Team from '@/components/HomePage/Team.vue';
 import Footer from '@/components/Footer.vue';
+import Header from '@/components/Header.vue';
 
 export default {
   name: 'AboutView',
@@ -27,7 +29,8 @@ export default {
     Umfrage,
     Fortschritt,
     Team,
-    Footer
+    Footer,
+    Header
   }
 }
 </script>
