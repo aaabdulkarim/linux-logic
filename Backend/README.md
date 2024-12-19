@@ -18,6 +18,16 @@ Das Backend bleibt gleich für beide Branches, weswegen eine Änderungen immer i
 - addChallenge(docker-file) **POST-Method**
     - Dass diese Methode für das Frontend zugänglich ist, ist noch nicht fix, da wir noch nicht wissen ob der User Challenges hinzufügen kann. Jedoch wird das nicht zur Datenbank hinzugefügt, sondern in einer Speicherstrategie, wo die vorgefertigten Docker Files bestehen
 
+
+## Anbindung an die Datenbank
+
+Die Datenbank läuft auf Neon über psql weil FastAPI gut für diese Datenbank geeignet ist. Das Python Package sqlmodel ist geschrieben von dem Autor von FastAPI und basiert auf SQLAlchemy mit Pydantic: 
+
+- SQLAlchemy ist ein ORM, welches eine einfache Datenbankprogrammierung durch Python ermöglicht 
+- Pydantic ist ein Tool, welches einfache Daten in Python Objekte/Klassen umwandelt. Mit diesen Models kann man einfacher arbeiten.
+
+
+
 # Dependencies
 
 ## venv
@@ -35,7 +45,6 @@ source venv/bin/activate
 ```
 
 ### Windows
-Es ist wichtig den Befehl in einem CMD Terminal auszuführen. In Powershell wird die Virtual Environment nicht aktiviert und das Git Bash akzeptiert die Syntax nicht
 
 ```cmd
 python -m venv venv  # zum Erstellen
@@ -56,6 +65,14 @@ Falls man Packages hinzufügen will, und venv aktiviert hat, kann man mit pip da
 
 ```bash
 pip freeze > requirements.txt
+```
+
+## Datenbankanbindung
+
+Damit das Backend sich mit der Datenbank verbinden kann, muss im Directory *linux-logic/Backend* eine *.env* Datei erstellt werden und mit folgenden Inhalt gefüllt sein:
+
+```python
+CONNECTION_STRING="DEIN NEON CONNECTION STRING"
 ```
 
 
