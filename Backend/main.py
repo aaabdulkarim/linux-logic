@@ -1,11 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from dotenv import load_dotenv, get_key
+from sqlmodel import create_engine, select
+
 
 # Laden des Connection Strings
 load_dotenv()
 connectionString = get_key(".env", "CONNECTION_STRING")
 
+
+# Das Erstellen der psql/Neon Engine
+connect_args = {"check_same_thread": False}
+engine = create_engine(connectionString, connect_args=connect_args)
 
 app = FastAPI()
 
