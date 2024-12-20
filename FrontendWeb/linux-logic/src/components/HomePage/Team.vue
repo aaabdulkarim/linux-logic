@@ -1,8 +1,12 @@
-<template>  
+<template>
+
     <div class="TeamOben grid" >
         <h1 style="color: white;">Team</h1>
     </div>
 
+    <div class="animated-text">
+        Test
+    </div>
     <div class="TeamUnten grid">
         <div class="col-12 cards-container">
             <Card 
@@ -34,10 +38,11 @@
 import Card from 'primevue/card';
 import Button from 'primevue/button';
 
+
 export default {
     components: {
         Card,
-        Button,
+        Button
     },
     data() {
         return {
@@ -84,6 +89,7 @@ export default {
 </script>
 
 <style scoped>
+
 .TeamOben {
     justify-content: center;
     text-align: center;

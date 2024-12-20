@@ -1,12 +1,31 @@
 <template>
-    <Header/>
-    <Kopfzeile/>
-    <Infos/>
-    <Meilenstein/>
-    <Umfrage/>
-    <Fortschritt/>
-    <Team/>
-    <Footer/>
+
+  <Kopfzeile />
+
+  <section id="infos">
+    <Infos />
+  </section>
+
+  <section id="meilenstein">
+    <Meilenstein />
+  </section>
+
+  <section id="umfrage">
+    <Umfrage />
+  </section>
+
+  <section id="fortschritt">
+    <Fortschritt />
+  </section>
+
+  <section id="team">
+    <Team />
+  </section>
+
+  <section id="footer">
+    <Footer />
+  </section>
+
 </template>
 
 <script>
