@@ -24,8 +24,9 @@ export default {
         'Willkommen bei Linux Logic!'        
       ],
       currentMessageIndex: 0,
-      typingInterval: null, // Timer für Buchstabe-für-Buchstabe-Anzeige
-      currentCharIndex: 0, // Index des aktuellen Buchstabens
+      typingInterval: null, 
+      currentCharIndex: 0, 
+      stopTyping: false
     };
   },
   mounted() {
@@ -52,26 +53,41 @@ export default {
     this.fitAddon.fit(); // Adjusts terminal size to its container
 
     // Start typing the first message
-    this.startTyping();
+    this.startTyping();  
   },
   methods: {
+    simpleWrite(text){
+        this.stopTyping = true
+        console.log(text);
+        
+        this.terminal.clear()
+        this.terminal.write("\r\n" + text)
+    },
+
+    typeTerminal(){
+    
+      const currentMessage = this.messages[this.currentMessageIndex];
+      if (this.currentCharIndex < currentMessage.length) {
+        this.terminal.write(currentMessage[this.currentCharIndex]);
+        this.currentCharIndex++;
+      } else {
+        this.currentCharIndex = 0;
+        this.currentMessageIndex = (this.currentMessageIndex + 1) % this.messages.length;
+        clearInterval(this.typingInterval); // Stop the current interval
+        this.terminal.write('\r\n'); // Move to the next line
+        setTimeout(() => {
+          this.terminal.clear(); // Clear the terminal
+          setTimeout(() => {
+            this.startTyping(); // Start typing the next message
+          }, 500); // Wait for 500ms before starting the next message
+        }, 1000); // Wait for 1000ms before clearing the terminal
+      }
+      
+    },
     startTyping() {
       this.typingInterval = setInterval(() => {
-        const currentMessage = this.messages[this.currentMessageIndex];
-        if (this.currentCharIndex < currentMessage.length) {
-          this.terminal.write(currentMessage[this.currentCharIndex]);
-          this.currentCharIndex++;
-        } else {
-          this.currentCharIndex = 0;
-          this.currentMessageIndex = (this.currentMessageIndex + 1) % this.messages.length;
-          clearInterval(this.typingInterval); // Stop the current interval
-          this.terminal.write('\r\n'); // Move to the next line
-          setTimeout(() => {
-            this.terminal.clear(); // Clear the terminal
-            setTimeout(() => {
-              this.startTyping(); // Start typing the next message
-            }, 500); // Wait for 500ms before starting the next message
-          }, 1000); // Wait for 1000ms before clearing the terminal
+        if (this.stopTyping == false){
+          this.typeTerminal()
         }
       }, 100); // Adjust the typing speed by changing the interval
     }

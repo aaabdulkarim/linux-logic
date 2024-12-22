@@ -3,10 +3,7 @@
     <div class="TeamOben grid" >
         <h1 style="color: white;">Team</h1>
     </div>
-
-    <div class="animated-text">
-        Test
-    </div>
+    
     <div class="TeamUnten grid">
         <div class="col-12 cards-container">
             <Card 

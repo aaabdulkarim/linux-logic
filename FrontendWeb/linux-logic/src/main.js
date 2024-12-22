@@ -11,7 +11,8 @@ const app = createApp(App);
 app.use(PrimeVue, {
     theme: {
         preset: Aura
-    }
+    }, 
+    unstyled: true
 });
 
 createApp(App).use(router).mount('#app')
