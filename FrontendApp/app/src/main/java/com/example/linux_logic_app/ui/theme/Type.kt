@@ -19,24 +19,25 @@ val LiloFontFamily = FontFamily(
 // Definieren der Typographie von Linux Logic
 val LiloTypography = Typography(
     // Große Überschriften
-    displayLarge = TextStyle(
+    headlineLarge = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 34.sp,
-        lineHeight = 40.sp // Zeilenhöhe für bessere Lesbarkeit
+        fontSize = 28.sp,
+        lineHeight = 36.sp // Zeilenhöhe für bessere Lesbarkeit
     ),
     // Mittlere Überschriften
     headlineMedium = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
-        lineHeight = 30.sp
+        lineHeight = 28.sp
     ),
-    // Kleine Überschriften
+    // Kleine Unterüberschriften
     headlineSmall = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
+        fontStyle = FontStyle.Italic,
+        fontSize = 22.sp,
         lineHeight = 26.sp
     ),
     // Normaler Fließtext
@@ -46,23 +47,25 @@ val LiloTypography = Typography(
         fontSize = 16.sp,
         lineHeight = 22.sp
     ),
+    // Unterpunkte
     bodyMedium = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Normal,
+        fontStyle = FontStyle.Italic,
         fontSize = 14.sp,
         lineHeight = 20.sp
     ),
     // Beschriftungen, z. B. für Buttons oder kleine Labels
     labelLarge = TextStyle(
         fontFamily = LiloFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
         lineHeight = 18.sp
     ),
-    labelSmall = TextStyle(
+    labelMedium = TextStyle(
         fontFamily = LiloFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp,
         lineHeight = 16.sp
     )
 )
