@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +33,8 @@ fun RegisterScreen() {
     var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }  // Hinzufügen für das Bestätigungspasswort
+    var passwordMatchError by rememberSaveable { mutableStateOf(false) }  // Flag für Fehleranzeige
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -40,70 +43,86 @@ fun RegisterScreen() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.google_logo),
-            contentDescription = "Login-Screen Image",
+            contentDescription = "Registration-Screen Image",
             modifier = Modifier.size(200.dp)
         )
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(text = "Willkommen bei Linux Logic")
+        Text(text = "Willkommen bei Linux Logic", style = MaterialTheme.typography.headlineMedium)
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(text = "Erstellen Sie einen Account")
+        Text(text = "Erstellen Sie einen Account", style = MaterialTheme.typography.bodyMedium)
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Benutzername Eingabe
         OutlinedTextField(
-            value = email,
-            onValueChange = {email = it},
-            label = {
-                Text(text = "Benutzername")
-            }
+            value = username,
+            onValueChange = { username = it },
+            label = { Text(text = "Benutzername") },
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // E-Mail Adresse Eingabe
         OutlinedTextField(
             value = email,
-            onValueChange = {email = it},
-            label = {
-                Text(text = "E-Mail Adresse")
-            }
+            onValueChange = { email = it },
+            label = { Text(text = "E-Mail Adresse") },
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Passwort Eingabe
         OutlinedTextField(
             value = password,
-            onValueChange = {password = it},
-            label = {
-                Text(text = "Passwort")
-            },
-            visualTransformation = PasswordVisualTransformation()
+            onValueChange = { password = it },
+            label = { Text(text = "Passwort") },
+            visualTransformation = PasswordVisualTransformation(),
         )
-
-        /*OutlinedTextField(
-            value = ,
-            onValueChange = ,
-            label = {
-                Text(text = "Passwort bestätigen")
-            },
-            visualTransformation = PasswordVisualTransformation()
-        )*/
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Passwort Bestätigung Eingabe
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text(text = "Passwort bestätigen") },
+            visualTransformation = PasswordVisualTransformation(),
+            isError = passwordMatchError // Fehleranzeige aktivieren, wenn Passwörter nicht übereinstimmen
+        )
+
+        // Fehleranzeige für Passwörter, die nicht übereinstimmen
+        if (passwordMatchError) {
+            Text(
+                text = "Die Passwörter stimmen nicht überein.",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Registrieren Button
         Button(
             onClick = {
-                Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")
-            }
+                if (password == confirmPassword) {
+                    // Registrierung kann fortgesetzt werden, wenn Passwörter übereinstimmen
+                    Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")
+                } else {
+                    // Fehler anzeigen, wenn Passwörter nicht übereinstimmen
+                    passwordMatchError = true
+                }
+            },
         ) {
             Text(text = "Registrieren")
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // Social Login Buttons
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,7 +135,7 @@ fun RegisterScreen() {
                 modifier = Modifier
                     .size(60.dp)
                     .clickable {
-
+                        // Google login action
                     }
             )
 
@@ -126,7 +145,7 @@ fun RegisterScreen() {
                 modifier = Modifier
                     .size(60.dp)
                     .clickable {
-
+                        // Microsoft login action
                     }
             )
 
@@ -136,16 +155,18 @@ fun RegisterScreen() {
                 modifier = Modifier
                     .size(60.dp)
                     .clickable {
-
+                        // X login action
                     }
             )
         }
 
+        // Login-Link für bereits registrierte Nutzer
         Row {
             Text(text = "Sie haben bereits ein Konto?  ")
-            Text(text = "Login",
+            Text(
+                text = "Login",
                 modifier = Modifier.clickable {
-
+                    // Navigate to Login screen
                 }
             )
         }

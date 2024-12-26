@@ -7,14 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.linux_logic_app.ui.theme.Linux_logic_appTheme
 
-import com.example.linux_logic_app.screens.LoginScreen
+import com.example.linux_logic_app.screens.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Linux_logic_appTheme {
-                LoginScreen()
+                RegisterScreen()
             }
         }
     }
