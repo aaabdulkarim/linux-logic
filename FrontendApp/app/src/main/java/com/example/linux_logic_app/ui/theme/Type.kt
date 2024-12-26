@@ -22,15 +22,15 @@ val LiloTypography = Typography(
     headlineLarge = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 28.sp,
-        lineHeight = 36.sp // Zeilenhöhe für bessere Lesbarkeit
+        fontSize = 36.sp,
+        lineHeight = 44.sp // Zeilenhöhe für bessere Lesbarkeit
     ),
     // Mittlere Überschriften
     headlineMedium = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
-        lineHeight = 28.sp
+        fontSize = 26.sp,
+        lineHeight = 34.sp
     ),
     // Kleine Unterüberschriften
     headlineSmall = TextStyle(
@@ -38,35 +38,35 @@ val LiloTypography = Typography(
         fontWeight = FontWeight.Bold,
         fontStyle = FontStyle.Italic,
         fontSize = 22.sp,
-        lineHeight = 26.sp
+        lineHeight = 30.sp
     ),
     // Normaler Fließtext
     bodyLarge = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 22.sp
+        fontSize = 15.sp,
+        lineHeight = 19.sp
     ),
     // Unterpunkte
     bodyMedium = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Normal,
         fontStyle = FontStyle.Italic,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
+        fontSize = 13.sp,
+        lineHeight = 17.sp
     ),
     // Beschriftungen, z. B. für Buttons oder kleine Labels
     labelLarge = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
-        lineHeight = 18.sp
+        fontSize = 20.sp,
+        lineHeight = 28.sp
     ),
     labelMedium = TextStyle(
         fontFamily = LiloFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 14.sp,
-        lineHeight = 16.sp
+        fontSize = 18.sp,
+        lineHeight = 26.sp
     )
 )
 
