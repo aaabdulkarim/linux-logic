@@ -28,7 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.R
 
 @Composable
-fun LoginScreen() {
+fun RegisterScreen() {
+    var username by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
@@ -45,11 +46,21 @@ fun LoginScreen() {
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(text = "Willkommen zurück")
+        Text(text = "Willkommen bei Linux Logic")
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(text = "Loggen Sie sich in Ihr Konto ein")
+        Text(text = "Erstellen Sie einen Account")
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = {email = it},
+            label = {
+                Text(text = "Benutzername")
+            }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -72,21 +83,24 @@ fun LoginScreen() {
             visualTransformation = PasswordVisualTransformation()
         )
 
+        /*OutlinedTextField(
+            value = ,
+            onValueChange = ,
+            label = {
+                Text(text = "Passwort bestätigen")
+            },
+            visualTransformation = PasswordVisualTransformation()
+        )*/
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
-                Log.i("Credentials", "E-Mail: $email; Password: $password")
+                Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")
             }
         ) {
-            Text(text = "Login")
+            Text(text = "Registrieren")
         }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(text = "Passwort vergessen?", modifier = Modifier.clickable {
-
-        })
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -98,7 +112,7 @@ fun LoginScreen() {
         ) {
             Image(
                 painterResource(id = R.drawable.google_logo),
-                contentDescription = "Login mittels Google Account",
+                contentDescription = "Registrierung mittels Google Account",
                 modifier = Modifier
                     .size(60.dp)
                     .clickable {
@@ -108,7 +122,7 @@ fun LoginScreen() {
 
             Image(
                 painterResource(id = R.drawable.microsoft_logo),
-                contentDescription = "Login mittels Microsoft Account",
+                contentDescription = "Registrierung mittels Microsoft Account",
                 modifier = Modifier
                     .size(60.dp)
                     .clickable {
@@ -118,7 +132,7 @@ fun LoginScreen() {
 
             Image(
                 painterResource(id = R.drawable.x_logo),
-                contentDescription = "Login mittels X Account",
+                contentDescription = "Registrierung mittels X Account",
                 modifier = Modifier
                     .size(60.dp)
                     .clickable {
@@ -128,8 +142,8 @@ fun LoginScreen() {
         }
 
         Row {
-            Text(text = "Sie haben noch kein Konto?  ")
-            Text(text = "Registrieren",
+            Text(text = "Sie haben bereits ein Konto?  ")
+            Text(text = "Login",
                 modifier = Modifier.clickable {
 
                 }
