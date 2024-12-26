@@ -16,25 +16,31 @@ val LiloFontFamily = FontFamily(
     Font(R.font.ubuntumono_bolditalic, FontWeight.Bold, FontStyle.Italic)
 )
 
+val LiloFontFamily2 = FontFamily(
+    Font(R.font.montserrat_regular, FontWeight.Normal),
+    Font(R.font.montserrat_bold, FontWeight.Bold),
+    Font(R.font.montserrat_italic, FontWeight.Normal, FontStyle.Italic),
+)
+
 // Definieren der Typographie von Linux Logic
 val LiloTypography = Typography(
     // Große Überschriften
     headlineLarge = TextStyle(
-        fontFamily = LiloFontFamily,
+        fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
         lineHeight = 44.sp // Zeilenhöhe für bessere Lesbarkeit
     ),
     // Mittlere Überschriften
     headlineMedium = TextStyle(
-        fontFamily = LiloFontFamily,
+        fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
         fontSize = 26.sp,
         lineHeight = 34.sp
     ),
     // Kleine Unterüberschriften
     headlineSmall = TextStyle(
-        fontFamily = LiloFontFamily,
+        fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
         fontStyle = FontStyle.Italic,
         fontSize = 22.sp,
@@ -42,14 +48,14 @@ val LiloTypography = Typography(
     ),
     // Normaler Fließtext
     bodyLarge = TextStyle(
-        fontFamily = LiloFontFamily,
+        fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Normal,
         fontSize = 15.sp,
         lineHeight = 19.sp
     ),
     // Unterpunkte
     bodyMedium = TextStyle(
-        fontFamily = LiloFontFamily,
+        fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Normal,
         fontStyle = FontStyle.Italic,
         fontSize = 13.sp,
@@ -57,13 +63,13 @@ val LiloTypography = Typography(
     ),
     // Beschriftungen, z. B. für Buttons oder kleine Labels
     labelLarge = TextStyle(
-        fontFamily = LiloFontFamily,
+        fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 28.sp
     ),
     labelMedium = TextStyle(
-        fontFamily = LiloFontFamily,
+        fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
         lineHeight = 26.sp
