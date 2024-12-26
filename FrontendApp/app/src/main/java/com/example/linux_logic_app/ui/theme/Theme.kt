@@ -77,7 +77,7 @@ fun Linux_logic_appTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = LiloTypography,
         content = content
     )
 }
