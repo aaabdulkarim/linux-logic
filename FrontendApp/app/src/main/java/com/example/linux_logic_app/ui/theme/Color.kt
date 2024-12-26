@@ -12,6 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 // Global
 val LiloMain = Color(0xFF569191)
+val LiloMainSec = Color(0xFF6AA5A5)
 val LiloOrange = Color(0xFFFF8c00)
 
 // Light Mode

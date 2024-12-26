@@ -10,15 +10,37 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+// Definition der Farbpalette jeweils für Light-Mode und Dark-Mode
 private val DarkColorScheme = darkColorScheme(
+    primary = LiloMain,
+    secondary = LiloMainSec,
+    tertiary = LiloOrange,
+    background = LiloDark,
+    surface = LiloDarkSec,
+    onPrimary = LiloDarkText,
+    onSecondary = LiloDarkText,
+    onTertiary = LiloDarkText,
+    onBackground = LiloDarkText,
+    onSurface = LiloDarkText
+
     /* primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80
     */
-
 )
 
 private val LightColorScheme = lightColorScheme(
+    primary = LiloMain,
+    secondary = LiloMainSec,
+    tertiary = LiloOrange,
+    background = LiloLight,
+    surface = LiloLightSec,
+    onPrimary = LiloLightText,
+    onSecondary = LiloLightText,
+    onTertiary = LiloLightText,
+    onBackground = LiloLightText,
+    onSurface = LiloLightText
+
     /* primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
@@ -47,7 +69,9 @@ fun Linux_logic_appTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
+        // Standard-Dark-Mode-Farbpalette
         darkTheme -> DarkColorScheme
+        // Standard-Light-Mode-Farbpalette
         else -> LightColorScheme
     }
 
