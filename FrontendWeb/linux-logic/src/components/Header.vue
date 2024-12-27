@@ -1,7 +1,7 @@
 <template>  
     <div class="all grid">
         <i class="pi pi-bars bars col-1"></i>
-        <img src="..\assets\LogoLinuxLogic.webp" alt="Logo" class="img col-8">
+        <img src="..\assets\LogoLinuxLogic.webp" alt="Logo" class="img">
         <i class="pi pi-sun col-1"></i>
         <i class="pi pi-cog col-1"></i>
         <i class="pi pi-user col-1"></i>
