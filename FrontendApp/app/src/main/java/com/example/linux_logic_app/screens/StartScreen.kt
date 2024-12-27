@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -27,70 +28,17 @@ import com.example.linux_logic_app.ui.theme.*
 
 @Composable
 fun StartScreen() {
-
-    Image(
-        painter = painterResource(id = R.drawable.linux_logic_aqua),
-        contentDescription = "Abstraktes Aqua Hintergrundbild",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.5f)
-    )
-
-    // Hauptfarben und Ressourcen festlegen
-    val backgroundColor = Color(0xFF569191) // Hauptfarbe (angepasst auf deine App-Farbe)
-    val penguinModifier = Modifier.size(100.dp) // Größe des Pinguin-Images
-
     Box(
-        modifier = Modifier
-            .fillMaxSize() // Füllt die gesamte Bildschirmfläche aus
+        modifier = Modifier.fillMaxSize().background(Color(0xFF569191))
     ) {
-        // Abstraktes Aqua-Bild im Hintergrund
-
-
-        // Rotiertes Rechteck
-        Box(
-            modifier = Modifier
-                .fillMaxWidth() // Passt sich an die gesamte Bildschirmgröße an
-                .graphicsLayer {
-                    rotationZ = -10f // Drehung gegen den Uhrzeigersinn in Grad
-                }
-                .background(backgroundColor) // Hintergrundfarbe
-        )
-
-        // Inhalt überlagern (Logo, Text, Pinguin)
-        Column(
+        Image(
+            alignment = Alignment.TopCenter,
+            painter = painterResource(id = R.drawable.linux_logic_start),
+            contentDescription = "Abstraktes Aqua Hintergrundbild",
+            contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 100.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Linux Logic Logo
-            Image(
-                painter = painterResource(id = R.drawable.linux_logic_main_transparent),
-                contentDescription = "Linux Logic Logo",
-                modifier = Modifier.size(200.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Untertitel
-            Text(
-                text = "Linux lernen leicht gemacht",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Pinguin Bild
-            Image(
-                painter = painterResource(id = R.drawable.linux_logic_pinguin),
-                contentDescription = "Pinguin Bild",
-                modifier = Modifier
-                    .size(120.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-        }
+        )
     }
+
 }
