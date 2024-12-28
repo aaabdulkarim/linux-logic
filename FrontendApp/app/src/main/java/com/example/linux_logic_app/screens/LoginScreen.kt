@@ -49,7 +49,7 @@ fun LoginScreen() {
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        Text(text = "Loggen Sie sich in Ihr Konto ein")
+        Text(text = "Melden Sie sich bei Ihrem Konto an")
 
         Spacer(modifier = Modifier.height(16.dp))
 
