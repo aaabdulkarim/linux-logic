@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,10 +27,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.R
 
@@ -67,7 +62,7 @@ fun StartScreen() {
                     text = "Willkommen bei LINUX LOGIC",
                     color = Color.White,
                     style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.align(Alignment.Start)
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
 
                 Spacer(modifier = Modifier.size(16.dp))
@@ -79,7 +74,7 @@ fun StartScreen() {
                     modifier = Modifier.align(Alignment.Start)
                 )
 
-                Spacer(modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.size(8.dp))
 
                 Row(
                     modifier = Modifier
@@ -106,9 +101,7 @@ fun StartScreen() {
                     Text(
                         text = "www.linux-logic.com",
                         color = Color.Blue,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            textDecoration = TextDecoration.None
-                        ),
+                        style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier
                             .clickable {
                                 Log.i(
@@ -116,7 +109,6 @@ fun StartScreen() {
                                     "User clicked link - Action \"Linux Logic Website TEXT\" -"
                                 )
                             }
-
                     )
                 }
 
@@ -129,50 +121,48 @@ fun StartScreen() {
                 ) {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 4.dp),
                         onClick = {
                             Log.i("StartScreen", "User is performing - Action: \"Login\" -")
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.Filled.Lock, // Standard-Symbol oder eigenes hinzufügen
-                                contentDescription = "Anmelden icon",
-                                tint = Color.White // Icon in Weiß
+                                imageVector = Icons.Filled.Home,
+                                contentDescription = "Anmelden Icon",
+                                tint = Color.White
                             )
                         },
                         text = {
                             Text(
                                 text = "Anmelden",
-                                color = Color.White // Text in Weiß
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White
                             )
                         },
-                        containerColor = Color(0xFF569191), // Main Linux Logic Farbe
-                        contentColor = Color.White // Standardfarbe für Text und Icons
+                        containerColor = Color(0xFF445a65),
                     )
 
                     ExtendedFloatingActionButton(
                         modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 4.dp),
                         onClick = {
                             Log.i("StartScreen", "User is performing - Action: \"Register\" -")
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.Filled.Lock, // Standard-Symbol oder eigenes hinzufügen
-                                contentDescription = "Anmelden icon",
-                                tint = Color.White // Icon in Weiß
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = "Register Icon",
+                                tint = Color.White
                             )
                         },
                         text = {
                             Text(
                                 text = "Registrieren",
-                                color = Color.White // Text in Weiß
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White
                             )
                         },
-                        containerColor = Color(0xFF569191), // Main Linux Logic Farbe
-                        contentColor = Color.White // Standardfarbe für Text und Icons
+                        containerColor = Color(0xFFFF8c00),
                     )
                 }
             }
