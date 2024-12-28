@@ -45,9 +45,9 @@ export default {
   .button {
     color: #569191;
     background-color: white;
-    border: 2px solid #569191;
+    border: 2px solid white;
     border-radius: 10px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease;
     width: 300px;
   }
   
@@ -55,7 +55,6 @@ export default {
     background-color: #569191;
     border: 2px solid #d0f0f0;
     color: white;
-    transform: scale(1.05);
   }
   
   /* Link Styling */

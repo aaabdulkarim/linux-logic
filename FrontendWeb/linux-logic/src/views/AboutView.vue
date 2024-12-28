@@ -1,5 +1,6 @@
 <template>
-
+  <Header />
+  
   <Kopfzeile />
 
   <section id="infos">
