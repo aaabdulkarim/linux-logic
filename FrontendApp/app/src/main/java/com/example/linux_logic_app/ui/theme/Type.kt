@@ -65,10 +65,16 @@ val LiloTypography = Typography(
     labelLarge = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
+        fontSize = 22.sp,
+        lineHeight = 30.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = LiloFontFamily2,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 28.sp
     ),
-    labelMedium = TextStyle(
+    labelSmall = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
