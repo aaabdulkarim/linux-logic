@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.navigation.*
 
 @Composable
 fun StartScreen() {
@@ -98,17 +99,11 @@ fun StartScreen() {
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Text(
-                        text = "www.linux-logic.com",
-                        color = Color.Blue,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .clickable {
-                                Log.i(
-                                    "StartScreen",
-                                    "User clicked link - Action \"Linux Logic Website TEXT\" -"
-                                )
-                            }
+                    HyperlinkText(
+                        fullText = "www.linux-logic.com",
+                        linkText = "www.linux-logic.com",
+                        linkUrl = "https://www.linux-logic.com",
+                        onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website TEXT\" -"
                     )
                 }
 
@@ -128,7 +123,7 @@ fun StartScreen() {
                         icon = {
                             Icon(
                                 imageVector = Icons.Filled.Home,
-                                contentDescription = "Anmelden Icon",
+                                contentDescription = "Home Icon",
                                 tint = Color.White
                             )
                         },
@@ -151,7 +146,7 @@ fun StartScreen() {
                         icon = {
                             Icon(
                                 imageVector = Icons.Filled.Person,
-                                contentDescription = "Register Icon",
+                                contentDescription = "Person Icon",
                                 tint = Color.White
                             )
                         },
