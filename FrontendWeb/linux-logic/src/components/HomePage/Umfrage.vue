@@ -17,33 +17,30 @@
 
                 <h2>Verteilung der Kenntnisse</h2>
                 <p>
-                    Hohe Kenntnisse (8-10): Vier Personen haben einen hohen Kenntnisstand (8 oder höher), was darauf hindeutet, dass sie wahrscheinlich sehr erfahren im Umgang mit Linux sind. Dies könnte auf intensives "Learning by doing", privates Interesse oder den häufigen Einsatz von Linux hinweisen.
-                    Mittlere Kenntnisse (4-7): Die meisten Personen befinden sich im mittleren Bereich (4-7). Sie haben grundlegende bis solide Kenntnisse, meist erworben durch Schule, Learning by doing und Online-Ressourcen wie Videos und Foren.
-                    Niedrige Kenntnisse (1-3): Vier Personen haben geringe Kenntnisse (2 oder 3), was darauf hinweist, dass sie wahrscheinlich nur begrenzten Kontakt mit Linux hatten, meist in einem schulischen Umfeld.
-                </p>
+                    
+Hohe Kenntnisse (8-10): Vier Personen sind sehr erfahren, was auf intensives "Learning by Doing", privates Interesse oder häufigen Einsatz von Linux hinweist.
+Mittlere Kenntnisse (4-7): Die Mehrheit hat grundlegende bis solide Kenntnisse, meist durch Schule, "Learning by Doing" und Online-Ressourcen erworben.
+Niedrige Kenntnisse (1-3): Vier Personen haben nur geringe Kenntnisse, vermutlich durch begrenzten Kontakt im schulischen Umfeld.                </p>
                 
                 <h2>Lernmethoden</h2>
                 <p>
-                    Learning by Doing: Dies ist die am häufigsten genannte Methode, was darauf hinweist, dass praktisches Arbeiten und eigenständiges Erforschen eine wichtige Rolle beim Erlernen von Linux spielen. Es wird sowohl von Personen mit hohen als auch mittleren Kenntnissen oft erwähnt.
-                    Schule: Die Schule wird häufig als Lernquelle genannt, vor allem bei Personen mit mittleren bis niedrigen Kenntnissen. Dies deutet darauf hin, dass der schulische Unterricht eine grundlegende Einführung in Linux bietet, aber möglicherweise nicht tief genug geht, um hohe Kenntnisse zu vermitteln.
-                    Videos/Youtube: Viele Teilnehmer nutzen Videos, oft wird Youtube angegeben, als Lernressource, was die Popularität visueller und praktischer Lernmethoden betont. Dies wird oft mit anderen Methoden kombiniert, um das Verständnis zu vertiefen.
-                    Privates Interesse: Einige der fortgeschritteneren Benutzer (8-9) haben ihre Kenntnisse durch privates Interesse und den Einsatz von Linux in ihrer Freizeit erworben, was auf eine höhere Motivation und Eigeninitiative hinweist.
-                    Stack Overflow: Eine Person erwähnte die Nutzung von Stack Overflow, was auf die Bedeutung von Community-gestützten Plattformen für das Lösen spezifischer Probleme hinweist.
-                </p>
-                
+                Learning by Doing: Diese Methode spielt eine zentrale Rolle beim Erlernen von Linux und wird von Personen mit hohen und mittleren Kenntnissen häufig genutzt.
+                Schule: Der schulische Unterricht bietet eine grundlegende Einführung, reicht jedoch oft nicht für fortgeschrittene Kenntnisse aus.
+                Videos/Youtube: Viele nutzen Videos, insbesondere YouTube, als Lernressource und kombinieren sie mit anderen Methoden zur Vertiefung.
+                Privates Interesse: Fortgeschrittene Nutzer (8-9) haben ihre Kenntnisse oft durch privates Interesse und den Einsatz in der Freizeit erworben.
+                Stack Overflow: Eine Person hob die Bedeutung von Community-Plattformen wie Stack Overflow zur Lösung spezifischer Probleme hervor.                </p>
                 <h2>Besondere Beobachtungen</h2>
                 <p>
-                    Person A (9): Dieser Teilnehmer erwarb seine hohen Kenntnisse durch die Verwendung von Linux auf einem alten Laptop, was zeigt, dass das regelmäßige Arbeiten mit älterer Hardware und alternativen Betriebssystemen zur Vertiefung des Wissens beitragen kann.
-                    Person B (9) Person C (8): Beide haben durch "Learning by doing" sehr hohe Kenntnisse erworben, was darauf hinweist, dass praktische Erfahrung eine der effektivsten Methoden zum Erlernen von Linux ist.
+                Person A (9): Dieser Teilnehmer erwarb seine hohen Kenntnisse durch die Verwendung von Linux auf einem alten Laptop, was zeigt, dass das regelmäßige Arbeiten mit älterer Hardware und alternativen Betriebssystemen zur Vertiefung des Wissens beitragen kann.
+                Person B (9) Person C (8): Beide haben durch "Learning by doing" sehr hohe Kenntnisse erworben, was darauf hinweist, dass praktische Erfahrung eine der effektivsten Methoden zum Erlernen von Linux ist.
                 </p>
                 </div>
             </p-splitter-panel>
-
             <!-- Rechte Seite: Fazit -->
             <p-splitter-panel class="splitter-right" minSize="50" size="25">
                 <div>
                 <h2>Fazit</h2>
-                <p>Die Umfrage zeigt, dass praktische Erfahrung ("Learning by doing") in Kombination mit einem hohen Maß an Eigeninitiative die effektivsten Methoden zur Entwicklung von Linux-Kenntnissen sind. Der schulische Unterricht bietet eine grundlegende Einführung, reicht jedoch oft nicht aus, um fortgeschrittene Kenntnisse zu erreichen. Auch Videos und Online-Ressourcen sind wertvolle Hilfsmittel für das autodidaktische Lernen.</p>
+                <p>Die Umfrage zeigt, dass praktische Erfahrung ("Learning by doing") in Kombination mit hoher Eigeninitiative die effektivsten Methoden zur Entwicklung von Linux-Kenntnissen sind. Das Diplomprojekt "Linux Logic" greift dieses Konzept auf und ergänzt es durch spielerische Aufgaben, die eine praxisnahe und interaktive Erlernung von Linux ermöglichen. Der schulische Unterricht an einer IT-HTL bietet eine grundlegende Einführung, reicht jedoch oft nicht aus, um fortgeschrittene Kenntnisse zu erreichen. Auch Videos und Online-Ressourcen sind wertvolle Hilfsmittel für das autodidaktische Lernen.</p>
                 </div>
             </p-splitter-panel>
         </p-splitter>
@@ -82,6 +79,7 @@ export default {
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: true,
                     scales: {
                         x: {
                             title: {
@@ -100,7 +98,7 @@ export default {
                             },
                             suggestedMax: 7
                         }
-                    }
+                    },
                 }
             });
         }
@@ -123,12 +121,11 @@ export default {
     color: #569191;
     background-color:white ;
     text-align: left; 
-    padding-left: 20rem;
-    padding-right: 20rem;
-    padding-left: 10rem;
-    padding-right: 10rem;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    padding-left: 8rem;
+    padding-right: 8rem;
+    justify-content: center;
+    width: 100%;
+
 }
 .unten {
     color: #3D525C;
@@ -141,13 +138,13 @@ export default {
     padding-top: 3rem;
     padding-bottom: 3rem;
 }
-canvas {
-    max-width: 100%; 
-    height: auto;    
+canvas {  
+    width: 100% !important; /* Erzwingt die Anpassung an die Containerbreite */
+    height: auto !important; /* Erzwingt die Anpassung an die Containerhöhe */   
 }
 .Umfrage{
     color: #569191;
-    background-color:white ;;
+    background-color:white;
 }
 .splitter {
     color: #3D525C;

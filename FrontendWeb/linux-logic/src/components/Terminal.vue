@@ -68,7 +68,7 @@ export default {
         this.stopTyping = true;
         console.log(text);
         
-        this.terminal.clear(); // Clear terminal but keep the prompt
+        this.terminal.clear();
 
         // logic@linux:~& ausgeben nachdem das Terminal gecleared wird 
         // this.terminal.write("logic@linux:~$ " + text); // Add the prompt again before the text
@@ -140,7 +140,7 @@ export default {
 }
 
 .terminal-output {
-
+  text-align: center;
   color: #dcdcdc;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
