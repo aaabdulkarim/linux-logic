@@ -32,6 +32,12 @@ fun LinuxLogicNavigator() {
             RegisterScreen(navController)
         }
 
+        composable(
+            route = Screen.Main.route
+        ) {
+            RegisterScreen(navController)
+        }
+
         /*
         z.B.:
         composable(

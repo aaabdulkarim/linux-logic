@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,11 +25,13 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.Screen
-
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -174,7 +176,7 @@ fun LoginScreen(navController: NavController) {
                     },
                     modifier = Modifier
                         .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(16.dp), // Abgerundete Ecken
+                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
@@ -209,7 +211,7 @@ fun LoginScreen(navController: NavController) {
                     },
                     modifier = Modifier
                         .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(16.dp), // Abgerundete Ecken
+                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
@@ -223,7 +225,7 @@ fun LoginScreen(navController: NavController) {
                         IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(image, contentDescription = description)
                         }
-                    }
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -248,9 +250,18 @@ fun LoginScreen(navController: NavController) {
                         Log.i("Credentials", "E-Mail: $email; Password: $password")
                     },
                     modifier = Modifier
-                        .fillMaxWidth() // Volle Breite der Box
+                        .fillMaxWidth()
+                        .padding(start = 32.dp, end = 32.dp),
+                    contentPadding = PaddingValues(16.dp),
+                    colors = ButtonDefaults.buttonColors().copy(
+                        containerColor = Color(0xFF445a65),
+                        contentColor = Color.White
+                    )
                 ) {
-                    Text(text = "Login")
+                    Text(
+                        text = "Anmelden",
+                        style = MaterialTheme.typography.labelMedium
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -291,6 +302,8 @@ fun LoginScreen(navController: NavController) {
                             }
                     )
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.Center,
