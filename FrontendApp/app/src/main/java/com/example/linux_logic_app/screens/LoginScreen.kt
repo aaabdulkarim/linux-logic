@@ -127,7 +127,7 @@ fun LoginScreen(navController: NavController) {
                 .background(Color.White)
                 .fillMaxSize()
                 .weight(0.75f)
-                .padding(32.dp) // Padding hinzufügen für den gesamten Inhalt
+                .padding(16.dp) // Padding hinzufügen für den gesamten Inhalt
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             Column(
@@ -184,7 +184,7 @@ fun LoginScreen(navController: NavController) {
                     isError = emailErrorMessage != null
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = password,
@@ -219,7 +219,8 @@ fun LoginScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.Default.Close else Icons.Default.Check
+                        val image =
+                            if (passwordVisible) Icons.Default.Close else Icons.Default.Check
                         val description = if (passwordVisible) "Hide password" else "Show password"
                         IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(image, contentDescription = description)

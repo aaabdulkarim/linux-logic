@@ -59,6 +59,8 @@ fun RegisterScreen(navController: NavController) {
     val (username, setUsername) = rememberSaveable { mutableStateOf("") }
     val (password, setPassword) = rememberSaveable { mutableStateOf("") }
     val (passwordVisible, setPasswordVisible) = rememberSaveable { mutableStateOf(false) }
+    val (confirmPassword, setConfirmPassword) = rememberSaveable { mutableStateOf("") }
+    var confirmPasswordErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
     /*
     ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
     Funktionen zurückgegebenen Werte direkt in separate Variablen auspacken können. Kotlin erlaubt
@@ -124,7 +126,7 @@ fun RegisterScreen(navController: NavController) {
                 .background(Color.White)
                 .fillMaxSize()
                 .weight(0.75f)
-                .padding(32.dp) // Padding hinzufügen für den gesamten Inhalt
+                .padding(16.dp) // Padding hinzufügen für den gesamten Inhalt
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             Column(
@@ -185,7 +187,7 @@ fun RegisterScreen(navController: NavController) {
                     isError = usernameErrorMessage != null
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = email,
@@ -227,7 +229,7 @@ fun RegisterScreen(navController: NavController) {
                     isError = emailErrorMessage != null
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = password,
@@ -270,9 +272,55 @@ fun RegisterScreen(navController: NavController) {
                     },
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-
+                OutlinedTextField(
+                    value = confirmPassword,
+                    onValueChange = {
+                        setConfirmPassword(it)
+                        confirmPasswordErrorMessage = if (it == password) {
+                            null
+                        } else {
+                            "Passwörter stimmen nicht überein!"
+                        }
+                    },
+                    label = {
+                        Text(
+                            text = "Passwort bestätigen",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = "Bitte Passwort erneut eingeben",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Password Confirmation Icon",
+                            tint = Color(0xFF569191)
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(), // Volle Breite der Box
+                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
+                    singleLine = true, // Verhindert den Zeilenumbruch
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Password, // Eingabe als Passwort
+                        imeAction = ImeAction.Done // Fertigstellen der Eingabe
+                    ),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    isError = confirmPasswordErrorMessage != null,
+                    trailingIcon = {
+                        val image = if (passwordVisible) Icons.Default.Close else Icons.Default.Check
+                        val description = if (passwordVisible) "Hide password" else "Show password"
+                        IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
+                            Icon(image, contentDescription = description)
+                        }
+                    },
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
