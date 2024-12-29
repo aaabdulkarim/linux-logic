@@ -16,10 +16,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -51,7 +61,6 @@ fun LoginScreen(navController: NavController) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .weight(0.25f)
         ) {
             Column(
@@ -65,11 +74,17 @@ fun LoginScreen(navController: NavController) {
                     contentDescription = "Linux Logic Penguin",
                 )
 
-                Image(
+                /*Image(
                     painter = painterResource(id = R.drawable.linux_logic_main_transparent_2),
                     contentDescription = "Linux Logic Logo White",
                     modifier = Modifier
                         .padding(bottom = 16.dp)
+                )*/
+
+                Text(
+                    text = "Willkommen zurück!",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.White
                 )
             }
         }
@@ -78,8 +93,8 @@ fun LoginScreen(navController: NavController) {
             modifier = Modifier
                 .background(Color.White)
                 .fillMaxSize()
-                .weight(0.8f)
-                .padding(16.dp) // Padding hinzufügen für den gesamten Inhalt
+                .weight(0.75f)
+                .padding(32.dp) // Padding hinzufügen für den gesamten Inhalt
                 .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             Column(
@@ -88,11 +103,11 @@ fun LoginScreen(navController: NavController) {
                     .align(Alignment.Center), // Vertikale Zentrierung
                 horizontalAlignment = Alignment.CenterHorizontally, // Horizontale Zentrierung
             ) {
-                Text(text = "Willkommen zurück", style = MaterialTheme.typography.headlineMedium)
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(text = "Melden Sie sich bei Ihrem Konto an", style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = "Melden Sie sich bei Ihrem Konto an",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -100,7 +115,20 @@ fun LoginScreen(navController: NavController) {
                     value = email,
                     onValueChange = { email = it },
                     label = { Text(text = "E-Mail Adresse") },
-                    modifier = Modifier.fillMaxWidth() // Volle Breite der Box
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Email Icon",
+                            tint = Color(0xFF569191)
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(), // Volle Breite der Box
+                    shape = RoundedCornerShape(12.dp), // Abgerundete Ecken
+                    singleLine = true, // Verhindert den Zeilenumbruch
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Email // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                    ),
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
