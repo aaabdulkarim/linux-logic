@@ -30,11 +30,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.*
 
 @Composable
-fun StartScreen() {
+fun StartScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
