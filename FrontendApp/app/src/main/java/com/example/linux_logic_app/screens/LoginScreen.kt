@@ -69,6 +69,8 @@ fun LoginScreen(navController: NavController) {
     // Regular expression to validate email format
     val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
 
+    val isFormValid = emailErrorMessage == null && password.isNotEmpty() && password.length >= 8
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -255,8 +257,11 @@ fun LoginScreen(navController: NavController) {
                     contentPadding = PaddingValues(16.dp),
                     colors = ButtonDefaults.buttonColors().copy(
                         containerColor = Color(0xFF445a65),
-                        contentColor = Color.White
-                    )
+                        contentColor = Color.White,
+                        disabledContainerColor = Color(0xFFCECECE),
+                        disabledContentColor = Color(0xFF7F7F7F)
+                    ),
+                    enabled = isFormValid
                 ) {
                     Text(
                         text = "Anmelden",

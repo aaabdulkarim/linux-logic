@@ -72,6 +72,12 @@ fun RegisterScreen(navController: NavController) {
 
     var usernameErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
 
+    val isFormValid = emailErrorMessage == null &&
+            usernameErrorMessage == null &&
+            password.isNotEmpty() &&
+            password.length >= 8 &&
+            password == confirmPassword
+
     // Regular expression to validate email format
     val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
 
@@ -334,8 +340,11 @@ fun RegisterScreen(navController: NavController) {
                     contentPadding = PaddingValues(16.dp),
                     colors = ButtonDefaults.buttonColors().copy(
                         containerColor = Color(0xFFFF8c00),
-                        contentColor = Color.White
-                    )
+                        contentColor = Color.White,
+                        disabledContainerColor = Color(0xFFCECECE),
+                        disabledContentColor = Color(0xFF7F7F7F)
+                    ),
+                    enabled = isFormValid
                 ) {
                     Text(
                         text = "Registrieren",
