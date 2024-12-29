@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,11 +24,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.navigation.Screen
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -129,11 +134,16 @@ fun LoginScreen(navController: NavController) {
         }
 
         Row {
-            Text(text = "Sie haben noch kein Konto?  ")
+            Text(text = "Sie haben noch kein Konto?")
+            Spacer(modifier = Modifier.width(8.dp))
             Text(text = "Registrieren",
                 modifier = Modifier.clickable {
-
-                }
+                    navController.navigate(Screen.Register.route)
+                    Log.i("LoginScreen", "User is performing - Action: \"Register\" -")
+                },
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Blue,
+                textDecoration = TextDecoration.Underline
             )
         }
     }

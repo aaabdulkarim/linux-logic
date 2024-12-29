@@ -32,7 +32,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.navigation.*
+import com.example.linux_logic_app.navigation.HyperlinkText
+import com.example.linux_logic_app.navigation.Screen
 
 @Composable
 fun StartScreen(navController: NavController) {
@@ -119,6 +120,7 @@ fun StartScreen(navController: NavController) {
                         modifier = Modifier
                             .padding(horizontal = 4.dp),
                         onClick = {
+                            navController.navigate(Screen.Login.route)
                             Log.i("StartScreen", "User is performing - Action: \"Login\" -")
                         },
                         icon = {
@@ -142,6 +144,7 @@ fun StartScreen(navController: NavController) {
                         modifier = Modifier
                             .padding(horizontal = 4.dp),
                         onClick = {
+                            navController.navigate(Screen.Register.route)
                             Log.i("StartScreen", "User is performing - Action: \"Register\" -")
                         },
                         icon = {

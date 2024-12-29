@@ -18,6 +18,11 @@ package com.example.linux_logic_app.navigation
  *   Definiert die eindeutige Route für einen Bildschirm, die in der Navigation verwendet wird.
  */
 sealed class Screen(val route: String) {
+    /*
+    Ein data object kombiniert die Vorteile eines object (Singleton) und einer data class
+    (automatisch generierte Methoden wie equals(), hashCode() und toString()), wodurch es ideal für
+    typsichere, effiziente und vergleichbare Einzelexemplare wie Navigationselemente ist.
+     */
     data object Start : Screen("start")
     data object Login : Screen("login")
     data object Register : Screen("register")

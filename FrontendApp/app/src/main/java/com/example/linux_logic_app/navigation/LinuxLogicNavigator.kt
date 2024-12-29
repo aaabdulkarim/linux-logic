@@ -4,22 +4,40 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 import com.example.linux_logic_app.screens.*
 
 @Composable
 fun LinuxLogicNavigator() {
     // NavHost, NavController, composables, route, ...
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "start") {
-        composable("start") {
+    NavHost(navController = navController, startDestination = Screen.Start.route) {
+        composable(
+            route = Screen.Start.route
+        ) {
             StartScreen(navController)
         }
-        composable("login") {
+
+        composable(
+            route = Screen.Login.route
+        ) {
             LoginScreen(navController)
         }
-        composable("register") {
+
+        composable(
+            route = Screen.Register.route
+        ) {
             RegisterScreen(navController)
         }
+
+        /*
+        z.B.:
+        composable(
+            route = "${Screen.Login.route}/{userId}",
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")
+            LoginScreen(userId)
+            }
+         */
     }
 }
