@@ -16,18 +16,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.sharp.Lock
+import androidx.compose.material.icons.twotone.CheckCircle
+import androidx.compose.material.icons.twotone.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,18 +45,33 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.Screen
 
+
 @Composable
 fun LoginScreen(navController: NavController) {
     var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    val (password, setPassword) = rememberSaveable { mutableStateOf("") }
+    val (passwordVisible, setPasswordVisible) = rememberSaveable { mutableStateOf(false) }
+    /*
+    ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
+    Funktionen zurückgegebenen Werte direkt in separate Variablen auspacken können. Kotlin erlaubt
+    es, dieses Objekt in zwei Variablen zu zerlegen: eine zum Lesen des Wertes und eine zum Aktualisieren
+     */
+
+    // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
+    var errorMessage by rememberSaveable { mutableStateOf<String?>(null) }
+
+    // Regular expression to validate email format
+    val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
 
     Column(
         modifier = Modifier
@@ -81,11 +102,27 @@ fun LoginScreen(navController: NavController) {
                         .padding(bottom = 16.dp)
                 )*/
 
-                Text(
-                    text = "Willkommen zurück!",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color.White
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Home,
+                        contentDescription = "Home Icon for Login",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = "Willkommen zurück!",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.White
+                    )
+                }
             }
         }
 
@@ -113,32 +150,85 @@ fun LoginScreen(navController: NavController) {
 
                 OutlinedTextField(
                     value = email,
-                    onValueChange = { email = it },
-                    label = { Text(text = "E-Mail Adresse") },
+                    onValueChange = {
+                        email = it
+                        errorMessage = if (it.matches(emailPattern.toRegex())) {
+                            null
+                        } else {
+                            "Invalide E-Mail Adresse!"
+                        }
+                    },
+                    label = {
+                        Text(
+                            text = "E-Mail Adresse",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = "Bitte Ihre E-Mail Adresse eingeben",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Email,
-                            contentDescription = "Email Icon",
+                            contentDescription = "Email Icon for Login",
                             tint = Color(0xFF569191)
                         )
                     },
                     modifier = Modifier
                         .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(12.dp), // Abgerundete Ecken
+                    shape = RoundedCornerShape(16.dp), // Abgerundete Ecken
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Email // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
+                    isError = errorMessage != null
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
-                    label = { Text(text = "Passwort") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth() // Volle Breite der Box
+                    onValueChange = setPassword,
+                    label = {
+                        Text(
+                            text = "Passwort",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = "Bitte Ihr Passwort eingeben",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Password Icon for Login",
+                            tint = Color(0xFF569191)
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(), // Volle Breite der Box
+                    shape = RoundedCornerShape(16.dp), // Abgerundete Ecken
+                    singleLine = true, // Verhindert den Zeilenumbruch
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
+                    ),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    isError = password.isNotEmpty() && password.length < 8,
+                    trailingIcon = {
+                        val image = if (passwordVisible) Icons.Default.Close else Icons.Default.Check
+                        val description = if (passwordVisible) "Hide password" else "Show password"
+                        IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
+                            Icon(image, contentDescription = description)
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
