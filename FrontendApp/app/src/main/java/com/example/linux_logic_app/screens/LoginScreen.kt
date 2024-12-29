@@ -31,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +54,7 @@ import com.example.linux_logic_app.navigation.Screen
 
 @Composable
 fun LoginScreen(navController: NavController) {
-    var email by rememberSaveable { mutableStateOf("") }
+    val (email, setEmail) = rememberSaveable { mutableStateOf("") }
     val (password, setPassword) = rememberSaveable { mutableStateOf("") }
     val (passwordVisible, setPasswordVisible) = rememberSaveable { mutableStateOf(false) }
     /*
@@ -65,7 +64,7 @@ fun LoginScreen(navController: NavController) {
      */
 
     // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
-    var errorMessage by rememberSaveable { mutableStateOf<String?>(null) }
+    var emailErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
 
     // Regular expression to validate email format
     val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
@@ -148,8 +147,8 @@ fun LoginScreen(navController: NavController) {
                 OutlinedTextField(
                     value = email,
                     onValueChange = {
-                        email = it
-                        errorMessage = if (it.matches(emailPattern.toRegex())) {
+                        setEmail(it)
+                        emailErrorMessage = if (it.matches(emailPattern.toRegex())) {
                             null
                         } else {
                             "Invalide E-Mail Adresse!"
@@ -182,7 +181,7 @@ fun LoginScreen(navController: NavController) {
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = errorMessage != null
+                    isError = emailErrorMessage != null
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -215,7 +214,7 @@ fun LoginScreen(navController: NavController) {
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
-                        imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
+                        imeAction = ImeAction.Done // Es wird Das Formular abgeschickt
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = password.isNotEmpty() && password.length < 8,
