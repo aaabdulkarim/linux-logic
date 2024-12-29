@@ -19,15 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.sharp.Lock
-import androidx.compose.material.icons.twotone.CheckCircle
-import androidx.compose.material.icons.twotone.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -233,18 +228,30 @@ fun LoginScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                Text(
+                    text = "Passwort vergessen?",
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .padding(end = 16.dp)
+                        .clickable {
+
+                        },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Blue,
+                    textDecoration = TextDecoration.Underline,
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
                 Button(
                     onClick = {
                         Log.i("Credentials", "E-Mail: $email; Password: $password")
                     },
-                    modifier = Modifier.fillMaxWidth() // Volle Breite der Box
+                    modifier = Modifier
+                        .fillMaxWidth() // Volle Breite der Box
                 ) {
                     Text(text = "Login")
                 }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Text(text = "Passwort vergessen?", modifier = Modifier.clickable { })
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -259,7 +266,9 @@ fun LoginScreen(navController: NavController) {
                         contentDescription = "Login mittels Google Account",
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable {}
+                            .clickable {
+
+                            }
                     )
 
                     Image(
@@ -267,7 +276,9 @@ fun LoginScreen(navController: NavController) {
                         contentDescription = "Login mittels Microsoft Account",
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable {}
+                            .clickable {
+
+                            }
                     )
 
                     Image(
@@ -275,22 +286,28 @@ fun LoginScreen(navController: NavController) {
                         contentDescription = "Login mittels X Account",
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable {}
+                            .clickable {
+
+                            }
                     )
                 }
 
                 Row(
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                 ) {
                     Text(text = "Sie haben noch kein Konto?")
+
                     Spacer(modifier = Modifier.width(8.dp))
+
                     Text(
                         text = "Registrieren",
-                        modifier = Modifier.clickable {
-                            navController.navigate(Screen.Register.route)
-                            Log.i("LoginScreen", "User is performing - Action: \"Register\" -")
-                        },
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate(Screen.Register.route)
+                                Log.i("LoginScreen", "User is performing - Action: \"Register\" -")
+                            },
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.Blue,
                         textDecoration = TextDecoration.Underline
