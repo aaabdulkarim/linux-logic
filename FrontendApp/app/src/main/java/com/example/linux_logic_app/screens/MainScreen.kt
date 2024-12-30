@@ -2,12 +2,11 @@ package com.example.linux_logic_app.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Edit
@@ -54,6 +53,36 @@ fun MainScreen(navController: NavController) {
             ModalDrawerSheet {
                 Text(
                     text = "Shortcuts"
+                )
+
+                HorizontalDivider()
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Weiter Spielen") },
+                    selected = false,
+                    onClick = {
+
+                    }
+                )
+
+                HorizontalDivider()
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Alle Level") },
+                    selected = false,
+                    onClick = {
+
+                    }
+                )
+
+                HorizontalDivider()
+
+                NavigationDrawerItem(
+                    label = { Text(text = "Suchen") },
+                    selected = false,
+                    onClick = {
+
+                    }
                 )
             }
         }
@@ -106,7 +135,7 @@ fun MainScreen(navController: NavController) {
                     )
                 }
             },
-            scrimColor = Color.Transparent // Keine Überlappung
+            scrimColor = Color.White // Keine Überlappung
         ) {
             Scaffold(
                 topBar = {
@@ -115,7 +144,17 @@ fun MainScreen(navController: NavController) {
                             Image(
                                 painter = painterResource(id = R.drawable.linux_logic_pinguin),
                                 contentDescription = "Linux Logic Pinguin",
-                                modifier = Modifier.size(32.dp) // Größe des Pinguin-Logos
+                                modifier = Modifier
+                                    .size(32.dp)
+                            )
+
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            Image(
+                                painter = painterResource(id = R.drawable.linux_logic_main_transparent_2),
+                                contentDescription = "Linux Logic Logo",
+                                modifier = Modifier
+                                    .size(32.dp)
                             )
                         },
                         navigationIcon = {
@@ -215,19 +254,5 @@ fun MainScreen(navController: NavController) {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun DrawerContent(title: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(text = title, style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Option 1", style = MaterialTheme.typography.bodyLarge)
-        Text("Option 2", style = MaterialTheme.typography.bodyLarge)
     }
 }

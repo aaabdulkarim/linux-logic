@@ -249,6 +249,7 @@ fun LoginScreen(navController: NavController) {
 
                 Button(
                     onClick = {
+                        navController.navigate(Screen.Main.route)
                         Log.i("Credentials", "E-Mail: $email; Password: $password")
                     },
                     modifier = Modifier

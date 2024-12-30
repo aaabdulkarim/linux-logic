@@ -333,7 +333,8 @@ fun RegisterScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        Log.i("Credentials", "E-Mail: $email; Password: $password")
+                        navController.navigate(Screen.Main.route)
+                        Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")
                     },
                     modifier = Modifier
                         .fillMaxWidth()
