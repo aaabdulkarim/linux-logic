@@ -2,6 +2,7 @@ package com.example.linux_logic_app.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,11 +13,11 @@ import androidx.compose.material.icons.automirrored.twotone.ArrowForward
 import androidx.compose.material.icons.automirrored.twotone.ExitToApp
 import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.Build
-import androidx.compose.material.icons.twotone.Edit
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material.icons.twotone.Notifications
+import androidx.compose.material.icons.twotone.Place
 import androidx.compose.material.icons.twotone.PlayArrow
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Settings
@@ -36,7 +37,6 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.navigation.Screen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -225,7 +226,7 @@ fun MainScreen(navController: NavController) {
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Start.route)
                         }
                     )
                 }
@@ -299,7 +300,7 @@ fun MainScreen(navController: NavController) {
                         contentColor = Color.White
                     ) {
                         Icon(
-                            Icons.TwoTone.PlayArrow,
+                            Icons.TwoTone.Place,
                             contentDescription = "Add Icon for Main"
                         )
                     }
@@ -309,41 +310,67 @@ fun MainScreen(navController: NavController) {
                         containerColor = Color(0xFF445a65),
                         contentColor = Color.White
                     ) {
-                        IconButton(
-                            onClick = {
-
-                            },
+                        Column(
                             modifier = Modifier
-                                .weight(1f)
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(
-                                Icons.TwoTone.Build,
-                                contentDescription = "Neues Icon for Main"
+                            IconButton(
+                                onClick = {
+
+                                },
+                                modifier = Modifier
+
+                            ) {
+                                Icon(
+                                    Icons.TwoTone.Build,
+                                    contentDescription = "Neues Icon for Main"
+                                )
+                            }
+                            Text(
+                                text = "Neues",
+                                style =  MaterialTheme.typography.bodyLarge
                             )
                         }
 
-                        IconButton(
-                            onClick = {
-
-                            },
+                        Column(
                             modifier = Modifier
-                                .weight(1f)
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(
-                                Icons.TwoTone.Home,
-                                contentDescription = "Home Icon for Main"
+                            IconButton(
+                                onClick = {
+
+                                }
+                            ) {
+                                Icon(
+                                    Icons.TwoTone.Home,
+                                    contentDescription = "Home Icon for Main"
+                                )
+                            }
+                            Text(
+                                text = "Home",
+                                style =  MaterialTheme.typography.bodyLarge
                             )
                         }
 
-                        IconButton(
-                            onClick = {
-
-                            },
+                        Column(
                             modifier = Modifier
-                                .weight(1f)
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(Icons.TwoTone.Edit,
-                                contentDescription = "Lernen Icon for Main"
+                            IconButton(
+                                onClick = {
+
+                                }
+                            ) {
+                                Icon(Icons.TwoTone.PlayArrow,
+                                    contentDescription = "Lernen Icon for Main"
+                                )
+                            }
+                            Text(
+                                text= "Spielen",
+                                style =  MaterialTheme.typography.bodyLarge
                             )
                         }
                     }
