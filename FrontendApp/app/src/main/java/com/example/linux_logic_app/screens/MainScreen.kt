@@ -3,11 +3,10 @@ package com.example.linux_logic_app.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ArrowForward
 import androidx.compose.material.icons.automirrored.twotone.ExitToApp
@@ -61,7 +60,12 @@ fun MainScreen(navController: NavController) {
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+                drawerContainerColor = Color(0xFF445a65),
+                drawerContentColor = Color.White,
+                drawerShape = RoundedCornerShape(topEnd = 64.dp, bottomEnd = 64.dp), // Abgerundete Ecken am Ende
+                drawerState = endDrawerState, // Der EndDrawerState (Verwendung von `rememberDrawerState()` zur Initialisierung)
+            ) {
                 Text(
                     text = "Shortcuts",
                     modifier = Modifier
@@ -69,7 +73,10 @@ fun MainScreen(navController: NavController) {
                     style = MaterialTheme.typography.labelLarge,
                 )
 
-                HorizontalDivider()
+                HorizontalDivider(
+                    thickness = 2.dp,
+                    color = Color(0xFFFF8c00)
+                )
 
                 NavigationDrawerItem(
                     label = {
@@ -90,7 +97,10 @@ fun MainScreen(navController: NavController) {
                     }
                 )
 
-                HorizontalDivider()
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Color(0xFF404242)
+                )
 
                 NavigationDrawerItem(
                     label = {
@@ -117,7 +127,12 @@ fun MainScreen(navController: NavController) {
             drawerState = endDrawerState,
             gesturesEnabled = endDrawerState.isOpen,
             drawerContent = {
-                ModalDrawerSheet {
+                ModalDrawerSheet(
+                    drawerContainerColor = Color(0xFF445a65),
+                    drawerContentColor = Color.White,
+                    drawerShape = RoundedCornerShape(topEnd = 64.dp, bottomEnd = 64.dp), // Abgerundete Ecken am Ende
+                    drawerState = endDrawerState, // Der EndDrawerState (Verwendung von `rememberDrawerState()` zur Initialisierung)
+                ) {
                     Text(
                         text = "Dein Profil",
                         modifier = Modifier
@@ -125,7 +140,10 @@ fun MainScreen(navController: NavController) {
                         style = MaterialTheme.typography.labelLarge,
                     )
 
-                    HorizontalDivider()
+                    HorizontalDivider(
+                        thickness = 2.dp,
+                        color = Color(0xFFFF8c00)
+                    )
 
                     NavigationDrawerItem(
                         label = {
@@ -146,7 +164,10 @@ fun MainScreen(navController: NavController) {
                         }
                     )
 
-                    HorizontalDivider()
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = Color(0xFF404242)
+                    )
 
                     NavigationDrawerItem(
                         label = {
@@ -167,7 +188,10 @@ fun MainScreen(navController: NavController) {
                         }
                     )
 
-                    HorizontalDivider()
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = Color(0xFF404242)
+                    )
 
                     NavigationDrawerItem(
                         label = {
@@ -188,7 +212,10 @@ fun MainScreen(navController: NavController) {
                         }
                     )
 
-                    HorizontalDivider()
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = Color(0xFF404242)
+                    )
 
                     NavigationDrawerItem(
                         label = {
@@ -209,7 +236,10 @@ fun MainScreen(navController: NavController) {
                         }
                     )
 
-                    HorizontalDivider()
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = Color(0xFF404242)
+                    )
 
                     NavigationDrawerItem(
                         label = {
@@ -236,21 +266,27 @@ fun MainScreen(navController: NavController) {
                 topBar = {
                     CenterAlignedTopAppBar(
                         title = {
-                            Image(
-                                painter = painterResource(id = R.drawable.linux_logic_pinguin),
-                                contentDescription = "Linux Logic Pinguin",
-                                modifier = Modifier
-                                    .size(64.dp)
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically, // Bilder vertikal zentrieren
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.linux_logic_pinguin),
+                                    contentDescription = "Linux Logic Pinguin",
+                                )
 
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Image(
-                                painter = painterResource(id = R.drawable.linux_logic_main_transparent_2),
-                                contentDescription = "Linux Logic Logo",
-                                modifier = Modifier
-                                    .size(64.dp)
-                            )
+                                Text(
+                                    text = "Linux Logic",
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                                /*
+                                Image(
+                                    painter = painterResource(id = R.drawable.linux_logic_main_transparent_2),
+                                    contentDescription = "Linux Logic Logo",
+                                    modifier = Modifier
+                                        .size(128.dp) // Passe die Größe an
+                                )
+                                */
+                            }
                         },
                         navigationIcon = {
                             IconButton(
