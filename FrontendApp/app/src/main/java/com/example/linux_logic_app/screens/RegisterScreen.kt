@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -304,7 +305,7 @@ fun RegisterScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Lock,
+                            imageVector = Icons.Default.Refresh,
                             contentDescription = "Password Confirmation Icon",
                             tint = Color(0xFF569191)
                         )
