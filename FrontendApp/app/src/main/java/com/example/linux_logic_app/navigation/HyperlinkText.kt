@@ -56,7 +56,7 @@ fun HyperlinkText(
 
     Text(
         text = annotatedString,
-        style = MaterialTheme.typography.bodyMedium, // Nutzt die gleiche Schriftart wie `Text`
+        style = MaterialTheme.typography.bodyLarge, // Nutzt die gleiche Schriftart wie `Text`
         modifier = Modifier.clickable {
             annotatedString.getStringAnnotations("URL", 0, annotatedString.length).firstOrNull()?.let { annotation ->
                 // Öffnet den Link

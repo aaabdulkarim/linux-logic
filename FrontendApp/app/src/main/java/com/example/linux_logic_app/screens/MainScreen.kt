@@ -21,6 +21,7 @@ import androidx.compose.material.icons.twotone.PlayArrow
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.ThumbUp
+import androidx.compose.material.icons.twotone.Warning
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
@@ -46,9 +47,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.navigation.HyperlinkText
 import com.example.linux_logic_app.navigation.Screen
 import kotlinx.coroutines.launch
 
+/*
+https://stackoverflow.com/questions/67025228/how-to-create-a-second-drawer-in-jetpack-compose
+Probleme beim implementieren eines rechtbündigen Navigation Drawers
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavController) {
@@ -113,6 +119,32 @@ fun MainScreen(navController: NavController) {
                     icon = {
                         Icon(
                             Icons.AutoMirrored.TwoTone.ArrowForward,
+                            contentDescription = "All levels for Main"
+                        )
+                    },
+                    onClick = {
+
+                    }
+                )
+
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Color(0xFF404242)
+                )
+
+                NavigationDrawerItem(
+                    label = {
+                        HyperlinkText(
+                            fullText = "Über Linux Logic",
+                            linkText = "www.linux-logic.com",
+                            linkUrl = "https://www.linux-logic.com",
+                            onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website MAIN\" -"
+                        )
+                    },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            Icons.TwoTone.Info,
                             contentDescription = "All levels for Main"
                         )
                     },
@@ -220,7 +252,7 @@ fun MainScreen(navController: NavController) {
                     NavigationDrawerItem(
                         label = {
                             Text(
-                                text = "Hilfe und Feedback",
+                                text = "Feedback senden",
                                 style = MaterialTheme.typography.bodyLarge
                             )
                         },
@@ -228,7 +260,31 @@ fun MainScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 Icons.TwoTone.ThumbUp,
-                                contentDescription = "Help and feedback for Main"
+                                contentDescription = "Feedback for Main"
+                            )
+                        },
+                        onClick = {
+
+                        }
+                    )
+
+                    HorizontalDivider(
+                        thickness = 1.dp,
+                        color = Color(0xFF404242)
+                    )
+
+                    NavigationDrawerItem(
+                        label = {
+                            Text(
+                                text = "Hilfe",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        selected = false,
+                        icon = {
+                            Icon(
+                                Icons.TwoTone.Warning,
+                                contentDescription = "Help for Main"
                             )
                         },
                         onClick = {
