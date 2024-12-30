@@ -5,5 +5,5 @@ import androidx.navigation.NavController
 
 @Composable
 fun NewScreen(navController: NavController) {
-
+    // Morgen fertigstellen.
 }
