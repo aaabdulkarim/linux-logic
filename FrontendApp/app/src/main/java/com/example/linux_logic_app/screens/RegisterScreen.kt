@@ -26,6 +26,13 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.twotone.AccountCircle
+import androidx.compose.material.icons.twotone.Check
+import androidx.compose.material.icons.twotone.Close
+import androidx.compose.material.icons.twotone.Email
+import androidx.compose.material.icons.twotone.Lock
+import androidx.compose.material.icons.twotone.Person
+import androidx.compose.material.icons.twotone.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -110,7 +117,7 @@ fun RegisterScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Person,
+                        imageVector = Icons.TwoTone.Person,
                         contentDescription = "Home Icon for Register",
                         tint = Color.White,
                         modifier = Modifier
@@ -178,7 +185,7 @@ fun RegisterScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,
+                            imageVector = Icons.TwoTone.AccountCircle,
                             contentDescription = "Account Icon for Register",
                             tint = Color(0xFF569191)
                         )
@@ -220,7 +227,7 @@ fun RegisterScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Email,
+                            imageVector = Icons.TwoTone.Email,
                             contentDescription = "Email Icon for Register",
                             tint = Color(0xFF569191)
                         )
@@ -255,7 +262,7 @@ fun RegisterScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Lock,
+                            imageVector = Icons.TwoTone.Lock,
                             contentDescription = "Password Icon for Login",
                             tint = Color(0xFF569191)
                         )
@@ -271,7 +278,7 @@ fun RegisterScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.Default.Close else Icons.Default.Check
+                        val image = if (passwordVisible) Icons.TwoTone.Close else Icons.TwoTone.Check
                         val description = if (passwordVisible) "Hide password" else "Show password"
                         IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(image, contentDescription = description)
@@ -305,7 +312,7 @@ fun RegisterScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Refresh,
+                            imageVector = Icons.TwoTone.Refresh,
                             contentDescription = "Password Confirmation Icon",
                             tint = Color(0xFF569191)
                         )
@@ -321,7 +328,7 @@ fun RegisterScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = confirmPasswordErrorMessage != null,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.Default.Close else Icons.Default.Check
+                        val image = if (passwordVisible) Icons.TwoTone.Close else Icons.TwoTone.Check
                         val description = if (passwordVisible) "Hide password" else "Show password"
                         IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(image, contentDescription = description)

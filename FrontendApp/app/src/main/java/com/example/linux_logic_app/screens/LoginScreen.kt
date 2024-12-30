@@ -24,6 +24,11 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.twotone.Check
+import androidx.compose.material.icons.twotone.Close
+import androidx.compose.material.icons.twotone.Email
+import androidx.compose.material.icons.twotone.Home
+import androidx.compose.material.icons.twotone.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -106,7 +111,7 @@ fun LoginScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Home,
+                        imageVector = Icons.TwoTone.Home,
                         contentDescription = "Home Icon for Login",
                         tint = Color.White,
                         modifier = Modifier
@@ -170,7 +175,7 @@ fun LoginScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Email,
+                            imageVector = Icons.TwoTone.Email,
                             contentDescription = "Email Icon for Login",
                             tint = Color(0xFF569191)
                         )
@@ -205,7 +210,7 @@ fun LoginScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Lock,
+                            imageVector = Icons.TwoTone.Lock,
                             contentDescription = "Password Icon for Login",
                             tint = Color(0xFF569191)
                         )
@@ -222,7 +227,7 @@ fun LoginScreen(navController: NavController) {
                     isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
                         val image =
-                            if (passwordVisible) Icons.Default.Close else Icons.Default.Check
+                            if (passwordVisible) Icons.TwoTone.Close else Icons.TwoTone.Check
                         val description = if (passwordVisible) "Hide password" else "Show password"
                         IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(image, contentDescription = description)

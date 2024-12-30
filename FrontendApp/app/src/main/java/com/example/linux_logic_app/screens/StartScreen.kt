@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.twotone.Home
+import androidx.compose.material.icons.twotone.Person
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -125,7 +127,7 @@ fun StartScreen(navController: NavController) {
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.Filled.Home,
+                                imageVector = Icons.TwoTone.Home,
                                 contentDescription = "Home Icon",
                                 tint = Color.White
                             )
@@ -149,7 +151,7 @@ fun StartScreen(navController: NavController) {
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.Filled.Person,
+                                imageVector = Icons.TwoTone.Person,
                                 contentDescription = "Person Icon",
                                 tint = Color.White
                             )

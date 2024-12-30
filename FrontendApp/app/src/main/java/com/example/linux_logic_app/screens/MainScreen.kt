@@ -8,11 +8,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.ExitToApp
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.twotone.AccountCircle
+import androidx.compose.material.icons.twotone.Build
+import androidx.compose.material.icons.twotone.Edit
+import androidx.compose.material.icons.twotone.Home
+import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Menu
+import androidx.compose.material.icons.twotone.Notifications
+import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.ThumbUp
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -93,7 +101,10 @@ fun MainScreen(navController: NavController) {
             drawerContent = {
                 ModalDrawerSheet {
                     Text(
-                        text = "Profil"
+                        text = "Dein Profil",
+                        modifier = Modifier
+                            .padding(16.dp),
+                        style = MaterialTheme.typography.labelLarge,
                     )
 
                     HorizontalDivider()
@@ -101,14 +112,28 @@ fun MainScreen(navController: NavController) {
                     NavigationDrawerItem(
                         label = { Text(text = "Informationen") },
                         selected = false,
+                        icon = {
+                            Icon(
+                                Icons.TwoTone.Info,
+                                contentDescription = "Information for Main"
+                            )
+                        },
                         onClick = {
 
                         }
                     )
 
+                    HorizontalDivider()
+
                     NavigationDrawerItem(
                         label = { Text(text = "Einstellungen") },
                         selected = false,
+                        icon = {
+                            Icon(
+                                Icons.TwoTone.Settings,
+                                contentDescription = "Settings for Main"
+                            )
+                        },
                         onClick = {
 
                         }
@@ -119,6 +144,28 @@ fun MainScreen(navController: NavController) {
                     NavigationDrawerItem(
                         label = { Text(text = "Mitteilungen") },
                         selected = false,
+                        icon = {
+                            Icon(
+                                Icons.TwoTone.Notifications,
+                                contentDescription = "Notifications for Main"
+                            )
+                        },
+                        onClick = {
+
+                        }
+                    )
+
+                    HorizontalDivider()
+
+                    NavigationDrawerItem(
+                        label = { Text(text = "Hilfe und Feedback") },
+                        selected = false,
+                        icon = {
+                            Icon(
+                                Icons.TwoTone.ThumbUp,
+                                contentDescription = "Help and feedback for Main"
+                            )
+                        },
                         onClick = {
 
                         }
@@ -129,13 +176,18 @@ fun MainScreen(navController: NavController) {
                     NavigationDrawerItem(
                         label = { Text(text = "Abmelden") },
                         selected = false,
+                        icon = {
+                            Icon(
+                                Icons.AutoMirrored.TwoTone.ExitToApp,
+                                contentDescription = "Logout for Main"
+                            )
+                        },
                         onClick = {
 
                         }
                     )
                 }
             },
-            scrimColor = Color.White // Keine Überlappung
         ) {
             Scaffold(
                 topBar = {
@@ -207,7 +259,7 @@ fun MainScreen(navController: NavController) {
                                 .weight(1f)
                         ) {
                             Icon(
-                                Icons.Default.Build,
+                                Icons.TwoTone.Build,
                                 contentDescription = "Neues Icon for Main"
                             )
                         }
@@ -222,7 +274,7 @@ fun MainScreen(navController: NavController) {
                                 .weight(1f)
                         ) {
                             Icon(
-                                Icons.Default.Home,
+                                Icons.TwoTone.Home,
                                 contentDescription = "Home Icon for Main"
                             )
                         }
@@ -236,7 +288,7 @@ fun MainScreen(navController: NavController) {
                             modifier = Modifier
                                 .weight(1f)
                         ) {
-                            Icon(Icons.Default.Edit,
+                            Icon(Icons.TwoTone.Edit,
                                 contentDescription = "Lernen Icon for Main"
                             )
                         }
