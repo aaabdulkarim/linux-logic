@@ -1,5 +1,13 @@
+
 <template>
-  <div id="terminal-container" ref="terminalContainer"></div>
+  <div id="terminal-container" ref="terminalContainer">
+    <div class="terminal-header">
+      <span>logic Terminal</span>
+    </div>
+    <div class="terminal-output">
+      <!-- Terminal output is rendered here -->
+    </div>
+  </div>
 </template>
 
 <script>
@@ -33,7 +41,7 @@ export default {
     // Create and configure the terminal
     this.terminal = new Terminal({
       cursorBlink: true,  // Cursor blinks to improve visibility
-      rows: 25,           // Set initial number of rows
+      rows: 30,           // Set initial number of rows
       cols: 800,           // Set initial number of columns
       theme: {
         background: '#1e1e1e', // Dark background color for better contrast
@@ -57,16 +65,23 @@ export default {
   },
   methods: {
     simpleWrite(text){
-        this.stopTyping = true
+        this.stopTyping = true;
         console.log(text);
         
-        this.terminal.clear()
-        this.terminal.write("\r\n" + text)
+        this.terminal.clear();
+
+        // logic@linux:~& ausgeben nachdem das Terminal gecleared wird 
+        // this.terminal.write("logic@linux:~$ " + text); // Add the prompt again before the text
     },
 
-    typeTerminal(){
-    
+    typeTerminal() {
       const currentMessage = this.messages[this.currentMessageIndex];
+      const prompt = "logic@linux:~$ "; // Terminal prompt
+
+      if (this.currentCharIndex === 0) {
+        this.terminal.write(prompt); // Write the prompt before the first message
+      }
+
       if (this.currentCharIndex < currentMessage.length) {
         this.terminal.write(currentMessage[this.currentCharIndex]);
         this.currentCharIndex++;
@@ -76,18 +91,22 @@ export default {
         clearInterval(this.typingInterval); // Stop the current interval
         this.terminal.write('\r\n'); // Move to the next line
         setTimeout(() => {
-          this.terminal.clear(); // Clear the terminal
+          this.terminal.clear(); // Clear the terminal but keep the prompt
+
+          // logic@linux:~& ausgeben nachdem das Terminal gecleared wird 
+          // this.terminal.write(prompt); // Add the prompt again before starting the next message
+
           setTimeout(() => {
             this.startTyping(); // Start typing the next message
           }, 500); // Wait for 500ms before starting the next message
         }, 1000); // Wait for 1000ms before clearing the terminal
       }
-      
     },
+
     startTyping() {
       this.typingInterval = setInterval(() => {
         if (this.stopTyping == false){
-          this.typeTerminal()
+          this.typeTerminal();
         }
       }, 100); // Adjust the typing speed by changing the interval
     }
@@ -98,13 +117,33 @@ export default {
 }
 </script>
 
+
 <style>
 .terminal-container {
   width: 100%;
   height: 100%;
   background-color: #1e1e1e;
-  border-radius: 5px;
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+.terminal-header {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #111; 
+  color: #fff;
+  padding-left: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  text-align: left;
+  font-size: 18px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.terminal-output {
+  text-align: center;
+  color: #dcdcdc;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
 </style>
+

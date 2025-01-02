@@ -1,17 +1,18 @@
 <template>
-    <div class="all flex flex-column align-items-center justify-content-center">
+    <div class="all flex flex-column align-items-center justify-content-center grid">
       <!-- Logo -->
-      <div class="mb-5">
+      <div class="mb-5 ">
         <img src="@/assets/LogoLinuxLogic.webp" alt="Logo" class="LogoLinuxLogic">
       </div>
   
-      <!-- Button-Container Für den Anfang verstecken-->
-      <!-- <div class="flex flex-column align-items-center">
-        <button class="button p-3 mb-3 text-lg font-bold">Anmelden</button>
-        <span class="text-sm cursor-pointer">
+      
+      <div class="flex flex-column align-items-center">
+        <button class="button p-3 mb-3 text-lg font-bold">Spielen</button>
+        <!-- Button-Container Für den Anfang verstecken-->
+        <!-- <span class="text-sm cursor-pointer">
           <u>Registrieren</u>
-        </span>
-      </div> -->
+        </span>-->
+      </div> 
     </div>
   </template>
 
@@ -36,7 +37,7 @@ export default {
   }
   
   .LogoLinuxLogic {
-    max-width: 300px;
+    max-width: 80%;
     height: auto;
   }
   
@@ -44,16 +45,16 @@ export default {
   .button {
     color: #569191;
     background-color: white;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: 2px solid white;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    width: 300px;
   }
   
   .button:hover {
-    background-color: #4a8080;
+    background-color: #569191;
+    border: 2px solid #d0f0f0;
     color: white;
-    transform: scale(1.05);
   }
   
   /* Link Styling */
