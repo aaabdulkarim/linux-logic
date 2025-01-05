@@ -1,5 +1,5 @@
 from typing import Annotated
-
+from validate_email import validate_email
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from dotenv import load_dotenv, get_key
@@ -72,6 +72,30 @@ async def register(userModel : User, session: SessionDep):
     """
     Ein User wird registriert und zur Datenbank hinzugefügt
     """
+
+    # Check ob das übergebene User Model invalide Daten hat
+    email = userModel.email
+
+    # Überprüfen ob die Email existiert
+    if validate_email(userModel.email, check_blacklist=False) == False:
+        return False
+    
+
+    # Überprüfen ob die Email schon in unserem System vorhanden ist
+    statement = select(User)
+    userlist = session.exec(statement)
+    for user in userlist:
+        if user.email == email:
+            return False
+    
+    if len(userModel.password_hash) < 1:
+        return False
+    
+    session.add(userModel)
+    session.commit()
+
+    return True
+    
 
 
 @app.get("/progress")
