@@ -29,12 +29,10 @@ export default {
     .Infos {
         background-color: white;
         color: #3D525C;
+        text-align: left; 
+        padding-left: 20rem;
         text-align: left;  
         padding-left: 10rem;
         padding-right: 4rem;
     }
-    
-
-    
-
 </style>

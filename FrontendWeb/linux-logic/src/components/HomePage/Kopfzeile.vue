@@ -1,40 +1,70 @@
-<template>  
-    <div class="all grid">
-        <div class="col-12">
-        <img src="..\..\assets\LogoLinuxLogic.webp" alt="Logo" class="LogoLinuxLogic pl-5">
-        </div> 
-        <!--
-        <div class="button-container">
-            <button class="col-2 m-2 mt-3 text-lg">Anmelden</button>
-        </div>
-        <span class="m-2 mt-3 button-container text-sm"><u>Registrieren</u></span>
-        -->
+<template>
+    <div class="all flex flex-column align-items-center justify-content-center grid">
+      <!-- Logo -->
+      <div class="mb-5 ">
+        <img src="@/assets/LogoLinuxLogic.webp" alt="Logo" class="LogoLinuxLogic">
+      </div>
+  
+      
+      <div class="flex flex-column align-items-center">
+        <button class="button p-3 mb-3 text-lg font-bold">Spielen</button>
+        <!-- Button-Container Für den Anfang verstecken-->
+        <!-- <span class="text-sm cursor-pointer">
+          <u>Registrieren</u>
+        </span>-->
+      </div> 
     </div>
-</template>
+  </template>
+
+<script>
+import AnimateOnScroll from 'primevue/animateonscroll';
+
+
+export default {
+  name: 'Kopfzeile',
+  components: {
+    AnimateOnScroll
+  }
+}
+
+</script>
 
 <style scoped>
-    .all {
-        height: 102vh;
-        color: white;
-        background-color: #569191;
-        padding-top: 10rem;
-        padding-bottom: 16rem;
-    }
-    .LogoLinuxLogic {
-        max-width: 500%;
-        height: auto;
-    }
-    .button-container {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-    button {
-        color: #569191;
-        background-color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-</style>
+  .all {
+    height: 102vh;
+    color: white;
+    background-color: #569191;
+  }
+  
+  .LogoLinuxLogic {
+    max-width: 80%;
+    height: auto;
+  }
+  
+  /* Button Styling */
+  .button {
+    color: #569191;
+    background-color: white;
+    border: 2px solid white;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    width: 300px;
+  }
+  
+  .button:hover {
+    background-color: #569191;
+    border: 2px solid #d0f0f0;
+    color: white;
+  }
+  
+  /* Link Styling */
+  .text-sm {
+    color: white;
+    transition: color 0.3s ease;
+  }
+  
+  .text-sm:hover {
+    color: #d0f0f0;
+  }
+  </style>
+  

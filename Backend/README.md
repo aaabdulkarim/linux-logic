@@ -46,9 +46,24 @@ source venv/bin/activate
 
 ### Windows
 
-```cmd
+```powershell
 python -m venv venv  # zum Erstellen
 .\venv\Scripts\activate
+```
+
+*Falls dieser Fehler vorkommt:*
+```powershell
+"about_Execution_Policies" (https:/go.microsoft.com/fwlink/?LinkID=135170).
+In Zeile:1 Zeichen:1
++ .\venv\Scripts\activate
++ ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : Sicherheitsfehler: (:) [], PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+```
+
+*Muss davor dieser Command ausgeführt werden*
+```Powershell
+Set-ExecutionPolicy Unrestricted -Scope Process
 ```
 
 ---
