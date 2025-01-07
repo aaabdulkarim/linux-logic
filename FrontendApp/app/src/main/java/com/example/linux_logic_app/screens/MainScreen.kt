@@ -77,6 +77,7 @@ fun MainScreen(navController: NavController) {
                     modifier = Modifier
                         .padding(16.dp),
                     style = MaterialTheme.typography.labelLarge,
+                    color = Color.White
                 )
 
                 HorizontalDivider(
@@ -88,7 +89,8 @@ fun MainScreen(navController: NavController) {
                     label = {
                         Text(
                             text = "Suchen",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
                         )
                     },
                     selected = false,
@@ -112,7 +114,8 @@ fun MainScreen(navController: NavController) {
                     label = {
                         Text(
                             text = "Alle Level",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
                         )
                     },
                     selected = false,
@@ -170,6 +173,7 @@ fun MainScreen(navController: NavController) {
                         modifier = Modifier
                             .padding(16.dp),
                         style = MaterialTheme.typography.labelLarge,
+                        color = Color.White
                     )
 
                     HorizontalDivider(
@@ -181,7 +185,8 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Informationen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
@@ -205,7 +210,8 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Einstellungen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
@@ -229,7 +235,8 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Mitteilungen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
@@ -253,7 +260,8 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Feedback senden",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
@@ -277,7 +285,8 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Hilfe",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
@@ -301,7 +310,8 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Abmelden",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
