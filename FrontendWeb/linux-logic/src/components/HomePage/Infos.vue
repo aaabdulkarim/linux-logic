@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Terminal from '@/components/Terminal.vue'
+import Terminal from '@/components/HomePage/BspTerminal.vue'
 export default {
     name: 'Infos',
     components: {
