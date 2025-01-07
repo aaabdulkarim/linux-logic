@@ -105,7 +105,8 @@ fun StartScreen(navController: NavController) {
                         fullText = "www.linux-logic.com",
                         linkText = "www.linux-logic.com",
                         linkUrl = "https://www.linux-logic.com",
-                        onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website TEXT\" -"
+                        onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website TEXT\" -",
+                        textColor = Color.Blue
                     )
                 }
 

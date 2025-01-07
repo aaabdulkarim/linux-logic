@@ -97,7 +97,8 @@ fun MainScreen(navController: NavController) {
                     icon = {
                         Icon(
                             Icons.TwoTone.Search,
-                            contentDescription = "Search for Main"
+                            contentDescription = "Search for Main",
+                            tint = Color.White
                         )
                     },
                     onClick = {
@@ -122,7 +123,8 @@ fun MainScreen(navController: NavController) {
                     icon = {
                         Icon(
                             Icons.AutoMirrored.TwoTone.ArrowForward,
-                            contentDescription = "All levels for Main"
+                            contentDescription = "All levels for Main",
+                            tint = Color.White
                         )
                     },
                     onClick = {
@@ -141,14 +143,16 @@ fun MainScreen(navController: NavController) {
                             fullText = "Über Linux Logic",
                             linkText = "www.linux-logic.com",
                             linkUrl = "https://www.linux-logic.com",
-                            onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website MAIN\" -"
+                            onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website MAIN\" -",
+                            textColor = Color.White
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
                             Icons.TwoTone.Info,
-                            contentDescription = "All levels for Main"
+                            contentDescription = "All levels for Main",
+                            tint = Color.White
                         )
                     },
                     onClick = {
@@ -193,7 +197,8 @@ fun MainScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 Icons.TwoTone.Info,
-                                contentDescription = "Information for Main"
+                                contentDescription = "Information for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -218,7 +223,8 @@ fun MainScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 Icons.TwoTone.Settings,
-                                contentDescription = "Settings for Main"
+                                contentDescription = "Settings for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -243,7 +249,8 @@ fun MainScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 Icons.TwoTone.Notifications,
-                                contentDescription = "Notifications for Main"
+                                contentDescription = "Notifications for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -268,7 +275,8 @@ fun MainScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 Icons.TwoTone.ThumbUp,
-                                contentDescription = "Feedback for Main"
+                                contentDescription = "Feedback for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -293,7 +301,8 @@ fun MainScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 Icons.TwoTone.Warning,
-                                contentDescription = "Help for Main"
+                                contentDescription = "Help for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -318,7 +327,8 @@ fun MainScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 Icons.AutoMirrored.TwoTone.ExitToApp,
-                                contentDescription = "Logout for Main"
+                                contentDescription = "Logout for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
