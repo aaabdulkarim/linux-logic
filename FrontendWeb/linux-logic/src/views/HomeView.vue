@@ -2,6 +2,8 @@
   <div class="home">
     
     <a href="/#/about">To About</a>
+    <br>
+    <a href="/#/terminal">To Game</a>
 
     <Terminal/>
   </div>
@@ -9,7 +11,7 @@
 
 <script>
 // @ is an alias to /src
-import Terminal from '@/components/Terminal.vue'
+import Terminal from '@/components/HomePage/BspTerminal.vue'
 
 export default {
   name: 'HomeView',
