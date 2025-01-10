@@ -88,7 +88,7 @@ fun RegisterScreen(navController: NavController) {
 
     Column(
         modifier = Modifier
-            .verticalScroll(scrollState)
+
             .fillMaxSize()
             .background(Color(0xFF569191)),
         horizontalAlignment = Alignment.CenterHorizontally,

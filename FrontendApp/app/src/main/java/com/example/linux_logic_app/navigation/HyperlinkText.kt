@@ -1,6 +1,5 @@
 package com.example.linux_logic_app.navigation
 
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -71,5 +70,3 @@ fun HyperlinkText(
         color = textColor
     )
 }
-
-
