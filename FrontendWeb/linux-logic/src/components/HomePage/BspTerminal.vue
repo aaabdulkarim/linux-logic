@@ -16,7 +16,7 @@ import "@xterm/xterm/css/xterm.css";
 import { FitAddon } from "xterm-addon-fit";
 
 export default {
-  name: 'Terminal',
+  name: 'BspTerminal',
   data() {
     return {
       terminal: null,
@@ -118,7 +118,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .terminal-container {
   width: 100%;
   height: 100%;

@@ -1,6 +1,5 @@
 package com.example.linux_logic_app.navigation
 
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +24,8 @@ fun HyperlinkText(
     fullText: String,
     linkText: String,
     linkUrl: String,
-    onLinkClickLogMessage: String
+    onLinkClickLogMessage: String,
+    textColor: Color
 ) {
     val context = LocalContext.current
 
@@ -66,8 +66,7 @@ fun HyperlinkText(
                 // Log-Ereignis hinzufügen
                 Log.i("HyperlinkText Linux Logic", onLinkClickLogMessage)
             }
-        }
+        },
+        color = textColor
     )
 }
-
-

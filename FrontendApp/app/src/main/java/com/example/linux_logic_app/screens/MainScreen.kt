@@ -2,14 +2,15 @@ package com.example.linux_logic_app.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ArrowForward
 import androidx.compose.material.icons.automirrored.twotone.ExitToApp
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.Build
 import androidx.compose.material.icons.twotone.Home
@@ -22,7 +23,8 @@ import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.ThumbUp
 import androidx.compose.material.icons.twotone.Warning
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,19 +35,30 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.HyperlinkText
 import com.example.linux_logic_app.navigation.Screen
@@ -55,12 +68,44 @@ import kotlinx.coroutines.launch
 https://stackoverflow.com/questions/67025228/how-to-create-a-second-drawer-in-jetpack-compose
 Probleme beim implementieren eines rechtbündigen Navigation Drawers
  */
+
+data class BottomNavigationItem(
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val hasNews: Boolean,
+    val badgeCount: Int? = null
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val endDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    var selectedItemIndex by rememberSaveable { mutableStateOf(1) }
+    val navController = rememberNavController()
+    val items = listOf(
+        BottomNavigationItem(
+            title = "Neues",
+            selectedIcon = Icons.Filled.Build,
+            unselectedIcon = Icons.TwoTone.Build,
+            hasNews = true,
+            badgeCount = 1,
+        ),
+        BottomNavigationItem(
+            title = "Home",
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.TwoTone.Home,
+            hasNews = false,
+        ),
+        BottomNavigationItem(
+            title = "Spielen",
+            selectedIcon = Icons.Filled.PlayArrow,
+            unselectedIcon = Icons.TwoTone.PlayArrow,
+            hasNews = false,
+        )
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -77,6 +122,7 @@ fun MainScreen(navController: NavController) {
                     modifier = Modifier
                         .padding(16.dp),
                     style = MaterialTheme.typography.labelLarge,
+                    color = Color.White
                 )
 
                 HorizontalDivider(
@@ -88,14 +134,16 @@ fun MainScreen(navController: NavController) {
                     label = {
                         Text(
                             text = "Suchen",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
                             Icons.TwoTone.Search,
-                            contentDescription = "Search for Main"
+                            contentDescription = "Search for Main",
+                            tint = Color.White
                         )
                     },
                     onClick = {
@@ -112,14 +160,16 @@ fun MainScreen(navController: NavController) {
                     label = {
                         Text(
                             text = "Alle Level",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
                             Icons.AutoMirrored.TwoTone.ArrowForward,
-                            contentDescription = "All levels for Main"
+                            contentDescription = "All levels for Main",
+                            tint = Color.White
                         )
                     },
                     onClick = {
@@ -138,14 +188,16 @@ fun MainScreen(navController: NavController) {
                             fullText = "Über Linux Logic",
                             linkText = "www.linux-logic.com",
                             linkUrl = "https://www.linux-logic.com",
-                            onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website MAIN\" -"
+                            onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website MAIN\" -",
+                            textColor = Color.White
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
                             Icons.TwoTone.Info,
-                            contentDescription = "All levels for Main"
+                            contentDescription = "All levels for Main",
+                            tint = Color.White
                         )
                     },
                     onClick = {
@@ -170,6 +222,7 @@ fun MainScreen(navController: NavController) {
                         modifier = Modifier
                             .padding(16.dp),
                         style = MaterialTheme.typography.labelLarge,
+                        color = Color.White
                     )
 
                     HorizontalDivider(
@@ -181,14 +234,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Informationen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.Info,
-                                contentDescription = "Information for Main"
+                                contentDescription = "Information for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -205,14 +260,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Einstellungen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.Settings,
-                                contentDescription = "Settings for Main"
+                                contentDescription = "Settings for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -229,14 +286,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Mitteilungen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.Notifications,
-                                contentDescription = "Notifications for Main"
+                                contentDescription = "Notifications for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -253,14 +312,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Feedback senden",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.ThumbUp,
-                                contentDescription = "Feedback for Main"
+                                contentDescription = "Feedback for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -277,14 +338,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Hilfe",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.Warning,
-                                contentDescription = "Help for Main"
+                                contentDescription = "Help for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -301,14 +364,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Abmelden",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.AutoMirrored.TwoTone.ExitToApp,
-                                contentDescription = "Logout for Main"
+                                contentDescription = "Logout for Main",
+                                tint = Color.White
                             )
                         },
                         onClick = {
@@ -398,7 +463,64 @@ fun MainScreen(navController: NavController) {
                     }
                 },
                 bottomBar = {
-                    BottomAppBar(
+                    NavigationBar(
+                        containerColor = Color(0xFF445a65),
+                        contentColor = Color.White
+                    ) {
+                        items.forEachIndexed { index, item ->
+                            NavigationBarItem(
+                                colors = NavigationBarItemDefaults.colors(
+                                    unselectedIconColor = Color.White,
+                                    selectedIconColor = Color.White,
+                                    selectedTextColor = Color.White,
+                                    indicatorColor = Color(0xFFFF8c00)
+                                ),
+                                label = {
+                                    Text(
+                                        text = item.title,
+                                        style = MaterialTheme.typography.labelSmall,
+                                    )
+                                },
+                                alwaysShowLabel = false,
+                                selected = selectedItemIndex == index,
+                                onClick = {
+                                    selectedItemIndex = index
+                                    navController.navigate(item.title) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {
+                                    BadgedBox(
+                                        badge = {
+                                            if(item.badgeCount != null) {
+                                                Badge {
+                                                    Text(
+                                                        text = item.badgeCount.toString()
+                                                    )
+                                                }
+                                            } else if(item.hasNews) {
+                                                Badge()
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = if(index == selectedItemIndex) {
+                                                item.selectedIcon
+                                            } else {
+                                                item.unselectedIcon
+                                            },
+                                            contentDescription = item.title + "for Main"
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    /*BottomAppBar(
                         containerColor = Color(0xFF445a65),
                         contentColor = Color.White
                     ) {
@@ -411,7 +533,7 @@ fun MainScreen(navController: NavController) {
                                 onClick = {
 
                                 },
-                                modifier = Modifier
+                                modifier = Modifier,
 
                             ) {
                                 Icon(
@@ -465,17 +587,22 @@ fun MainScreen(navController: NavController) {
                                 style =  MaterialTheme.typography.bodyLarge
                             )
                         }
-                    }
+                    }*/
                 }
             ) { innerPadding ->
-                // Main Content
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
+                        .padding(innerPadding)
                 ) {
-                    Text("Willkommen im Main Screen!", style = MaterialTheme.typography.bodyLarge)
+                    NavHost(
+                        navController = navController,
+                        startDestination = "Home",
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable("Home") { HomeScreen() }
+                        composable("Neues") { NewScreen() }
+                        composable("Spielen") { PlayScreen() }
+                    }
                 }
             }
         }

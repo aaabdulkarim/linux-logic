@@ -88,6 +88,7 @@ async def register(userModel : User, session: SessionDep):
         if user.email == email:
             return False
     
+    # Überprüfen ob das Password nicht leer ist
     if len(userModel.password_hash) < 1:
         return False
     
