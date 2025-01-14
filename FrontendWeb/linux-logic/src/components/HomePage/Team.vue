@@ -112,7 +112,7 @@ export default {
     padding: 2rem 0;
 }
 .TeamUnten {
-    background-color: white;
+    background-color: #f4f4f4;
     padding: 2rem 0;
     position:static;
 }
@@ -123,7 +123,7 @@ export default {
     justify-content: center;
     flex-wrap: nowrap;
     padding: 2rem;
-    background-color: white;
+    background-color: #f4f4f4;
 }
 
 .cards-container img {

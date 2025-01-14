@@ -24,12 +24,11 @@ h1 {
 }
 h2 {
   font-size: 2.5rem;
-  
   color: #569191;
 }
 h3 {
   font-size: 2rem;
-  line-height: 0.5rem;
+
   color: #569191;
 }
 h4 {

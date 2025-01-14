@@ -17,7 +17,6 @@
                         <p class="m-0">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. 
                         </p>
-                        <Button @click="toggleContent('berichtI')">Weiterlesen</Button>
                         <div v-if="showContent['berichtI']">
                             <h4>Literaturrecherche</h4>
                             <p class="m-0">
@@ -28,6 +27,7 @@
                                 Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. 
                             </p>
                         </div>
+                        <Button @click="toggleContent('berichtI')" :label="showContent['berichtI'] ? 'Weniger anzeigen' : 'Weiterlesen'"></Button>
                     </TabPanel>
 
                     <TabPanel value="1">
@@ -38,19 +38,19 @@
                             Excepteur sint occaecat cupidatat non proident. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. 
                             Sed libero elit, faucibus eu eleifend eget, vulputate et magna. Curabitur pretium tincidunt lacus. 
                         </p>
-                        <Button @click="toggleContent('berichtII')" >Weiterlesen</Button>
+                        
                         
                         <div v-if="showContent['berichtII']">
                             <h4>System-Design und Architektur</h4>
                             <p class="m-0">
                                 Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Sed libero elit, faucibus eu eleifend eget, vulputate et magna. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Sed libero elit, faucibus eu eleifend eget, vulputate et magna. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Sed libero elit, faucibus eu eleifend eget, vulputate et magna.
-                                
                             </p>
                             <h4>Testphase und Rückmeldungen</h4>
                             <p class="m-0">
                                 Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Sed libero elit, faucibus eu eleifend eget, vulputate et magna. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Sed libero elit, faucibus eu eleifend eget, vulputate et magna. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Sed libero elit, faucibus eu eleifend eget, vulputate et magna.
                             </p>
                         </div>
+                        <Button @click="toggleContent('berichtII')" :label="showContent['berichtII'] ? 'Weniger anzeigen' : 'Weiterlesen'"></Button>
                     </TabPanel>
 
 
