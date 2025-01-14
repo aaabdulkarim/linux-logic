@@ -1,3 +1,4 @@
+ 
 <!-- Logo einblendung nach scrollen geht noch nicht-->
 <template>
     <div class="header grid">
@@ -57,7 +58,7 @@
   }
   
   .icon {
-    font-size: 2rem;
+    font-size: 1.6rem;
     color: white;
     transition: transform 0.2s ease;
   }
