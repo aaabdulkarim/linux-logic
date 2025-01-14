@@ -2,10 +2,12 @@
     <div class="Umfrage grid">
         <div class="oben col-12">
             <h1 style="color: white;">Umfrage Linux-Kenntnisse</h1>
-            <p style="max-width: 40rem;">In einer groß angelegten Studie am TGM wurden 20 Schülerinnen und Schüler nach ihren Linux-Kenntnissen und wie sie diese erlangt haben, befragt. Sie sollten auf einer Skala von 1 bis 10 ihre Linux-Kenntnisse bewerten und angeben, wie sie diese Kenntnisse erworben haben.</p>
+            <p style="max-width: 60%;">In einer groß angelegten Studie am TGM wurden 20 Schülerinnen und Schüler nach ihren Linux-Kenntnissen und wie sie diese erlangt haben, befragt. Sie sollten auf einer Skala von 1 bis 10 ihre Linux-Kenntnisse bewerten und angeben, wie sie diese Kenntnisse erworben haben.</p>
         </div>
-        <div class="chart-container col-12">
-            <canvas id="linuxChart"></canvas>
+        <div>
+            <div class="chart-container col-12">
+                <canvas id="linuxChart"></canvas>
+            </div>
         </div>
         <div class="unten col-12 grid">
         <p-splitter class="splitter" >
@@ -14,14 +16,11 @@
                 <div>
                 <h2>Durchschnittliche Linux-Kenntnisse</h2>
                 <p>Durchschnittlicher Wert: Der durchschnittliche Kenntnisstand in Linux liegt bei etwa 5,1, was auf ein mittleres Niveau hinweist. Dies zeigt, dass die Gruppe insgesamt eine moderate Vertrautheit mit Linux hat, mit einigen Ausreißern nach oben und unten.</p>
-
                 <h2>Verteilung der Kenntnisse</h2>
                 <p>
-                    
-Hohe Kenntnisse (8-10): Vier Personen sind sehr erfahren, was auf intensives "Learning by Doing", privates Interesse oder häufigen Einsatz von Linux hinweist.
-Mittlere Kenntnisse (4-7): Die Mehrheit hat grundlegende bis solide Kenntnisse, meist durch Schule, "Learning by Doing" und Online-Ressourcen erworben.
-Niedrige Kenntnisse (1-3): Vier Personen haben nur geringe Kenntnisse, vermutlich durch begrenzten Kontakt im schulischen Umfeld.                </p>
-                
+                Hohe Kenntnisse (8-10): Vier Personen sind sehr erfahren, was auf intensives "Learning by Doing", privates Interesse oder häufigen Einsatz von Linux hinweist.
+                Mittlere Kenntnisse (4-7): Die Mehrheit hat grundlegende bis solide Kenntnisse, meist durch Schule, "Learning by Doing" und Online-Ressourcen erworben. 
+                Niedrige Kenntnisse (1-3): Vier Personen haben nur geringe Kenntnisse, vermutlich durch begrenzten Kontakt im schulischen Umfeld.                </p>
                 <h2>Lernmethoden</h2>
                 <p>
                 Learning by Doing: Diese Methode spielt eine zentrale Rolle beim Erlernen von Linux und wird von Personen mit hohen und mittleren Kenntnissen häufig genutzt.
@@ -138,10 +137,8 @@ export default {
     padding-top: 3rem;
     padding-bottom: 3rem;
 }
-canvas {  
-    width: 100% !important; /* Erzwingt die Anpassung an die Containerbreite */
-    height: auto !important; /* Erzwingt die Anpassung an die Containerhöhe */   
-}
+
+
 .Umfrage{
     color: #569191;
     background-color:white;
@@ -151,6 +148,10 @@ canvas {
     background-color: white;
     border: none;
 
+}
+canvas {  
+    width: 100% !important; /* Erzwingt die Anpassung an die Containerbreite */
+    height: auto !important; /* Skaliert die Höhe entsprechend */
 }
 .splitter-left {
     padding-right: 2rem;

@@ -1,6 +1,5 @@
 <template>
-
-    <div class="TeamOben grid" >
+    <div class="TeamOben grid">
         <h1 style="color: white;">Team</h1>
     </div>
     
@@ -23,7 +22,13 @@
                 </template>
                 <template #footer>
                     <div class="flex gap-4 mt-1">
-                        <Button label="Kontakt" severity="secondary" outlined class="w-full" />
+                        <Button 
+                            label="Kontakt" 
+                            severity="secondary" 
+                            outlined 
+                            class="w-full" 
+                            @click="sendMail(member.email)" 
+                        />
                     </div>
                 </template>
             </Card>
@@ -35,11 +40,19 @@
 import Card from 'primevue/card';
 import Button from 'primevue/button';
 
-
 export default {
     components: {
         Card,
         Button
+    },
+    methods: {
+        sendMail(email) {
+            if (typeof window !== 'undefined' && email) {
+                window.location.href = 'mailto:' + email;
+            } else {
+                console.error('E-Mail oder Window-Objekt ist nicht verfügbar.');
+            }
+        },
     },
     data() {
         return {
@@ -50,6 +63,7 @@ export default {
                     role: "Projektleiter",
                     image: require("../../assets/AA.webp"),
                     description: "Organisation und Koordination des gesamten Projekts.",
+                    email: "aabdulkarim@student.tgm.ac.at"
                 },
                 {
                     id: 2,
@@ -57,6 +71,7 @@ export default {
                     role: "Frontend-Design",
                     image: require("../../assets/BE.webp"),
                     description: "Gestaltung der Benutzeroberfläche und Optimierung der Nutzererfahrung.",
+                    email: "beder@student.tgm.ac.at"
                 },
                 {
                     id: 3,
@@ -64,6 +79,7 @@ export default {
                     role: "Mobile-App Entwicklung",
                     image: require("../../assets/BG.webp"),
                     description: "Entwicklung und Implementierung der Mobile-App.",
+                    email: "bgogoladze@student.tgm.ac.at"
                 },
                 {
                     id: 4,
@@ -71,6 +87,7 @@ export default {
                     role: "Web-App-Entwicklung",
                     image: require("../../assets/AK.webp"),
                     description: "Entwicklung und Implementierung der Web-App.",
+                    email: "akarakassoglou@student.tgm.ac.at"
                 },
                 {
                     id: 5,
@@ -78,6 +95,7 @@ export default {
                     role: "Backend-Entwicklung",
                     image: require("../../assets/SR.webp"),
                     description: "Entwicklung der Backend-Infrastruktur und der Datenbankanbindungen.",
+                    email: "srychkov@student.tgm.ac.at"
                 },
             ],
         };
