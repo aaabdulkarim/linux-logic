@@ -1,12 +1,13 @@
 <template>
   <div class="Meilenstein grid">
     <div class="col-12">
-      <h1 style="padding-top: 10rem; padding-left: 10rem; padding-bottom: 4rem;">Meilensteinplan</h1>
-
+      <div class="überschrift">
+      <h1>Meilensteinplan</h1>
+      </div>
       <Timeline :value="events" class="customized-timeline">
         <!-- Linkes Datum -->
         <template #opposite="slotProps">
-          <small class="event-date">{{ slotProps.item.date }}</small>
+          <h5 class="event-date">{{ slotProps.item.date }}</h5>
         </template>
         
         <!-- Marker -->
@@ -141,6 +142,12 @@ export default {
   background-color: white;
   color: #3D525C;
 }
+.überschrift {
+  padding-top: 10rem; 
+  padding-left: 10rem; 
+  padding-bottom: 4rem;
+  text-align: center;
+}
 
 .event-title {
   font-size: 1.8rem;
@@ -156,7 +163,8 @@ export default {
 .event-date {
   font-size: 1rem;
   color: #808080;
-  margin-top: 0;
+  margin-bottom: 0rem;
+  margin-top: 10px;
 }
 .customized-timeline .p-timeline-event-marker {
   width: 2.2rem;

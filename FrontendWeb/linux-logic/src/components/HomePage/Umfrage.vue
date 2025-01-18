@@ -4,10 +4,8 @@
             <h1 style="color: white;">Umfrage Linux-Kenntnisse</h1>
             <p style="max-width: 60%;">In einer groß angelegten Studie am TGM wurden 20 Schülerinnen und Schüler nach ihren Linux-Kenntnissen und wie sie diese erlangt haben, befragt. Sie sollten auf einer Skala von 1 bis 10 ihre Linux-Kenntnisse bewerten und angeben, wie sie diese Kenntnisse erworben haben.</p>
         </div>
-        <div>
-            <div class="chart-container col-12">
-                <canvas id="linuxChart"></canvas>
-            </div>
+        <div class="chart-container">
+            <canvas id="linuxChart"></canvas>
         </div>
         <div class="unten col-12 grid">
         <p-splitter class="splitter" >
@@ -119,7 +117,6 @@ export default {
 .chart-container {
     color: #569191;
     background-color:white ;
-    text-align: left; 
     padding-left: 8rem;
     padding-right: 8rem;
     justify-content: center;
