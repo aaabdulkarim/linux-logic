@@ -48,13 +48,14 @@ export default {
   data() {
     return {
       events: [
-        {
+            {
           date: "09.09.24",
           status: "PROJEKTSTART",
           event: "Projektstart",
           details: "Kick-off des Diplomprojekts Linux-Logic, Definition von Zielen, Teamaufstellung und DA-Antrag",
           color: "#569191",
-          icon: "pi pi-check"
+          icon: "pi pi-check",
+          direction: "opposite", // This will display on the opposite side
         },
         {
           date: "14.10.24",
@@ -62,7 +63,8 @@ export default {
           event: "Machbarkeitsstudie abgeschlossen",
           details: "Fertigstellung der Machbarkeitsstudie, Evaluierung der technischen Anforderungen",
           color: "#569191",
-          icon: "pi pi-check"
+          icon: "pi pi-check",
+          direction: "normal", // Default side
         },
         {
           date: "08.11.24",
@@ -70,7 +72,8 @@ export default {
           event: "Prototyp fertiggestellt",
           details: "Fertigstellung eines Prototyps für eine visuelle und funktionelle Vorstellung",
           color: "#569191",
-          icon: "pi pi-check"
+          icon: "pi pi-check",
+          direction: "opposite", 
         },
         {
           date: "27.01.25",
@@ -78,7 +81,8 @@ export default {
           event: "Beta-Version entwickelt",
           details: "Erster Release der funktionierenden Applikationen",
           color: "#808080",
-          icon: "pi pi-check"
+          icon: "pi pi-check",
+          direction: "normal", 
         },
         {
           date: "21.02.25",
@@ -86,8 +90,9 @@ export default {
           event: "Testphase abgeschlossen",
           details: "Tests, Fehlerbehebungen und Optimierungen bei Bedarf",
           color: "#808080",
-          icon: "pi pi-check"
-          
+          icon: "pi pi-check",
+          direction: "opposite"
+
         },
         {
           date: "01.04.25",
@@ -95,7 +100,9 @@ export default {
           event: "Diplomarbeit vollständig",
           details: "Die Diplomarbeit schriftlich festgehalten und bereit für Einreichung",
           color: "#808080",
-          icon: "pi pi-check"
+          icon: "pi pi-check",
+          direction: "normal", 
+
         },
         {
           date: "08.04.25",
@@ -103,7 +110,8 @@ export default {
           event: "Projektabschluss",
           details: "Abschluss des Projekts, Einreichung der Diplomarbeit",
           color: "#808080",
-          icon: "pi pi-check"
+          icon: "pi pi-check",
+          direction: "opposite", 
         },
       ]
     }
@@ -136,6 +144,12 @@ export default {
 </script>
 
 <style scoped>
+.Meilenstein h1 {
+  text-align: center;
+  padding: 10rem 0 4rem 0; /* Zentriert den Titel und hält Abstand */
+}
+
+
 .Meilenstein {
   text-align: left; 
   background-color: white;
