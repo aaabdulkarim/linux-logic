@@ -4,12 +4,10 @@
             <h1 style="color: white;">Umfrage Linux-Kenntnisse</h1>
             <p style="max-width: 60%;">In einer groß angelegten Studie am TGM wurden 20 Schülerinnen und Schüler nach ihren Linux-Kenntnissen und wie sie diese erlangt haben, befragt. Sie sollten auf einer Skala von 1 bis 10 ihre Linux-Kenntnisse bewerten und angeben, wie sie diese Kenntnisse erworben haben.</p>
         </div>
-        <div>
-            <div class="chart-container col-12">
-                <canvas id="linuxChart"></canvas>
-            </div>
+        <div class="chart-container col-12">
+            <canvas id="linuxChart"></canvas>
         </div>
-        <div class="unten col-12 grid">
+        <div class="unten col-12 md-8grid">
         <p-splitter class="splitter" >
             <!-- Linke Seite: Wissensübersicht und Verteilung -->
             <p-splitter-panel class="splitter-left" minSize="50" size="75">
@@ -119,7 +117,6 @@ export default {
 .chart-container {
     color: #569191;
     background-color:white ;
-    text-align: left; 
     padding-left: 8rem;
     padding-right: 8rem;
     justify-content: center;
@@ -137,8 +134,6 @@ export default {
     padding-top: 3rem;
     padding-bottom: 3rem;
 }
-
-
 .Umfrage{
     color: #569191;
     background-color:white;
@@ -151,7 +146,7 @@ export default {
 }
 canvas {  
     width: 100% !important; /* Erzwingt die Anpassung an die Containerbreite */
-    height: auto !important; /* Skaliert die Höhe entsprechend */
+    height: fit-content !important; /* Erzwingt die Anpassung an die Containerhöhe */
 }
 .splitter-left {
     padding-right: 2rem;
