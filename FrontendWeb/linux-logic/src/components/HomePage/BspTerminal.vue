@@ -23,7 +23,7 @@ export default {
       fitAddon: null,
       messages: [
         'Hallo Welt!',
-        'Linux-Logic: Dein Einsieg in Linux!',
+        'Linux-Logic: Dein Einstieg in Linux!',
         'Linux Leicht Lernen!',
         'Befehle schreiben. Probleme lösen.',
         'Learning by Doing!',
@@ -42,7 +42,7 @@ export default {
     this.terminal = new Terminal({
       cursorBlink: true,  // Cursor blinks to improve visibility
       rows: 30,           // Set initial number of rows
-      cols: 800,           // Set initial number of columns
+      cols: 420,           // Set initial number of columns
       theme: {
         background: '#1e1e1e', // Dark background color for better contrast
         foreground: '#dcdcdc', // Light text color
@@ -76,7 +76,7 @@ export default {
 
     typeTerminal() {
       const currentMessage = this.messages[this.currentMessageIndex];
-      const prompt = "logic@linux:~$ "; // Terminal prompt
+      const prompt = " logic@linux:~$ "; // Terminal prompt
 
       if (this.currentCharIndex === 0) {
         this.terminal.write(prompt); // Write the prompt before the first message
