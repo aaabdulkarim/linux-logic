@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            enableEdgeToEdge()
             Linux_logic_appTheme {
                 LinuxLogicNavigator()
             }

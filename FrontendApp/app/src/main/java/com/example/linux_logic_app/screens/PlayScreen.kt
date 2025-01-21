@@ -1,70 +1,40 @@
 package com.example.linux_logic_app.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import androidx.compose.animation.*
 import androidx.compose.foundation.Image
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.R
 
-@Composable
-fun PlayScreen() {
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .padding(8.dp)
-    ) {
-        CourseListScreen()
-    }
-
-}
-
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun CourseListScreen() {
+fun PlayScreen() {
     var selectedCourse by remember { mutableStateOf<Course?>(null) }
 
-    SharedTransitionLayout(modifier = Modifier.fillMaxSize()) {
+    SharedTransitionLayout(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         LazyColumn(
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(courseList) { index, course ->
+            itemsIndexed(courseList) { _, course ->
                 AnimatedVisibility(
                     visible = course != selectedCourse,
                     enter = fadeIn() + scaleIn(),
@@ -75,63 +45,27 @@ fun CourseListScreen() {
                         modifier = Modifier
                             .sharedBounds(
                                 sharedContentState = rememberSharedContentState(key = "${course.name}-bounds"),
-                                animatedVisibilityScope = this,
-                                clipInOverlayDuringTransition = OverlayClip(RoundedCornerShape(12.dp))
+                                animatedVisibilityScope = this
                             )
-                            .background(Color.White, RoundedCornerShape(12.dp))
-                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xFF569191), RoundedCornerShape(16.dp))
+                            .clip(RoundedCornerShape(32.dp))
                     ) {
-                        CourseContents(
-                            course = course,
-                            modifier = Modifier.sharedElement(
-                                state = rememberSharedContentState(key = course.name),
-                                animatedVisibilityScope = this@AnimatedVisibility
-                            ),
-                            onClick = {
-                                selectedCourse = course
-                            }
-                        )
+                        CourseCard(course = course, onClick = { selectedCourse = course })
                     }
                 }
             }
         }
+
         CourseEditDetails(
             course = selectedCourse,
-            onConfirmClick = {
-                selectedCourse = null
-            }
+            onConfirmClick = { selectedCourse = null }
         )
-    }
-}
-
-@Composable
-fun CourseContents(course: Course, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clickable { onClick() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(id = course.imageRes),
-            contentDescription = course.name,
-            modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape)
-                .background(Color.Gray)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(course.name, style = MaterialTheme.typography.bodyMedium)
-            Text(course.description, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-        }
     }
 }
 
 @Composable
 fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
-    if (course != null) {
+    course?.let {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -147,22 +81,75 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = course.imageRes),
-                    contentDescription = course.name,
+                    painter = painterResource(id = it.imageRes),
+                    contentDescription = it.name,
                     modifier = Modifier
                         .size(128.dp)
-                        .clip(CircleShape)
+                        .clip(RoundedCornerShape(50))
                         .background(Color.Gray)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(course.name, style = MaterialTheme.typography.bodyMedium)
+                Text(it.name, style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(course.description, style = MaterialTheme.typography.bodySmall)
+                Text(it.description, style = MaterialTheme.typography.bodySmall)
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onConfirmClick) {
                     Text("Zurück")
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CourseCard(course: Course, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .height(200.dp)
+                .fillMaxWidth()
+        ) {
+            // Hintergrundbild
+            Image(
+                painter = painterResource(id = course.imageRes),
+                contentDescription = course.name,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
+
+            // Gradient-Overlay
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.7f)
+                            )
+                        )
+                    )
+                    .height(80.dp)
+            )
+
+            // Text für den Kursnamen
+            Text(
+                text = course.name,
+                style = MaterialTheme.typography.bodyMedium.copy(color = Color.White),
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp)
+            )
         }
     }
 }
@@ -177,8 +164,8 @@ val courseList = listOf(
     Course("Linux Basics", "Lernen Sie die Grundlagen von Linux.", R.drawable.linux_basics_course),
     Course("Advanced Bash", "Erstellen Sie leistungsstarke Bash-Skripte.", R.drawable.bash_course),
     Course("Docker Essentials", "Beherrschen Sie Docker-Container.", R.drawable.docker_course),
-    Course("Linux Dateisystem und Navigation", "Beherrschen Sie Docker-Container.", R.drawable.dateisystem_navigation_course),
-    Course("Textbearbeitung mit vim und nano", "Beherrschen Sie Docker-Container.", R.drawable.nano_vs_vim_course),
-    Course("Linux Systemadministration", "Beherrschen Sie Docker-Container.", R.drawable.systemadministartion_course),
-    Course("Netzwerkverwaltung unter Linux", "Beherrschen Sie Docker-Container.", R.drawable.netzwerkverwaltung_course)
+    Course("Linux Dateisystem und Navigation", "Erlernen Sie das Dateisystem und die Navigation unter Linux.", R.drawable.dateisystem_navigation_course),
+    Course("Textbearbeitung mit vim und nano", "Erlernen Sie grundlegende Textbearbeitung unter Linux.", R.drawable.nano_vs_vim_course),
+    Course("Linux Systemadministration", "Erlernen Sie die Grundlagen der Systemadministration unter Linux.", R.drawable.systemadministartion_course),
+    Course("Netzwerkverwaltung unter Linux", "Verwalten Sie Netzwerke unter Linux.", R.drawable.netzwerkverwaltung_course)
 )

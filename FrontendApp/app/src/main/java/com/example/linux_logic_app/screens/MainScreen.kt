@@ -3,6 +3,7 @@ package com.example.linux_logic_app.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -597,7 +598,8 @@ fun MainScreen(navController: NavController) {
                     NavHost(
                         navController = navController,
                         startDestination = "Home",
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier
+                            .fillMaxSize()
                     ) {
                         composable("Home") { HomeScreen() }
                         composable("Neues") { NewScreen() }
