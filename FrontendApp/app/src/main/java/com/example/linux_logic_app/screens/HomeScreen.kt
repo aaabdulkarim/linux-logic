@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.linux_logic_app.components.Terminal
 
 @Composable
 fun HomeScreen() {
@@ -20,6 +19,5 @@ fun HomeScreen() {
         Text(
             text = "Home Page"
         )
-        Terminal()
     }
 }
