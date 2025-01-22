@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -30,7 +31,7 @@ fun PlayScreen() {
             .fillMaxSize()
     ) {
         LazyColumn(
-            contentPadding = PaddingValues(8.dp),
+            contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxSize()
         ) {
@@ -75,8 +76,8 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
             Column(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(32.dp)
                     .background(Color.White, RoundedCornerShape(16.dp))
+                    .fillMaxWidth()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -84,17 +85,51 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                     painter = painterResource(id = it.imageRes),
                     contentDescription = it.name,
                     modifier = Modifier
-                        .size(128.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.Gray)
+                        .size(200.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(it.name, style = MaterialTheme.typography.bodyMedium)
+                Text(it.name, style = MaterialTheme.typography.labelSmall)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(it.description, style = MaterialTheme.typography.bodySmall)
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = onConfirmClick) {
-                    Text("Zurück")
+                Row {
+                    Button(
+                        onConfirmClick,
+                        modifier = Modifier
+                            .padding(start = 16.dp, end = 16.dp)
+                            .weight(1f),
+                        contentPadding = PaddingValues(16.dp),
+                        colors = ButtonDefaults.buttonColors().copy(
+                            containerColor = Color(0xFF445a65),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color(0xFFCECECE),
+                            disabledContentColor = Color(0xFF7F7F7F)
+                        ),
+                    ) {
+                        Text(
+                            text = "Zurück",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                    Button(
+                        onConfirmClick,
+                        modifier = Modifier
+                            .padding(start = 16.dp, end = 16.dp)
+                            .weight(1f),
+                        contentPadding = PaddingValues(16.dp),
+                        colors = ButtonDefaults.buttonColors().copy(
+                            containerColor = Color(0xFFFF8c00),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color(0xFFCECECE),
+                            disabledContentColor = Color(0xFF7F7F7F)
+                        ),
+                    ) {
+                        Text(
+                            text = "Spielen",
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
                 }
             }
         }
@@ -107,7 +142,11 @@ fun CourseCard(course: Course, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { onClick() },
+            .clickable {
+                onClick(
+
+                )
+            },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -135,8 +174,9 @@ fun CourseCard(course: Course, onClick: () -> Unit) {
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                Color.Black.copy(alpha = 0.7f)
-                            )
+                                Color.Black
+                            ),
+                            startY = 70f
                         )
                     )
                     .height(80.dp)
@@ -145,9 +185,10 @@ fun CourseCard(course: Course, onClick: () -> Unit) {
             // Text für den Kursnamen
             Text(
                 text = course.name,
-                style = MaterialTheme.typography.bodyMedium.copy(color = Color.White),
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White,
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
+                    .align(Alignment.BottomCenter)
                     .padding(16.dp)
             )
         }
