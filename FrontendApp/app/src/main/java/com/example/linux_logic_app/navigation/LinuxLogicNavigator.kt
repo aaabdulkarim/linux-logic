@@ -11,8 +11,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.screens.LoginScreen
 import com.example.linux_logic_app.screens.MainScreen
-import com.example.linux_logic_app.screens.NewScreen
-import com.example.linux_logic_app.screens.PlayScreen
 import com.example.linux_logic_app.screens.RegisterScreen
 import com.example.linux_logic_app.screens.StartScreen
 

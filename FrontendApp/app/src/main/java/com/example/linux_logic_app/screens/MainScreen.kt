@@ -601,9 +601,9 @@ fun MainScreen(navController: NavController) {
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        composable("Home") { HomeScreen() }
-                        composable("Neues") { NewScreen() }
-                        composable("Spielen") { PlayScreen() }
+                        composable("home") { HomeScreen() }
+                        composable("new") { NewScreen() }
+                        composable("play") { PlayScreen() }
                     }
                 }
             }
