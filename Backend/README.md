@@ -138,6 +138,11 @@ Standard Befehle ausprobieren
 
 #### Docker Befehle zum Testen
 
+Im Backend/dockerfolder
+
 ``docker build -t newone .``
 
 ``docker run -p 1000:1000 newone``
+
+
+und *dockersocketmain.py* starten wie bei [Ausführen-der-Api](#ausführen-der-api) nur dass, der Name der Datei *dockersocketmain.py* ist
