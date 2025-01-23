@@ -23,38 +23,38 @@ data class Course(
  */
 val courseList = listOf(
     Course(
-        name = "Linux Basics",
-        description = "Lernen Sie die Grundlagen von Linux.",
+        name = "Linux Grundlagen",
+        description = "Deine ersten Schritte: Lerne die Grundlagen des Linux-Betriebssystems kennen. Du wirst verstehen, wie du dich im Terminal zurechtfindest, Dateien verwaltest und einfache Aufgaben automatisierst.",
         imageRes = R.drawable.linux_basics_course
     ),
     Course(
-        name = "Advanced Bash",
-        description = "Erstellen Sie leistungsstarke Bash-Skripte.",
+        name = "Fortgeschrittene Bash",
+        description = "Werde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.",
         imageRes = R.drawable.bash_course
     ),
     Course(
-        name = "Docker Essentials",
-        description = "Beherrschen Sie Docker-Container.",
+        name = "Docker Kenntnisse",
+        description = "Beherrsche Docker: Entwickle und verwalte moderne Anwendungen mit Docker Containern. Lerne, wie du deine Anwendungen portabel und skalierbar machst.",
         imageRes = R.drawable.docker_course
     ),
     Course(
         name = "Linux Dateisystem und Navigation",
-        description = "Erlernen Sie das Dateisystem und die Navigation unter Linux.",
+        description = "Navigiere durch das Linux-Dateisystem: Versteh den Aufbau des Linux-Dateisystems und wie du effizient darin navigierst. Lerne, wie du Dateien und Verzeichnisse verwaltest und suchst.",
         imageRes = R.drawable.dateisystem_navigation_course
     ),
     Course(
         name = "Textbearbeitung mit vim und nano",
-        description = "Erlernen Sie grundlegende Textbearbeitung unter Linux.",
+        description = "Werde zum Texteditor-Meister: Lerne die leistungsstarken Texteditoren vim und nano kennen und werde zum Profi in der Textbearbeitung.",
         imageRes = R.drawable.nano_vs_vim_course
     ),
     Course(
         name = "Linux Systemadministration",
-        description = "Erlernen Sie die Grundlagen der Systemadministration unter Linux.",
+        description = "Werde zum Linux-Administrator: Installiere, konfiguriere und verwalte deine eigenen Linux-Systeme. Lerne, wie du Probleme behebst und dein System optimierst.",
         imageRes = R.drawable.systemadministartion_course
     ),
     Course(
         name = "Netzwerkverwaltung unter Linux",
-        description = "Verwalten Sie Netzwerke unter Linux.",
+        description = "Baue deine eigenen Netzwerke: Konfiguriere Netzwerke und richte verschiedene Netzwerkdienste ein. Lerne, wie du mehrere Computer miteinander verbindest und sicher kommunizierst.",
         imageRes = R.drawable.netzwerkverwaltung_course
     )
 )

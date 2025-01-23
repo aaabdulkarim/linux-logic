@@ -16,18 +16,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +46,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.navigation.Course
 import com.example.linux_logic_app.navigation.courseList
@@ -74,7 +79,7 @@ fun PlayScreen() {
                                 animatedVisibilityScope = this
                             )
                             .background(Color(0xFF569191), RoundedCornerShape(16.dp))
-                            .clip(RoundedCornerShape(32.dp))
+                            .clip(RoundedCornerShape(16.dp))
                     ) {
                         CourseCard(course = course, onClick = { selectedCourse = course })
                     }
@@ -97,32 +102,48 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                 .fillMaxSize()
                 .background(Color(0x80000000))
                 .clickable { onConfirmClick() }
+                .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .align(Alignment.Center)
+                    .fillMaxHeight(0.7f)
                     .background(Color.White, RoundedCornerShape(16.dp))
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
                     painter = painterResource(id = it.imageRes),
                     contentDescription = it.name,
                     modifier = Modifier
-                        .size(200.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .fillMaxWidth()
+                        .fillMaxWidth() // Use fillMaxWidth instead of weight
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                    contentScale = ContentScale.Crop
                 )
-                Text(it.name, style = MaterialTheme.typography.labelSmall)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(it.description, style = MaterialTheme.typography.bodySmall)
+
                 Spacer(modifier = Modifier.height(16.dp))
-                Row {
+
+                Text(
+                    it.name,
+                    style = MaterialTheme.typography.labelSmall
+                )
+
+                Text(
+                    it.description,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+
+                Spacer(modifier = Modifier.weight(1f)) // Use weight to fill remaining space
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Button(
                         onConfirmClick,
                         modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp)
+                            .padding(horizontal = 16.dp)
                             .weight(1f),
                         contentPadding = PaddingValues(16.dp),
                         colors = ButtonDefaults.buttonColors().copy(
@@ -140,11 +161,11 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                     Button(
                         onConfirmClick,
                         modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp)
+                            .padding(horizontal = 16.dp)
                             .weight(1f),
                         contentPadding = PaddingValues(16.dp),
                         colors = ButtonDefaults.buttonColors().copy(
-                            containerColor = Color(0xFFFF8c00),
+                            containerColor = Color(0xFF569191),
                             contentColor = Color.White,
                             disabledContainerColor = Color(0xFFCECECE),
                             disabledContentColor = Color(0xFF7F7F7F)
@@ -215,6 +236,27 @@ fun CourseCard(course: Course, onClick: () -> Unit) {
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ExpandableText(
+    text: String,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit
+) {
+    Column {
+        Text(
+            text = text,
+            maxLines = if (expanded) Int.MAX_VALUE else 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        IconButton(onClick = { onExpandedChange(!expanded) }) {
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) "Ausblenden" else "Anzeigen"
             )
         }
     }
