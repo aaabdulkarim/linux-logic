@@ -600,9 +600,9 @@ fun MainScreen() {
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        composable("home") { HomeScreen() }
-                        composable("new") { NewScreen() }
-                        composable("play") { PlayScreen() }
+                        composable("Home") { HomeScreen() }
+                        composable("Neues") { NewScreen() }
+                        composable("Spielen") { PlayScreen() }
                     }
                 }
             }
