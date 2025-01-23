@@ -3,6 +3,7 @@ package com.example.linux_logic_app.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -44,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,8 +59,7 @@ fun PlayScreen() {
     var selectedCourse by remember { mutableStateOf<Course?>(null) }
 
     SharedTransitionLayout(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
@@ -87,15 +88,15 @@ fun PlayScreen() {
             }
         }
 
-        CourseEditDetails(
-            course = selectedCourse,
-            onConfirmClick = { selectedCourse = null }
-        )
+        CourseEditDetails(course = selectedCourse, onConfirmClick = { selectedCourse = null })
     }
 }
 
 @Composable
 fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
+    var isExpanded by remember { mutableStateOf(false) }
+    val rotationAngle by animateFloatAsState(targetValue = if (isExpanded) 180f else 0f, label = "Rotation of Arrow-Icon")
+
     course?.let {
         Box(
             modifier = Modifier
@@ -117,7 +118,7 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth() // Use fillMaxWidth instead of weight
                         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.FillWidth
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -127,12 +128,33 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                     style = MaterialTheme.typography.labelSmall
                 )
 
-                Text(
-                    it.description,
+                Row(
                     modifier = Modifier
-                        .padding(16.dp),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = if (isExpanded) "Collapse" else "Expand",
+                        modifier = Modifier
+                            .graphicsLayer(rotationZ = rotationAngle)
+                            .clickable {
+                                isExpanded = !isExpanded
+                            },
+                    )
+
+                    Text(
+                        it.description,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .clickable {
+                                isExpanded = !isExpanded
+                            },
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
 
                 Spacer(modifier = Modifier.weight(1f)) // Use weight to fill remaining space
 
@@ -154,8 +176,7 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                         ),
                     ) {
                         Text(
-                            text = "Zurück",
-                            style = MaterialTheme.typography.labelSmall
+                            text = "Zurück", style = MaterialTheme.typography.labelSmall
                         )
                     }
                     Button(
@@ -172,8 +193,7 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                         ),
                     ) {
                         Text(
-                            text = "Spielen",
-                            style = MaterialTheme.typography.labelSmall
+                            text = "Spielen", style = MaterialTheme.typography.labelSmall
                         )
                     }
                 }
@@ -219,10 +239,8 @@ fun CourseCard(course: Course, onClick: () -> Unit) {
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                Color.Transparent,
-                                Color.Black
-                            ),
-                            startY = 70f
+                                Color.Transparent, Color.Black
+                            ), startY = 70f
                         )
                     )
                     .height(80.dp)
@@ -236,27 +254,6 @@ fun CourseCard(course: Course, onClick: () -> Unit) {
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun ExpandableText(
-    text: String,
-    expanded: Boolean,
-    onExpandedChange: (Boolean) -> Unit
-) {
-    Column {
-        Text(
-            text = text,
-            maxLines = if (expanded) Int.MAX_VALUE else 2,
-            overflow = TextOverflow.Ellipsis
-        )
-        IconButton(onClick = { onExpandedChange(!expanded) }) {
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = if (expanded) "Ausblenden" else "Anzeigen"
             )
         }
     }
