@@ -29,7 +29,7 @@ val courseList = listOf(
     ),
     Course(
         name = "Fortgeschrittene Bash",
-        description = "Werde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.",
+        description = "Werde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.\nWerde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.\nWerde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.\nWerde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.",
         imageRes = R.drawable.bash_course
     ),
     Course(

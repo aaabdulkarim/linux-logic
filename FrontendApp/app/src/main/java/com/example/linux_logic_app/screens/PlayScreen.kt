@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,7 +31,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +46,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.navigation.Course
 import com.example.linux_logic_app.navigation.courseList
@@ -107,7 +104,6 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxHeight(0.7f)
                     .background(Color.White, RoundedCornerShape(16.dp))
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,73 +124,78 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                     style = MaterialTheme.typography.labelSmall
                 )
 
-                Row(
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.Top
+                        .padding(16.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
-                        contentDescription = if (isExpanded) "Collapse" else "Expand",
-                        modifier = Modifier
-                            .graphicsLayer(rotationZ = rotationAngle)
-                            .clickable {
-                                isExpanded = !isExpanded
-                            },
-                    )
-
-                    Text(
-                        it.description,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .clickable {
-                                isExpanded = !isExpanded
-                            },
-                        maxLines = if (isExpanded) Int.MAX_VALUE else 1,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f)) // Use weight to fill remaining space
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        onConfirmClick,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .weight(1f),
-                        contentPadding = PaddingValues(16.dp),
-                        colors = ButtonDefaults.buttonColors().copy(
-                            containerColor = Color(0xFF445a65),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color(0xFFCECECE),
-                            disabledContentColor = Color(0xFF7F7F7F)
-                        ),
-                    ) {
-                        Text(
-                            text = "Zurück", style = MaterialTheme.typography.labelSmall
-                        )
+                    item {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.KeyboardArrowDown,
+                                contentDescription = if (isExpanded) "Collapse" else "Expand",
+                                modifier = Modifier
+                                    .graphicsLayer(rotationZ = rotationAngle)
+                                    .clickable {
+                                        isExpanded = !isExpanded
+                                    },
+                            )
+                            Text(
+                                text = it.description,
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .clickable {
+                                        isExpanded = !isExpanded
+                                    },
+                                maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
                     }
-                    Button(
-                        onConfirmClick,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .weight(1f),
-                        contentPadding = PaddingValues(16.dp),
-                        colors = ButtonDefaults.buttonColors().copy(
-                            containerColor = Color(0xFF569191),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color(0xFFCECECE),
-                            disabledContentColor = Color(0xFF7F7F7F)
-                        ),
-                    ) {
-                        Text(
-                            text = "Spielen", style = MaterialTheme.typography.labelSmall
-                        )
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Button(
+                                onConfirmClick,
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .weight(1f),
+                                contentPadding = PaddingValues(16.dp),
+                                colors = ButtonDefaults.buttonColors().copy(
+                                    containerColor = Color(0xFF445a65),
+                                    contentColor = Color.White,
+                                    disabledContainerColor = Color(0xFFCECECE),
+                                    disabledContentColor = Color(0xFF7F7F7F)
+                                ),
+                            ) {
+                                Text(
+                                    text = "Zurück", style = MaterialTheme.typography.labelSmall
+                                )
+                            }
+                            Button(
+                                onConfirmClick,
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .weight(1f),
+                                contentPadding = PaddingValues(16.dp),
+                                colors = ButtonDefaults.buttonColors().copy(
+                                    containerColor = Color(0xFF569191),
+                                    contentColor = Color.White,
+                                    disabledContainerColor = Color(0xFFCECECE),
+                                    disabledContentColor = Color(0xFF7F7F7F)
+                                ),
+                            ) {
+                                Text(
+                                    text = "Spielen", style = MaterialTheme.typography.labelSmall
+                                )
+                            }
+                        }
                     }
                 }
             }
