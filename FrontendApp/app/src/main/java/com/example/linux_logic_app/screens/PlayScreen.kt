@@ -122,85 +122,93 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row {
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
-                        contentDescription = if (isExpanded) "Collapse" else "Expand",
-                        modifier = Modifier
-                            .graphicsLayer(rotationZ = rotationAngle)
-                            .clickable {
-                                isExpanded = !isExpanded
-                            },
-                    )
-
-                    Text(
-                        it.name,
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                }
-
-                LazyColumn(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                        .clickable {
+                            isExpanded = !isExpanded
+                        },
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    item {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = it.description,
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .clickable {
-                                        isExpanded = !isExpanded
-                                    },
-                                maxLines = if (isExpanded) Int.MAX_VALUE else 2,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                    }
-                    item {
-                        Row(
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            contentDescription = if (isExpanded) "Collapse" else "Expand",
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Button(
-                                onConfirmClick,
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp)
-                                    .weight(1f),
-                                contentPadding = PaddingValues(16.dp),
-                                colors = ButtonDefaults.buttonColors().copy(
-                                    containerColor = Color(0xFF445a65),
-                                    contentColor = Color.White,
-                                    disabledContainerColor = Color(0xFFCECECE),
-                                    disabledContentColor = Color(0xFF7F7F7F)
-                                ),
+                                .graphicsLayer(rotationZ = rotationAngle)
+                        )
+
+                        Text(
+                            it.name,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        item {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Zurück", style = MaterialTheme.typography.labelSmall
+                                    text = it.description,
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp),
+                                    maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                                    style = MaterialTheme.typography.bodyLarge
                                 )
                             }
-                            Button(
-                                onConfirmClick,
+                        }
+                        item {
+                            Row(
                                 modifier = Modifier
-                                    .padding(horizontal = 8.dp)
-                                    .weight(1f),
-                                contentPadding = PaddingValues(16.dp),
-                                colors = ButtonDefaults.buttonColors().copy(
-                                    containerColor = Color(0xFF569191),
-                                    contentColor = Color.White,
-                                    disabledContainerColor = Color(0xFFCECECE),
-                                    disabledContentColor = Color(0xFF7F7F7F)
-                                ),
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text(
-                                    text = "Spielen",
-                                    style = MaterialTheme.typography.labelSmall
-                                )
+                                Button(
+                                    onConfirmClick,
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .weight(1f),
+                                    contentPadding = PaddingValues(16.dp),
+                                    colors = ButtonDefaults.buttonColors().copy(
+                                        containerColor = Color(0xFF445a65),
+                                        contentColor = Color.White,
+                                        disabledContainerColor = Color(0xFFCECECE),
+                                        disabledContentColor = Color(0xFF7F7F7F)
+                                    ),
+                                ) {
+                                    Text(
+                                        text = "Zurück", style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+                                Button(
+                                    onConfirmClick,
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .weight(1f),
+                                    contentPadding = PaddingValues(16.dp),
+                                    colors = ButtonDefaults.buttonColors().copy(
+                                        containerColor = Color(0xFF569191),
+                                        contentColor = Color.White,
+                                        disabledContainerColor = Color(0xFFCECECE),
+                                        disabledContentColor = Color(0xFF7F7F7F)
+                                    ),
+                                ) {
+                                    Text(
+                                        text = "Spielen",
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
                             }
                         }
                     }
