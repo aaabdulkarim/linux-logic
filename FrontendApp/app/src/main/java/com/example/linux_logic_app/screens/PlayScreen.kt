@@ -92,7 +92,10 @@ fun PlayScreen() {
 @Composable
 fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
-    val rotationAngle by animateFloatAsState(targetValue = if (isExpanded) 180f else 0f, label = "Rotation of Arrow-Icon")
+    val rotationAngle by animateFloatAsState(
+        targetValue = if (isExpanded) 180f else 0f,
+        label = "Rotation of Arrow-Icon"
+    )
 
     course?.let {
         Box(
@@ -119,10 +122,22 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    it.name,
-                    style = MaterialTheme.typography.labelSmall
-                )
+                Row {
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = if (isExpanded) "Collapse" else "Expand",
+                        modifier = Modifier
+                            .graphicsLayer(rotationZ = rotationAngle)
+                            .clickable {
+                                isExpanded = !isExpanded
+                            },
+                    )
+
+                    Text(
+                        it.name,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
 
                 LazyColumn(
                     modifier = Modifier
@@ -133,15 +148,6 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                imageVector = Icons.Filled.KeyboardArrowDown,
-                                contentDescription = if (isExpanded) "Collapse" else "Expand",
-                                modifier = Modifier
-                                    .graphicsLayer(rotationZ = rotationAngle)
-                                    .clickable {
-                                        isExpanded = !isExpanded
-                                    },
-                            )
                             Text(
                                 text = it.description,
                                 modifier = Modifier
@@ -158,13 +164,13 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp),
+                                .padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Button(
                                 onConfirmClick,
                                 modifier = Modifier
-                                    .padding(horizontal = 16.dp)
+                                    .padding(horizontal = 8.dp)
                                     .weight(1f),
                                 contentPadding = PaddingValues(16.dp),
                                 colors = ButtonDefaults.buttonColors().copy(
@@ -181,7 +187,7 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                             Button(
                                 onConfirmClick,
                                 modifier = Modifier
-                                    .padding(horizontal = 16.dp)
+                                    .padding(horizontal = 8.dp)
                                     .weight(1f),
                                 contentPadding = PaddingValues(16.dp),
                                 colors = ButtonDefaults.buttonColors().copy(
@@ -192,7 +198,8 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                                 ),
                             ) {
                                 Text(
-                                    text = "Spielen", style = MaterialTheme.typography.labelSmall
+                                    text = "Spielen",
+                                    style = MaterialTheme.typography.labelSmall
                                 )
                             }
                         }

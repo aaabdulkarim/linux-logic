@@ -18,7 +18,6 @@ import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material.icons.twotone.Notifications
-import androidx.compose.material.icons.twotone.Place
 import androidx.compose.material.icons.twotone.PlayArrow
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Settings
@@ -29,7 +28,6 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -448,7 +446,7 @@ fun MainScreen() {
                         )
                     )
                 },
-                floatingActionButton = {
+                /*floatingActionButton = {
                     FloatingActionButton(
                         onClick = {
 
@@ -461,7 +459,7 @@ fun MainScreen() {
                             contentDescription = "Add Icon for Main"
                         )
                     }
-                },
+                },*/
                 bottomBar = {
                     NavigationBar(
                         containerColor = Color(0xFF445a65),
