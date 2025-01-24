@@ -17,6 +17,6 @@ fun NewScreen() {
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
-        Terminal("ws://192.168.0.76:8000/ws")
+        Terminal("ws://10.0.107.0:8000/ws")
     }
 }

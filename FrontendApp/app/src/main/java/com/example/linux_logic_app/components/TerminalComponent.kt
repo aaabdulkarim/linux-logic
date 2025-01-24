@@ -163,15 +163,20 @@ fun Terminal(socketUrl : String) {
                             keyboardActions = KeyboardActions(
                                 onDone = {
                                     if (userInput.isNotBlank()) {
-                                        webSocketClient.sendMessage(userInput)
+                                        if (userInput == "clear") {
+                                            terminalOutput = listOf("")
+                                        }else{
+                                            webSocketClient.sendMessage(userInput)
 
-                                        // Temporärer Fix
-                                        // Wenn der Client nie eine Message erhält, kann es sein, dass die App freezed
-                                        while (webSocketClient.waiting()) {
-                                            continue
+                                            // Temporärer Fix
+                                            // Wenn der Client nie eine Message erhält, kann es sein, dass die App freezed
+                                            while (webSocketClient.waiting()) {
+                                                continue
+                                            }
+                                            terminalOutput = terminalOutput + "lilo@beta:~$ ${userInput}" + webSocketClient.output
+                                            userInput = "" // Clear input
                                         }
-                                        terminalOutput = terminalOutput + "lilo@beta:~$ ${userInput}" + webSocketClient.output
-                                        userInput = "" // Clear input
+
                                     }
                                 }
                             )
