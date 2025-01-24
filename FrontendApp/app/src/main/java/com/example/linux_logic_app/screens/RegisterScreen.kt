@@ -82,8 +82,10 @@ fun RegisterScreen(navController: NavController) {
     // Regular expression to validate email format
     val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
 
+
     Column(
         modifier = Modifier
+
             .fillMaxSize()
             .background(Color(0xFF569191)),
         horizontalAlignment = Alignment.CenterHorizontally,

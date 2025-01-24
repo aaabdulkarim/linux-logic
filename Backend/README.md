@@ -95,3 +95,54 @@ CONNECTION_STRING="DEIN NEON CONNECTION STRING"
 # Ausführen der API
 
 Solange man im Backend Folder ist, die Virtual Environment mit ihren requirements installiert hat, sollte man fastapi dev main.py ausführen können
+
+
+# Test - Infos
+
+Um die Websocket Verbindung zu testen gibt es folgende Voraussetzungen
+
+- FastAPI und Python VENV Setup wie Oben erklärt; [Voraussetzungen](#dependencies)
+- Docker
+
+Befehl:
+```bash
+docker image pull debian
+``` 
+
+## Testprozess
+
+#### Backend Setup
+
+- Starten der venv  [venv](#venv)
+  
+- Starten der API [Ausführen-der-Api](#ausführen-der-api)
+
+#### Frontend Setup
+
+- [test.html](test/test.html) im Browser öffnen
+
+- Sicherstellen, dass [test.js](test/test.html) in [test](test/) vorhanden ist
+
+#### Benutzen des Debian Containers
+
+Standard Befehle ausprobieren
+
+| Befehl               | Erwarteter Output                                        |
+|----------------------|----------------------------------------------------------|
+| `ls`                 | `bin boot dev etc home lib lib64 media mnt opt proc root run sbin srv sys tmp usr var` |
+| `pwd`                | `/`                                                      |
+| `cd`                 | *leer*                                                   |
+| `nano`               | `sh: 1: nano: not found`                                 |
+| `mkdir test`        | *leer* |
+
+
+#### Docker Befehle zum Testen
+
+Im Backend/dockerfolder
+
+``docker build -t newone .``
+
+``docker run -p 1000:1000 newone``
+
+
+und *dockersocketmain.py* starten wie bei [Ausführen-der-Api](#ausführen-der-api) nur dass, der Name der Datei *dockersocketmain.py* ist

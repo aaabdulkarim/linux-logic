@@ -23,6 +23,10 @@
     <Team />
   </section>
 
+  <section id="impressum">
+    <Impressum />
+  </section>
+  
   <section id="footer">
     <Footer />
   </section>
@@ -39,6 +43,7 @@ import Umfrage from '@/components/HomePage/Umfrage.vue';
 import Team from '@/components/HomePage/Team.vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
+import Impressum from '@/components/HomePage/Impressum.vue';
 
 export default {
   name: 'AboutView',
@@ -50,6 +55,7 @@ export default {
     Fortschritt,
     Team,
     Footer,
+    Impressum,
     Header
   }
 }
