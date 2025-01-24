@@ -18,12 +18,76 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import okhttp3.*;
+import okio.ByteString
+
+class WebSocketClient(url: String) {
+    private val client = OkHttpClient()
+    private val request = Request.Builder().url(url).build()
+    private lateinit var webSocket: WebSocket
+    public var output = ""
+    private var messageReceived = false
+
+    fun connect() {
+        webSocket = client.newWebSocket(request, object : WebSocketListener() {
+            override fun onOpen(webSocket: WebSocket, response: Response) {
+                println("Connected to WebSocket")
+                output = "Connected to"
+            }
+
+            override fun onMessage(webSocket: WebSocket, text: String) {
+                println("Received message: $text")
+                messageReceived = true
+                output = text
+
+            }
+
+            override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+                println("Received bytes: $bytes")
+                output = bytes.toString()
+            }
+
+            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+                println("Closing WebSocket: $code / $reason")
+                webSocket.close(code, reason)
+            }
+
+            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                println("WebSocket error: ${t.message}")
+            }
+        })
+    }
+
+    fun sendMessage(message: String) {
+        webSocket.send(message)
+        messageReceived = false
+    }
+
+    fun waiting(): Boolean {
+        return !messageReceived
+    }
+
+    fun disconnect() {
+        webSocket.close(1000, "Goodbye!")
+    }
+}
+
 
 @Composable
-fun Terminal() {
+fun Terminal(socketUrl : String) {
     var terminalOutput by remember { mutableStateOf(listOf("Welcome to logic terminal!")) }
     var userInput by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
+    val socketState by remember {
+        mutableStateOf("Message")
+    }
+
+    val webSocketClient = remember { WebSocketClient(socketUrl)}
+
+    LaunchedEffect(Unit){
+        webSocketClient.connect()
+
+    }
 
     // Terminal UI
     Box(
@@ -40,7 +104,10 @@ fun Terminal() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Black, shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)) // Rounded header top
+                    .background(
+                        Color.Black,
+                        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+                    ) // Rounded header top
                     .padding(12.dp)
             ) {
                 Text(
@@ -56,7 +123,10 @@ fun Terminal() {
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .background(Color(0xFF404242), shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)) // Rounded terminal bottom
+                    .background(
+                        Color(0xFF404242),
+                        shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                    ) // Rounded terminal bottom
                     .padding(8.dp)
                     .verticalScroll(scrollState)
             ) {
@@ -93,7 +163,14 @@ fun Terminal() {
                             keyboardActions = KeyboardActions(
                                 onDone = {
                                     if (userInput.isNotBlank()) {
-                                        terminalOutput = terminalOutput + "lilo@beta:~$ ${userInput}" + processCommand(userInput)
+                                        webSocketClient.sendMessage(userInput)
+
+                                        // Temporärer Fix
+                                        // Wenn der Client nie eine Message erhält, kann es sein, dass die App freezed
+                                        while (webSocketClient.waiting()) {
+                                            continue
+                                        }
+                                        terminalOutput = terminalOutput + "lilo@beta:~$ ${userInput}" + webSocketClient.output
                                         userInput = "" // Clear input
                                     }
                                 }
@@ -103,15 +180,5 @@ fun Terminal() {
                 }
             }
         }
-    }
-}
-
-// Mock command processing function
-fun processCommand(command: String): String {
-    return when (command.lowercase()) {
-        "help" -> "\rAvailable commands: help, clear, hello"
-        "hello" -> "\rHello, User!"
-        "ls" -> "home documents downloads" // Clear screen command (handled differently in a real terminal)
-        else -> "\rCommand not found: $command"
     }
 }
