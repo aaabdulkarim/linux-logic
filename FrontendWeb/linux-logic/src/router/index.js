@@ -19,7 +19,12 @@ const routes = [
     path: '/terminal',
     name: 'game',
     component: () => import(/* webpackChunkName: "game" */ '../views/GameView.vue')
-  }
+  },
+  {
+    path: '/Auswahl',
+    name: 'Auswahl',
+    component: () => import(/* webpackChunkName: "selection" */ '../views/AuswahlView.vue')
+  },
 ]
 
 const router = createRouter({
