@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.cyan.min.css">      
+    
+    <title>Test Websocket Client Verbindung</title>
+
+    <style>
+        #ausgaben {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right {
+            align-self: flex-end;
+            list-style: none;
+        }
+
+        .left {
+            align-self: flex-start;
+            list-style: none;
+        }
+
+    </style>
+  </head>
+  <body>
+    <main class="container">
+
+        <h1>
+            Testen der Websocket Verbindung mit einem Docker Container
+        </h1>
+
+        <div role="group">
+            <input type="text" placeholder="Befehl eingeben" name="commandEingabe" id="inputTerminal">
+            <button id="sendButton">
+                Send
+            </button>
+
+        </div>
+        <h3>
+            Ausgaben
+        </h3>
+
+        <ul id="ausgaben">
+            
+        </ul>
+    </main>
+  </body>
+
+  <script src="test.js">
+
+  </script>
+</html>
