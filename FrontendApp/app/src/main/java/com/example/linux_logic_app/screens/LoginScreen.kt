@@ -21,9 +21,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.DoorBack
 import androidx.compose.material.icons.twotone.Email
-import androidx.compose.material.icons.twotone.Lock
-import androidx.compose.material.icons.twotone.LockOpen
 import androidx.compose.material.icons.twotone.Password
+import androidx.compose.material.icons.twotone.Visibility
+import androidx.compose.material.icons.twotone.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -53,6 +53,7 @@ import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
+import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -227,13 +228,13 @@ fun LoginScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.LockOpen else Icons.TwoTone.Lock
+                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
                         val description = if (passwordVisible) "Showed password" else "Hidden password"
                         IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(
                                 imageVector = image,
                                 contentDescription = description,
-                                tint = LiloMain
+                                tint = LiloOrange
                             )
                         }
                     },
@@ -284,7 +285,10 @@ fun LoginScreen(navController: NavController) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(40.dp),
+                        .padding(40.dp)
+                        .clickable {
+
+                        },
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -299,9 +303,6 @@ fun LoginScreen(navController: NavController) {
                         contentDescription = "Login mittels Google Account",
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable {
-
-                            }
                     )
 
                     /*Image(

@@ -9,11 +9,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.twotone.ArrowForward
 import androidx.compose.material.icons.automirrored.twotone.ExitToApp
-import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.twotone.AccountCircle
-import androidx.compose.material.icons.twotone.Build
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Menu
@@ -21,6 +20,7 @@ import androidx.compose.material.icons.twotone.Notifications
 import androidx.compose.material.icons.twotone.PlayArrow
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.Terminal
 import androidx.compose.material.icons.twotone.ThumbUp
 import androidx.compose.material.icons.twotone.Warning
 import androidx.compose.material3.Badge
@@ -85,9 +85,9 @@ fun MainScreen() {
     val navController = rememberNavController()
     val items = listOf(
         BottomNavigationItem(
-            title = "Anpassen",
-            selectedIcon = Icons.Filled.Build,
-            unselectedIcon = Icons.TwoTone.Build,
+            title = "Terminal",
+            selectedIcon = Icons.Filled.Terminal,
+            unselectedIcon = Icons.TwoTone.Terminal,
             hasNews = true,
             badgeCount = 1,
         ),
@@ -432,7 +432,7 @@ fun MainScreen() {
                             ) {
                                 Icon(
                                     Icons.TwoTone.AccountCircle,
-                                    contentDescription = "Profile Icon for Main",
+                                    contentDescription = "AccountCircle Icon for Main",
                                     tint = Color.White // Die Farbe wird hier nicht automatisch auf Weiß gesetzt?
                                 )
                             }
@@ -599,7 +599,7 @@ fun MainScreen() {
                             .fillMaxSize()
                     ) {
                         composable("Home") { HomeScreen() }
-                        composable("Anpassen") { CustomizeScreen() }
+                        composable("Terminal") { CustomizeScreen() }
                         composable("Spielen") { PlayScreen() }
                     }
                 }

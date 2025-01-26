@@ -19,13 +19,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.AccountCircle
-import androidx.compose.material.icons.twotone.Check
-import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material.icons.twotone.Email
 import androidx.compose.material.icons.twotone.Lock
+import androidx.compose.material.icons.twotone.LockOpen
+import androidx.compose.material.icons.twotone.Password
+import androidx.compose.material.icons.twotone.PermIdentity
 import androidx.compose.material.icons.twotone.PersonAddAlt
-import androidx.compose.material.icons.twotone.Refresh
+import androidx.compose.material.icons.twotone.Repeat
+import androidx.compose.material.icons.twotone.Visibility
+import androidx.compose.material.icons.twotone.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -53,6 +55,7 @@ import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloMain
+import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
 fun RegisterScreen(navController: NavController) {
@@ -180,9 +183,9 @@ fun RegisterScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.TwoTone.AccountCircle,
-                            contentDescription = "Account Icon for Register",
-                            tint = Color(0xFF569191)
+                            imageVector = Icons.TwoTone.PermIdentity,
+                            contentDescription = "Identity Icon for Register",
+                            tint = LiloMain
                         )
                     },
                     modifier = Modifier
@@ -224,7 +227,7 @@ fun RegisterScreen(navController: NavController) {
                         Icon(
                             imageVector = Icons.TwoTone.Email,
                             contentDescription = "Email Icon for Register",
-                            tint = Color(0xFF569191)
+                            tint = LiloMain
                         )
                     },
                     modifier = Modifier
@@ -257,9 +260,9 @@ fun RegisterScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.TwoTone.Lock,
+                            imageVector = Icons.TwoTone.Password,
                             contentDescription = "Password Icon for Login",
-                            tint = Color(0xFF569191)
+                            tint = LiloMain
                         )
                     },
                     modifier = Modifier
@@ -273,10 +276,18 @@ fun RegisterScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.Close else Icons.TwoTone.Check
-                        val description = if (passwordVisible) "Hide password" else "Show password"
-                        IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
-                            Icon(image, contentDescription = description)
+                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description = if (passwordVisible) "Showed password" else "Hidden password"
+                        IconButton(
+                            onClick = {
+                                setPasswordVisible(!passwordVisible)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = image,
+                                contentDescription = description,
+                                tint = LiloOrange
+                            )
                         }
                     },
                 )
@@ -307,9 +318,9 @@ fun RegisterScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.TwoTone.Refresh,
+                            imageVector = Icons.TwoTone.Repeat,
                             contentDescription = "Password Confirmation Icon",
-                            tint = Color(0xFF569191)
+                            tint = LiloMain
                         )
                     },
                     modifier = Modifier
@@ -323,10 +334,18 @@ fun RegisterScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = confirmPasswordErrorMessage != null,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.Close else Icons.TwoTone.Check
-                        val description = if (passwordVisible) "Hide password" else "Show password"
-                        IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
-                            Icon(image, contentDescription = description)
+                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description = if (passwordVisible) "Showed password" else "Hidden password"
+                        IconButton(
+                            onClick = {
+                                setPasswordVisible(!passwordVisible)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = image,
+                                contentDescription = description,
+                                tint = LiloOrange
+                            )
                         }
                     },
                 )
@@ -343,7 +362,7 @@ fun RegisterScreen(navController: NavController) {
                         .padding(start = 32.dp, end = 32.dp),
                     contentPadding = PaddingValues(16.dp),
                     colors = ButtonDefaults.buttonColors().copy(
-                        containerColor = Color(0xFFFF8c00),
+                        containerColor = LiloOrange,
                         contentColor = Color.White,
                         disabledContainerColor = Color(0xFFCECECE),
                         disabledContentColor = Color(0xFF7F7F7F)
@@ -361,7 +380,10 @@ fun RegisterScreen(navController: NavController) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(40.dp),
+                        .padding(40.dp)
+                        .clickable {
+
+                        },
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -376,9 +398,6 @@ fun RegisterScreen(navController: NavController) {
                         contentDescription = "Login mittels Google Account",
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable {
-
-                            }
                     )
 
                     /*Image(
