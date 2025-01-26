@@ -23,3 +23,6 @@ Darüber hinaus erfolgt eine umfassende Evaluierung der Gebrauchstauglichkeit, u
     - Kein plattformübergreifender Support: Da diese Technologie nativ für Android angedacht ist benötigt es eine separate Implementierungen für andere Betriebssysteme. 
     - Limitierte Libraries spezifische Funktionen: Im Vergleich zu Cross-Plattform-Technologien gibt es weniger fertige Lösungen für sehr individuelle Komponente, beispielsweise webbasierte oder plattformübergreifende Terminals. 
     - Einfaches Design: Für das Design ist nur Material-Design (neuste Version 3) verfügbar man muss ein eigenes UI-Framework entwickeln.
+
+## Fortschritt
+Nachdokumentieren wie und was genau umgesetzt wurde in textueller Form
