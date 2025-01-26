@@ -25,6 +25,16 @@ const routes = [
     name: 'Auswahl',
     component: () => import(/* webpackChunkName: "selection" */ '../views/AuswahlView.vue')
   },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/LoginView.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import(/* webpackChunkName: "register" */ '../views/RegisterView.vue')
+  },
 ]
 
 const router = createRouter({
