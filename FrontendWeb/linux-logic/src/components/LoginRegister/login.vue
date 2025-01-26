@@ -1,71 +1,188 @@
 <template>
-    <div class="login h-screen flex flex-col items-center justify-center bg-cover bg-center" 
-         :style="{ backgroundImage: `url(@/assets/abstract_art_aqua_final.png)` }">
-      <div class="login-container bg-white/70 rounded-lg shadow-lg p-8 w-full max-w-md">
-        <h1 class="text-xl font-bold mb-6 text-center text-gray-800">Login</h1>
-        <form>
-          <!-- Email -->
-          <div class="mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <InputText id="email" v-model="email" class="w-full mt-1 p-inputtext-sm" placeholder="Email" />
-          </div>
-          <!-- Passwort -->
-          <div class="mb-4">
-            <label for="password" class="block text-sm font-medium text-gray-700">Passwort</label>
-            <Password id="password" v-model="password" class="w-full mt-1 p-password-sm" placeholder="Passwort" />
-          </div>
-          <!-- Checkbox und Link -->
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center">
-              <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" class="mr-2" />
-              <label for="stayLoggedIn" class="text-sm text-gray-700">Angemeldet bleiben</label>
-            </div>
-            <a href="#" class="text-sm text-blue-600 hover:underline">Passwort Vergessen</a>
-          </div>
-          <!-- Button -->
-          <Button label="Anmelden" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 rounded-md" />
-        </form>
-        <!-- Registrierung -->
-        <div class="text-center mt-4 text-sm">
-          Haben Sie keinen Account? 
-          <a href="#" class="text-blue-600 hover:underline">Registrieren</a>
+  <div class="login-page grid" :style="backgroundStyle">
+    <div class="login-container">
+      <h2>Anmelden</h2>
+
+      <form @submit.prevent="onSubmit">
+        <div class="p-field">
+          <label for="email"><h5>Email</h5></label>
+          <InputText id="email" v-model="email"/>
+          <label for="password"><h5>Passwort</h5></label>
+          <Password id="password" v-model="password" :feedback="false" toggleMask/>
         </div>
+
+        <div class="login-actions">
+          <div class="stay-logged-in">
+            <label for="stayLoggedIn">Angemeldet bleiben</label>
+            <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" />
+          </div>
+          <div class="forgot-password">
+            <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
+          </div>
+        </div>
+
+          <Button label="Anmelden" />
+      </form>
+
+      <div class="register-link">
+        <span>Haben Sie keinen Account? </span>
+        <router-link to="/register">Registrieren</router-link>
       </div>
-      <!-- Footer -->
-      <Footer />
     </div>
-  </template>
-  
-  <script>
-  import Footer from "@/components/Footer.vue";
-  import { ref } from "vue";
-  import { InputText } from "primevue/inputtext";
-  import { Password } from "primevue/password";
-  import { Button } from "primevue/button";
-  import { Checkbox } from "primevue/checkbox";
-  
-  export default {
-    name: "Login",
-    components: {
-      Footer,
-      InputText,
-      Password,
-      Button,
-      Checkbox,
-    },
-    setup() {
-      const email = ref("");
-      const password = ref("");
-      const stayLoggedIn = ref(false);
-  
-      return { email, password, stayLoggedIn };
-    },
-  };
-  </script>
-  
-  <style scoped>
-  .login {
-    min-height: 100vh;
+  </div>
+</template>
+
+<script>
+import  InputText  from 'primevue/inputtext';
+import  Password  from 'primevue/password';
+import  Checkbox  from 'primevue/checkbox';
+import  Button  from 'primevue/button';
+
+export default {
+  components: { 
+    InputText, 
+    Password, 
+    Checkbox, 
+    Button 
+  },
+  data() {
+    return {
+      email: '',
+      password: '',
+      stayLoggedIn: false
+    };
+  },
+  computed: {
+    backgroundStyle() {
+      return {
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
+    }
+  },
+  methods: {
+    onSubmit() {
+      // Logik für die Anmeldung
+      console.log('E-Mail:', this.email);
+      console.log('Passwort:', this.password);
+      console.log('Angemeldet bleiben:', this.stayLoggedIn);
+    }
   }
-  </style>
-  
+};
+</script>
+
+<style scoped>
+.login-page {
+  background-color: #569191;
+  background-image: url('@/assets/abstract_art_aqua_final.webp');
+  background-size: cover;
+  background-position: center;
+}
+
+.login-container {
+  background: rgba(255, 255, 255, 0.5);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 35%;
+  min-width: 420px;
+}
+
+.p-field {
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start; 
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.p-field label {
+    margin-bottom: -1rem;
+}
+
+.p-field input {
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.5);
+  color: #3D525C;
+  border: none;
+  width: 100%;
+}
+.p-field input:focus {
+  outline: none;
+  border: none;
+  box-shadow: 0 0 0 1px #569191;
+}
+::v-deep .p-password {
+  width: 100%;
+}
+::v-deep .p-password .p-inputtext {
+  padding: 0.8rem;
+  background: rgba(255, 255, 255, 0.5);
+  color: #3D525C;
+  border: none;
+  width: 100%;
+}
+::v-deep .p-password input:focus {
+  outline: none;
+  border: none;
+  box-shadow: 0 0 0 1px #569191; /* Fokusrahmen */
+}
+
+.login-actions {
+  font-family: 'Ubuntu', monospace; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-top: 4rem;
+}
+.p-checkbox {
+  margin-left: 0.5rem;
+}
+::v-deep .p-checkbox .p-checkbox-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid #569191;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  margin-right: 1rem;
+  background-color: #569191;
+  color: white;
+  border: none;
+  height: 46px;
+  width: 100%;
+}
+button:hover {
+  border: none !important;
+  background-color: #7eb9b9 !important;
+  color: white !important;
+}
+
+.forgot-password {
+  font-family: 'Ubuntu', monospace; 
+  color: #569191;
+  text-decoration: none;
+}
+.forgot-password:hover {
+  text-decoration: underline;
+}
+.register-link {
+  font-family: 'Ubuntu', monospace; 
+  text-align: center;
+  margin-top: 1rem;
+}
+.register-link a {
+  color: #569191;
+  text-decoration: none;
+}
+.register-link a:hover {
+  text-decoration: underline;
+}
+</style>
