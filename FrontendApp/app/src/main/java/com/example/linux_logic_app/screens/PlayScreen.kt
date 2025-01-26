@@ -25,7 +25,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -49,6 +49,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.navigation.Course
 import com.example.linux_logic_app.navigation.courseList
+import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloDarkText
+import com.example.linux_logic_app.ui.theme.LiloMain
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -76,21 +79,21 @@ fun PlayScreen() {
                                 sharedContentState = rememberSharedContentState(key = "${course.name}-bounds"),
                                 animatedVisibilityScope = this
                             )
-                            .background(Color(0xFF569191), RoundedCornerShape(16.dp))
+                            .background(LiloMain, RoundedCornerShape(16.dp))
                             .clip(RoundedCornerShape(16.dp))
                     ) {
-                        CourseCard(course = course, onClick = { selectedCourse = course })
+                        CourseCard(course = course, onSelectClick = { selectedCourse = course })
                     }
                 }
             }
         }
 
-        CourseEditDetails(course = selectedCourse, onConfirmClick = { selectedCourse = null })
+        CourseEditDetails(course = selectedCourse, onPlayClick = { selectedCourse = null })
     }
 }
 
 @Composable
-fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
+fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
         targetValue = if (isExpanded) 180f else 0f,
@@ -102,12 +105,14 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0x80000000))
-                .clickable { onConfirmClick() }
+                .clickable {
+                    onPlayClick()
+                }
                 .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .background(Color.White, RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
                     .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -115,7 +120,7 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                     painter = painterResource(id = it.imageRes),
                     contentDescription = it.name,
                     modifier = Modifier
-                        .fillMaxWidth() // Use fillMaxWidth instead of weight
+                        .fillMaxWidth()
                         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                     contentScale = ContentScale.FillWidth
                 )
@@ -137,15 +142,17 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            imageVector = Icons.Filled.ArrowDropDown,
                             contentDescription = if (isExpanded) "Collapse" else "Expand",
                             modifier = Modifier
-                                .graphicsLayer(rotationZ = rotationAngle)
+                                .graphicsLayer(rotationZ = rotationAngle),
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
 
                         Text(
                             it.name,
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -163,7 +170,8 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                                     modifier = Modifier
                                         .padding(horizontal = 16.dp),
                                     maxLines = if (isExpanded) Int.MAX_VALUE else 2,
-                                    style = MaterialTheme.typography.bodyLarge
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
                         }
@@ -175,38 +183,41 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Button(
-                                    onConfirmClick,
+                                    onPlayClick,
                                     modifier = Modifier
                                         .padding(horizontal = 8.dp)
                                         .weight(1f),
                                     contentPadding = PaddingValues(16.dp),
                                     colors = ButtonDefaults.buttonColors().copy(
-                                        containerColor = Color(0xFF445a65),
-                                        contentColor = Color.White,
+                                        containerColor = LiloBlue,
+                                        contentColor = LiloDarkText,
                                         disabledContainerColor = Color(0xFFCECECE),
                                         disabledContentColor = Color(0xFF7F7F7F)
                                     ),
                                 ) {
                                     Text(
-                                        text = "Zurück", style = MaterialTheme.typography.labelSmall
+                                        text = "Zurück",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = LiloDarkText
                                     )
                                 }
                                 Button(
-                                    onConfirmClick,
+                                    onPlayClick,
                                     modifier = Modifier
                                         .padding(horizontal = 8.dp)
                                         .weight(1f),
                                     contentPadding = PaddingValues(16.dp),
                                     colors = ButtonDefaults.buttonColors().copy(
-                                        containerColor = Color(0xFF569191),
-                                        contentColor = Color.White,
+                                        containerColor = LiloMain,
+                                        contentColor = LiloDarkText,
                                         disabledContainerColor = Color(0xFFCECECE),
                                         disabledContentColor = Color(0xFF7F7F7F)
                                     ),
                                 ) {
                                     Text(
                                         text = "Spielen",
-                                        style = MaterialTheme.typography.labelSmall
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = LiloDarkText
                                     )
                                 }
                             }
@@ -219,15 +230,13 @@ fun CourseEditDetails(course: Course?, onConfirmClick: () -> Unit) {
 }
 
 @Composable
-fun CourseCard(course: Course, onClick: () -> Unit) {
+fun CourseCard(course: Course, onSelectClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                onClick(
-
-                )
+                onSelectClick()
             },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -266,7 +275,7 @@ fun CourseCard(course: Course, onClick: () -> Unit) {
             Text(
                 text = course.name,
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.White,
+                color = LiloDarkText,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp)

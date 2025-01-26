@@ -1,5 +1,7 @@
 package com.example.linux_logic_app.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -7,8 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.twotone.ArrowForward
-import androidx.compose.material.icons.automirrored.twotone.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.Shortcut
+import androidx.compose.material.icons.automirrored.twotone.Help
+import androidx.compose.material.icons.automirrored.twotone.Logout
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Terminal
@@ -16,13 +19,14 @@ import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Menu
-import androidx.compose.material.icons.twotone.Notifications
+import androidx.compose.material.icons.twotone.NotificationsActive
 import androidx.compose.material.icons.twotone.PlayArrow
+import androidx.compose.material.icons.twotone.RateReview
 import androidx.compose.material.icons.twotone.Search
+import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Terminal
-import androidx.compose.material.icons.twotone.ThumbUp
-import androidx.compose.material.icons.twotone.Warning
+import androidx.compose.material.icons.twotone.Tour
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -45,6 +49,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -52,14 +57,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.navigation.HyperlinkText
 import com.example.linux_logic_app.navigation.Screen
+import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloMain
 import kotlinx.coroutines.launch
 
 /*
@@ -83,6 +90,9 @@ fun MainScreen() {
     val coroutineScope = rememberCoroutineScope()
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(1) }
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val liloWebUrl = "https://www.linux-logic.com"
+    val liloIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(liloWebUrl)) }
     val items = listOf(
         BottomNavigationItem(
             title = "Terminal",
@@ -110,22 +120,32 @@ fun MainScreen() {
         gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             ModalDrawerSheet(
-                drawerContainerColor = Color(0xFF445a65),
-                drawerContentColor = Color.White,
+                drawerContainerColor = MaterialTheme.colorScheme.background,
+                drawerContentColor = MaterialTheme.colorScheme.onBackground,
                 drawerShape = RoundedCornerShape(topEnd = 64.dp, bottomEnd = 64.dp), // Abgerundete Ecken am Ende
                 drawerState = endDrawerState, // Der EndDrawerState (Verwendung von `rememberDrawerState()` zur Initialisierung)
             ) {
-                Text(
-                    text = "Shortcuts",
+                Row(
                     modifier = Modifier
-                        .padding(16.dp),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = Color.White
-                )
+                        .padding(start = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.Shortcut,
+                        contentDescription = "Shortcut Icon for Main"
+                    )
+
+                    Text(
+                        text = "Shortcuts",
+                        modifier = Modifier
+                            .padding(16.dp),
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                }
 
                 HorizontalDivider(
-                    thickness = 2.dp,
-                    color = Color(0xFFFF8c00)
+                    thickness = 3.dp,
+                    color = LiloMain
                 )
 
                 NavigationDrawerItem(
@@ -133,15 +153,13 @@ fun MainScreen() {
                         Text(
                             text = "Suchen",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
                             Icons.TwoTone.Search,
-                            contentDescription = "Search for Main",
-                            tint = Color.White
+                            contentDescription = "Search Icon for Main",
                         )
                     },
                     onClick = {
@@ -151,7 +169,7 @@ fun MainScreen() {
 
                 HorizontalDivider(
                     thickness = 1.dp,
-                    color = Color(0xFF404242)
+                    color = LiloBlue
                 )
 
                 NavigationDrawerItem(
@@ -159,15 +177,13 @@ fun MainScreen() {
                         Text(
                             text = "Alle Level",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
-                            Icons.AutoMirrored.TwoTone.ArrowForward,
-                            contentDescription = "All levels for Main",
-                            tint = Color.White
+                            Icons.TwoTone.Tour,
+                            contentDescription = "Tour Icon for Main",
                         )
                     },
                     onClick = {
@@ -177,29 +193,25 @@ fun MainScreen() {
 
                 HorizontalDivider(
                     thickness = 1.dp,
-                    color = Color(0xFF404242)
+                    color = LiloBlue
                 )
 
                 NavigationDrawerItem(
                     label = {
-                        HyperlinkText(
-                            fullText = "Über Linux Logic",
-                            linkText = "www.linux-logic.com",
-                            linkUrl = "https://www.linux-logic.com",
-                            onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website MAIN\" -",
-                            textColor = Color.White
+                        Text(
+                            text ="Mehr über Linux Logic",
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
                             Icons.TwoTone.Info,
-                            contentDescription = "All levels for Main",
-                            tint = Color.White
+                            contentDescription = "Info Icon for Main",
                         )
                     },
                     onClick = {
-
+                        context.startActivity(liloIntent)
                     }
                 )
             }
@@ -231,7 +243,7 @@ fun MainScreen() {
                     NavigationDrawerItem(
                         label = {
                             Text(
-                                text = "Informationen",
+                                text = "Account Informationen",
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = Color.White
                             )
@@ -239,8 +251,8 @@ fun MainScreen() {
                         selected = false,
                         icon = {
                             Icon(
-                                Icons.TwoTone.Info,
-                                contentDescription = "Information for Main",
+                                Icons.TwoTone.Security,
+                                contentDescription = "Security icon for Main",
                                 tint = Color.White
                             )
                         },
@@ -266,7 +278,7 @@ fun MainScreen() {
                         icon = {
                             Icon(
                                 Icons.TwoTone.Settings,
-                                contentDescription = "Settings for Main",
+                                contentDescription = "Settings Icon for Main",
                                 tint = Color.White
                             )
                         },
@@ -291,8 +303,8 @@ fun MainScreen() {
                         selected = false,
                         icon = {
                             Icon(
-                                Icons.TwoTone.Notifications,
-                                contentDescription = "Notifications for Main",
+                                Icons.TwoTone.NotificationsActive,
+                                contentDescription = "Notifications Active Icon for Main",
                                 tint = Color.White
                             )
                         },
@@ -317,8 +329,8 @@ fun MainScreen() {
                         selected = false,
                         icon = {
                             Icon(
-                                Icons.TwoTone.ThumbUp,
-                                contentDescription = "Feedback for Main",
+                                Icons.TwoTone.RateReview,
+                                contentDescription = "RateReview Icon for Main",
                                 tint = Color.White
                             )
                         },
@@ -343,8 +355,8 @@ fun MainScreen() {
                         selected = false,
                         icon = {
                             Icon(
-                                Icons.TwoTone.Warning,
-                                contentDescription = "Help for Main",
+                                Icons.AutoMirrored.TwoTone.Help,
+                                contentDescription = "Help Icon for Main",
                                 tint = Color.White
                             )
                         },
@@ -369,8 +381,8 @@ fun MainScreen() {
                         selected = false,
                         icon = {
                             Icon(
-                                Icons.AutoMirrored.TwoTone.ExitToApp,
-                                contentDescription = "Logout for Main",
+                                Icons.AutoMirrored.TwoTone.Logout,
+                                contentDescription = "Logout Icon for Main",
                                 tint = Color.White
                             )
                         },
