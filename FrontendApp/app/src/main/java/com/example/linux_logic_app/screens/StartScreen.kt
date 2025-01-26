@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Home
-import androidx.compose.material.icons.twotone.Person
+import androidx.compose.material.icons.automirrored.twotone.Login
+import androidx.compose.material.icons.twotone.PersonAddAlt
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -126,8 +126,8 @@ fun StartScreen(navController: NavController) {
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.TwoTone.Home,
-                                contentDescription = "Home Icon",
+                                imageVector = Icons.AutoMirrored.TwoTone.Login,
+                                contentDescription = "Login Icon for Start",
                                 tint = Color.White
                             )
                         },
@@ -150,8 +150,8 @@ fun StartScreen(navController: NavController) {
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.TwoTone.Person,
-                                contentDescription = "Person Icon",
+                                imageVector = Icons.TwoTone.PersonAddAlt,
+                                contentDescription = "PersonAdd Icon for Start",
                                 tint = Color.White
                             )
                         },

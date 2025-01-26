@@ -85,7 +85,7 @@ fun MainScreen() {
     val navController = rememberNavController()
     val items = listOf(
         BottomNavigationItem(
-            title = "Neues",
+            title = "Anpassen",
             selectedIcon = Icons.Filled.Build,
             unselectedIcon = Icons.TwoTone.Build,
             hasNews = true,
@@ -599,7 +599,7 @@ fun MainScreen() {
                             .fillMaxSize()
                     ) {
                         composable("Home") { HomeScreen() }
-                        composable("Neues") { NewScreen() }
+                        composable("Anpassen") { CustomizeScreen() }
                         composable("Spielen") { PlayScreen() }
                     }
                 }
