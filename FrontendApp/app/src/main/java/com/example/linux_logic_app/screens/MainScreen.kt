@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
+import androidx.compose.material.icons.twotone.ManageAccounts
 import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material.icons.twotone.NotificationsActive
 import androidx.compose.material.icons.twotone.PlayArrow
@@ -66,7 +67,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
-import com.example.linux_logic_app.ui.theme.LiloMain
+import com.example.linux_logic_app.ui.theme.LiloOrange
 import kotlinx.coroutines.launch
 
 /*
@@ -127,7 +128,7 @@ fun MainScreen() {
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(start = 8.dp),
+                        .padding(start = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
@@ -144,8 +145,8 @@ fun MainScreen() {
                 }
 
                 HorizontalDivider(
-                    thickness = 3.dp,
-                    color = LiloMain
+                    thickness = 5.dp,
+                    color = LiloOrange
                 )
 
                 NavigationDrawerItem(
@@ -200,6 +201,7 @@ fun MainScreen() {
                     label = {
                         Text(
                             text ="Mehr über Linux Logic",
+                            style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     },
@@ -222,38 +224,46 @@ fun MainScreen() {
             gesturesEnabled = endDrawerState.isOpen,
             drawerContent = {
                 ModalDrawerSheet(
-                    drawerContainerColor = Color(0xFF445a65),
-                    drawerContentColor = Color.White,
+                    drawerContainerColor = MaterialTheme.colorScheme.background,
+                    drawerContentColor = MaterialTheme.colorScheme.onBackground,
                     drawerShape = RoundedCornerShape(topEnd = 64.dp, bottomEnd = 64.dp), // Abgerundete Ecken am Ende
                     drawerState = endDrawerState, // Der EndDrawerState (Verwendung von `rememberDrawerState()` zur Initialisierung)
                 ) {
-                    Text(
-                        text = "Dein Profil",
+                    Row(
                         modifier = Modifier
-                            .padding(16.dp),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Color.White
-                    )
+                            .padding(start = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.TwoTone.ManageAccounts,
+                            contentDescription = "ManageAccounts Icon for Main"
+                        )
+                        Text(
+                            text = "Dein Profil",
+                            modifier = Modifier
+                                .padding(16.dp),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+
 
                     HorizontalDivider(
-                        thickness = 2.dp,
-                        color = Color(0xFFFF8c00)
+                        thickness = 5.dp,
+                        color = LiloOrange
                     )
 
                     NavigationDrawerItem(
                         label = {
                             Text(
                                 text = "Account Informationen",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.Security,
-                                contentDescription = "Security icon for Main",
-                                tint = Color.White
+                                contentDescription = "Security icon for Main"
                             )
                         },
                         onClick = {
@@ -263,23 +273,21 @@ fun MainScreen() {
 
                     HorizontalDivider(
                         thickness = 1.dp,
-                        color = Color(0xFF404242)
+                        color = LiloBlue
                     )
 
                     NavigationDrawerItem(
                         label = {
                             Text(
                                 text = "Einstellungen",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.Settings,
-                                contentDescription = "Settings Icon for Main",
-                                tint = Color.White
+                                contentDescription = "Settings Icon for Main"
                             )
                         },
                         onClick = {
@@ -289,23 +297,21 @@ fun MainScreen() {
 
                     HorizontalDivider(
                         thickness = 1.dp,
-                        color = Color(0xFF404242)
+                        color = LiloBlue
                     )
 
                     NavigationDrawerItem(
                         label = {
                             Text(
                                 text = "Mitteilungen",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.NotificationsActive,
-                                contentDescription = "Notifications Active Icon for Main",
-                                tint = Color.White
+                                contentDescription = "NotificationsActive Icon for Main"
                             )
                         },
                         onClick = {
@@ -315,23 +321,21 @@ fun MainScreen() {
 
                     HorizontalDivider(
                         thickness = 1.dp,
-                        color = Color(0xFF404242)
+                        color = LiloBlue
                     )
 
                     NavigationDrawerItem(
                         label = {
                             Text(
                                 text = "Feedback senden",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.RateReview,
-                                contentDescription = "RateReview Icon for Main",
-                                tint = Color.White
+                                contentDescription = "RateReview Icon for Main"
                             )
                         },
                         onClick = {
@@ -341,23 +345,21 @@ fun MainScreen() {
 
                     HorizontalDivider(
                         thickness = 1.dp,
-                        color = Color(0xFF404242)
+                        color = LiloBlue
                     )
 
                     NavigationDrawerItem(
                         label = {
                             Text(
                                 text = "Hilfe",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.AutoMirrored.TwoTone.Help,
-                                contentDescription = "Help Icon for Main",
-                                tint = Color.White
+                                contentDescription = "Help Icon for Main"
                             )
                         },
                         onClick = {
@@ -367,7 +369,7 @@ fun MainScreen() {
 
                     HorizontalDivider(
                         thickness = 1.dp,
-                        color = Color(0xFF404242)
+                        color = LiloBlue
                     )
 
                     NavigationDrawerItem(
@@ -375,15 +377,13 @@ fun MainScreen() {
                             Text(
                                 text = "Abmelden",
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.AutoMirrored.TwoTone.Logout,
-                                contentDescription = "Logout Icon for Main",
-                                tint = Color.White
+                                contentDescription = "Logout Icon for Main"
                             )
                         },
                         onClick = {
@@ -507,9 +507,12 @@ fun MainScreen() {
                                     BadgedBox(
                                         badge = {
                                             if(item.badgeCount != null) {
-                                                Badge {
+                                                Badge(
+                                                    containerColor = Color(0xFFA00000),
+                                                ) {
                                                     Text(
-                                                        text = item.badgeCount.toString()
+                                                        text = "!",//item.badgeCount.toString(),
+                                                        style = MaterialTheme.typography.labelSmall
                                                     )
                                                 }
                                             } else if(item.hasNews) {
