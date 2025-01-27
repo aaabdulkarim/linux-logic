@@ -28,7 +28,6 @@ h2 {
 }
 h3 {
   font-size: 2rem;
-
   color: #569191;
 }
 h4 {
