@@ -81,9 +81,9 @@
     <style scoped>
     .register-page {
         background-color: #569191;
-        background-image: url('@/assets/abstract_art_aqua_final.webp');
+        background-image: url('@/assets/abstract_background.webp');
         background-size: cover;
-        background-position: center;
+        background-position: bottom;
 
     }
     
@@ -92,7 +92,7 @@
         padding: 2rem;
         border-radius: 1rem;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        width: 35%;
+        width: 40%;
         min-width: 420px;
     }
     .name {
