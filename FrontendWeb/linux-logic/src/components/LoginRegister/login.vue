@@ -13,8 +13,8 @@
 
         <div class="login-actions">
           <div class="stay-logged-in">
-            <label for="stayLoggedIn">Angemeldet bleiben</label>
             <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" />
+            <label for="stayLoggedIn">Angemeldet bleiben</label>
           </div>
           <div class="forgot-password">
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
@@ -61,14 +61,6 @@ export default {
       };
     }
   },
-  methods: {
-    onSubmit() {
-      // Logik für die Anmeldung
-      console.log('E-Mail:', this.email);
-      console.log('Passwort:', this.password);
-      console.log('Angemeldet bleiben:', this.stayLoggedIn);
-    }
-  }
 };
 </script>
 
@@ -137,7 +129,7 @@ export default {
   margin-top: 4rem;
 }
 .p-checkbox {
-  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 ::v-deep .p-checkbox .p-checkbox-box {
   width: 20px;
