@@ -13,14 +13,13 @@
 
         <div class="login-actions">
           <div class="stay-logged-in">
-            <label for="stayLoggedIn">Angemeldet bleiben</label>
             <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" />
+            <label for="stayLoggedIn">Angemeldet bleiben</label>
           </div>
           <div class="forgot-password">
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
           </div>
         </div>
-
           <Button label="Anmelden" />
       </form>
 
@@ -62,23 +61,15 @@ export default {
       };
     }
   },
-  methods: {
-    onSubmit() {
-      // Logik für die Anmeldung
-      console.log('E-Mail:', this.email);
-      console.log('Passwort:', this.password);
-      console.log('Angemeldet bleiben:', this.stayLoggedIn);
-    }
-  }
 };
 </script>
 
 <style scoped>
 .login-page {
   background-color: #569191;
-  background-image: url('@/assets/abstract_art_aqua_final.webp');
+  background-image: url('@/assets/abstract_background.webp');
   background-size: cover;
-  background-position: center;
+  background-position: bottom;
 }
 
 .login-container {
@@ -86,7 +77,7 @@ export default {
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  width: 35%;
+  width: 40%;
   min-width: 420px;
 }
 
@@ -138,7 +129,7 @@ export default {
   margin-top: 4rem;
 }
 .p-checkbox {
-  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 ::v-deep .p-checkbox .p-checkbox-box {
   width: 20px;

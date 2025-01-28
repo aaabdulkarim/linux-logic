@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-color: #569191;
 }
 
 h1, h2, h3, h4{
@@ -39,7 +40,6 @@ h2 {
 }
 h3 {
   font-size: 2rem;
-
   color: #569191;
 }
 h4 {

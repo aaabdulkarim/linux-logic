@@ -7,7 +7,7 @@
         <div class="chart-container col-12">
             <canvas id="linuxChart"></canvas>
         </div>
-        <div class="unten col-12 md-8grid">
+        <div class="unten col-12 md-8 grid">
         <p-splitter class="splitter" >
             <!-- Linke Seite: Wissensübersicht und Verteilung -->
             <p-splitter-panel class="splitter-left" minSize="50" size="75">

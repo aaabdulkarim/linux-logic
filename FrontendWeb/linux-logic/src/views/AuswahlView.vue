@@ -1,6 +1,6 @@
 <template>
 <Header />
-<Auswahl
+<Auswahl />
 <Footer />
 </template>
 
