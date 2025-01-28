@@ -12,21 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Palette
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,22 +30,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.linux_logic_app.ui.theme.LiloMain
+import androidx.compose.ui.window.Dialog
 
 @Composable
 fun CustomizeScreen() {
-    val headerColor = remember { mutableStateOf(Color.Black) }
-    val textColor = remember { mutableStateOf(Color.White) }
-    val colorOptions =
-        listOf(Color.Black, Color.Gray, Color.White, Color.Red, Color.Green, Color.Blue)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-
     ) {
         Text(
             text = "Passe dein Terminal individuell an!",
@@ -62,130 +49,126 @@ fun CustomizeScreen() {
                 .align(Alignment.CenterHorizontally)
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.TwoTone.Palette,
-                contentDescription = "Palette Icon for Customization",
-                tint = LiloMain
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = "Farboptionen:",
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-
-    }
-}
-
-@Composable
-fun ColorPickerDropdown(
-    selectedColor: MutableState<Color>,
-    label: String
-) {
-    var expanded by remember { mutableStateOf(false) }
-    var showColorDialog by remember { mutableStateOf(false) }
-
-    Column {
-        // Label für den Picker
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(vertical = 8.dp)
+            text = "Farboptionen für Terminal-Kopf:",
+            style = MaterialTheme.typography.bodyLarge
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ColorCustomizationComponent(
+            defaultColors = listOf(
+                Color.Black, Color.Gray, Color.White, Color.Red, Color.Green, Color.Blue
+            )
+        )
+    }
+}
+
+@Composable
+fun ColorCustomizationComponent(defaultColors: List<Color>) {
+    var selectedColor by remember { mutableStateOf(Color.Black) }
+    var isColorPickerDialogOpen by remember { mutableStateOf(false) }
+    var expandedDropdown by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Color Picker Box
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(selectedColor.value, shape = RoundedCornerShape(8.dp))
-                .clickable { expanded = !expanded }
-                .padding(12.dp)
-        ) {
-            Text(
-                text = "Aktuell ausgewählt",
-                color = Color.White
-            )
-        }
+                .size(50.dp)
+                .background(selectedColor, RoundedCornerShape(8.dp))
+                .clickable { isColorPickerDialogOpen = true }
+        )
 
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
+        Spacer(modifier = Modifier.width(16.dp))
+
+        // Dropdown for Standard Colors
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+                .padding(8.dp)
+                .clickable { expandedDropdown = !expandedDropdown }
         ) {
-            DropdownMenuItem(
-                text = { Text("Wähle Farbe aus") },
-                onClick = {
-                    expanded = false
-                    showColorDialog = true
+            Text("Standardfarben auswählen")
+
+            DropdownMenu(
+                expanded = expandedDropdown,
+                onDismissRequest = { expandedDropdown = false }
+            ) {
+                defaultColors.forEach { color ->
+                    DropdownMenuItem(
+                        text = { Box(modifier = Modifier.size(24.dp).background(color)) },
+                        onClick = {
+                            selectedColor = color
+                            expandedDropdown = false
+                        }
+                    )
                 }
-            )
+            }
         }
+    }
 
-        if (showColorDialog) {
-            ColorPickerDialog(
-                initialColor = selectedColor.value,
-                onColorSelected = {
-                    selectedColor.value = it
-                    showColorDialog = false
-                },
-                onDismiss = { showColorDialog = false }
-            )
+    // Color Picker Dialog
+    if (isColorPickerDialogOpen) {
+        Dialog(onDismissRequest = { isColorPickerDialogOpen = false }) {
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text("Farbe auswählen", fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    ColorSlider(
+                        onColorSelected = { selectedColor = it }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { isColorPickerDialogOpen = false }) {
+                        Text("Fertig")
+                    }
+                }
+            }
         }
     }
 }
 
-
 @Composable
-fun ColorPickerDialog(
-    initialColor: Color,
-    onColorSelected: (Color) -> Unit,
-    onDismiss: () -> Unit
-) {
-    var red by remember { mutableStateOf(initialColor.red) }
-    var green by remember { mutableStateOf(initialColor.green) }
-    var blue by remember { mutableStateOf(initialColor.blue) }
+fun ColorSlider(onColorSelected: (Color) -> Unit) {
+    var red by remember { mutableStateOf(0f) }
+    var green by remember { mutableStateOf(0f) }
+    var blue by remember { mutableStateOf(0f) }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Farbe auswählen") },
-        text = {
-            Column {
-                Text("Rot: ${(red * 255).toInt()}")
-                Slider(
-                    value = red,
-                    onValueChange = { red = it },
-                    valueRange = 0f..1f
-                )
-
-                Text("Grün: ${(green * 255).toInt()}")
-                Slider(
-                    value = green,
-                    onValueChange = { green = it },
-                    valueRange = 0f..1f
-                )
-
-                Text("Blau: ${(blue * 255).toInt()}")
-                Slider(
-                    value = blue,
-                    onValueChange = { blue = it },
-                    valueRange = 0f..1f
-                )
+    Column {
+        Text("Rot")
+        Slider(
+            value = red,
+            onValueChange = {
+                red = it
+                onColorSelected(Color(red, green, blue))
             }
-        },
-        confirmButton = {
-            TextButton(onClick = { onColorSelected(Color(red, green, blue)) }) {
-                Text("Auswählen")
+        )
+        Text("Grün")
+        Slider(
+            value = green,
+            onValueChange = {
+                green = it
+                onColorSelected(Color(red, green, blue))
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Abbrechen")
+        )
+        Text("Blau")
+        Slider(
+            value = blue,
+            onValueChange = {
+                blue = it
+                onColorSelected(Color(red, green, blue))
             }
-        }
-    )
+        )
+    }
 }
+
