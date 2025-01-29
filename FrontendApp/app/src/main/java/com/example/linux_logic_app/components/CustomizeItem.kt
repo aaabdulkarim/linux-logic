@@ -12,7 +12,7 @@ import com.example.linux_logic_app.R
  * und eine optionale Beschreibung.
  *
  * @property name Der Name der Anpassung, z. B. "Farbe anpassen".
- * @property iconResId Eine optionale Ressourcen-ID des Icons, das für diese Anpassung verwendet wird.
+ * @property backgroundImage Eine optionale Ressourcen-ID des Icons, das für diese Anpassung verwendet wird.
  * @property description Eine optionale Beschreibung, die zusätzliche Informationen zu dieser Anpassung liefert.
  */
 data class CustomizationItem(
@@ -36,53 +36,6 @@ val customizationList = listOf(
      * Sie enthält den Namen der Anpassung, eine Ressourcen-ID für das Bild-Icon und eine Beschreibung.
      */
     CustomizationItem(
-        name = "Farbe anpassen",
-        backgroundImage = R.drawable.colors_customize,
-        icon = Icons.TwoTone.Palette,
-        description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
-    ),
-    CustomizationItem(
-        name = "Farbe anpassen",
-        backgroundImage = R.drawable.colors_customize,
-        icon = Icons.TwoTone.Palette,
-        description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
-    ),
-    CustomizationItem(
-        name = "Farbe anpassen",
-        backgroundImage = R.drawable.colors_customize,
-        icon = Icons.TwoTone.Palette,
-        description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
-    ),
-    CustomizationItem(
-        name = "Farbe anpassen",
-        backgroundImage = R.drawable.colors_customize,
-        icon = Icons.TwoTone.Palette,
-        description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
-    ),
-    CustomizationItem(
-        name = "Farbe anpassen",
-        backgroundImage = R.drawable.colors_customize,
-        icon = Icons.TwoTone.Palette,
-        description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
-    ),
-    CustomizationItem(
-        name = "Farbe anpassen",
-        backgroundImage = R.drawable.colors_customize,
-        icon = Icons.TwoTone.Palette,
-        description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
-    ),
-    CustomizationItem(
-        name = "Farbe anpassen",
-        backgroundImage = R.drawable.colors_customize,
-        icon = Icons.TwoTone.Palette,
-        description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
-    ),
-    CustomizationItem(
-        name = "Farbe anpassen",
-        backgroundImage = R.drawable.colors_customize,
-        icon = Icons.TwoTone.Palette,
-        description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
-    ),CustomizationItem(
         name = "Farbe anpassen",
         backgroundImage = R.drawable.colors_customize,
         icon = Icons.TwoTone.Palette,

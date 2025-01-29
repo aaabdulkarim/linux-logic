@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.twotone.Colorize
 import androidx.compose.material.icons.twotone.Palette
 import androidx.compose.material3.AlertDialog
@@ -50,9 +51,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.linux_logic_app.R
 import com.example.linux_logic_app.components.ColorPicker
 import com.example.linux_logic_app.components.CustomizationItem
-import com.example.linux_logic_app.components.customizationList
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDark
 import com.example.linux_logic_app.ui.theme.LiloDarkSec
@@ -97,8 +98,8 @@ fun CustomizeScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
             .verticalScroll(rememberScrollState())
+            .padding(16.dp)
     ) {
         Text(
             text = "Passe dein Terminal individuell an!",
@@ -140,14 +141,14 @@ fun CustomizeScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            customizationList.forEach { item ->
-                CustomizationCard(customizationItem = item)
-            }
-        }
+        CustomizationCard(
+            customizationItem = CustomizationItem(
+                name = "Farben anpassen",
+                icon = Icons.Filled.Palette,
+                backgroundImage = R.drawable.colors_customize,
+                description = "Ein Bild zur Beschreibung der Anpassung für Farben im Terminal"
+            )
+        )
     }
 }
 
@@ -348,7 +349,7 @@ fun CustomizationCard(customizationItem: CustomizationItem) {
     ) {
         Box(
             modifier = Modifier
-                .height(80.dp)
+                .height(100.dp)
                 .fillMaxWidth()
         ) {
             Image(
