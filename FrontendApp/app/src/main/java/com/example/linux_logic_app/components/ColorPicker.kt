@@ -3,6 +3,7 @@ package com.example.linux_logic_app.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,7 +33,7 @@ fun ColorPicker(onColorSelected: (Color) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -42,7 +43,7 @@ fun ColorPicker(onColorSelected: (Color) -> Unit) {
             AlphaTile(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(30.dp)
+                    .height(32.dp)
                     .clip(RoundedCornerShape(6.dp)),
                 controller = controller
             )
@@ -50,8 +51,8 @@ fun ColorPicker(onColorSelected: (Color) -> Unit) {
         HsvColorPicker(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
-                .padding(10.dp),
+                .fillMaxHeight(fraction = 0.7f)
+                .padding(8.dp),
             controller = controller,
             onColorChanged = { colorEnvelope ->
                 val color = colorEnvelope.color
@@ -62,8 +63,8 @@ fun ColorPicker(onColorSelected: (Color) -> Unit) {
         AlphaSlider(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
-                .height(35.dp),
+                .padding(8.dp)
+                .height(32.dp),
             controller = controller,
             tileOddColor = Color.White,
             tileEvenColor = Color.Black
@@ -71,8 +72,8 @@ fun ColorPicker(onColorSelected: (Color) -> Unit) {
         BrightnessSlider(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
-                .height(35.dp),
+                .padding(8.dp)
+                .height(32.dp),
             controller = controller,
         )
     }
