@@ -16,7 +16,7 @@
         >
           <template #header>
             
-            <h2>{{ level.name }}</h2>
+            <h2 style="color: white;">{{ level.name }}</h2>
             <small>Schwierigkeit: {{ level.difficulty }}</small>
           </template>
           <template #content>
@@ -44,7 +44,7 @@
           :key="level.id"
         >
           <template #header>
-            <h2>{{ level.name }}</h2>
+            <h2 style="color: white;">{{ level.name }}</h2>
             <small>Schwierigkeit: {{ level.difficulty }}</small>
           </template>
           <template #content>
@@ -137,7 +137,6 @@ export default {
   padding-bottom: 7rem;
   position: static;
 }
-
 .cards-container {
   display: flex;
   gap: 2rem;
@@ -146,24 +145,28 @@ export default {
   padding: 2rem;
   background-color: white;
 }
-
+.cards-container >>> .p-card-header {
+  background-color: #569191;
+  color: white;
+}
 .cards-container >>> .p-card-body {
   background-color: white;
   color: #3D525C;
+  border: 1px solid #569191;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
 }
 .cards-container >>> .p-button {
-  border: 1px solid #3D525C;
-  color: #3D525C;
+  border: 1px solid #569191;
+  color: #569191;
   background-color: transparent;
 }
 .cards-container >>> .p-button:hover {
   border: 1px solid white !important;
   color: white !important;
-  background-color: #3D525C !important;
+  background-color: #569191 !important;
 }
 .cards-container .m-0 {
   font-size: 1rem;
