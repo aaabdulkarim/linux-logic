@@ -3,6 +3,7 @@ package com.example.linux_logic_app.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -47,8 +48,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.linux_logic_app.navigation.Course
-import com.example.linux_logic_app.navigation.courseList
+import com.example.linux_logic_app.components.Course
+import com.example.linux_logic_app.components.courseList
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDarkText
 import com.example.linux_logic_app.ui.theme.LiloMain
@@ -87,7 +88,6 @@ fun PlayScreen() {
                 }
             }
         }
-
         CourseEditDetails(course = selectedCourse, onPlayClick = { selectedCourse = null })
     }
 }
@@ -113,7 +113,8 @@ fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit) {
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
-                    .align(Alignment.Center),
+                    .align(Alignment.Center)
+                    ,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
@@ -131,7 +132,8 @@ fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit) {
                     modifier = Modifier
                         .clickable {
                             isExpanded = !isExpanded
-                        },
+                        }
+                        .animateContentSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {

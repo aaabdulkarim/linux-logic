@@ -2,9 +2,12 @@ package com.example.linux_logic_app.screens
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,19 +25,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.twotone.Colorize
 import androidx.compose.material.icons.twotone.Palette
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,12 +43,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
+import com.example.linux_logic_app.components.CustomizationItem
+import com.example.linux_logic_app.components.customizationList
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDark
 import com.example.linux_logic_app.ui.theme.LiloDarkSec
@@ -68,12 +71,24 @@ https://github.com/skydoves/colorpicker-compose/tree/main
 fun CustomizeScreen() {
     val defaultColorList = listOf(
         Color.White to "Weiß",
-        Color.Black to "Schwarz", Color.Cyan to "Cyan", Color.Magenta to "Magenta", Color.Yellow to "Gelb",
-        Color.Red to "Rot", Color.Green to "Grün", Color.Blue to "Blau",
-        Color.Gray to "Grau", Color.LightGray to "Hellgrau", Color.DarkGray to "Dunkelgrau",
-        LiloMain to "Lilo Hauptfarbe", LiloMainSec to "Lilo Sekundärfarbe", LiloOrange to "Lilo Orange", LiloBlue to "Lilo Blau",
-        LiloLight to "Lilo Hell", LiloLightSec to "Lilo Hell Sekundär",
-        LiloDark to "Lilo Dunkel", LiloDarkSec to "Lilo Dunkel Sekundär"
+        Color.Black to "Schwarz",
+        Color.Cyan to "Cyan",
+        Color.Magenta to "Magenta",
+        Color.Yellow to "Gelb",
+        Color.Red to "Rot",
+        Color.Green to "Grün",
+        Color.Blue to "Blau",
+        Color.Gray to "Grau",
+        Color.LightGray to "Hellgrau",
+        Color.DarkGray to "Dunkelgrau",
+        LiloMain to "Lilo Hauptfarbe",
+        LiloMainSec to "Lilo Sekundärfarbe",
+        LiloOrange to "Lilo Orange",
+        LiloBlue to "Lilo Blau",
+        LiloLight to "Lilo Hell",
+        LiloLightSec to "Lilo Hell Sekundär",
+        LiloDark to "Lilo Dunkel",
+        LiloDarkSec to "Lilo Dunkel Sekundär"
     )
 
     var selectedColor by remember { mutableStateOf(Color.Black) }
@@ -125,11 +140,14 @@ fun CustomizeScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomizationCard(
-            "Farboptionen",
-            Icons.TwoTone.Palette
-        )
-
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            customizationList.forEach { item ->
+                CustomizationCard(customizationItem = item)
+            }
+        }
     }
 }
 
@@ -315,53 +333,71 @@ fun ColorPickerDialog(
 https://www.youtube.com/watch?v=SNcMCH5DqaM
  */
 @Composable
-fun CustomizationCard(name: String, icon: ImageVector) {
-    var expanded by remember { mutableStateOf(false) }
+fun CustomizationCard(customizationItem: CustomizationItem) {
+    var isExpanded by remember { mutableStateOf(false) }
+    val rotationAngle by animateFloatAsState(
+        targetValue = if (isExpanded) 180f else 0f,
+        label = "Rotation of Arrow-Icon"
+    )
 
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        ),
         modifier = Modifier
             .padding(4.dp)
+            .clickable { isExpanded = !isExpanded },
+        border = BorderStroke(5.dp, LiloMain)
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .padding(12.dp)
-                .animateContentSize()
+                .height(80.dp)
+                .fillMaxWidth()
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = "Icon for Customization Option",
-                tint = LiloMain
-            )
-            Column(
+            Image(
+                painter = painterResource(id = customizationItem.backgroundImage),
+                contentDescription = customizationItem.name,
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(12.dp)
-            ) {
-                Text("Anpassung - ")
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                if(expanded) {
-                    Text(text = "dfsdfdsfsf".repeat(4))
-                }
-            }
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
 
-            IconButton(
-                onClick = {
-                    expanded = !expanded
-                }
+            Row(
+                modifier = Modifier
+                    .fillMaxSize() // Die gesamte Row füllen um den Content zu centern
+                    .padding(12.dp)
+                    .animateContentSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    imageVector = if(expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = if(expanded) "Show less" else "Show more"
+                    imageVector = customizationItem.icon,
+                    contentDescription = "Custom Icon",
+                    modifier = Modifier.size(40.dp),
+                    tint = Color.White
+                )
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        text = customizationItem.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    if (isExpanded) {
+                        // Options Terminal Header etc.
+                    }
+                }
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    modifier = Modifier
+                        .graphicsLayer(rotationZ = rotationAngle),
+                    contentDescription = if (isExpanded) "Show less" else "Show more",
+                    tint = Color.White
                 )
             }
         }
     }
-
 }
