@@ -1,5 +1,6 @@
 package com.example.linux_logic_app.screens
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,14 +22,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.twotone.Colorize
 import androidx.compose.material.icons.twotone.Palette
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
@@ -118,6 +125,10 @@ fun CustomizeScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        CustomizationCard(
+            "Farboptionen",
+            Icons.TwoTone.Palette
+        )
 
     }
 }
@@ -176,25 +187,29 @@ fun ColorCustomizer(
             expanded = showDefaultColors,
             onDismissRequest = {
                 showDefaultColors = false
-            }
+            },
+            modifier = Modifier
+                .height(300.dp)
+                .animateContentSize()
         ) {
             defaultColorList.forEach { (color, name) ->
                 DropdownMenuItem(
                     text = {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(16.dp)
-                                    .background(color)
+                                    .size(24.dp)
+                                    .background(color, shape = RoundedCornerShape(8.dp))
                             )
 
                             Spacer(modifier = Modifier.width(8.dp))
 
                             Text(
                                 text = name,
-                                color = MaterialTheme.colorScheme.onBackground
+                                color = MaterialTheme.colorScheme.onBackground,
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     },
@@ -206,6 +221,7 @@ fun ColorCustomizer(
                 )
             }
         }
+
     }
 
     if (showColorPicker) {
@@ -293,4 +309,59 @@ fun ColorPickerDialog(
             }
         }
     )
+}
+
+/*
+https://www.youtube.com/watch?v=SNcMCH5DqaM
+ */
+@Composable
+fun CustomizationCard(name: String, icon: ImageVector) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        modifier = Modifier
+            .padding(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .animateContentSize()
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = "Icon for Customization Option",
+                tint = LiloMain
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(12.dp)
+            ) {
+                Text("Anpassung - ")
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                if(expanded) {
+                    Text(text = "dfsdfdsfsf".repeat(4))
+                }
+            }
+
+            IconButton(
+                onClick = {
+                    expanded = !expanded
+                }
+            ) {
+                Icon(
+                    imageVector = if(expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    contentDescription = if(expanded) "Show less" else "Show more"
+                )
+            }
+        }
+    }
+
 }
