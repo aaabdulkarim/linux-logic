@@ -1,6 +1,7 @@
 package com.example.linux_logic_app.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,10 +16,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.twotone.Palette
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,14 +54,15 @@ https://github.com/skydoves/colorpicker-compose/tree/main
 @Composable
 fun CustomizeScreen() {
     val defaultColorList = listOf(
-        Color.Black, Color.Cyan, Color.Magenta, Color.Yellow,
-        Color.Gray, Color.LightGray, Color.DarkGray,
-        Color.White,
-        Color.Red, Color.Green, Color.Blue,
-        LiloMain, LiloMainSec, LiloOrange, LiloBlue,
-        LiloLight, LiloLightSec,
-        LiloDark, LiloDarkSec
+        Color.Black to "Schwarz", Color.Cyan to "Cyan", Color.Magenta to "Magenta", Color.Yellow to "Gelb",
+        Color.Gray to "Grau", Color.LightGray to "Hellgrau", Color.DarkGray to "Dunkelgrau",
+        Color.White to "Weiß",
+        Color.Red to "Rot", Color.Green to "Grün", Color.Blue to "Blau",
+        LiloMain to "Lilo Hauptfarbe", LiloMainSec to "Lilo Sekundärfarbe", LiloOrange to "Lilo Orange", LiloBlue to "Lilo Blau",
+        LiloLight to "Lilo Hell", LiloLightSec to "Lilo Hell Sekundär",
+        LiloDark to "Lilo Dunkel", LiloDarkSec to "Lilo Dunkel Sekundär"
     )
+
     var selectedColor by remember { mutableStateOf(Color.Black) }
 
     Column(
@@ -63,7 +71,6 @@ fun CustomizeScreen() {
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
-
     ) {
         Text(
             text = "Passe dein Terminal individuell an!",
@@ -74,90 +81,95 @@ fun CustomizeScreen() {
                 .align(Alignment.CenterHorizontally)
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.TwoTone.Palette,
-                contentDescription = "Palette Icon for Customization",
-                tint = LiloMain
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = "Farboptionen:",
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Terminal-Kopf:",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            ColorPicker(onColorSelected = { color ->
-                // Update the selected color when the user picks a color
-                selectedColor = color
-            })
-
-
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Box(
-            modifier = Modifier
-                .size(50.dp)
-                .background(selectedColor, RoundedCornerShape(8.dp))
+        ColorPickerWithDropdown(
+            selectedColor = selectedColor,
+            onColorSelected = { color -> selectedColor = color },
+            defaultColorList = defaultColorList
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Terminal-Körper:",
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Kopfzeile:",
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Befehle:",
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-        }
     }
 }
 
 
+@Composable
+fun ColorPickerWithDropdown(
+    selectedColor: Color,
+    onColorSelected: (Color) -> Unit,
+    defaultColorList: List<Pair<Color, String>>
+) {
+    var showColorPicker by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier
+                .size(50.dp)
+                .background(selectedColor, RoundedCornerShape(8.dp))
+                .clickable { showColorPicker = true }
+        )
 
+        Spacer(modifier = Modifier.width(8.dp))
 
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                imageVector = Icons.Default.ArrowDropDown,
+                contentDescription = "Dropdown Icon"
+            )
+        }
 
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            defaultColorList.forEach { (color, name) ->
+                DropdownMenuItem(
+                    text = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(modifier = Modifier.size(24.dp).background(color))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(name)
+                        }
+                    },
+                    onClick = {
+                        onColorSelected(color)
+                        expanded = false
+                    }
+                )
+            }
+        }
+
+        if (showColorPicker) {
+            AlertDialog(
+                onDismissRequest = { showColorPicker = false },
+                title = { Text("Wähle eine Farbe") },
+                text = {
+                    Column {
+                        ColorPicker(onColorSelected = { color ->
+                            onColorSelected(color)
+                        })
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = { showColorPicker = false }
+                    ) {
+                        Text("Bestätigen")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { showColorPicker = false }
+                    ) {
+                        Text("Abbrechen")
+                    }
+                }
+            )
+        }
+    }
+}
