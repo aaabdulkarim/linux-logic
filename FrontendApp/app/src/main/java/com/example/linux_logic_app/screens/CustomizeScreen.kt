@@ -70,30 +70,6 @@ https://github.com/skydoves/colorpicker-compose/tree/main
  */
 @Composable
 fun CustomizeScreen() {
-    val defaultColorList = listOf(
-        Color.White to "Weiß",
-        Color.Black to "Schwarz",
-        Color.Cyan to "Cyan",
-        Color.Magenta to "Magenta",
-        Color.Yellow to "Gelb",
-        Color.Red to "Rot",
-        Color.Green to "Grün",
-        Color.Blue to "Blau",
-        Color.Gray to "Grau",
-        Color.LightGray to "Hellgrau",
-        Color.DarkGray to "Dunkelgrau",
-        LiloMain to "Lilo Hauptfarbe",
-        LiloMainSec to "Lilo Sekundärfarbe",
-        LiloOrange to "Lilo Orange",
-        LiloBlue to "Lilo Blau",
-        LiloLight to "Lilo Hell",
-        LiloLightSec to "Lilo Hell Sekundär",
-        LiloDark to "Lilo Dunkel",
-        LiloDarkSec to "Lilo Dunkel Sekundär"
-    )
-
-    var selectedColor by remember { mutableStateOf(Color.Black) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -111,35 +87,6 @@ fun CustomizeScreen() {
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.TwoTone.Palette,
-                contentDescription = "Palette Icon for Customization",
-                tint = LiloMain
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = "Farboptionen:",
-                style = MaterialTheme.typography.bodyLarge
-            )
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        ColorCustomizer(
-            selectedColor = selectedColor,
-            onColorSelected = { color ->
-                selectedColor = color
-            },
-            defaultColorList = defaultColorList
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         CustomizationCard(
             customizationItem = CustomizationItem(
@@ -332,6 +279,8 @@ fun ColorPickerDialog(
 
 /*
 https://www.youtube.com/watch?v=SNcMCH5DqaM
+Vorübergehend wird dieses Composable nicht wiederverwendbar gestaltet, da es bis jetzt nur die
+Anpassung der Farbe im terminal gibt.
  */
 @Composable
 fun CustomizationCard(customizationItem: CustomizationItem) {
@@ -341,63 +290,149 @@ fun CustomizationCard(customizationItem: CustomizationItem) {
         label = "Rotation of Arrow-Icon"
     )
 
+    var selectedColor by remember { mutableStateOf(LiloMain) }
+
+    val defaultColorList = listOf(
+        Color.White to "Weiß",
+        Color.Black to "Schwarz",
+        Color.Cyan to "Cyan",
+        Color.Magenta to "Magenta",
+        Color.Yellow to "Gelb",
+        Color.Red to "Rot",
+        Color.Green to "Grün",
+        Color.Blue to "Blau",
+        Color.Gray to "Grau",
+        Color.LightGray to "Hellgrau",
+        Color.DarkGray to "Dunkelgrau",
+        LiloMain to "Lilo Hauptfarbe",
+        LiloMainSec to "Lilo Sekundärfarbe",
+        LiloOrange to "Lilo Orange",
+        LiloBlue to "Lilo Blau",
+        LiloLight to "Lilo Hell",
+        LiloLightSec to "Lilo Hell Sekundär",
+        LiloDark to "Lilo Dunkel",
+        LiloDarkSec to "Lilo Dunkel Sekundär"
+    )
+
     Card(
         modifier = Modifier
             .padding(4.dp)
             .clickable { isExpanded = !isExpanded },
         border = BorderStroke(5.dp, LiloMain)
     ) {
-        Box(
-            modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth()
+        Column( // Use a Column as the main layout for the Card
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(id = customizationItem.backgroundImage),
-                contentDescription = customizationItem.name,
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(12.dp)),
-                contentScale = ContentScale.Crop
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxSize() // Die gesamte Row füllen um den Content zu centern
-                    .padding(12.dp)
-                    .animateContentSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                    .height(100.dp)
+                    .fillMaxWidth()
             ) {
-                Icon(
-                    imageVector = customizationItem.icon,
-                    contentDescription = "Custom Icon",
-                    modifier = Modifier.size(40.dp),
-                    tint = Color.White
+                Image(
+                    painter = painterResource(id = customizationItem.backgroundImage),
+                    contentDescription = customizationItem.name,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
                 )
 
-                Column(
+                Row(
                     modifier = Modifier
-                        .weight(1f)
+                        .fillMaxSize() // Die gesamte Row füllen um den Content zu centern
                         .padding(12.dp)
+                        .animateContentSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = customizationItem.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+                    Icon(
+                        imageVector = customizationItem.icon,
+                        contentDescription = "Custom Icon",
+                        modifier = Modifier.size(40.dp),
+                        tint = Color.White
                     )
-                    if (isExpanded) {
-                        // Options Terminal Header etc.
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(12.dp)
+                    ) {
+                        Text(
+                            text = customizationItem.name,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        if (isExpanded) {
+                            Column( // This Column is now inside the main Card Column
+                                modifier = Modifier.padding(16.dp) // Add some padding
+                            ) {
+                                Column {
+                                    Text(
+                                        text = "Terminal Kopf"
+                                    )
+
+                                    ColorCustomizer(
+                                        selectedColor = selectedColor,
+                                        onColorSelected = { color ->
+                                            selectedColor = color
+                                        },
+                                        defaultColorList = defaultColorList
+                                    )
+                                }
+
+                                Column {
+                                    Text(
+                                        text = "Terminal Körper"
+                                    )
+
+                                    ColorCustomizer(
+                                        selectedColor = selectedColor,
+                                        onColorSelected = { color ->
+                                            selectedColor = color
+                                        },
+                                        defaultColorList = defaultColorList
+                                    )
+                                }
+
+                                Column {
+                                    Text(
+                                        text = "Terminal Kopf (Text)"
+                                    )
+
+                                    ColorCustomizer(
+                                        selectedColor = selectedColor,
+                                        onColorSelected = { color ->
+                                            selectedColor = color
+                                        },
+                                        defaultColorList = defaultColorList
+                                    )
+                                }
+
+                                Column {
+                                    Text(
+                                        text = "Terminal Befehle"
+                                    )
+
+                                    ColorCustomizer(
+                                        selectedColor = selectedColor,
+                                        onColorSelected = { color ->
+                                            selectedColor = color
+                                        },
+                                        defaultColorList = defaultColorList
+                                    )
+                                }
+                            }
+                        }
                     }
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        modifier = Modifier
+                            .graphicsLayer(rotationZ = rotationAngle),
+                        contentDescription = if (isExpanded) "Show less" else "Show more",
+                        tint = Color.White
+                    )
                 }
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    modifier = Modifier
-                        .graphicsLayer(rotationZ = rotationAngle),
-                    contentDescription = if (isExpanded) "Show less" else "Show more",
-                    tint = Color.White
-                )
             }
         }
     }
