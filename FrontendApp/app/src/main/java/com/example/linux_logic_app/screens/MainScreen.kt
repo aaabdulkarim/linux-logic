@@ -239,7 +239,7 @@ fun MainScreen() {
                             contentDescription = "ManageAccounts Icon for Main"
                         )
                         Text(
-                            text = "Dein Profil",
+                            text = "Ihr Profil",
                             modifier = Modifier
                                 .padding(16.dp),
                             style = MaterialTheme.typography.labelLarge
