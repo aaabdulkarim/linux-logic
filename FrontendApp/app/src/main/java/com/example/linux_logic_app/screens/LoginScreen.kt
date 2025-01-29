@@ -160,6 +160,9 @@ fun LoginScreen(navController: NavController) {
                             "Invalide E-Mail Adresse!"
                         }
                     },
+                    /*colors = OutlinedTextFieldDefaults.colors(
+                        cursorColor = LiloMain,
+                    ),*/
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -196,7 +199,8 @@ fun LoginScreen(navController: NavController) {
                     value = password,
                     onValueChange = setPassword,
                     colors = OutlinedTextFieldDefaults.colors(
-                        cursorColor = LiloMain
+                        cursorColor = LiloMain,
+
                     ),
                     label = {
                         Text(

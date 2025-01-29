@@ -17,13 +17,14 @@
                 <InputText id="email" v-model="email"/>
                 <label for="password"><h5>Passwort</h5></label>
                 <Password id="password" v-model="password" :feedback="false" toggleMask/>
-                <label for="password"><h5>Passwort bestätigen</h5></label>
-                <Password id="password" v-model="password" :feedback="false" toggleMask/>
+                <label for="password_2"><h5>Passwort bestätigen</h5></label>
+                <Password id="password_2" v-model="password" :feedback="false" toggleMask/>
             </div>
             <div class="register-actions">
                 <div class="stay-logged-in">
-                <label for="stayLoggedIn">Angemeldet bleiben</label>
                 <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" />
+                <label for="stayLoggedIn">Angemeldet bleiben</label>
+                
                 </div>
             </div>
                 <Button label="Registrieren" />
@@ -67,23 +68,15 @@
             };
         }
         },
-        methods: {
-        onSubmit() {
-            // Logik für die Anmeldung
-            console.log('E-Mail:', this.email);
-            console.log('Passwort:', this.password);
-            console.log('Angemeldet bleiben:', this.stayLoggedIn);
-        }
-        }
     };
     </script>
     
     <style scoped>
     .register-page {
         background-color: #569191;
-        background-image: url('@/assets/abstract_art_aqua_final.webp');
+        background-image: url('@/assets/abstract_background.webp');
         background-size: cover;
-        background-position: center;
+        background-position: bottom;
 
     }
     
@@ -92,7 +85,7 @@
         padding: 2rem;
         border-radius: 1rem;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        width: 35%;
+        width: 40%;
         min-width: 420px;
     }
     .name {
@@ -175,7 +168,7 @@
         margin-top: 4rem;
     }
     .p-checkbox {
-        margin-left: 0.5rem;
+        margin-right: 0.5rem;
     }
     ::v-deep .p-checkbox .p-checkbox-box {
         width: 20px;

@@ -61,4 +61,6 @@ dependencies {
     implementation(libs.androidx.animation)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.okhttp)
+    // https://mvnrepository.com/artifact/com.github.skydoves/colorpicker-compose
+    implementation("com.github.skydoves:colorpicker-compose:1.1.2")
 }
