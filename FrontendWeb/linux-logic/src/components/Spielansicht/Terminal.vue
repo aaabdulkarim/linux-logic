@@ -125,7 +125,7 @@ export default {
     },
     respondToInput(input) {
       
-      if (input.toLowerCase() === "clear") {
+      if (input.toLowerCase() == "clear") {
         this.terminal.clear();
         this.writePrompt();
         return;
