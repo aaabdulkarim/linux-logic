@@ -43,7 +43,7 @@ export default {
     this.fitAddon.fit();
 
     // WebSocket Initialization (Move this above onmessage assignment)
-    let url = "ws://192.168.0.76:8000/ws";
+    let url = "ws://10.0.107.0:8000/ws";
     this.socketClient = new WebSocket(url);
 
     // WebSocket event handlers must be assigned AFTER initialization
@@ -152,7 +152,7 @@ export default {
 </script>
 
 <style scoped>
-#terminal-container {
+.terminal-container {
   width: 100%;
   height: 100%;
   background-color: #1e1e1e;
@@ -161,14 +161,17 @@ export default {
 }
 .terminal-header {
   font-family: 'Courier New', Courier, monospace;
-  background-color: #111;
+  background-color: #111; 
   color: #fff;
-  padding: 4px 10px;
+  padding-left: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   text-align: left;
   font-size: 18px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
+
 .terminal-output {
   text-align: center;
   color: #dcdcdc;
@@ -176,3 +179,5 @@ export default {
   border-bottom-right-radius: 5px;
 }
 </style>
+
+

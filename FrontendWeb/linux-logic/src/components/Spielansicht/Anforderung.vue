@@ -64,6 +64,8 @@ export default {
 <style scoped>
 .all {
   background-color: white;
+  padding-bottom: 18rem;
+  justify-content: center;
 }
 .container {
   background-color: white;
@@ -72,14 +74,14 @@ export default {
   align-items: center;
   justify-content: center;
   max-width: 1200px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .content {
   justify-content: left;
   text-align: left;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
 
 }
 
@@ -103,7 +105,6 @@ export default {
   max-width: 1200px;
   margin-top: 20px;
   padding: 0 20px;
-  padding-bottom: 18rem;
 }
 
 .right-icons {

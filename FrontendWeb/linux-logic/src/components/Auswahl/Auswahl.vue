@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     selectLevel(levelId) {
-      alert(`Level ${levelId} ausgewählt!`);
+      // alert(`Level ${levelId} ausgewählt!`);
       router.push("/terminal")
     }
   }
