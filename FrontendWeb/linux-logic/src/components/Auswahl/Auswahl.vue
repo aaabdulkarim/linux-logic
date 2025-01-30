@@ -1,11 +1,16 @@
 <template>
   <div class="LevelOben grid">
-    <h1 style="color: white;">Chapter</h1>
+    <h1 style="color: white;">Chapters</h1>
   </div>
   <div>
     <div class="beschreibung grid">
       <h3>Kapitel I: Mittelalter</h3>
-      <p>Im ersten Kapitel beschäftigen wir uns mit Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. </p>
+      <p> 
+        Der König plant eine große Eröffnung für das neue Schloss und hat dich mit
+        einfachen, aber wichtigen Aufgaben beauftragt, um sicherzustellen, dass alles
+        perfekt vorbereitet ist. Die Diener eilen geschäftig durch die großen Hallen, um die letzten Vorbereitungen zu treffen, während der königliche Gärtner die prachtvollen Blumenbeete inspiziert. Die Köche in der Schlossküche bereiten ein Festmahl vor, das die Gäste in Staunen versetzen soll. Doch plötzlich erreicht eine eilende Botschaft den König – ein unerwarteter Gast von weit her kündigt sein Kommen an.
+
+      </p>
     </div>
     <div class="card grid">
       <div class="col-12 cards-container">
@@ -34,38 +39,16 @@
     </div>
     <div class="beschreibung grid">
       <h3>Kapitel II: </h3>
-      <p>Im ersten Kapitel beschäftigen wir uns mit Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. </p>
+      <p>Gesperrt</p>
     </div>
-    <div class="card grid">
-      <div class="col-12 cards-container">
-        <Card 
-          style="width: 20rem; overflow: hidden;" 
-          v-for="level in levels" 
-          :key="level.id"
-        >
-          <template #header>
-            <h2 style="color: white;">{{ level.name }}</h2>
-            <small>Schwierigkeit: {{ level.difficulty }}</small>
-          </template>
-          <template #content>
-            <p class="m-0">
-              {{ level.description }}
-            </p>
-          </template>
-          <template #footer>
-            <div class="flex gap-4 mt-1">
-              <Button label="Start" @click="selectLevel(level.id)" severity="success" class="w-full" />
-            </div>
-          </template>
-        </Card>
-      </div>
-    </div>
+    
   </div>
 </template>
 
 <script>
 import Card from 'primevue/card';
 import Button from 'primevue/button';
+import router from '@/router';
 
 export default {
   components: {
@@ -111,6 +94,7 @@ export default {
   methods: {
     selectLevel(levelId) {
       alert(`Level ${levelId} ausgewählt!`);
+      router.push("/terminal")
     }
   }
 };

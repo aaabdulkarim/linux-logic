@@ -2,11 +2,16 @@
 <div class="all grid">
   <div class="container">
     <div class="header ">
-      <h1>Level1</h1>
+      <h1>Level 1</h1>
     </div>
     <div class="content">
-      <h2>Aufgabenstellung</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum.</p>
+      <h2>Beschreibung</h2>
+      <p>Den roten Teppich ausrollen:
+
+        Wechsel in das Verzeichnis der Veranstaltungsvorbereitung: cd
+        /home/Veranstaltung .
+        Erstelle eine Datei, die den roten Teppich darstellt: touch roter_teppich.txt .
+      </p>
     </div>
     <div class="terminal-container">
       <Terminal/>

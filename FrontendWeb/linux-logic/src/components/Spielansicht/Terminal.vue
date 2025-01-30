@@ -20,6 +20,7 @@ export default {
     return {
       terminal: null,
       fitAddon: null,
+      socketClient: null,
       promptLength: 13 // Länge des Prompts "logic@linux:~$ "
     };
   },
@@ -40,11 +41,61 @@ export default {
     this.terminal.loadAddon(this.fitAddon);
     this.terminal.open(this.$refs.terminalContainer);
     this.fitAddon.fit();
-    this.writePrompt();
+
+    // WebSocket Initialization (Move this above onmessage assignment)
+    let url = "ws://192.168.0.76:8000/ws";
+    this.socketClient = new WebSocket(url);
+
+    // WebSocket event handlers must be assigned AFTER initialization
+    this.socketClient.onopen = () => {
+      console.log("WebSocket connection established.");
+
+
+    };
+
+    this.socketClient.onmessage = (event) => {
+      this.terminal.write(`\r\n${event.data}`);
+      this.writePrompt();
+    };
+
+    this.socketClient.onerror = (error) => {
+      console.error("WebSocket Error:", error);
+    };
+
+    this.socketClient.onclose = () => {
+      console.warn("WebSocket connection closed.");
+
+      setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
+
+    };
 
     this.terminal.onData(this.handleInput);
   },
   methods: {
+    initWebSocket() {
+    let url = "ws://192.168.0.76:8000/ws";
+    this.socketClient = new WebSocket(url);
+
+    this.socketClient.onopen = () => {
+      console.log("WebSocket connection established.");
+      
+    };
+
+    this.socketClient.onmessage = (event) => {
+      this.terminal.write(`\r\n${event.data}`);
+      this.writePrompt();
+    };
+
+    this.socketClient.onerror = (error) => {
+      console.error("WebSocket Error:", error);
+    };
+
+    this.socketClient.onclose = () => {
+      console.warn("WebSocket connection closed. Reconnecting...");
+    };       
+  },
+
+
     writePrompt() {
       this.terminal.write("\r\nlogic@linux:~$ ");
     },
@@ -52,9 +103,18 @@ export default {
       const char = data.charCodeAt(0);
 
       if (char === 13) { // Enter key
-        const input = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY)?.translateToString().slice(this.promptLength);
-        this.respondToInput(input.trim());
-        this.writePrompt();
+        const line = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY);
+        console.log("Line Object:", line);
+
+        if (line) {
+            const lineText = line.translateToString();
+            console.log("Full Line Text:", lineText);
+            console.log("Prompt Length:", this.promptLength);
+            console.log("Extracted Input:", lineText.slice(this.promptLength));
+            this.respondToInput(lineText.slice(14));
+
+        }
+        
       } else if (char === 127) { // Backspace
         if (this.terminal.buffer.active.cursorX > this.promptLength) {
           this.terminal.write('\b \b');
@@ -64,22 +124,28 @@ export default {
       }
     },
     respondToInput(input) {
-      let response;
-      switch (input.toLowerCase()) {
-        case 'help':
-          response = "Available commands: help, hello, clear";
-          break;
-        case 'hello':
-          response = "Hello, welcome to logic Terminal!";
-          break;
-        case 'clear':
-          this.terminal.clear();
-          this.writePrompt();
-          return;
-        default:
-          response = `Command not found: ${input}`;
+      
+      if (input.toLowerCase() === "clear") {
+        this.terminal.clear();
+        this.writePrompt();
+        return;
       }
-      this.terminal.write(`\r\n${response}`);
+
+      if (this.socketClient.readyState === WebSocket.OPEN) {
+        console.log("SENDING")
+        setTimeout(() => {
+          this.socketClient.send(input);
+          console.log("should be send");
+        }, 100); // Delay for 100ms
+        console.log("should be send")
+
+      } else {
+        this.terminal.write("\r\n[Error] WebSocket not connected.");
+      }
+
+
+
+      
     }
   }
 };
