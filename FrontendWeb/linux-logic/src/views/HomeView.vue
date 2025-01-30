@@ -4,6 +4,12 @@
     <a href="/#/about">To About</a>
     <br>
     <a href="/#/terminal">To Game</a>
+    <br>
+    <a href="/#/login">To Login</a>
+    <br>
+    <a href="/#/register">To Register</a>
+    <br>
+    <a href="/#/auswahl">To Auswahl</a>
 
     <Terminal/>
   </div>

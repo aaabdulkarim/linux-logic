@@ -19,17 +19,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Check
-import androidx.compose.material.icons.twotone.Close
+import androidx.compose.material.icons.twotone.DoorBack
 import androidx.compose.material.icons.twotone.Email
-import androidx.compose.material.icons.twotone.Home
-import androidx.compose.material.icons.twotone.Lock
+import androidx.compose.material.icons.twotone.Password
+import androidx.compose.material.icons.twotone.Visibility
+import androidx.compose.material.icons.twotone.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,7 +39,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +51,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.Screen
+import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloMain
+import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -74,7 +77,7 @@ fun LoginScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF569191)),
+            .background(LiloMain),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -106,8 +109,8 @@ fun LoginScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        imageVector = Icons.TwoTone.Home,
-                        contentDescription = "Home Icon for Login",
+                        imageVector = Icons.TwoTone.DoorBack,
+                        contentDescription = "DoorBack Icon for Login",
                         tint = Color.White,
                         modifier = Modifier
                             .padding(top = 4.dp)
@@ -126,11 +129,11 @@ fun LoginScreen(navController: NavController) {
 
         Box(
             modifier = Modifier
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .weight(0.75f)
                 .padding(16.dp) // Padding hinzufügen für den gesamten Inhalt
-                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                //.clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             Column(
                 modifier = Modifier
@@ -141,7 +144,8 @@ fun LoginScreen(navController: NavController) {
                 Text(
                     text = "Melden Sie sich bei Ihrem Konto an",
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -156,6 +160,9 @@ fun LoginScreen(navController: NavController) {
                             "Invalide E-Mail Adresse!"
                         }
                     },
+                    /*colors = OutlinedTextFieldDefaults.colors(
+                        cursorColor = LiloMain,
+                    ),*/
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -172,7 +179,7 @@ fun LoginScreen(navController: NavController) {
                         Icon(
                             imageVector = Icons.TwoTone.Email,
                             contentDescription = "Email Icon for Login",
-                            tint = Color(0xFF569191)
+                            tint = LiloMain
                         )
                     },
                     modifier = Modifier
@@ -191,6 +198,10 @@ fun LoginScreen(navController: NavController) {
                 OutlinedTextField(
                     value = password,
                     onValueChange = setPassword,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        cursorColor = LiloMain,
+
+                    ),
                     label = {
                         Text(
                             text = "Passwort",
@@ -205,9 +216,9 @@ fun LoginScreen(navController: NavController) {
                     },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.TwoTone.Lock,
+                            imageVector = Icons.TwoTone.Password,
                             contentDescription = "Password Icon for Login",
-                            tint = Color(0xFF569191)
+                            tint = LiloMain
                         )
                     },
                     modifier = Modifier
@@ -221,11 +232,14 @@ fun LoginScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
-                        val image =
-                            if (passwordVisible) Icons.TwoTone.Close else Icons.TwoTone.Check
-                        val description = if (passwordVisible) "Hide password" else "Show password"
+                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description = if (passwordVisible) "Showed password" else "Hidden password"
                         IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
-                            Icon(image, contentDescription = description)
+                            Icon(
+                                imageVector = image,
+                                contentDescription = description,
+                                tint = LiloOrange
+                            )
                         }
                     },
                 )
@@ -241,7 +255,7 @@ fun LoginScreen(navController: NavController) {
 
                         },
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Blue,
+                    color = MaterialTheme.colorScheme.primary,
                     textDecoration = TextDecoration.Underline,
                 )
 
@@ -257,7 +271,7 @@ fun LoginScreen(navController: NavController) {
                         .padding(start = 32.dp, end = 32.dp),
                     contentPadding = PaddingValues(16.dp),
                     colors = ButtonDefaults.buttonColors().copy(
-                        containerColor = Color(0xFF445a65),
+                        containerColor = LiloBlue,
                         contentColor = Color.White,
                         disabledContainerColor = Color(0xFFCECECE),
                         disabledContentColor = Color(0xFF7F7F7F)
@@ -275,20 +289,27 @@ fun LoginScreen(navController: NavController) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(40.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                        .padding(40.dp)
+                        .clickable {
+
+                        },
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Text(
+                        text = "Anmelden mit Google:",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
                     Image(
                         painterResource(id = R.drawable.google_logo),
                         contentDescription = "Login mittels Google Account",
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable {
-
-                            }
                     )
 
-                    Image(
+                    /*Image(
                         painterResource(id = R.drawable.microsoft_logo),
                         contentDescription = "Login mittels Microsoft Account",
                         modifier = Modifier
@@ -306,7 +327,7 @@ fun LoginScreen(navController: NavController) {
                             .clickable {
 
                             }
-                    )
+                    )*/
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -316,7 +337,10 @@ fun LoginScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    Text(text = "Sie haben noch kein Konto?")
+                    Text(
+                        text = "Sie haben noch kein Konto?",
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
@@ -328,7 +352,7 @@ fun LoginScreen(navController: NavController) {
                                 Log.i("LoginScreen", "User is performing - Action: \"Register\" -")
                             },
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.Blue,
+                        color = MaterialTheme.colorScheme.primary,
                         textDecoration = TextDecoration.Underline
                     )
                 }

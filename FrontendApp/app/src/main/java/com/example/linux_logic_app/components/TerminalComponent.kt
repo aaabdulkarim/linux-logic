@@ -12,20 +12,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import okhttp3.*;
+import androidx.compose.ui.text.withStyle
+import okhttp3.*
 import okio.ByteString
 
 class WebSocketClient(url: String) {
     private val client = OkHttpClient()
     private val request = Request.Builder().url(url).build()
     private lateinit var webSocket: WebSocket
-    public var output = ""
+    var output = ""
     private var messageReceived = false
 
     fun connect() {
@@ -144,8 +147,17 @@ fun Terminal(socketUrl : String) {
                     // User Input
                     Row {
                         Text(
-                            text = "lilo@beta:~\$ ",
-                            color = Color.White,
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = Color.Green)) {
+                                    append("lilo@beta:")
+                                }
+                                withStyle(style = SpanStyle(color = Color(0xFF0073FF))) {
+                                    append("~")
+                                }
+                                withStyle(style = SpanStyle(color = Color.Green)) {
+                                    append("$ ")
+                                }
+                            },
                             fontSize = 14.sp,
                             fontFamily = FontFamily.Monospace
                         )

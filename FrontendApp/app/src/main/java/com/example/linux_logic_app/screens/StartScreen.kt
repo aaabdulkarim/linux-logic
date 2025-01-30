@@ -1,5 +1,7 @@
 package com.example.linux_logic_app.screens
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,18 +19,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.Home
-import androidx.compose.material.icons.twotone.Person
+import androidx.compose.material.icons.automirrored.twotone.Login
+import androidx.compose.material.icons.twotone.PersonAddAlt
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
@@ -37,6 +42,9 @@ import com.example.linux_logic_app.navigation.Screen
 
 @Composable
 fun StartScreen(navController: NavController) {
+    val context = LocalContext.current
+    val liloWebUrl = "https://www.linux-logic.com"
+    val liloIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(liloWebUrl)) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -81,7 +89,14 @@ fun StartScreen(navController: NavController) {
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            context.startActivity(liloIntent)
+                            Log.i(
+                                "StartScreen",
+                                "User clicked Link - Action \"open Linux Logic Website\" -"
+                            )
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -91,22 +106,14 @@ fun StartScreen(navController: NavController) {
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .size(32.dp)
-                            .clickable {
-                                Log.i(
-                                    "StartScreen",
-                                    "User clicked link - Action \"Linux Logic Website LINK\" -"
-                                )
-                            }
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    HyperlinkText(
-                        fullText = "www.linux-logic.com",
-                        linkText = "www.linux-logic.com",
-                        linkUrl = "https://www.linux-logic.com",
-                        onLinkClickLogMessage = "User clicked link - Action \"Linux Logic Website TEXT\" -",
-                        textColor = Color.Blue
+                    Text(
+                        text = "www.linux-logic.com",
+                        color = Color.Blue,
+                        textDecoration = TextDecoration.Underline
                     )
                 }
 
@@ -126,8 +133,8 @@ fun StartScreen(navController: NavController) {
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.TwoTone.Home,
-                                contentDescription = "Home Icon",
+                                imageVector = Icons.AutoMirrored.TwoTone.Login,
+                                contentDescription = "Login Icon for Start",
                                 tint = Color.White
                             )
                         },
@@ -150,8 +157,8 @@ fun StartScreen(navController: NavController) {
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.TwoTone.Person,
-                                contentDescription = "Person Icon",
+                                imageVector = Icons.TwoTone.PersonAddAlt,
+                                contentDescription = "PersonAdd Icon for Start",
                                 tint = Color.White
                             )
                         },

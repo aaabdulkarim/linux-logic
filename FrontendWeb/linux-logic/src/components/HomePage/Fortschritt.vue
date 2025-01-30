@@ -101,7 +101,7 @@ Der Python-REST-API-Server kann erfolgreich eine Verbindung zur Datenbank herste
                 },
                 {
                     "berichtName": "Bericht 6",
-                    "datum": "19.12. bis zum 14.01.",
+                    "datum": "19.12. - 14.01.",
                     "text": `Über die Weihnachtsferien war einiges geplant für die Realisierung des Diplomprojekts Linux Logic. Folgenden Fortschritt haben wir im Zeitraum vom 19.12. bis zum 14.01. erreicht:
 Backend: REST API mit Datenbankanbindung, Register Funktion, login
 Web Frontend: Spielansicht mit erweitertem terminal xtermjs
@@ -134,7 +134,7 @@ Datenbank: Szenarien geschrieben, Schema überarbeitet`,
     background-color: white;
 }
 
-.card {
+::v-deep .card {
     background-color: white;
     color: #3D525C;
     text-align: left;
@@ -191,14 +191,14 @@ Datenbank: Szenarien geschrieben, Schema überarbeitet`,
     color: white;
 }
 
-.m-0 {
+.card >>> .p-tabpanel {
     color: #3D525C;
 }
 
 /* VueJs Transition styles */
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.3s ease;
+    transition: opacity 0.5s ease;
 }
 .fade-enter-from,
 .fade-leave-to {

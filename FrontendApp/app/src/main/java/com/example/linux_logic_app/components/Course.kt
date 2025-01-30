@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.navigation
+package com.example.linux_logic_app.components
 
 import com.example.linux_logic_app.R
 

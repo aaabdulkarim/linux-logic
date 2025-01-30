@@ -8,16 +8,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.linux_logic_app.components.Terminal
 
 @Composable
 fun HomeScreen() {
     Box(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
-        Text(
-            text = "Home Page"
-        )
+        //Text(
+        //    text = "Fortschritt - Coming Soon"
+        //)
+        Terminal("ws://10.0.107.0:8000/ws")
     }
 }
