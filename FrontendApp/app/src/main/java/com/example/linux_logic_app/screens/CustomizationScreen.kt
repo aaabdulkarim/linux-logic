@@ -23,7 +23,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.SubdirectoryArrowRight
 import androidx.compose.material.icons.twotone.Colorize
 import androidx.compose.material.icons.twotone.Palette
 import androidx.compose.material3.AlertDialog
@@ -35,6 +38,8 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
 import com.example.linux_logic_app.ui.theme.LiloBlue
@@ -102,7 +108,8 @@ fun ColorCustomizer(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 8.dp)
     ) {
         Box(
@@ -303,10 +310,11 @@ fun ColorCustomizationCard() {
     )
     // Eigene Zustände für jede Option
     var terminalHeader by remember { mutableStateOf(Color.Black) }
-    var terminalBody by remember { mutableStateOf(Color.Black) }
-    var terminalHeaderText by remember { mutableStateOf(Color.Black) }
-    var shellPrompt by remember { mutableStateOf(Color.Black) }
-    var commands by remember { mutableStateOf(Color.Black) }
+    var terminalBody by remember { mutableStateOf(LiloDark) }
+    var terminalHeaderText by remember { mutableStateOf(Color.White) }
+    var shellPrompt by remember { mutableStateOf(Color.Green) }
+    var commands by remember { mutableStateOf(Color.White) }
+    var checked by remember { mutableStateOf(true) }
 
     Card(
         colors = CardDefaults.cardColors(
@@ -351,42 +359,100 @@ fun ColorCustomizationCard() {
             }
             // Erweiterter Inhalt, nur sichtbar wenn die Card expanded ist
             if (expanded) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                ColorCustomizationOption(
-                    title = "Terminal Kopf",
-                    selectedColor = terminalHeader,
-                    onColorSelected = { terminalHeader = it },
-                    defaultColorList = defaultColorList
-                )
+                if (checked) {
+                    Text(
+                        text = "Verwendung der Default-Farben",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        textAlign = TextAlign.Center
+                    )
 
-                ColorCustomizationOption(
-                    title = "Terminal Körper",
-                    selectedColor = terminalBody,
-                    onColorSelected = { terminalBody = it },
-                    defaultColorList = defaultColorList
-                )
+                } else {
+                    ColorCustomizationOption(
+                        option = "Terminal Kopf:",
+                        selectedColor = terminalHeader,
+                        onColorSelected = { terminalHeader = it },
+                        defaultColorList = defaultColorList
+                    )
 
-                ColorCustomizationOption(
-                    title = "Terminal Kopf (Text)",
-                    selectedColor = terminalHeaderText,
-                    onColorSelected = { terminalHeaderText = it },
-                    defaultColorList = defaultColorList
-                )
+                    ColorCustomizationOption(
+                        option = "Terminal Körper:",
+                        selectedColor = terminalBody,
+                        onColorSelected = { terminalBody = it },
+                        defaultColorList = defaultColorList
+                    )
 
-                ColorCustomizationOption(
-                    title = "Shell Prompt",
-                    selectedColor = shellPrompt,
-                    onColorSelected = { shellPrompt = it },
-                    defaultColorList = defaultColorList
-                )
+                    ColorCustomizationOption(
+                        option = "Terminal Kopf (Text):",
+                        selectedColor = terminalHeaderText,
+                        onColorSelected = { terminalHeaderText = it },
+                        defaultColorList = defaultColorList
+                    )
 
-                ColorCustomizationOption(
-                    title = "Befehle",
-                    selectedColor = commands,
-                    onColorSelected = { commands = it },
-                    defaultColorList = defaultColorList
-                )
+                    ColorCustomizationOption(
+                        option = "Shell Prompt:",
+                        selectedColor = shellPrompt,
+                        onColorSelected = { shellPrompt = it },
+                        defaultColorList = defaultColorList
+                    )
+
+                    ColorCustomizationOption(
+                        option = "Befehle:",
+                        selectedColor = commands,
+                        onColorSelected = { commands = it },
+                        defaultColorList = defaultColorList
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Default",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Switch(
+                        checked = checked,
+                        onCheckedChange = {
+                            checked = it
+                        },
+                        thumbContent = if (checked) {
+                            {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = "Check Icon for Customization",
+                                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                                )
+                            }
+                        } else {
+                            {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = "Check Icon for Customization",
+                                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                                    tint = Color.White
+                                )
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = LiloOrange,
+                            checkedTrackColor = LiloMain,
+                            uncheckedThumbColor = LiloBlue,
+                            uncheckedTrackColor = LiloMain,
+                        )
+                    )
+                }
             }
         }
     }
@@ -394,7 +460,7 @@ fun ColorCustomizationCard() {
 
 @Composable
 fun ColorCustomizationOption(
-    title: String,
+    option: String,
     selectedColor: Color,
     onColorSelected: (Color) -> Unit,
     defaultColorList: List<Pair<Color, String>>
@@ -405,17 +471,25 @@ fun ColorCustomizationOption(
             .padding(vertical = 8.dp)
     ) {
         Text(
-            text = title,
+            text = option,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        ColorCustomizer(
-            selectedColor = selectedColor,
-            onColorSelected = onColorSelected,
-            defaultColorList = defaultColorList,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.SubdirectoryArrowRight,
+                contentDescription = "SubdirectoryArrowRight for Customization"
+            )
+            ColorCustomizer(
+                selectedColor = selectedColor,
+                onColorSelected = onColorSelected,
+                defaultColorList = defaultColorList,
+            )
+        }
     }
 }

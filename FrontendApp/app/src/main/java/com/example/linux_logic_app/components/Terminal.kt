@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import com.example.linux_logic_app.ui.theme.LiloDark
 import okhttp3.*
 import okio.ByteString
 
@@ -75,9 +76,8 @@ class WebSocketClient(url: String) {
     }
 }
 
-
 @Composable
-fun Terminal(socketUrl : String) {
+fun Terminal(socketUrl: String) {
     var terminalOutput by remember { mutableStateOf(listOf("Welcome to logic terminal!")) }
     var userInput by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
@@ -85,11 +85,10 @@ fun Terminal(socketUrl : String) {
         mutableStateOf("Message")
     }
 
-    val webSocketClient = remember { WebSocketClient(socketUrl)}
+    val webSocketClient = remember { WebSocketClient(socketUrl) }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         webSocketClient.connect()
-
     }
 
     // Terminal UI
@@ -101,7 +100,10 @@ fun Terminal(socketUrl : String) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFF404242), shape = RoundedCornerShape(16.dp)) // Rounded terminal box
+                .background(
+                    color = LiloDark,
+                    shape = RoundedCornerShape(16.dp)
+                ) // Rounded terminal box
         ) {
             // Header (separater Bereich oben)
             Box(
@@ -127,7 +129,7 @@ fun Terminal(socketUrl : String) {
                 modifier = Modifier
                     .weight(1f)
                     .background(
-                        Color(0xFF404242),
+                        LiloDark,
                         shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
                     ) // Rounded terminal bottom
                     .padding(8.dp)
@@ -151,7 +153,7 @@ fun Terminal(socketUrl : String) {
                                 withStyle(style = SpanStyle(color = Color.Green)) {
                                     append("lilo@beta:")
                                 }
-                                withStyle(style = SpanStyle(color = Color(0xFF0073FF))) {
+                                withStyle(style = SpanStyle(color = Color.Green)) {
                                     append("~")
                                 }
                                 withStyle(style = SpanStyle(color = Color.Green)) {
@@ -177,7 +179,7 @@ fun Terminal(socketUrl : String) {
                                     if (userInput.isNotBlank()) {
                                         if (userInput == "clear") {
                                             terminalOutput = listOf("")
-                                        }else{
+                                        } else {
                                             webSocketClient.sendMessage(userInput)
 
                                             // Temporärer Fix
@@ -185,7 +187,8 @@ fun Terminal(socketUrl : String) {
                                             while (webSocketClient.waiting()) {
                                                 continue
                                             }
-                                            terminalOutput = terminalOutput + "lilo@beta:~$ ${userInput}" + webSocketClient.output
+                                            terminalOutput =
+                                                terminalOutput + "lilo@beta:~$ ${userInput}" + webSocketClient.output
                                             userInput = "" // Clear input
                                         }
 
