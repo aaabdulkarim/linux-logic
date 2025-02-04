@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -102,6 +103,7 @@ fun ColorCustomizer(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
+            .padding(start = 8.dp)
     ) {
         Box(
             modifier = Modifier
@@ -294,20 +296,22 @@ fun ColorCustomizationCard() {
         LiloDarkSec to "Lilo Dunkel Sekundär"
     )
 
-    var selectedColor by remember { mutableStateOf(Color.Black) }
     var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f,
         label = "Rotation of Arrow-Icon"
     )
+    // Eigene Zustände für jede Option
+    var terminalHeader by remember { mutableStateOf(Color.Black) }
+    var terminalBody by remember { mutableStateOf(Color.Black) }
+    var terminalHeaderText by remember { mutableStateOf(Color.Black) }
+    var shellPrompt by remember { mutableStateOf(Color.Black) }
+    var commands by remember { mutableStateOf(Color.Black) }
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = LiloDark,
-            contentColor = MaterialTheme.colorScheme.onBackground
-        ),
-        modifier = Modifier
-            .padding(8.dp)
+            containerColor = LiloBlue
+        )
     ) {
         // Eine Column, die die statische Zeile und den erweiterten Inhalt enthält
         Column(
@@ -320,39 +324,98 @@ fun ColorCustomizationCard() {
         ) {
             // Statische Zeile mit Icons und Text
             Row(
-                modifier = Modifier,
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Icon(
                     imageVector = Icons.TwoTone.Palette,
-                    contentDescription = "Icon for Customization Option",
+                    contentDescription = "Palette Icon for Customization",
                     tint = LiloMain
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+
                 Text(
                     text = "Anpassung - Farben",
-                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
                 )
+
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = if (expanded) "Collapse" else "Expand",
                     modifier = Modifier.graphicsLayer(rotationZ = rotationAngle),
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = Color.White
                 )
             }
-            // Erweiterter Inhalt, nur sichtbar wenn expanded == true
+            // Erweiterter Inhalt, nur sichtbar wenn die Card expanded ist
             if (expanded) {
                 Spacer(modifier = Modifier.height(8.dp))
-                ColorCustomizer(
-                    selectedColor = selectedColor,
-                    onColorSelected = { color ->
-                        selectedColor = color
-                    },
+
+                ColorCustomizationOption(
+                    title = "Terminal Kopf",
+                    selectedColor = terminalHeader,
+                    onColorSelected = { terminalHeader = it },
+                    defaultColorList = defaultColorList
+                )
+
+                ColorCustomizationOption(
+                    title = "Terminal Körper",
+                    selectedColor = terminalBody,
+                    onColorSelected = { terminalBody = it },
+                    defaultColorList = defaultColorList
+                )
+
+                ColorCustomizationOption(
+                    title = "Terminal Kopf (Text)",
+                    selectedColor = terminalHeaderText,
+                    onColorSelected = { terminalHeaderText = it },
+                    defaultColorList = defaultColorList
+                )
+
+                ColorCustomizationOption(
+                    title = "Shell Prompt",
+                    selectedColor = shellPrompt,
+                    onColorSelected = { shellPrompt = it },
+                    defaultColorList = defaultColorList
+                )
+
+                ColorCustomizationOption(
+                    title = "Befehle",
+                    selectedColor = commands,
+                    onColorSelected = { commands = it },
                     defaultColorList = defaultColorList
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ColorCustomizationOption(
+    title: String,
+    selectedColor: Color,
+    onColorSelected: (Color) -> Unit,
+    defaultColorList: List<Pair<Color, String>>
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        ColorCustomizer(
+            selectedColor = selectedColor,
+            onColorSelected = onColorSelected,
+            defaultColorList = defaultColorList,
+        )
     }
 }
