@@ -16,10 +16,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -57,6 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
 import com.example.linux_logic_app.components.Terminal
+import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDark
 import com.example.linux_logic_app.ui.theme.LiloDarkSec
@@ -72,7 +71,7 @@ https://mvnrepository.com/artifact/com.godaddy.android.colorpicker/compose-color
 https://github.com/skydoves/colorpicker-compose/tree/main
  */
 @Composable
-fun CustomizationScreen() {
+fun CustomizationScreen(terminalViewModel: TerminalViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,15 +90,19 @@ fun CustomizationScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ColorCustomizationCard()
+        ColorCustomizationCard(terminalViewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        /*
+        Anmerkung: Entweder weight verwenden für Dynamik oder fixe Höhe um auch innerhalb eines Scrolls anzupassen.
+        Siehe PlayScreen die fixe Höhe aller Course Cards - 200.dp
+        */
         Box(
             modifier = Modifier
                 .weight(1f)
         ) {
-            Terminal("ws://10.0.107.0:8000/ws", true)
+            Terminal("ws://10.0.107.0:8000/ws", true, terminalViewModel)
         }
     }
 }
@@ -292,7 +295,9 @@ fun ColorPickerDialog(
 https://www.youtube.com/watch?v=SNcMCH5DqaM
  */
 @Composable
-fun ColorCustomizationCard() {
+fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
+    val currentColors = terminalViewModel.terminalColors
+
     val defaultColorList = listOf(
         Color.White to "Weiß",
         Color.Black to "Schwarz",
@@ -321,11 +326,6 @@ fun ColorCustomizationCard() {
         label = "Rotation of Arrow-Icon"
     )
     // Eigene Zustände für jede Option
-    var terminalHeader by remember { mutableStateOf(Color.Black) }
-    var terminalBody by remember { mutableStateOf(LiloDark) }
-    var terminalHeaderText by remember { mutableStateOf(Color.White) }
-    var shellPrompt by remember { mutableStateOf(Color.Green) }
-    var commands by remember { mutableStateOf(Color.White) }
     var checked by remember { mutableStateOf(true) }
 
     Card(
@@ -386,36 +386,66 @@ fun ColorCustomizationCard() {
                 } else {
                     ColorCustomizationOption(
                         option = "Terminal Kopf:",
-                        selectedColor = terminalHeader,
-                        onColorSelected = { terminalHeader = it },
+                        selectedColor = currentColors.headerColor,
+                        onColorSelected = {
+                            terminalViewModel.updateColors(
+                                currentColors.copy(
+                                    headerColor = it
+                                )
+                            )
+                        },
                         defaultColorList = defaultColorList
                     )
 
                     ColorCustomizationOption(
                         option = "Terminal Körper:",
-                        selectedColor = terminalBody,
-                        onColorSelected = { terminalBody = it },
+                        selectedColor = currentColors.bodyColor,
+                        onColorSelected = {
+                            terminalViewModel.updateColors(
+                                currentColors.copy(
+                                    bodyColor = it
+                                )
+                            )
+                        },
                         defaultColorList = defaultColorList
                     )
 
                     ColorCustomizationOption(
                         option = "Terminal Kopf (Text):",
-                        selectedColor = terminalHeaderText,
-                        onColorSelected = { terminalHeaderText = it },
+                        selectedColor = currentColors.headerTextColor,
+                        onColorSelected = {
+                            terminalViewModel.updateColors(
+                                currentColors.copy(
+                                    headerTextColor = it
+                                )
+                            )
+                        },
                         defaultColorList = defaultColorList
                     )
 
                     ColorCustomizationOption(
                         option = "Shell Prompt:",
-                        selectedColor = shellPrompt,
-                        onColorSelected = { shellPrompt = it },
+                        selectedColor = currentColors.shellPromptColor,
+                        onColorSelected = {
+                            terminalViewModel.updateColors(
+                                currentColors.copy(
+                                    shellPromptColor = it
+                                )
+                            )
+                        },
                         defaultColorList = defaultColorList
                     )
 
                     ColorCustomizationOption(
                         option = "Befehle:",
-                        selectedColor = commands,
-                        onColorSelected = { commands = it },
+                        selectedColor = currentColors.commandColor,
+                        onColorSelected = {
+                            terminalViewModel.updateColors(
+                                currentColors.copy(
+                                    commandColor = it
+                                )
+                            )
+                        },
                         defaultColorList = defaultColorList
                     )
                 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.lifecycle.ViewModel
 import com.example.linux_logic_app.ui.theme.LiloDark
 import okhttp3.*
 import okio.ByteString
@@ -77,7 +78,8 @@ class WebSocketClient(url: String) {
 }
 
 @Composable
-fun Terminal(socketUrl: String, preview: Boolean = false) {
+fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: TerminalViewModel) {
+    val terminalColors = terminalViewModel.terminalColors
     var terminalOutput by remember { mutableStateOf(listOf("Welcome to logic terminal!")) }
     var userInput by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
@@ -94,13 +96,12 @@ fun Terminal(socketUrl: String, preview: Boolean = false) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    color = LiloDark,
+                    color = terminalColors.bodyColor,
                     shape = RoundedCornerShape(16.dp)
                 )
         ) {
@@ -109,14 +110,14 @@ fun Terminal(socketUrl: String, preview: Boolean = false) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        Color.Black,
+                        terminalColors.headerColor,
                         shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
                     )
                     .padding(12.dp)
             ) {
                 Text(
                     text = "logic terminal",
-                    color = Color.White,
+                    color = terminalColors.headerTextColor,
                     fontSize = 16.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold
@@ -128,7 +129,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false) {
                 modifier = Modifier
                     .weight(1f)
                     .background(
-                        LiloDark,
+                        terminalColors.bodyColor,
                         shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
                     )
                     .padding(8.dp)
@@ -139,7 +140,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false) {
                     terminalOutput.forEach { line ->
                         Text(
                             text = line,
-                            color = Color.White,
+                            color = terminalColors.commandColor,
                             fontSize = 14.sp,
                             fontFamily = FontFamily.Monospace
                         )
@@ -150,10 +151,10 @@ fun Terminal(socketUrl: String, preview: Boolean = false) {
                         if (preview) {
                             Text(
                                 text = buildAnnotatedString {
-                                    withStyle(style = SpanStyle(color = Color.Green)) {
+                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
                                         append("lilo@beta:~$ ")
                                     }
-                                    withStyle(style = SpanStyle(color = Color.White)) {
+                                    withStyle(style = SpanStyle(color = terminalColors.commandColor)) {
                                         append("ls\n__pycache__    scenario_x.txt\n")
                                     }
                                 },
@@ -163,13 +164,13 @@ fun Terminal(socketUrl: String, preview: Boolean = false) {
                         } else {
                             Text(
                                 text = buildAnnotatedString {
-                                    withStyle(style = SpanStyle(color = Color.Green)) {
+                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
                                         append("lilo@beta:")
                                     }
-                                    withStyle(style = SpanStyle(color = Color.Green)) {
+                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
                                         append("~")
                                     }
-                                    withStyle(style = SpanStyle(color = Color.Green)) {
+                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
                                         append("$ ")
                                     }
                                 },
@@ -181,7 +182,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false) {
                                 value = userInput,
                                 onValueChange = { userInput = it },
                                 textStyle = TextStyle(
-                                    color = Color.White,
+                                    color = terminalColors.commandColor,
                                     fontSize = 14.sp,
                                     fontFamily = FontFamily.Monospace
                                 ),
