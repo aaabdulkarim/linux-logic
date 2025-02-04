@@ -75,8 +75,8 @@ fun CustomizationScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Text(
             text = "Passe dein Terminal individuell an!",
@@ -90,16 +90,14 @@ fun CustomizationScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         ColorCustomizationCard()
+        ColorCustomizationCard()
+        ColorCustomizationCard()
+        ColorCustomizationCard()
+        ColorCustomizationCard()
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(400.dp) // Feste Höhe für Terminal-Vorschau
-        ) {
-            Terminal("ws://10.0.107.0:8000/ws", true)
-        }
+        Terminal("ws://10.0.107.0:8000/ws", true)
     }
 }
 
@@ -355,7 +353,7 @@ fun ColorCustomizationCard() {
                 )
 
                 Text(
-                    text = "Anpassung - Farben",
+                    text = "Farbanpassung",
                     color = Color.White,
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
