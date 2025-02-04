@@ -77,21 +77,20 @@ class WebSocketClient(url: String) {
 }
 
 @Composable
-fun Terminal(socketUrl: String) {
+fun Terminal(socketUrl: String, preview: Boolean = false) {
     var terminalOutput by remember { mutableStateOf(listOf("Welcome to logic terminal!")) }
     var userInput by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
-    val socketState by remember {
-        mutableStateOf("Message")
+
+    // Im Preview-Modus wird kein WebSocket-Client erstellt
+    val webSocketClient = remember { if (!preview) WebSocketClient(socketUrl) else null }
+
+    if (!preview) {
+        LaunchedEffect(Unit) {
+            webSocketClient?.connect()
+        }
     }
 
-    val webSocketClient = remember { WebSocketClient(socketUrl) }
-
-    LaunchedEffect(Unit) {
-        webSocketClient.connect()
-    }
-
-    // Terminal UI
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -103,16 +102,16 @@ fun Terminal(socketUrl: String) {
                 .background(
                     color = LiloDark,
                     shape = RoundedCornerShape(16.dp)
-                ) // Rounded terminal box
+                )
         ) {
-            // Header (separater Bereich oben)
+            // Header
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
                         Color.Black,
                         shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
-                    ) // Rounded header top
+                    )
                     .padding(12.dp)
             ) {
                 Text(
@@ -124,19 +123,19 @@ fun Terminal(socketUrl: String) {
                 )
             }
 
-            // Terminal Output and Input
+            // Terminal Output und Input
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .background(
                         LiloDark,
                         shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
-                    ) // Rounded terminal bottom
+                    )
                     .padding(8.dp)
                     .verticalScroll(scrollState)
             ) {
                 Column {
-                    // Terminal output
+                    // Ausgabe
                     terminalOutput.forEach { line ->
                         Text(
                             text = line,
@@ -146,59 +145,78 @@ fun Terminal(socketUrl: String) {
                         )
                     }
 
-                    // User Input
+                    // Eingabezeile
                     Row {
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(style = SpanStyle(color = Color.Green)) {
-                                    append("lilo@beta:")
-                                }
-                                withStyle(style = SpanStyle(color = Color.Green)) {
-                                    append("~")
-                                }
-                                withStyle(style = SpanStyle(color = Color.Green)) {
-                                    append("$ ")
-                                }
-                            },
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily.Monospace
-                        )
-                        BasicTextField(
-                            value = userInput,
-                            onValueChange = { userInput = it },
-                            textStyle = TextStyle(
-                                color = Color.White,
+                        if (preview) {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = SpanStyle(color = Color.Green)) {
+                                        append("lilo@beta:~$ ")
+                                    }
+                                    withStyle(style = SpanStyle(color = Color.White)) {
+                                        append("ls\n__pycache__    scenario_x.txt\n")
+                                    }
+                                },
                                 fontSize = 14.sp,
                                 fontFamily = FontFamily.Monospace
-                            ),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    if (userInput.isNotBlank()) {
-                                        if (userInput == "clear") {
-                                            terminalOutput = listOf("")
-                                        } else {
-                                            webSocketClient.sendMessage(userInput)
-
-                                            // Temporärer Fix
-                                            // Wenn der Client nie eine Message erhält, kann es sein, dass die App freezed
-                                            while (webSocketClient.waiting()) {
-                                                continue
-                                            }
-                                            terminalOutput =
-                                                terminalOutput + "lilo@beta:~$ ${userInput}" + webSocketClient.output
-                                            userInput = "" // Clear input
-                                        }
-
-                                    }
-                                }
                             )
-                        )
+                        } else {
+                            Text(
+                                text = buildAnnotatedString {
+                                    withStyle(style = SpanStyle(color = Color.Green)) {
+                                        append("lilo@beta:")
+                                    }
+                                    withStyle(style = SpanStyle(color = Color.Green)) {
+                                        append("~")
+                                    }
+                                    withStyle(style = SpanStyle(color = Color.Green)) {
+                                        append("$ ")
+                                    }
+                                },
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily.Monospace
+                            )
+                            // Im Preview-Modus schalten wir den TextField auf readOnly
+                            BasicTextField(
+                                value = userInput,
+                                onValueChange = { userInput = it },
+                                textStyle = TextStyle(
+                                    color = Color.White,
+                                    fontSize = 14.sp,
+                                    fontFamily = FontFamily.Monospace
+                                ),
+                                readOnly = preview,  // verhindert, dass im Preview-Modus Eingaben verarbeitet werden
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    imeAction = ImeAction.Done
+                                ),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        if (userInput.isNotBlank()) {
+                                            if (userInput == "clear") {
+                                                terminalOutput = listOf("")
+                                            } else {
+                                                webSocketClient?.sendMessage(userInput)
+
+                                                // Temporärer Fix: Warte, falls der Client noch Message erwartet
+                                                while (webSocketClient?.waiting() == true) {
+                                                    continue
+                                                }
+
+                                                terminalOutput = terminalOutput +
+                                                        "lilo@beta:~$ $userInput" +
+                                                        (webSocketClient?.output ?: "")
+
+                                                userInput = "" // Eingabe leeren
+                                            }
+                                        }
+                                    }
+                                )
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+

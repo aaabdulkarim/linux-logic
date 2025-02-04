@@ -17,9 +17,6 @@ fun HomeScreen() {
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp),
     ) {
-        //Text(
-        //    text = "Fortschritt - Coming Soon"
-        //)
         Terminal("ws://10.0.107.0:8000/ws")
     }
 }

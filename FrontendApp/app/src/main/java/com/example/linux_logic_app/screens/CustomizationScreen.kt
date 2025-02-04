@@ -54,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
+import com.example.linux_logic_app.components.Terminal
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDark
 import com.example.linux_logic_app.ui.theme.LiloDarkSec
@@ -89,8 +90,19 @@ fun CustomizationScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         ColorCustomizationCard()
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp) // Feste Höhe für Terminal-Vorschau
+        ) {
+            Terminal("ws://10.0.107.0:8000/ws", true)
+        }
     }
 }
+
 
 @Composable
 fun ColorCustomizer(
@@ -182,7 +194,6 @@ fun ColorCustomizer(
                 )
             }
         }
-
     }
 
     if (showColorPicker) {
