@@ -22,8 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.twotone.Colorize
 import androidx.compose.material.icons.twotone.Palette
 import androidx.compose.material3.AlertDialog
@@ -34,7 +33,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,11 +44,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
-import com.example.linux_logic_app.components.Terminal
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDark
 import com.example.linux_logic_app.ui.theme.LiloDarkSec
@@ -66,19 +62,7 @@ https://mvnrepository.com/artifact/com.godaddy.android.colorpicker/compose-color
 https://github.com/skydoves/colorpicker-compose/tree/main
  */
 @Composable
-fun CustomizeScreen() {
-    val defaultColorList = listOf(
-        Color.White to "Weiß",
-        Color.Black to "Schwarz", Color.Cyan to "Cyan", Color.Magenta to "Magenta", Color.Yellow to "Gelb",
-        Color.Red to "Rot", Color.Green to "Grün", Color.Blue to "Blau",
-        Color.Gray to "Grau", Color.LightGray to "Hellgrau", Color.DarkGray to "Dunkelgrau",
-        LiloMain to "Lilo Hauptfarbe", LiloMainSec to "Lilo Sekundärfarbe", LiloOrange to "Lilo Orange", LiloBlue to "Lilo Blau",
-        LiloLight to "Lilo Hell", LiloLightSec to "Lilo Hell Sekundär",
-        LiloDark to "Lilo Dunkel", LiloDarkSec to "Lilo Dunkel Sekundär"
-    )
-
-    var selectedColor by remember { mutableStateOf(Color.Black) }
-
+fun CustomizationScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,10 +81,7 @@ fun CustomizeScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CustomizationCard(
-            "Farboptionen",
-            Icons.TwoTone.Palette
-        )
+        ColorCustomizationCard()
     }
 }
 
@@ -114,7 +95,7 @@ fun ColorCustomizer(
     var showDefaultColors by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
         targetValue = if (showDefaultColors) 180f else 0f,
-        label = "Rotation of Arrow-Icon"
+        label = "Rotation of ArrowDropDown Icon"
     )
     var selectedColorName by remember { mutableStateOf("Farbe auswählen") }
 
@@ -172,7 +153,7 @@ fun ColorCustomizer(
                             Box(
                                 modifier = Modifier
                                     .size(24.dp)
-                                    .background(color, shape = RoundedCornerShape(8.dp))
+                                    .background(color = color, shape = RoundedCornerShape(8.dp))
                             )
 
                             Spacer(modifier = Modifier.width(8.dp))
@@ -198,7 +179,9 @@ fun ColorCustomizer(
     if (showColorPicker) {
         ColorPickerDialog(
             initialColor = selectedColor,
-            onDismiss = { showColorPicker = false },
+            onDismiss = {
+                showColorPicker = false
+            },
             onConfirm = { color ->
                 onColorSelected(color)
                 selectedColorName = "Benutzerdefiniert"
@@ -232,7 +215,9 @@ fun ColorPickerDialog(
         },
         text = {
             ColorPicker(
-                onColorSelected = { tempColor = it }
+                onColorSelected = {
+                    tempColor = it
+                }
             )
         },
         icon = {
@@ -286,71 +271,88 @@ fun ColorPickerDialog(
 https://www.youtube.com/watch?v=SNcMCH5DqaM
  */
 @Composable
-fun CustomizationCard(name: String, icon: ImageVector) {
+fun ColorCustomizationCard() {
     val defaultColorList = listOf(
         Color.White to "Weiß",
-        Color.Black to "Schwarz", Color.Cyan to "Cyan", Color.Magenta to "Magenta", Color.Yellow to "Gelb",
-        Color.Red to "Rot", Color.Green to "Grün", Color.Blue to "Blau",
-        Color.Gray to "Grau", Color.LightGray to "Hellgrau", Color.DarkGray to "Dunkelgrau",
-        LiloMain to "Lilo Hauptfarbe", LiloMainSec to "Lilo Sekundärfarbe", LiloOrange to "Lilo Orange", LiloBlue to "Lilo Blau",
-        LiloLight to "Lilo Hell", LiloLightSec to "Lilo Hell Sekundär",
-        LiloDark to "Lilo Dunkel", LiloDarkSec to "Lilo Dunkel Sekundär"
+        Color.Black to "Schwarz",
+        Color.Cyan to "Cyan",
+        Color.Magenta to "Magenta",
+        Color.Yellow to "Gelb",
+        Color.Red to "Rot",
+        Color.Green to "Grün",
+        Color.Blue to "Blau",
+        Color.Gray to "Grau",
+        Color.LightGray to "Hellgrau",
+        Color.DarkGray to "Dunkelgrau",
+        LiloMain to "Lilo Hauptfarbe",
+        LiloMainSec to "Lilo Sekundärfarbe",
+        LiloOrange to "Lilo Orange",
+        LiloBlue to "Lilo Blau",
+        LiloLight to "Lilo Hell",
+        LiloLightSec to "Lilo Hell Sekundär",
+        LiloDark to "Lilo Dunkel",
+        LiloDarkSec to "Lilo Dunkel Sekundär"
     )
 
     var selectedColor by remember { mutableStateOf(Color.Black) }
     var expanded by remember { mutableStateOf(false) }
+    val rotationAngle by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "Rotation of Arrow-Icon"
+    )
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = LiloDark
+            containerColor = LiloDark,
+            contentColor = MaterialTheme.colorScheme.onBackground
         ),
         modifier = Modifier
-            .padding(4.dp)
+            .padding(8.dp)
     ) {
-        Row(
+        // Eine Column, die die statische Zeile und den erweiterten Inhalt enthält
+        Column(
             modifier = Modifier
-                .padding(12.dp)
-                .animateContentSize()
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = "Icon for Customization Option",
-                tint = LiloMain
-            )
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(12.dp)
-            ) {
-                Text("Anpassung - ")
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(Modifier.height(8.dp))
-                if(expanded) {
-                    ColorCustomizer(
-                        selectedColor = selectedColor,
-                        onColorSelected = { color ->
-                            selectedColor = color
-                        },
-                        defaultColorList = defaultColorList
-                    )
-                }
-            }
-
-            IconButton(
-                onClick = {
+                .clickable {
                     expanded = !expanded
                 }
+                .padding(16.dp)
+                .animateContentSize()
+        ) {
+            // Statische Zeile mit Icons und Text
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = if(expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = if(expanded) "Show less" else "Show more"
+                    imageVector = Icons.TwoTone.Palette,
+                    contentDescription = "Icon for Customization Option",
+                    tint = LiloMain
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = "Anpassung - Farben",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = if (expanded) "Collapse" else "Expand",
+                    modifier = Modifier.graphicsLayer(rotationZ = rotationAngle),
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            // Erweiterter Inhalt, nur sichtbar wenn expanded == true
+            if (expanded) {
+                Spacer(modifier = Modifier.height(8.dp))
+                ColorCustomizer(
+                    selectedColor = selectedColor,
+                    onColorSelected = { color ->
+                        selectedColor = color
+                    },
+                    defaultColorList = defaultColorList
                 )
             }
         }
     }
-
 }

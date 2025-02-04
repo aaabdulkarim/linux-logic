@@ -614,7 +614,7 @@ fun MainScreen() {
                             .fillMaxSize()
                     ) {
                         composable("Home") { HomeScreen() }
-                        composable("Terminal") { CustomizeScreen() }
+                        composable("Terminal") { CustomizationScreen() }
                         composable("Spielen") { PlayScreen() }
                     }
                 }
