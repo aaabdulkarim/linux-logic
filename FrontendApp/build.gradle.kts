@@ -5,5 +5,5 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     //https://developer.android.com/training/dependency-injection/hilt-android?hl=de#kts
     //https://medium.com/@ramadan123sayed/simple-guide-to-hilt-dependency-injection-in-android-with-jetpack-compose-and-ksp-3ddcbfaad37d
-    id("com.google.dagger.hilt.android") version "2.51.1" apply false
+    //id("com.google.dagger.hilt.android") version "2.51.1" apply false
 }

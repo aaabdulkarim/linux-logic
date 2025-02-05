@@ -61,7 +61,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -118,7 +118,7 @@ fun MainScreen() {
         )
     )
 
-    val terminalViewModel: TerminalViewModel = hiltViewModel()
+    val terminalViewModel: TerminalViewModel = viewModel()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -127,7 +127,10 @@ fun MainScreen() {
             ModalDrawerSheet(
                 drawerContainerColor = MaterialTheme.colorScheme.background,
                 drawerContentColor = MaterialTheme.colorScheme.onBackground,
-                drawerShape = RoundedCornerShape(topEnd = 64.dp, bottomEnd = 64.dp), // Abgerundete Ecken am Ende
+                drawerShape = RoundedCornerShape(
+                    topEnd = 64.dp,
+                    bottomEnd = 64.dp
+                ), // Abgerundete Ecken am Ende
                 drawerState = endDrawerState, // Der EndDrawerState (Verwendung von `rememberDrawerState()` zur Initialisierung)
             ) {
                 Row(
@@ -204,7 +207,7 @@ fun MainScreen() {
                 NavigationDrawerItem(
                     label = {
                         Text(
-                            text ="Mehr über Linux Logic",
+                            text = "Mehr über Linux Logic",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -230,7 +233,10 @@ fun MainScreen() {
                 ModalDrawerSheet(
                     drawerContainerColor = MaterialTheme.colorScheme.background,
                     drawerContentColor = MaterialTheme.colorScheme.onBackground,
-                    drawerShape = RoundedCornerShape(topEnd = 64.dp, bottomEnd = 64.dp), // Abgerundete Ecken am Ende
+                    drawerShape = RoundedCornerShape(
+                        topEnd = 64.dp,
+                        bottomEnd = 64.dp
+                    ), // Abgerundete Ecken am Ende
                     drawerState = endDrawerState, // Der EndDrawerState (Verwendung von `rememberDrawerState()` zur Initialisierung)
                 ) {
                     Row(
@@ -510,7 +516,7 @@ fun MainScreen() {
                                 icon = {
                                     BadgedBox(
                                         badge = {
-                                            if(item.badgeCount != null) {
+                                            if (item.badgeCount != null) {
                                                 Badge(
                                                     containerColor = Color(0xFFA00000),
                                                 ) {
@@ -519,13 +525,13 @@ fun MainScreen() {
                                                         style = MaterialTheme.typography.labelSmall
                                                     )
                                                 }
-                                            } else if(item.hasNews) {
+                                            } else if (item.hasNews) {
                                                 Badge()
                                             }
                                         }
                                     ) {
                                         Icon(
-                                            imageVector = if(index == selectedItemIndex) {
+                                            imageVector = if (index == selectedItemIndex) {
                                                 item.selectedIcon
                                             } else {
                                                 item.unselectedIcon
@@ -617,8 +623,8 @@ fun MainScreen() {
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        composable("Home") { HomeScreen() }
-                        composable("Terminal") { CustomizationScreen(terminalViewModel) }
+                        composable("Home") { HomeScreen(terminalViewModel = terminalViewModel) }
+                        composable("Terminal") { CustomizationScreen(terminalViewModel = terminalViewModel) }
                         composable("Spielen") { PlayScreen() }
                     }
                 }

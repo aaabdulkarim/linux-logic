@@ -55,7 +55,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
 import com.example.linux_logic_app.components.PreviewTerminal
-import com.example.linux_logic_app.components.Terminal
 import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDark
@@ -91,7 +90,7 @@ fun CustomizationScreen(terminalViewModel: TerminalViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ColorCustomizationCard(terminalViewModel)
+        ColorCustomizationCard(terminalViewModel = terminalViewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -103,7 +102,7 @@ fun CustomizationScreen(terminalViewModel: TerminalViewModel) {
             modifier = Modifier
                 .weight(1f)
         ) {
-            PreviewTerminal()
+            PreviewTerminal(terminalViewModel = terminalViewModel)
         }
     }
 }
@@ -297,8 +296,6 @@ https://www.youtube.com/watch?v=SNcMCH5DqaM
  */
 @Composable
 fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
-    val currentColors = terminalViewModel.terminalColors
-
     val defaultColorList = listOf(
         Color.White to "Weiß",
         Color.Black to "Schwarz",
@@ -320,7 +317,6 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
         LiloDark to "Lilo Dunkel",
         LiloDarkSec to "Lilo Dunkel Sekundär"
     )
-
     var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f,
@@ -328,6 +324,8 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
     )
     // Eigene Zustände für jede Option
     var checked by remember { mutableStateOf(true) }
+
+    val currentColors = terminalViewModel.terminalColors
 
     Card(
         colors = CardDefaults.cardColors(
