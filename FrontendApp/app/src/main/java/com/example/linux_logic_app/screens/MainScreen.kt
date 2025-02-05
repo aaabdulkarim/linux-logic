@@ -16,12 +16,12 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.twotone.AccountCircle
+import androidx.compose.material.icons.twotone.Feedback
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material.icons.twotone.NotificationsActive
 import androidx.compose.material.icons.twotone.PlayArrow
-import androidx.compose.material.icons.twotone.RateReview
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
@@ -312,7 +312,7 @@ fun MainScreen(navController: NavController) {
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Notifications.route)
                         }
                     )
 
@@ -332,13 +332,13 @@ fun MainScreen(navController: NavController) {
                         selected = false,
                         icon = {
                             Icon(
-                                Icons.TwoTone.RateReview,
+                                Icons.TwoTone.Feedback,
                                 contentDescription = "RateReview Icon for Main",
                                 tint = LiloMain
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Feedback.route)
                         }
                     )
 
@@ -364,7 +364,7 @@ fun MainScreen(navController: NavController) {
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Help.route)
                         }
                     )
 

@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.ArrowBackIosNew
-import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.Feedback
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,7 +27,7 @@ import com.example.linux_logic_app.ui.theme.LiloMain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun FeedbackScreen(navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -41,7 +41,7 @@ fun SettingsScreen(navController: NavController) {
                         )
 
                         Text(
-                            text = "Einstellungen",
+                            text = "Feedback",
                             style = MaterialTheme.typography.labelMedium
                         )
                     }
@@ -54,7 +54,7 @@ fun SettingsScreen(navController: NavController) {
                     ) {
                         Icon(
                             Icons.TwoTone.ArrowBackIosNew,
-                            contentDescription = "ArrowBackIosNew for Settings",
+                            contentDescription = "ArrowBackIosNew Icon for Feedback",
                             tint = Color.White
                         )
                     }
@@ -66,8 +66,8 @@ fun SettingsScreen(navController: NavController) {
                         }
                     ) {
                         Icon(
-                            Icons.TwoTone.Settings,
-                            contentDescription = "Settings Icon for Settings",
+                            Icons.TwoTone.Feedback,
+                            contentDescription = "Feedback Icon for Feedback",
                             tint = Color.White
                         )
                     }
