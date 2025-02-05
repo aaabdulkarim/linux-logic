@@ -1,19 +1,22 @@
 package com.example.linux_logic_app.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.screens.LoginScreen
 import com.example.linux_logic_app.screens.MainScreen
-import com.example.linux_logic_app.screens.ProfileScreen
 import com.example.linux_logic_app.screens.RegisterScreen
+import com.example.linux_logic_app.screens.SettingsScreen
 import com.example.linux_logic_app.screens.StartScreen
 
 @Composable
@@ -22,116 +25,56 @@ fun LinuxLogicNavigator() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Start.route
+        startDestination = Screen.Start.route,
+        enterTransition = { slideIntoContainer(
+            AnimatedContentTransitionScope.SlideDirection.Start, tween(
+                500
+            )
+        ) },
+        exitTransition = { slideOutOfContainer(
+            AnimatedContentTransitionScope.SlideDirection.Start, tween(
+                500
+            )
+        ) },
+        popEnterTransition = { slideIntoContainer(
+            AnimatedContentTransitionScope.SlideDirection.End, tween(
+                500
+            )
+        ) },
+        popExitTransition = { slideOutOfContainer(
+            AnimatedContentTransitionScope.SlideDirection.End, tween(
+                500
+            )
+        ) }
     ) {
         composable(
             route = Screen.Start.route,
-            enterTransition = {
-                // Eingangsanimation: Sanftes Reinzoomen
-                fadeIn(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleIn(
-                            initialScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            },
-            exitTransition = {
-                // Ausgangsanimation: Sanftes Verkleinern und Ausblenden
-                fadeOut(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleOut(
-                            targetScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            }
         ) {
             StartScreen(navController)
         }
 
         composable(
             route = Screen.Login.route,
-            enterTransition = {
-                // Eingangsanimation: Sanftes Reinzoomen
-                fadeIn(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleIn(
-                            initialScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            },
-            exitTransition = {
-                // Ausgangsanimation: Sanftes Verkleinern und Ausblenden
-                fadeOut(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleOut(
-                            targetScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            }
         ) {
             LoginScreen(navController)
         }
 
         composable(
             route = Screen.Register.route,
-            enterTransition = {
-                // Eingangsanimation: Sanftes Reinzoomen
-                fadeIn(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleIn(
-                            initialScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            },
-            exitTransition = {
-                // Ausgangsanimation: Sanftes Verkleinern und Ausblenden
-                fadeOut(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleOut(
-                            targetScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            }
         ) {
             RegisterScreen(navController)
         }
 
         composable(
             route = Screen.Main.route,
-            enterTransition = {
-                // Eingangsanimation: Sanftes Reinzoomen
-                fadeIn(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleIn(
-                            initialScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            },
-            exitTransition = {
-                // Ausgangsanimation: Sanftes Verkleinern und Ausblenden
-                fadeOut(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleOut(
-                            targetScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            }
         ) {
             MainScreen(navController)
         }
 
         composable(
             route = Screen.Settings.route,
-            enterTransition = {
-                // Eingangsanimation: Sanftes Reinzoomen
-                fadeIn(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleIn(
-                            initialScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            },
-            exitTransition = {
-                // Ausgangsanimation: Sanftes Verkleinern und Ausblenden
-                fadeOut(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +
-                        scaleOut(
-                            targetScale = 0.9f,
-                            animationSpec = tween(800, easing = LinearOutSlowInEasing)
-                        )
-            }
         ) {
-            ProfileScreen(navController)
+            SettingsScreen(navController)
         }
     }
 }

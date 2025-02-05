@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardReturn
 import androidx.compose.material.icons.automirrored.filled.Shortcut
+import androidx.compose.material.icons.twotone.ArrowBackIosNew
 import androidx.compose.material.icons.twotone.Category
 import androidx.compose.material.icons.twotone.DesignServices
 import androidx.compose.material.icons.twotone.Info
@@ -51,198 +52,66 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val coroutineScope = rememberCoroutineScope()
+fun SettingsScreen(navController: NavController) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically, // Row vertikal zentrieren
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.linux_logic_pinguin),
+                            contentDescription = "Linux Logic Pinguin",
+                        )
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = drawerState.isOpen,
-        drawerContent = {
-            ModalDrawerSheet(
-                drawerContainerColor = MaterialTheme.colorScheme.background,
-                drawerContentColor = MaterialTheme.colorScheme.onBackground,
-                drawerShape = RoundedCornerShape(
-                    topEnd = 64.dp,
-                    bottomEnd = 64.dp
-                )
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(start = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.TwoTone.Category,
-                        contentDescription = "Shortcut Icon for Settings",
-                        tint = LiloMain
-                    )
-
-                    Text(
-                        text = "Kategorien",
-                        modifier = Modifier
-                            .padding(16.dp),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                }
-
-                HorizontalDivider(
-                    thickness = 5.dp,
-                    color = LiloOrange
-                )
-
-                NavigationDrawerItem(
-                    label = {
                         Text(
-                            text = "Account Informationen",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onBackground
+                            text = "Einstellungen",
+                            style = MaterialTheme.typography.labelMedium
                         )
-                    },
-                    selected = false,
-                    icon = {
-                        Icon(
-                            Icons.TwoTone.Security,
-                            contentDescription = "Security Icon for Settings",
-                            tint = LiloMain
-                        )
-                    },
-                    onClick = {
-
                     }
-                )
-
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = LiloBlue
-                )
-
-                NavigationDrawerItem(
-                    label = {
-                        Text(
-                            text = "Design",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    },
-                    selected = false,
-                    icon = {
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate(Screen.Main.route)
+                        }
+                    ) {
                         Icon(
-                            Icons.TwoTone.DesignServices,
-                            contentDescription = "Search Icon for Settings",
-                            tint = LiloMain
+                            Icons.TwoTone.ArrowBackIosNew,
+                            contentDescription = "Hamburger Menu for Settings",
+                            tint = Color.White
                         )
-                    },
-                    onClick = {
-
                     }
-                )
-
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = LiloBlue
-                )
-
-                NavigationDrawerItem(
-                    label = {
-                        Text(
-                            text = "Mehr über Linux Logic",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                    },
-                    selected = false,
-                    icon = {
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            // empty
+                        }
+                    ) {
                         Icon(
-                            Icons.TwoTone.Info,
-                            contentDescription = "Info Icon for Main",
-                            tint = LiloMain
+                            Icons.TwoTone.Settings,
+                            contentDescription = "Settings Icon for Settings",
+                            tint = Color.White
                         )
-                    },
-                    onClick = {
-
                     }
+                },
+                colors = TopAppBarColors(
+                    containerColor = LiloMain,
+                    scrolledContainerColor = LiloMain,
+                    navigationIconContentColor = Color.White, // Hier setze ich die Farbe Weiß für die Icons ?
+                    titleContentColor = Color.White,
+                    actionIconContentColor = LiloMain
                 )
-            }
+            )
         }
-    ) {
-        Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically, // Row vertikal zentrieren
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.linux_logic_pinguin),
-                                contentDescription = "Linux Logic Pinguin",
-                            )
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+        ) {
 
-                            Text(
-                                text = "Einstellungen",
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                        }
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                coroutineScope.launch {
-                                    drawerState.open()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                Icons.TwoTone.Menu,
-                                contentDescription = "Hamburger Menu for Settings",
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    actions = {
-                        IconButton(
-                            onClick = {
-                                // empty
-                            }
-                        ) {
-                            Icon(
-                                Icons.TwoTone.Settings,
-                                contentDescription = "Settings Icon for Settings",
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    colors = TopAppBarColors(
-                        containerColor = LiloMain,
-                        scrolledContainerColor = LiloMain,
-                        navigationIconContentColor = Color.White, // Hier setze ich die Farbe Weiß für die Icons ?
-                        titleContentColor = Color.White,
-                        actionIconContentColor = LiloMain
-                    )
-                )
-            },
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        navController.navigate(Screen.Main.route)
-                    },
-                    containerColor = LiloOrange,
-                    contentColor = Color.White,
-                    shape = RoundedCornerShape(100)
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Default.KeyboardReturn,
-                        contentDescription = "ArrowCircleLeft Icon for Settings"
-                    )
-                }
-            },
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-            ) {
-
-            }
         }
     }
 }
