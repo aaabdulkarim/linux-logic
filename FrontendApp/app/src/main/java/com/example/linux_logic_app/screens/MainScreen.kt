@@ -70,6 +70,7 @@ import com.example.linux_logic_app.R
 import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 import kotlinx.coroutines.launch
 
@@ -141,7 +142,8 @@ fun MainScreen(navController: NavController) {
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.Shortcut,
-                        contentDescription = "Shortcut Icon for Main"
+                        contentDescription = "Shortcut Icon for Main",
+                        tint = LiloMain
                     )
 
                     Text(
@@ -160,15 +162,17 @@ fun MainScreen(navController: NavController) {
                 NavigationDrawerItem(
                     label = {
                         Text(
-                            text = "Suchen",
+                            text = "Account Informationen",
                             style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
-                            Icons.TwoTone.Search,
-                            contentDescription = "Search Icon for Main",
+                            Icons.TwoTone.Security,
+                            contentDescription = "Security icon for Main",
+                            tint = LiloMain
                         )
                     },
                     onClick = {
@@ -184,15 +188,17 @@ fun MainScreen(navController: NavController) {
                 NavigationDrawerItem(
                     label = {
                         Text(
-                            text = "Alle Level",
+                            text = "Suchen",
                             style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     },
                     selected = false,
                     icon = {
                         Icon(
-                            Icons.TwoTone.Tour,
-                            contentDescription = "Tour Icon for Main",
+                            Icons.TwoTone.Search,
+                            contentDescription = "Search Icon for Main",
+                            tint = LiloMain
                         )
                     },
                     onClick = {
@@ -218,6 +224,7 @@ fun MainScreen(navController: NavController) {
                         Icon(
                             Icons.TwoTone.Info,
                             contentDescription = "Info Icon for Main",
+                            tint = LiloMain
                         )
                     },
                     onClick = {
@@ -247,7 +254,8 @@ fun MainScreen(navController: NavController) {
                     ) {
                         Icon(
                             imageVector = Icons.TwoTone.ManageAccounts,
-                            contentDescription = "ManageAccounts Icon for Main"
+                            contentDescription = "ManageAccounts Icon for Main",
+                            tint = LiloMain
                         )
                         Text(
                             text = "Ihr Profil",
@@ -266,39 +274,17 @@ fun MainScreen(navController: NavController) {
                     NavigationDrawerItem(
                         label = {
                             Text(
-                                text = "Account Informationen",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        },
-                        selected = false,
-                        icon = {
-                            Icon(
-                                Icons.TwoTone.Security,
-                                contentDescription = "Security icon for Main"
-                            )
-                        },
-                        onClick = {
-
-                        }
-                    )
-
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = LiloBlue
-                    )
-
-                    NavigationDrawerItem(
-                        label = {
-                            Text(
                                 text = "Einstellungen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.Settings,
-                                contentDescription = "Settings Icon for Main"
+                                contentDescription = "Settings Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
@@ -315,14 +301,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Mitteilungen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.NotificationsActive,
-                                contentDescription = "NotificationsActive Icon for Main"
+                                contentDescription = "NotificationsActive Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
@@ -339,14 +327,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Feedback senden",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.RateReview,
-                                contentDescription = "RateReview Icon for Main"
+                                contentDescription = "RateReview Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
@@ -363,14 +353,16 @@ fun MainScreen(navController: NavController) {
                         label = {
                             Text(
                                 text = "Hilfe",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.AutoMirrored.TwoTone.Help,
-                                contentDescription = "Help Icon for Main"
+                                contentDescription = "Help Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
@@ -388,13 +380,15 @@ fun MainScreen(navController: NavController) {
                             Text(
                                 text = "Abmelden",
                                 style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.AutoMirrored.TwoTone.Logout,
-                                contentDescription = "Logout Icon for Main"
+                                contentDescription = "Logout Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
