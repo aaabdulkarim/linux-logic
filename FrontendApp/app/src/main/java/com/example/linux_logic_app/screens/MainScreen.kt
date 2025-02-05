@@ -27,7 +27,6 @@ import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Terminal
-import androidx.compose.material.icons.twotone.Tour
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -442,9 +441,10 @@ fun MainScreen(navController: NavController) {
                         actions = {
                             IconButton(
                                 onClick = {
-                                    coroutineScope.launch {
+                                    /*coroutineScope.launch {
                                         endDrawerState.open()
-                                    }
+                                    }*/
+                                    navController.navigate(Screen.Profile.route)
                                 }
                             ) {
                                 Icon(
