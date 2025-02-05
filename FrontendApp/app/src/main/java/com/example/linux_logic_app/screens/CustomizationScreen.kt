@@ -55,6 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
 import com.example.linux_logic_app.components.PreviewTerminal
+import com.example.linux_logic_app.components.TerminalColors
 import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDark
@@ -322,29 +323,23 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
         targetValue = if (expanded) 180f else 0f,
         label = "Rotation of Arrow-Icon"
     )
-    // Eigene Zustände für jede Option
-    var checked by remember { mutableStateOf(true) }
 
     val currentColors = terminalViewModel.terminalColors
+    val useDefaultColors = terminalViewModel.useDefaultColors
 
     Card(
         colors = CardDefaults.cardColors(
             containerColor = LiloBlue
         )
     ) {
-        // Eine Column, die die statische Zeile und den erweiterten Inhalt enthält
         Column(
             modifier = Modifier
-                .clickable {
-                    expanded = !expanded
-                }
+                .clickable { expanded = !expanded }
                 .padding(16.dp)
                 .animateContentSize()
         ) {
-            // Statische Zeile mit Icons und Text
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -353,14 +348,12 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                     contentDescription = "Palette Icon for Customization",
                     tint = LiloMain
                 )
-
                 Text(
                     text = "Farbanpassung",
                     color = Color.White,
                     style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
-
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = if (expanded) "Collapse" else "Expand",
@@ -368,11 +361,11 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                     tint = Color.White
                 )
             }
-            // Erweiterter Inhalt, nur sichtbar wenn die Card expanded ist
+
             if (expanded) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (checked) {
+                if (useDefaultColors) {
                     Text(
                         text = "Verwendung der Default-Farben",
                         style = MaterialTheme.typography.bodyLarge,
@@ -381,16 +374,13 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                             .padding(vertical = 8.dp),
                         textAlign = TextAlign.Center
                     )
-
                 } else {
                     ColorCustomizationOption(
                         option = "Terminal Kopf:",
                         selectedColor = currentColors.headerColor,
                         onColorSelected = {
                             terminalViewModel.updateColors(
-                                currentColors.copy(
-                                    headerColor = it
-                                )
+                                currentColors.copy(headerColor = it)
                             )
                         },
                         defaultColorList = defaultColorList
@@ -401,9 +391,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         selectedColor = currentColors.bodyColor,
                         onColorSelected = {
                             terminalViewModel.updateColors(
-                                currentColors.copy(
-                                    bodyColor = it
-                                )
+                                currentColors.copy(bodyColor = it)
                             )
                         },
                         defaultColorList = defaultColorList
@@ -414,9 +402,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         selectedColor = currentColors.headerTextColor,
                         onColorSelected = {
                             terminalViewModel.updateColors(
-                                currentColors.copy(
-                                    headerTextColor = it
-                                )
+                                currentColors.copy(headerTextColor = it)
                             )
                         },
                         defaultColorList = defaultColorList
@@ -427,9 +413,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         selectedColor = currentColors.shellPromptColor,
                         onColorSelected = {
                             terminalViewModel.updateColors(
-                                currentColors.copy(
-                                    shellPromptColor = it
-                                )
+                                currentColors.copy(shellPromptColor = it)
                             )
                         },
                         defaultColorList = defaultColorList
@@ -440,9 +424,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         selectedColor = currentColors.commandColor,
                         onColorSelected = {
                             terminalViewModel.updateColors(
-                                currentColors.copy(
-                                    commandColor = it
-                                )
+                                currentColors.copy(commandColor = it)
                             )
                         },
                         defaultColorList = defaultColorList
@@ -465,23 +447,21 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Switch(
-                        checked = checked,
+                        checked = useDefaultColors,
                         onCheckedChange = {
-                            checked = it
+                            terminalViewModel.updateDefaultMode(it)
                         },
-                        thumbContent = if (checked) {
-                            {
+                        thumbContent = {
+                            if (useDefaultColors) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = "Check Icon for Customization",
-                                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                                    modifier = Modifier.size(SwitchDefaults.IconSize)
                                 )
-                            }
-                        } else {
-                            {
+                            } else {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
-                                    contentDescription = "Check Icon for Customization",
+                                    contentDescription = "Clear Icon for Customization",
                                     modifier = Modifier.size(SwitchDefaults.IconSize),
                                     tint = Color.White
                                 )
@@ -491,7 +471,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                             checkedThumbColor = LiloOrange,
                             checkedTrackColor = LiloMain,
                             uncheckedThumbColor = LiloBlue,
-                            uncheckedTrackColor = LiloMain,
+                            uncheckedTrackColor = LiloMain
                         )
                     )
                 }
