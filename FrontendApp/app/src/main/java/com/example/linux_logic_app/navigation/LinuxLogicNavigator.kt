@@ -113,7 +113,7 @@ fun LinuxLogicNavigator() {
         }
 
         composable(
-            route = Screen.Profile.route,
+            route = Screen.Settings.route,
             enterTransition = {
                 // Eingangsanimation: Sanftes Reinzoomen
                 fadeIn(animationSpec = tween(800, easing = LinearOutSlowInEasing)) +

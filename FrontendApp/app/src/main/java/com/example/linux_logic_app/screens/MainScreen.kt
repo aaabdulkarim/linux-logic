@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material.icons.twotone.ManageAccounts
 import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material.icons.twotone.NotificationsActive
 import androidx.compose.material.icons.twotone.PlayArrow
@@ -252,7 +251,7 @@ fun MainScreen(navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.TwoTone.ManageAccounts,
+                            imageVector = Icons.TwoTone.AccountCircle,
                             contentDescription = "ManageAccounts Icon for Main",
                             tint = LiloMain
                         )
@@ -287,7 +286,7 @@ fun MainScreen(navController: NavController) {
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Settings.route)
                         }
                     )
 
@@ -441,10 +440,9 @@ fun MainScreen(navController: NavController) {
                         actions = {
                             IconButton(
                                 onClick = {
-                                    /*coroutineScope.launch {
+                                    coroutineScope.launch {
                                         endDrawerState.open()
-                                    }*/
-                                    navController.navigate(Screen.Profile.route)
+                                    }
                                 }
                             ) {
                                 Icon(
@@ -455,11 +453,11 @@ fun MainScreen(navController: NavController) {
                             }
                         },
                         colors = TopAppBarColors(
-                            containerColor = Color(0xFF569191),
-                            scrolledContainerColor = Color(0xFF569191),
+                            containerColor = LiloMain,
+                            scrolledContainerColor = LiloMain,
                             navigationIconContentColor = Color.White, // Hier setze ich die Farbe Weiß für die Icons ?
                             titleContentColor = Color.White,
-                            actionIconContentColor = Color(0xFF569191)
+                            actionIconContentColor = LiloMain
                         )
                     )
                 },
