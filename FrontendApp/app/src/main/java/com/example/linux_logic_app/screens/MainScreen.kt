@@ -61,10 +61,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloOrange
@@ -115,6 +117,8 @@ fun MainScreen() {
             hasNews = false,
         )
     )
+
+    val terminalViewModel: TerminalViewModel = hiltViewModel()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -614,7 +618,7 @@ fun MainScreen() {
                             .fillMaxSize()
                     ) {
                         composable("Home") { HomeScreen() }
-                        composable("Terminal") { CustomizationScreen() }
+                        composable("Terminal") { CustomizationScreen(terminalViewModel) }
                         composable("Spielen") { PlayScreen() }
                     }
                 }

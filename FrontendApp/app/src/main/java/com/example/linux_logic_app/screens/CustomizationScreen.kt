@@ -54,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
+import com.example.linux_logic_app.components.PreviewTerminal
 import com.example.linux_logic_app.components.Terminal
 import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
@@ -102,7 +103,7 @@ fun CustomizationScreen(terminalViewModel: TerminalViewModel) {
             modifier = Modifier
                 .weight(1f)
         ) {
-            Terminal("ws://10.0.107.0:8000/ws", true, terminalViewModel)
+            PreviewTerminal()
         }
     }
 }

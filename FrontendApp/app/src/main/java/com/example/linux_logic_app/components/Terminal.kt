@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -89,7 +90,7 @@ class WebSocketClient(url: String) {
 }
 
 @Composable
-fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: TerminalViewModel) {
+fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: TerminalViewModel = hiltViewModel()) {
     val terminalColors = terminalViewModel.terminalColors
     var terminalOutput by remember { mutableStateOf(listOf("Welcome to logic terminal!")) }
     var userInput by remember { mutableStateOf("") }
@@ -231,3 +232,8 @@ fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: Ter
     }
 }
 
+@Composable
+fun PreviewTerminal() {
+    val terminalViewModel = TerminalViewModel() // Manuelle Instanziierung für Preview
+    Terminal("ws://10.0.107.0:8000/ws", preview = true, terminalViewModel = terminalViewModel)
+}

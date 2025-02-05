@@ -70,6 +70,9 @@ dependencies {
     //https://developer.android.com/training/dependency-injection/hilt-android?hl=de#kts
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+
+    //https://www.youtube.com/watch?v=bbMsuI2p1DQ
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 }
 
 // Allow references to generated code

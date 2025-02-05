@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.example.linux_logic_app.ui.theme.LiloDark
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 data class TerminalColors(
     val headerColor: Color = Color.Black,
@@ -15,7 +17,9 @@ data class TerminalColors(
     val commandColor: Color = Color.White
 )
 
-class TerminalViewModel : ViewModel() {
+@HiltViewModel
+class TerminalViewModel @Inject constructor() : ViewModel() {
+
     var terminalColors by mutableStateOf(TerminalColors())
         private set
 
