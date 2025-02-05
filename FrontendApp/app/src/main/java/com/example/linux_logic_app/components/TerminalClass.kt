@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.example.linux_logic_app.ui.theme.LiloDark
 
 // 1. Definieren des Color-Modells als Data-Klasse
 data class TerminalColors(
@@ -17,11 +18,11 @@ data class TerminalColors(
 
 // 2. Festlegen der Default-Farben als Konstante
 val defaultTerminalColors = TerminalColors(
-    headerColor = Color.DarkGray,
-    bodyColor = Color.Black,
+    headerColor = Color.Black,
+    bodyColor = LiloDark,
     headerTextColor = Color.White,
     shellPromptColor = Color.Green,
-    commandColor = Color.LightGray
+    commandColor = Color.White
 )
 
 // 3. Erstellen des ViewModels, welches den State zentral verwaltet

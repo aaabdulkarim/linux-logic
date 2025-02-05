@@ -83,7 +83,7 @@ fun LinuxLogicNavigator() {
         composable(
             route = Screen.Main.route,
         ) {
-            MainScreen()
+            MainScreen(navController)
         }
 
         /*

@@ -62,6 +62,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -87,12 +88,12 @@ data class BottomNavigationItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val endDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(1) }
-    val navController = rememberNavController()
+    val navControllerMain = rememberNavController()
     val context = LocalContext.current
     val liloWebUrl = "https://www.linux-logic.com"
     val liloIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(liloWebUrl)) }
@@ -505,8 +506,8 @@ fun MainScreen() {
                                 selected = selectedItemIndex == index,
                                 onClick = {
                                     selectedItemIndex = index
-                                    navController.navigate(item.title) {
-                                        popUpTo(navController.graph.startDestinationId) {
+                                    navControllerMain.navigate(item.title) {
+                                        popUpTo(navControllerMain.graph.startDestinationId) {
                                             saveState = true
                                         }
                                         launchSingleTop = true
@@ -618,14 +619,14 @@ fun MainScreen() {
                         .padding(innerPadding)
                 ) {
                     NavHost(
-                        navController = navController,
+                        navController = navControllerMain,
                         startDestination = "Home",
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        composable("Home") { HomeScreen(terminalViewModel = terminalViewModel) }
-                        composable("Terminal") { CustomizationScreen(terminalViewModel = terminalViewModel) }
-                        composable("Spielen") { PlayScreen() }
+                        composable(Screen.Customize.route) { CustomizationScreen(terminalViewModel = terminalViewModel) }
+                        composable(Screen.Home.route) { HomeScreen(terminalViewModel = terminalViewModel) }
+                        composable(Screen.Play.route) { PlayScreen() }
                     }
                 }
             }

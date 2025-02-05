@@ -27,5 +27,10 @@ sealed class Screen(val route: String) {
     data object Login : Screen("login")
     data object Register : Screen("register")
     data object Main : Screen("main")
-    // Weitere Screens können hier hinzugefügt werden
+
+    // Folgende Screens gehören zur Navigation innerhalb des Main-Screens
+    data object Customize : Screen("Terminal")
+    data object Home : Screen("Home")
+    data object Play : Screen("Spielen")
+
 }
