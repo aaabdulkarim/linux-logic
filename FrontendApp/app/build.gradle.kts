@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -61,6 +63,16 @@ dependencies {
     implementation(libs.androidx.animation)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.okhttp)
+
     // https://mvnrepository.com/artifact/com.github.skydoves/colorpicker-compose
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
+
+    //https://developer.android.com/training/dependency-injection/hilt-android?hl=de#kts
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
