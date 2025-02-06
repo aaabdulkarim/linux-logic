@@ -33,10 +33,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,24 +56,18 @@ import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
 fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
-    val (email, setEmail) = rememberSaveable { mutableStateOf("") }
-    val (password, setPassword) = rememberSaveable { mutableStateOf("") }
-    val (passwordVisible, setPasswordVisible) = rememberSaveable { mutableStateOf(false) }
+    // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
+    val email = userViewModel.email
+    val password = userViewModel.password
+    val emailErrorMessage = userViewModel.emailErrorMessage
+    val passwordErrorMessage = userViewModel.passwordErrorMessage
     /*
-    ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
+    Folgender Ausdruck ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
     Funktionen zurückgegebenen Werte direkt in separate Variablen auspacken können. Kotlin erlaubt
     es, dieses Objekt in zwei Variablen zu zerlegen: eine zum Lesen des Wertes und eine zum Aktualisieren
      */
-
-    // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
-    var emailErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
-
-    var passwordErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
-
-    // Regular expression to validate email format
-    val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
-
-    val isFormValid = emailErrorMessage == null && passwordErrorMessage == null
+    val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
+    val isFormValid = emailErrorMessage.value == null && passwordErrorMessage.value == null
 
     Column(
         modifier = Modifier
@@ -98,13 +90,6 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     painter = painterResource(id = R.drawable.linux_logic_pinguin),
                     contentDescription = "Linux Logic Penguin",
                 )
-
-                /*Image(
-                    painter = painterResource(id = R.drawable.linux_logic_main_transparent_2),
-                    contentDescription = "Linux Logic Logo White",
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                )*/
 
                 Row(
                     modifier = Modifier
@@ -154,18 +139,8 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = {
-                        setEmail(it)
-                        emailErrorMessage = when {
-                            it.isEmpty() -> "E-Mail darf nicht leer sein!"
-                            !it.matches(emailPattern.toRegex()) -> "Ungültige E-Mail Adresse!"
-                            else -> null
-                        }
-                    },
-                    /*colors = OutlinedTextFieldDefaults.colors(
-                        cursorColor = LiloMain,
-                    ),*/
+                    value = email.value,
+                    onValueChange = { userViewModel.onEmailChange(it) },
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -193,9 +168,9 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = emailErrorMessage != null,
+                    isError = emailErrorMessage.value != null,
                     supportingText = {
-                        emailErrorMessage?.let {
+                        emailErrorMessage.value?.let {
                             Text(it, color = MaterialTheme.colorScheme.error)
                         }
                     }
@@ -204,15 +179,8 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = {
-                        setPassword(it)
-                        passwordErrorMessage = when {
-                            it.isEmpty() -> "Passwort darf nicht leer sein!"
-                            it.length < 8 -> "Passwort muss mindestens 8 Zeichen enthalten!"
-                            else -> null
-                        }
-                    },
+                    value = password.value,
+                    onValueChange = { userViewModel.onPasswordChange(it) },
                     colors = OutlinedTextFieldDefaults.colors(
                         cursorColor = LiloMain,
 
@@ -258,9 +226,9 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                             )
                         }
                     },
-                    isError = passwordErrorMessage != null,
+                    isError = passwordErrorMessage.value != null,
                     supportingText = {
-                        passwordErrorMessage?.let {
+                        passwordErrorMessage.value?.let {
                             Text(it, color = MaterialTheme.colorScheme.error)
                         }
                     }
@@ -285,19 +253,11 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Button(
                     onClick = {
-                        val emailInput = email.trim()
-                        val passwordInput = password.trim()
-
-                        // Verifizierung der E-Mail und des Passwortes
-                        if (userViewModel.login(emailInput, passwordInput)) {
-                            // Bei erfolgreichem Login zum Main Screen navigieren
+                        if (userViewModel.login(email.value.trim(), password.value.trim())) {
+                            userViewModel.clearErrorMessages()
                             Log.i("Credentials", "E-Mail: $email; Password: $password")
                             navController.navigate(Screen.Main.route)
-                        } else {
-                            // Fehlermeldung zeigen (hier als einfaches Beispiel)
-                            emailErrorMessage = "E-Mail oder Passwort ungültig"
                         }
-
                     },
                     modifier = Modifier
                         .fillMaxWidth()
