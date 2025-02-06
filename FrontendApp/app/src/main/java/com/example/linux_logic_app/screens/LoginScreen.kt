@@ -50,13 +50,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     val (email, setEmail) = rememberSaveable { mutableStateOf("") }
     val (password, setPassword) = rememberSaveable { mutableStateOf("") }
     val (passwordVisible, setPasswordVisible) = rememberSaveable { mutableStateOf(false) }
@@ -265,8 +266,19 @@ fun LoginScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        navController.navigate(Screen.Main.route)
-                        Log.i("Credentials", "E-Mail: $email; Password: $password")
+                        val emailInput = email.trim()
+                        val passwordInput = password.trim()
+
+                        // Verifizierung der E-Mail und des Passwortes
+                        if (userViewModel.login(emailInput, passwordInput)) {
+                            // Bei erfolgreichem Login zum Main Screen navigieren
+                            Log.i("Credentials", "E-Mail: $email; Password: $password")
+                            navController.navigate(Screen.Main.route)
+                        } else {
+                            // Fehlermeldung zeigen (hier als einfaches Beispiel)
+                            emailErrorMessage = "E-Mail oder Passwort ungültig"
+                        }
+
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -350,8 +362,8 @@ fun LoginScreen(navController: NavController) {
                         text = "Registrieren",
                         modifier = Modifier
                             .clickable {
-                                navController.navigate(Screen.Register.route)
                                 Log.i("LoginScreen", "User is performing - Action: \"Register\" -")
+                                navController.navigate(Screen.Register.route)
                             },
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
@@ -362,4 +374,3 @@ fun LoginScreen(navController: NavController) {
         }
     }
 }
-

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.screens.FeedbackScreen
 import com.example.linux_logic_app.screens.HelpScreen
 import com.example.linux_logic_app.screens.LoginScreen
@@ -16,7 +17,7 @@ import com.example.linux_logic_app.screens.SettingsScreen
 import com.example.linux_logic_app.screens.StartScreen
 
 @Composable
-fun LinuxLogicNavigator() {
+fun LinuxLogicNavigator(userViewModel: UserViewModel) {
     val navController = rememberNavController()
 
     NavHost(
@@ -56,19 +57,19 @@ fun LinuxLogicNavigator() {
         composable(
             route = Screen.Login.route,
         ) {
-            LoginScreen(navController)
+            LoginScreen(navController = navController, userViewModel = userViewModel)
         }
 
         composable(
             route = Screen.Register.route,
         ) {
-            RegisterScreen(navController)
+            RegisterScreen(navController = navController, userViewModel = userViewModel)
         }
 
         composable(
             route = Screen.Main.route,
         ) {
-            MainScreen(navController)
+            MainScreen(navController, userViewModel = userViewModel)
         }
 
         composable(

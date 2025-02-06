@@ -24,8 +24,7 @@ data class User(
 class UserViewModel : ViewModel() {
 
     // Der aktuell angemeldete Benutzer. Ist null, wenn niemand angemeldet ist.
-    var user by mutableStateOf<User?>(null)
-        private set
+    private var user by mutableStateOf<User?>(null)
 
     // Liste registrierter Benutzer
     private val registeredUsers = mutableListOf<User>()

@@ -51,12 +51,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
     val (email, setEmail) = rememberSaveable { mutableStateOf("") }
     val (username, setUsername) = rememberSaveable { mutableStateOf("") }
     val (password, setPassword) = rememberSaveable { mutableStateOf("") }
@@ -136,7 +137,7 @@ fun RegisterScreen(navController: NavController) {
                 .fillMaxSize()
                 .weight(0.75f)
                 .padding(16.dp) // Padding hinzufügen für den gesamten Inhalt
-                //.clip(RoundedCornerShape(topStart = 1.dp, topEnd = 16.dp))
+            //.clip(RoundedCornerShape(topStart = 1.dp, topEnd = 16.dp))
         ) {
             Column(
                 modifier = Modifier
@@ -163,7 +164,13 @@ fun RegisterScreen(navController: NavController) {
                             it.length !in 3..20 -> "Der Benutzername muss zwischen 3 und 20 Zeichen lang sein!"
                             !it.matches("^[a-zA-Z0-9_-]+$".toRegex()) -> "Nur Buchstaben, Zahlen, _ und - sind erlaubt!"
                             !it.matches("^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$".toRegex()) -> "Kein Start oder Ende mit Sonderzeichen!"
-                            "".any { word -> it.contains(word, ignoreCase = true) } -> "Der Benutzername enthält verbotene Wörter!"
+                            "".any { word ->
+                                it.contains(
+                                    word,
+                                    ignoreCase = true
+                                )
+                            } -> "Der Benutzername enthält verbotene Wörter!"
+
                             else -> null // Benutzername ist gültig
                         }
                     },
@@ -274,8 +281,10 @@ fun RegisterScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
-                        val description = if (passwordVisible) "Showed password" else "Hidden password"
+                        val image =
+                            if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description =
+                            if (passwordVisible) "Showed password" else "Hidden password"
                         IconButton(
                             onClick = {
                                 setPasswordVisible(!passwordVisible)
@@ -332,8 +341,10 @@ fun RegisterScreen(navController: NavController) {
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     isError = confirmPasswordErrorMessage != null,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
-                        val description = if (passwordVisible) "Showed password" else "Hidden password"
+                        val image =
+                            if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description =
+                            if (passwordVisible) "Showed password" else "Hidden password"
                         IconButton(
                             onClick = {
                                 setPasswordVisible(!passwordVisible)
@@ -352,8 +363,15 @@ fun RegisterScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        navController.navigate(Screen.Main.route)
-                        Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")
+                        if (isFormValid) {
+                            userViewModel.register(username, email, password)
+                            Log.i(
+                                "Credentials",
+                                "Username: $username; E-Mail: $email; Password: $password"
+                            )
+                            // Nach der erfolgreichen Registrierung zum MainScreen navigieren
+                            navController.navigate(Screen.Main.route)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()

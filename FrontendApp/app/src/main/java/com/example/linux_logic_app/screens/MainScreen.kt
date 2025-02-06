@@ -66,6 +66,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.components.TerminalViewModel
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
@@ -87,7 +88,7 @@ data class BottomNavigationItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val endDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -390,6 +391,7 @@ fun MainScreen(navController: NavController) {
                             )
                         },
                         onClick = {
+                            userViewModel.logout()
                             navController.navigate(Screen.Start.route)
                         }
                     )
