@@ -34,10 +34,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,12 +56,17 @@ import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
-    val (email, setEmail) = rememberSaveable { mutableStateOf("") }
-    val (username, setUsername) = rememberSaveable { mutableStateOf("") }
-    val (password, setPassword) = rememberSaveable { mutableStateOf("") }
-    val (passwordVisible, setPasswordVisible) = rememberSaveable { mutableStateOf(false) }
-    val (confirmPassword, setConfirmPassword) = rememberSaveable { mutableStateOf("") }
-    var confirmPasswordErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
+    val username = userViewModel.username
+    val email = userViewModel.email
+    val password = userViewModel.password
+    val confirmPassword = userViewModel.confirmPassword
+
+    val emailErrorMessage = userViewModel.emailErrorMessage
+    val usernameErrorMessage = userViewModel.usernameErrorMessage
+    val passwordErrorMessage = userViewModel.passwordErrorMessage
+    val confPasswordMessage = userViewModel.confPasswordMessage
+
+    val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
     /*
     ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
     Funktionen zurückgegebenen Werte direkt in separate Variablen auspacken können. Kotlin erlaubt
@@ -71,19 +74,9 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
      */
 
     // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
-    var emailErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
 
-    var usernameErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
-
-    val isFormValid = emailErrorMessage == null &&
-            usernameErrorMessage == null &&
-            password.isNotEmpty() &&
-            password.length >= 8 &&
-            password == confirmPassword
-
-    // Regular expression to validate email format
-    val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
-
+    val isFormValid = emailErrorMessage.value == null && usernameErrorMessage.value == null &&
+            passwordErrorMessage.value == null && confPasswordMessage.value == null
 
     Column(
         modifier = Modifier
@@ -152,28 +145,11 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = username,
-                    onValueChange = {
-                        setUsername(it)
-                        setUsername(it)
-                        usernameErrorMessage = when {
-                            it.isBlank() -> "Der Benutzername darf nicht leer sein!"
-                            it.length !in 3..20 -> "Der Benutzername muss zwischen 3 und 20 Zeichen lang sein!"
-                            !it.matches("^[a-zA-Z0-9_-]+$".toRegex()) -> "Nur Buchstaben, Zahlen, _ und - sind erlaubt!"
-                            !it.matches("^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$".toRegex()) -> "Kein Start oder Ende mit Sonderzeichen!"
-                            "".any { word ->
-                                it.contains(
-                                    word,
-                                    ignoreCase = true
-                                )
-                            } -> "Der Benutzername enthält verbotene Wörter!"
-
-                            else -> null // Benutzername ist gültig
-                        }
-                    },
+                    value = username.value,
+                    onValueChange = { userViewModel.onUsernameChange(it) },
                     label = {
                         Text(
                             text = "Benutzername",
@@ -201,21 +177,17 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                         keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = usernameErrorMessage != null
+                    isError = usernameErrorMessage.value != null,
+                    supportingText = {
+                        usernameErrorMessage.value?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = {
-                        setEmail(it)
-                        emailErrorMessage = if (it.matches(emailPattern.toRegex())) {
-                            null
-                        } else {
-                            "Invalide E-Mail Adresse!"
-                        }
-                    },
+                    value = email.value,
+                    onValueChange = { userViewModel.onEmailChange(it) },
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -243,14 +215,17 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = emailErrorMessage != null
+                    isError = emailErrorMessage.value != null,
+                    supportingText = {
+                        emailErrorMessage.value?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = setPassword,
+                    value = password.value,
+                    onValueChange = { userViewModel.onPasswordChange(it) },
                     label = {
                         Text(
                             text = "Passwort",
@@ -279,7 +254,6 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                         imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
                         val image =
                             if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
@@ -297,20 +271,17 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             )
                         }
                     },
+                    isError = passwordErrorMessage.value != null,
+                    supportingText = {
+                        passwordErrorMessage.value?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
                 OutlinedTextField(
-                    value = confirmPassword,
-                    onValueChange = {
-                        setConfirmPassword(it)
-                        confirmPasswordErrorMessage = if (it == password) {
-                            null
-                        } else {
-                            "Passwörter stimmen nicht überein!"
-                        }
-                    },
+                    value = confirmPassword.value,
+                    onValueChange = { userViewModel.onConfirmPasswordChange(it) },
                     label = {
                         Text(
                             text = "Passwort bestätigen",
@@ -339,7 +310,6 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                         imeAction = ImeAction.Done // Fertigstellen der Eingabe
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = confirmPasswordErrorMessage != null,
                     trailingIcon = {
                         val image =
                             if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
@@ -357,19 +327,22 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             )
                         }
                     },
+                    isError = confPasswordMessage.value != null,
+                    supportingText = {
+                        confPasswordMessage.value?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
                     onClick = {
-                        if (isFormValid) {
-                            userViewModel.register(username, email, password)
-                            Log.i(
-                                "Credentials",
-                                "Username: $username; E-Mail: $email; Password: $password"
-                            )
-                            // Nach der erfolgreichen Registrierung zum MainScreen navigieren
+                        if (userViewModel.register(username.value.trim(), email.value.trim(), password.value.trim())) {
+                            userViewModel.clearErrorMessages()
+                            userViewModel.clearAllFields()
+                            Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")
                             navController.navigate(Screen.Main.route)
                         }
                     },
@@ -391,7 +364,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                //Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier
@@ -436,8 +409,6 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             }
                     )*/
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.Center,

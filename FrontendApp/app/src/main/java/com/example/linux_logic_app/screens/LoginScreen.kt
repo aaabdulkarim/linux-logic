@@ -136,7 +136,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = email.value,
@@ -175,8 +175,6 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         }
                     }
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = password.value,
@@ -234,7 +232,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     }
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
                     text = "Passwort vergessen?",
@@ -255,6 +253,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     onClick = {
                         if (userViewModel.login(email.value.trim(), password.value.trim())) {
                             userViewModel.clearErrorMessages()
+                            userViewModel.clearAllFields()
                             Log.i("Credentials", "E-Mail: $email; Password: $password")
                             navController.navigate(Screen.Main.route)
                         }
@@ -277,7 +276,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                //Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier
@@ -322,8 +321,6 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                             }
                     )*/
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.Center,

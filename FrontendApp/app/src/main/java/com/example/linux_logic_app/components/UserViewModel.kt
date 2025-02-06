@@ -28,20 +28,33 @@ class UserViewModel : ViewModel() {
     _email ist privat und schützt den Zustand vor direktem Zugriff von außen.
     */
     private var _email = mutableStateOf("")
+
     /*
      Öffentliche, nur lesbare Darstellung des Zustands.
      email bietet Zugriff auf den Zustand ohne direkte Änderungsmöglichkeit.
      */
     val email: State<String> get() = _email
 
+    private var _username = mutableStateOf("")
+    val username: State<String> get() = _username
+
     private var _password = mutableStateOf("")
     val password: State<String> get() = _password
+
+    private val _confirmPassword = mutableStateOf("")
+    val confirmPassword: State<String> get() = _confirmPassword
 
     private var _emailErrorMessage = mutableStateOf<String?>(null)
     val emailErrorMessage: State<String?> get() = _emailErrorMessage
 
+    private var _usernameErrorMessage = mutableStateOf<String?>(null)
+    val usernameErrorMessage: State<String?> get() = _usernameErrorMessage
+
     private var _passwordErrorMessage = mutableStateOf<String?>(null)
     val passwordErrorMessage: State<String?> get() = _passwordErrorMessage
+
+    private var _confPasswordMessage = mutableStateOf<String?>(null)
+    val confPasswordMessage: State<String?> get() = _confPasswordMessage
 
     // Regular Expression um die Email zu validieren
     private val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
@@ -56,6 +69,11 @@ class UserViewModel : ViewModel() {
         registeredUsers.add(User("admin", "admin@test.com", "admin123"))
     }
 
+    fun onUsernameChange(newUsername: String) {
+        _username.value = newUsername
+        _usernameErrorMessage.value = validateUsername(newUsername)
+    }
+
     fun onEmailChange(newEmail: String) {
         _email.value = newEmail
         _emailErrorMessage.value = validateEmail(newEmail)
@@ -66,10 +84,25 @@ class UserViewModel : ViewModel() {
         _passwordErrorMessage.value = validatePassword(newPassword)
     }
 
+    fun onConfirmPasswordChange(newConfirmPassword: String) {
+        _confirmPassword.value = newConfirmPassword
+        _confPasswordMessage.value = validatePasswords()
+    }
+
     private fun validateEmail(email: String): String? {
         return when {
             email.isEmpty() -> "E-Mail darf nicht leer sein!"
             !email.matches(emailPattern.toRegex()) -> "Invalide E-Mail Adresse!"
+            else -> null
+        }
+    }
+
+    private fun validateUsername(username: String): String? {
+        return when {
+            username.isBlank() -> "Benutzername darf nicht leer sein!"
+            username.length !in 3..20 -> "Benutzername muss zwischen 3 - 20 Zeichen lang sein!"
+            !username.matches("^[a-zA-Z0-9_-]+$".toRegex()) -> "Nur Buchstaben, Zahlen, _ und - erlaubt!"
+            !username.matches("^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$".toRegex()) -> "Kein Start oder Ende mit Sonderzeichen!"
             else -> null
         }
     }
@@ -80,6 +113,13 @@ class UserViewModel : ViewModel() {
             password.length < 8 -> "Passwort muss mindestens 8 Zeichen enthalten!"
             else -> null
         }
+    }
+
+    private fun validatePasswords(): String? {
+        return if (_password.value == _confirmPassword.value)
+            null
+        else
+            "Passwörter stimmen nicht überein!"
     }
 
     /**
@@ -124,7 +164,25 @@ class UserViewModel : ViewModel() {
      */
     fun register(username: String, email: String, password: String): Boolean {
         if (emailExists(email)) {
+            _emailErrorMessage.value = "E-Mail bereits registriert!"
             return false    // Fehler: E-Mail bereits vorhanden
+        }
+
+        // Eingabevalidierung durchführen
+        val usernameError = validateUsername(username)
+        val emailError = validateEmail(email)
+        val passwordError = validatePassword(password)
+        val confirmPasswordError = validatePasswords()
+
+        // Fehlermeldungen setzen
+        _usernameErrorMessage.value = usernameError
+        _emailErrorMessage.value = emailError
+        _passwordErrorMessage.value = passwordError
+        _confPasswordMessage.value = confirmPasswordError
+
+        // Falls Fehler vorliegen, abbrechen
+        if (emailError != null || passwordError != null || usernameError != null || confirmPasswordError != null) {
+            return false
         }
 
         val newUser = User(username, email, password)
@@ -145,7 +203,8 @@ class UserViewModel : ViewModel() {
         newEmail: String? = null,
         newPassword: String? = null
     ): Boolean {
-        val currentUser = user ?: return false // Null-Safety-Prüfung auf user, zurückgeben falls null
+        val currentUser =
+            user ?: return false // Null-Safety-Prüfung auf user, zurückgeben falls null
 
         // Wenn eine neue E-Mail angegeben wurde, prüfen, ob sie nicht vom aktuellen Benutzer verwendet wird
         if (newEmail != null && newEmail != currentUser.email && registeredUsers.any { it.email == newEmail })
@@ -182,7 +241,7 @@ class UserViewModel : ViewModel() {
     /**
      * Diese Methode emailExists überprüft, ob eine E-Mail-Adresse bereits registriert ist.
      */
-    fun emailExists(email: String): Boolean {
+    private fun emailExists(email: String): Boolean {
         return registeredUsers.any { it.email == email }
     }
 
@@ -190,7 +249,20 @@ class UserViewModel : ViewModel() {
      * Diese Methode clearErrorMessages setzt alle ErrorMessages beim Erfolg auf null
      */
     fun clearErrorMessages() {
+        // .value holt den Wert innerhalb des State Containers während ohne .value versucht wird die Referenz zu ändern
         _emailErrorMessage.value = null
+        _usernameErrorMessage.value = null
         _passwordErrorMessage.value = null
+        _confPasswordMessage.value = null
+    }
+
+    /**
+     * Diese Methode clearAllFields setzt alle EingabeFelder zurück
+     */
+    fun clearAllFields() {
+        _username.value = ""
+        _email.value = ""
+        _password.value = ""
+        _confirmPassword.value = ""
     }
 }
