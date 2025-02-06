@@ -81,8 +81,9 @@ fun CustomizationScreen(terminalViewModel: TerminalViewModel) {
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "Passe dein Terminal individuell an!",
+            text = "Passen Sie Ihr Terminal individuell an!",
             style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(bottom = 8.dp)
