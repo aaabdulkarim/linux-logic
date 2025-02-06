@@ -20,8 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Email
-import androidx.compose.material.icons.twotone.Lock
-import androidx.compose.material.icons.twotone.LockOpen
 import androidx.compose.material.icons.twotone.Password
 import androidx.compose.material.icons.twotone.PermIdentity
 import androidx.compose.material.icons.twotone.PersonAddAlt
