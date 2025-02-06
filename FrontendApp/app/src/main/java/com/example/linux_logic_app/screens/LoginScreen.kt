@@ -70,10 +70,12 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
     var emailErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
 
+    var passwordErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
+
     // Regular expression to validate email format
     val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
 
-    val isFormValid = emailErrorMessage == null && password.isNotEmpty() && password.length >= 8
+    val isFormValid = emailErrorMessage == null && passwordErrorMessage == null
 
     Column(
         modifier = Modifier
@@ -155,10 +157,10 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     value = email,
                     onValueChange = {
                         setEmail(it)
-                        emailErrorMessage = if (it.matches(emailPattern.toRegex())) {
-                            null
-                        } else {
-                            "Invalide E-Mail Adresse!"
+                        emailErrorMessage = when {
+                            it.isEmpty() -> "E-Mail darf nicht leer sein!"
+                            !it.matches(emailPattern.toRegex()) -> "Ungültige E-Mail Adresse!"
+                            else -> null
                         }
                     },
                     /*colors = OutlinedTextFieldDefaults.colors(
@@ -191,14 +193,26 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = emailErrorMessage != null
+                    isError = emailErrorMessage != null,
+                    supportingText = {
+                        emailErrorMessage?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = password,
-                    onValueChange = setPassword,
+                    onValueChange = {
+                        setPassword(it)
+                        passwordErrorMessage = when {
+                            it.isEmpty() -> "Passwort darf nicht leer sein!"
+                            it.length < 8 -> "Passwort muss mindestens 8 Zeichen enthalten!"
+                            else -> null
+                        }
+                    },
                     colors = OutlinedTextFieldDefaults.colors(
                         cursorColor = LiloMain,
 
@@ -231,7 +245,6 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         imeAction = ImeAction.Done // Es wird Das Formular abgeschickt
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
                         val image =
                             if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
@@ -245,6 +258,12 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                             )
                         }
                     },
+                    isError = passwordErrorMessage != null,
+                    supportingText = {
+                        passwordErrorMessage?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

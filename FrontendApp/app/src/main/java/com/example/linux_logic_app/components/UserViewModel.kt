@@ -54,8 +54,10 @@ class UserViewModel : ViewModel() {
      * Gibt true zurück, wenn der Login erfolgreich war, sonst false.
      */
     fun login(email: String, password: String): Boolean {
+        registeredUsers.add(User("admin", "admin@test.com", "admin123"))
+
         // Direktes Suchen nach einem Benutzer, der sowohl E-Mail als auch Passwort korrekt hat
-        val liloUser = registeredUsers.firstOrNull { it.email == email && it.password == password }
+        val liloUser = registeredUsers.find { it.email == email && it.password == password }
 
         return liloUser?.let {
             user = it  // Setze den gefundenen Benutzer
@@ -76,17 +78,15 @@ class UserViewModel : ViewModel() {
         newEmail: String? = null,
         newPassword: String? = null
     ): Boolean {
-        val currentUser = user ?: return false  // Null-Safety-Prüfung auf user, zurückgeben falls null
+        val currentUser = user ?: return false // Null-Safety-Prüfung auf user, zurückgeben falls null
 
-        // Wenn neue E-Mail angegeben wurde, prüfen, ob sie nicht vom aktuellen Benutzer verwendet wird
-        if (newEmail != null && newEmail != currentUser.email && emailExists(newEmail)) {
-            return false    // Fehler: E-Mail bereits vergeben
-        }
+        // Wenn eine neue E-Mail angegeben wurde, prüfen, ob sie nicht vom aktuellen Benutzer verwendet wird
+        if (newEmail != null && newEmail != currentUser.email && registeredUsers.any { it.email == newEmail })
+            return false // Fehler: E-Mail bereits vergeben
 
-        // Wenn keine Änderungen vorliegen, einfach true zurückgeben
-        if (newUsername == null && newEmail == null && newPassword == null) {
+        // Keine Änderungen vor, direkt true zurückgeben
+        if (newUsername == null && newEmail == null && newPassword == null)
             return true // Keine Änderungen erforderlich
-        }
 
         // Erstelle einen neuen Benutzer, nur mit den geänderten Werten
         val updatedUser = currentUser.copy(
@@ -96,15 +96,11 @@ class UserViewModel : ViewModel() {
         )
 
         // Benutzer in der Liste aktualisieren
-        val index = registeredUsers.indexOf(currentUser)
-        if (index != -1) { // Überprüfen, ob der Benutzer in der Liste gefunden wurde
-            registeredUsers[index] = updatedUser
-        } else {
-            return false  // Falls der Benutzer nicht gefunden wurde, kann er nicht aktualisiert werden
-        }
+        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
+        if (index == -1) return false // Benutzer nicht gefunden
 
-        // Den aktuellen Benutzer auf die aktualisierte Version setzen
-        user = updatedUser
+        registeredUsers[index] = updatedUser // Benutzer aktualisieren
+        user = updatedUser // Den aktuellen Benutzer auf die aktualisierte Version setzen
         return true
     }
 
