@@ -219,7 +219,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
             if (expanded) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AccountField(
+                AccountDataField(
                     label = "Benutzername",
                     value = username,
                     enabled = editingEnabled,
@@ -227,9 +227,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     errorMessage = usernameErrorMessage
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                AccountField(
+                AccountDataField(
                     label = "E-Mail",
                     value = email,
                     enabled = editingEnabled,
@@ -237,9 +235,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     errorMessage = emailErrorMessage
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                AccountField(
+                AccountDataField(
                     label = "Passwort",
                     value = password,
                     enabled = editingEnabled,
@@ -247,8 +243,6 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     isPassword = true,
                     errorMessage = passwordErrorMessage
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
 
                 if (editingEnabled) {
                     Column {
@@ -317,7 +311,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
 }
 
 @Composable
-fun AccountField(
+fun AccountDataField(
     label: String,
     value: String,
     enabled: Boolean,
