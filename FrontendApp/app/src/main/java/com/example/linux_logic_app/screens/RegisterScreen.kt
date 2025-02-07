@@ -343,10 +343,18 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Button(
                     onClick = {
-                        if (userViewModel.register(username.trim(), email.trim(), password.trim())) {
+                        if (userViewModel.register(
+                                username.trim(),
+                                email.trim(),
+                                password.trim()
+                            )
+                        ) {
                             userViewModel.clearErrorMessages()
                             userViewModel.clearAllFields()
-                            Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")
+                            Log.i(
+                                "Credentials",
+                                "Username: $username; E-Mail: $email; Password: $password"
+                            )
                             navController.navigate(Screen.Main.route)
                         }
                     },

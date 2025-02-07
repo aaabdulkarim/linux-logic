@@ -23,35 +23,43 @@ fun LinuxLogicNavigator(userViewModel: UserViewModel) {
     NavHost(
         navController = navController,
         startDestination = Screen.Start.route,
-        enterTransition = { slideIntoContainer(
-            AnimatedContentTransitionScope.SlideDirection.Start,
-            tween(
-                500
+        enterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Start,
+                tween(
+                    500
+                )
             )
-        ) },
-        exitTransition = { slideOutOfContainer(
-            AnimatedContentTransitionScope.SlideDirection.Start,
-            tween(
-                500
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Start,
+                tween(
+                    500
+                )
             )
-        ) },
-        popEnterTransition = { slideIntoContainer(
-            AnimatedContentTransitionScope.SlideDirection.End,
-            tween(
-                500
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
+                tween(
+                    500
+                )
             )
-        ) },
-        popExitTransition = { slideOutOfContainer(
-            AnimatedContentTransitionScope.SlideDirection.End,
-            tween(
-                500
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
+                tween(
+                    500
+                )
             )
-        ) }
+        }
     ) {
         composable(
             route = Screen.Start.route,
         ) {
-            StartScreen(navController)
+            StartScreen(navController = navController)
         }
 
         composable(
@@ -69,31 +77,31 @@ fun LinuxLogicNavigator(userViewModel: UserViewModel) {
         composable(
             route = Screen.Main.route,
         ) {
-            MainScreen(navController, userViewModel = userViewModel)
+            MainScreen(navController = navController, userViewModel = userViewModel)
         }
 
         composable(
             route = Screen.Settings.route,
         ) {
-            SettingsScreen(navController)
+            SettingsScreen(navController = navController, userViewModel = userViewModel)
         }
 
         composable(
             route = Screen.Notifications.route,
         ) {
-            NotificationScreen(navController)
+            NotificationScreen(navController = navController)
         }
 
         composable(
             route = Screen.Feedback.route,
         ) {
-            FeedbackScreen(navController)
+            FeedbackScreen(navController = navController)
         }
 
         composable(
             route = Screen.Help.route,
         ) {
-            HelpScreen(navController)
+            HelpScreen(navController = navController)
         }
     }
 }

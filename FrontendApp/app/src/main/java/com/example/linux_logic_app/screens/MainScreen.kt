@@ -257,7 +257,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                             tint = LiloMain
                         )
                         Text(
-                            text = "Hallo $",
+                            text = "Hallo ${userViewModel.user?.username}",
                             modifier = Modifier
                                 .padding(16.dp),
                             style = MaterialTheme.typography.labelLarge,

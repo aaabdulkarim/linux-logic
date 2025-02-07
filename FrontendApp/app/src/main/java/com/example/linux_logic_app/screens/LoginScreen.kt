@@ -171,7 +171,10 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     isError = emailErrorMessage != null,
                     supportingText = {
                         emailErrorMessage?.let {
-                            Text(it, color = MaterialTheme.colorScheme.error)
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error
+                            )
                         }
                     }
                 )
@@ -227,7 +230,10 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     isError = passwordErrorMessage != null,
                     supportingText = {
                         passwordErrorMessage?.let {
-                            Text(it, color = MaterialTheme.colorScheme.error)
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error
+                            )
                         }
                     }
                 )

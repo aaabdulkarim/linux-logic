@@ -145,17 +145,24 @@ class UserViewModel : ViewModel() {
             return false
         }
 
-        // Direktes Suchen nach einem Benutzer, der sowohl E-Mail als auch Passwort korrekt hat
-        val liloUser = registeredUsers.find { it.email == email && it.password == password }
+        // Benutzer suchen, der mit der eingegebenen E-Mail übereinstimmt
+        val registeredUser = registeredUsers.find { it.email == email }
 
-        return if (liloUser != null) {
-            _user = liloUser
-            true // Erfolgreicher Login
-        } else {
-            // Fehlermeldungen für ungültige Eingaben setzen
+        // Falls kein Benutzer mit der E-Mail existiert, Fehlermeldung setzen und abbrechen
+        if (registeredUser == null) {
             _emailErrorMessage = "E-Mail nicht registriert!"
-            false
+            return false
         }
+
+        // Passwort prüfen, wenn Benutzer existiert
+        if (registeredUser.password != password) {
+            _passwordErrorMessage = "Passwort stimmt nicht überein!"
+            return false
+        }
+
+        // Erfolgreicher Login
+        _user = registeredUser
+        return true
     }
 
     /**
@@ -206,7 +213,8 @@ class UserViewModel : ViewModel() {
         newEmail: String? = null,
         newPassword: String? = null
     ): Boolean {
-        val currentUser = _user ?: return false // Null-Safety-Prüfung auf user, zurückgeben falls null
+        val currentUser =
+            _user ?: return false // Null-Safety-Prüfung auf user, zurückgeben falls null
 
         // Wenn eine neue E-Mail angegeben wurde, prüfen, ob sie nicht vom aktuellen Benutzer verwendet wird
         if (newEmail != null && newEmail != currentUser.email && registeredUsers.any { it.email == newEmail })
