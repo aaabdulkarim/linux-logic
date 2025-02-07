@@ -173,10 +173,20 @@ class UserViewModel : ViewModel() {
      * Gibt true zurück, wenn die Registrierung erfolgreich war, false bei Fehlern.
      */
     fun register(username: String, email: String, password: String): Boolean {
+        var hasError = false
+
         if (emailExists(email)) {
             _emailErrorMessage = "E-Mail bereits registriert!"
-            return false    // Fehler: E-Mail bereits vorhanden
+            hasError = true   // Fehler: E-Mail bereits vorhanden
         }
+
+        if (usernameExists(username)) {
+            _usernameErrorMessage = "Benutzername bereits vergeben!"
+            hasError = true    // Fehler: Benutzername bereits vergeben
+        }
+
+        if (hasError)
+            return false
 
         // Eingabevalidierung durchführen
         val usernameError = validateUsername(username)
@@ -249,10 +259,17 @@ class UserViewModel : ViewModel() {
     }
 
     /**
-     * Diese Methode emailExists überprüft, ob eine E-Mail-Adresse bereits registriert ist.
+     * Diese Methode emailExists überprüft, ob eine E-Mail-Adresse bereits besetzt ist.
      */
     private fun emailExists(email: String): Boolean {
         return registeredUsers.any { it.email == email }
+    }
+
+    /**
+     * Diese Methode usernameExists überprüft, ob ein Benutzername bereits vergeben ist.
+     */
+    private fun usernameExists(username: String): Boolean {
+        return registeredUsers.any { it.username == username }
     }
 
     /**
