@@ -27,66 +27,69 @@ class UserViewModel : ViewModel() {
     Interner Zustand, der von Compose beobachtet werden kann.
     _email ist privat und schützt den Zustand vor direktem Zugriff von außen.
     */
-    private var _email = mutableStateOf("")
+    private var _email by mutableStateOf("")
 
     /*
      Öffentliche, nur lesbare Darstellung des Zustands.
      email bietet Zugriff auf den Zustand ohne direkte Änderungsmöglichkeit.
      */
-    val email: State<String> get() = _email
+    val email: String get() = _email
 
-    private var _username = mutableStateOf("")
-    val username: State<String> get() = _username
+    private var _username by mutableStateOf("")
+    val username: String get() = _username
 
-    private var _password = mutableStateOf("")
-    val password: State<String> get() = _password
+    private var _password by mutableStateOf("")
+    val password: String get() = _password
 
-    private val _confirmPassword = mutableStateOf("")
-    val confirmPassword: State<String> get() = _confirmPassword
+    private var _confirmPassword by mutableStateOf("")
+    val confirmPassword: String get() = _confirmPassword
 
-    private var _emailErrorMessage = mutableStateOf<String?>(null)
-    val emailErrorMessage: State<String?> get() = _emailErrorMessage
+    private var _emailErrorMessage by mutableStateOf<String?>(null)
+    val emailErrorMessage: String? get() = _emailErrorMessage
 
-    private var _usernameErrorMessage = mutableStateOf<String?>(null)
-    val usernameErrorMessage: State<String?> get() = _usernameErrorMessage
+    private var _usernameErrorMessage by mutableStateOf<String?>(null)
+    val usernameErrorMessage: String? get() = _usernameErrorMessage
 
-    private var _passwordErrorMessage = mutableStateOf<String?>(null)
-    val passwordErrorMessage: State<String?> get() = _passwordErrorMessage
+    private var _passwordErrorMessage by mutableStateOf<String?>(null)
+    val passwordErrorMessage: String? get() = _passwordErrorMessage
 
-    private var _confPasswordMessage = mutableStateOf<String?>(null)
-    val confPasswordMessage: State<String?> get() = _confPasswordMessage
+    private var _confPasswordMessage by mutableStateOf<String?>(null)
+    val confPasswordMessage: String? get() = _confPasswordMessage
 
     // Regular Expression um die Email zu validieren
     private val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
 
     // Der aktuell angemeldete Benutzer. Ist null, wenn niemand angemeldet ist.
-    private var user by mutableStateOf<User?>(null)
+    //private var user by mutableStateOf<User?>(null)
+
+    private var _user by mutableStateOf<User?>(null)
+    val user: User? get() = _user
 
     // Liste registrierter Benutzer
-    private val registeredUsers = mutableListOf<User>()
+    private var registeredUsers = mutableListOf<User>()
 
     init {
-        registeredUsers.add(User("admin", "admin@test.com", "admin123"))
+        registeredUsers.add(User("Admin", "admin@test.com", "admin123"))
     }
 
     fun onUsernameChange(newUsername: String) {
-        _username.value = newUsername
-        _usernameErrorMessage.value = validateUsername(newUsername)
+        _username = newUsername
+        _usernameErrorMessage = validateUsername(newUsername)
     }
 
     fun onEmailChange(newEmail: String) {
-        _email.value = newEmail
-        _emailErrorMessage.value = validateEmail(newEmail)
+        _email = newEmail
+        _emailErrorMessage = validateEmail(newEmail)
     }
 
     fun onPasswordChange(newPassword: String) {
-        _password.value = newPassword
-        _passwordErrorMessage.value = validatePassword(newPassword)
+        _password = newPassword
+        _passwordErrorMessage = validatePassword(newPassword)
     }
 
     fun onConfirmPasswordChange(newConfirmPassword: String) {
-        _confirmPassword.value = newConfirmPassword
-        _confPasswordMessage.value = validatePasswords()
+        _confirmPassword = newConfirmPassword
+        _confPasswordMessage = validatePasswords()
     }
 
     private fun validateEmail(email: String): String? {
@@ -116,7 +119,7 @@ class UserViewModel : ViewModel() {
     }
 
     private fun validatePasswords(): String? {
-        return if (_password.value == _confirmPassword.value)
+        return if (_password == _confirmPassword)
             null
         else
             "Passwörter stimmen nicht überein!"
@@ -134,8 +137,8 @@ class UserViewModel : ViewModel() {
         val passwordError = validatePassword(password)
 
         // Fehlermeldungen setzen
-        _emailErrorMessage.value = emailError
-        _passwordErrorMessage.value = passwordError
+        _emailErrorMessage = emailError
+        _passwordErrorMessage = passwordError
 
         // Falls Fehler vorliegen, abbrechen
         if (emailError != null || passwordError != null) {
@@ -146,11 +149,11 @@ class UserViewModel : ViewModel() {
         val liloUser = registeredUsers.find { it.email == email && it.password == password }
 
         return if (liloUser != null) {
-            user = liloUser
+            _user = liloUser
             true // Erfolgreicher Login
         } else {
             // Fehlermeldungen für ungültige Eingaben setzen
-            _emailErrorMessage.value = "E-Mail nicht registriert!"
+            _emailErrorMessage = "E-Mail nicht registriert!"
             false
         }
     }
@@ -164,7 +167,7 @@ class UserViewModel : ViewModel() {
      */
     fun register(username: String, email: String, password: String): Boolean {
         if (emailExists(email)) {
-            _emailErrorMessage.value = "E-Mail bereits registriert!"
+            _emailErrorMessage = "E-Mail bereits registriert!"
             return false    // Fehler: E-Mail bereits vorhanden
         }
 
@@ -175,10 +178,10 @@ class UserViewModel : ViewModel() {
         val confirmPasswordError = validatePasswords()
 
         // Fehlermeldungen setzen
-        _usernameErrorMessage.value = usernameError
-        _emailErrorMessage.value = emailError
-        _passwordErrorMessage.value = passwordError
-        _confPasswordMessage.value = confirmPasswordError
+        _usernameErrorMessage = usernameError
+        _emailErrorMessage = emailError
+        _passwordErrorMessage = passwordError
+        _confPasswordMessage = confirmPasswordError
 
         // Falls Fehler vorliegen, abbrechen
         if (emailError != null || passwordError != null || usernameError != null || confirmPasswordError != null) {
@@ -187,7 +190,7 @@ class UserViewModel : ViewModel() {
 
         val newUser = User(username, email, password)
         registeredUsers.add(newUser)
-        user = newUser      // Automatische Anmeldung nach Registrierung
+        _user = newUser      // Automatische Anmeldung nach Registrierung
         return true
     }
 
@@ -203,8 +206,7 @@ class UserViewModel : ViewModel() {
         newEmail: String? = null,
         newPassword: String? = null
     ): Boolean {
-        val currentUser =
-            user ?: return false // Null-Safety-Prüfung auf user, zurückgeben falls null
+        val currentUser = _user ?: return false // Null-Safety-Prüfung auf user, zurückgeben falls null
 
         // Wenn eine neue E-Mail angegeben wurde, prüfen, ob sie nicht vom aktuellen Benutzer verwendet wird
         if (newEmail != null && newEmail != currentUser.email && registeredUsers.any { it.email == newEmail })
@@ -226,7 +228,7 @@ class UserViewModel : ViewModel() {
         if (index == -1) return false // Benutzer nicht gefunden
 
         registeredUsers[index] = updatedUser // Benutzer aktualisieren
-        user = updatedUser // Den aktuellen Benutzer auf die aktualisierte Version setzen
+        _user = updatedUser // Den aktuellen Benutzer auf die aktualisierte Version setzen
         return true
     }
 
@@ -235,7 +237,7 @@ class UserViewModel : ViewModel() {
      * Diese Methode logout meldet den Benutzer ab und setzt den User-State auf null.
      */
     fun logout() {
-        user = null
+        _user = null
     }
 
     /**
@@ -249,20 +251,20 @@ class UserViewModel : ViewModel() {
      * Diese Methode clearErrorMessages setzt alle ErrorMessages beim Erfolg auf null
      */
     fun clearErrorMessages() {
-        // .value holt den Wert innerhalb des State Containers während ohne .value versucht wird die Referenz zu ändern
-        _emailErrorMessage.value = null
-        _usernameErrorMessage.value = null
-        _passwordErrorMessage.value = null
-        _confPasswordMessage.value = null
+        //  holt den Wert innerhalb des State Containers während ohne  versucht wird die Referenz zu ändern
+        _emailErrorMessage = null
+        _usernameErrorMessage = null
+        _passwordErrorMessage = null
+        _confPasswordMessage = null
     }
 
     /**
      * Diese Methode clearAllFields setzt alle EingabeFelder zurück
      */
     fun clearAllFields() {
-        _username.value = ""
-        _email.value = ""
-        _password.value = ""
-        _confirmPassword.value = ""
+        _username = ""
+        _email = ""
+        _password = ""
+        _confirmPassword = ""
     }
 }

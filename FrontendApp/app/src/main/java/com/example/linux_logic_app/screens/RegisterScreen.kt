@@ -75,8 +75,8 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 
     // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
 
-    val isFormValid = emailErrorMessage.value == null && usernameErrorMessage.value == null &&
-            passwordErrorMessage.value == null && confPasswordMessage.value == null
+    val isFormValid = emailErrorMessage == null && usernameErrorMessage == null &&
+            passwordErrorMessage == null && confPasswordMessage == null
 
     Column(
         modifier = Modifier
@@ -148,7 +148,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = username.value,
+                    value = username,
                     onValueChange = { userViewModel.onUsernameChange(it) },
                     label = {
                         Text(
@@ -159,7 +159,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     placeholder = {
                         Text(
                             text = "Bitte Ihren Benutzernamen eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -177,16 +177,20 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                         keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = usernameErrorMessage.value != null,
+                    isError = usernameErrorMessage != null,
                     supportingText = {
-                        usernameErrorMessage.value?.let {
-                            Text(it, color = MaterialTheme.colorScheme.error)
+                        usernameErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 )
 
                 OutlinedTextField(
-                    value = email.value,
+                    value = email,
                     onValueChange = { userViewModel.onEmailChange(it) },
                     label = {
                         Text(
@@ -197,7 +201,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     placeholder = {
                         Text(
                             text = "Bitte Ihre E-Mail Adresse eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -215,16 +219,16 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = emailErrorMessage.value != null,
+                    isError = emailErrorMessage != null,
                     supportingText = {
-                        emailErrorMessage.value?.let {
+                        emailErrorMessage?.let {
                             Text(it, color = MaterialTheme.colorScheme.error)
                         }
                     }
                 )
 
                 OutlinedTextField(
-                    value = password.value,
+                    value = password,
                     onValueChange = { userViewModel.onPasswordChange(it) },
                     label = {
                         Text(
@@ -235,7 +239,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     placeholder = {
                         Text(
                             text = "Bitte Ihr Passwort eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -271,16 +275,16 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             )
                         }
                     },
-                    isError = passwordErrorMessage.value != null,
+                    isError = passwordErrorMessage != null,
                     supportingText = {
-                        passwordErrorMessage.value?.let {
+                        passwordErrorMessage?.let {
                             Text(it, color = MaterialTheme.colorScheme.error)
                         }
                     }
                 )
 
                 OutlinedTextField(
-                    value = confirmPassword.value,
+                    value = confirmPassword,
                     onValueChange = { userViewModel.onConfirmPasswordChange(it) },
                     label = {
                         Text(
@@ -291,7 +295,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     placeholder = {
                         Text(
                             text = "Bitte Passwort erneut eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -327,9 +331,9 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             )
                         }
                     },
-                    isError = confPasswordMessage.value != null,
+                    isError = confPasswordMessage != null,
                     supportingText = {
-                        confPasswordMessage.value?.let {
+                        confPasswordMessage?.let {
                             Text(it, color = MaterialTheme.colorScheme.error)
                         }
                     }
@@ -339,7 +343,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Button(
                     onClick = {
-                        if (userViewModel.register(username.value.trim(), email.value.trim(), password.value.trim())) {
+                        if (userViewModel.register(username.trim(), email.trim(), password.trim())) {
                             userViewModel.clearErrorMessages()
                             userViewModel.clearAllFields()
                             Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")

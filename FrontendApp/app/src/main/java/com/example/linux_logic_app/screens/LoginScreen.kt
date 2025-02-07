@@ -67,7 +67,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     es, dieses Objekt in zwei Variablen zu zerlegen: eine zum Lesen des Wertes und eine zum Aktualisieren
      */
     val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
-    val isFormValid = emailErrorMessage.value == null && passwordErrorMessage.value == null
+    val isFormValid = emailErrorMessage == null && passwordErrorMessage == null
 
     Column(
         modifier = Modifier
@@ -139,7 +139,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
-                    value = email.value,
+                    value = email,
                     onValueChange = { userViewModel.onEmailChange(it) },
                     label = {
                         Text(
@@ -150,7 +150,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     placeholder = {
                         Text(
                             text = "Bitte Ihre E-Mail Adresse eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -168,16 +168,16 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = emailErrorMessage.value != null,
+                    isError = emailErrorMessage != null,
                     supportingText = {
-                        emailErrorMessage.value?.let {
+                        emailErrorMessage?.let {
                             Text(it, color = MaterialTheme.colorScheme.error)
                         }
                     }
                 )
 
                 OutlinedTextField(
-                    value = password.value,
+                    value = password,
                     onValueChange = { userViewModel.onPasswordChange(it) },
                     colors = OutlinedTextFieldDefaults.colors(
                         cursorColor = LiloMain,
@@ -192,7 +192,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     placeholder = {
                         Text(
                             text = "Bitte Ihr Passwort eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -224,9 +224,9 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                             )
                         }
                     },
-                    isError = passwordErrorMessage.value != null,
+                    isError = passwordErrorMessage != null,
                     supportingText = {
-                        passwordErrorMessage.value?.let {
+                        passwordErrorMessage?.let {
                             Text(it, color = MaterialTheme.colorScheme.error)
                         }
                     }
@@ -251,7 +251,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Button(
                     onClick = {
-                        if (userViewModel.login(email.value.trim(), password.value.trim())) {
+                        if (userViewModel.login(email.trim(), password.trim())) {
                             userViewModel.clearErrorMessages()
                             userViewModel.clearAllFields()
                             Log.i("Credentials", "E-Mail: $email; Password: $password")

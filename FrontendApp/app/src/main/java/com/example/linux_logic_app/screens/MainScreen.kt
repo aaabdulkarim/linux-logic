@@ -257,10 +257,11 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                             tint = LiloMain
                         )
                         Text(
-                            text = "Ihr Profil",
+                            text = "Hallo $",
                             modifier = Modifier
                                 .padding(16.dp),
-                            style = MaterialTheme.typography.labelLarge
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
