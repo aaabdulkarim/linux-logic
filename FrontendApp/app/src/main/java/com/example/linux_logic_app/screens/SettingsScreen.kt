@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,12 +16,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.twotone.ArrowBackIosNew
+import androidx.compose.material.icons.twotone.Lock
+import androidx.compose.material.icons.twotone.PermIdentity
 import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -28,6 +35,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
@@ -42,6 +50,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -49,7 +61,10 @@ import com.example.linux_logic_app.R
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloDanger
 import com.example.linux_logic_app.ui.theme.LiloMain
+import com.example.linux_logic_app.ui.theme.LiloOrange
+import com.example.linux_logic_app.ui.theme.LiloSuccess
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,6 +156,9 @@ fun SettingsScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+
+
+
                 AccountSettingsCard(userViewModel)
             }
         }
@@ -155,10 +173,18 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
         label = "Rotation of Arrow-Icon"
     )
 
+    val (editingEnabled, setEditingEnabled) = remember { mutableStateOf(false) }
+
+    val username = userViewModel.user?.username.orEmpty()
+    val email = userViewModel.user?.email.orEmpty()
+    val password = userViewModel.user?.password.orEmpty()
+
+    val usernameErrorMessage = userViewModel.usernameErrorMessage
+    val emailErrorMessage = userViewModel.emailErrorMessage
+    val passwordErrorMessage = userViewModel.passwordErrorMessage
+
     Card(
-        colors = CardDefaults.cardColors(
-            containerColor = LiloBlue
-        )
+        colors = CardDefaults.cardColors(containerColor = LiloBlue)
     ) {
         Column(
             modifier = Modifier
@@ -193,16 +219,142 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
             if (expanded) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateContentSize(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
+                AccountField(
+                    label = "Benutzername",
+                    value = username,
+                    enabled = editingEnabled,
+                    onValueChange = userViewModel::onUsernameChange,
+                    errorMessage = usernameErrorMessage
+                )
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                AccountField(
+                    label = "E-Mail",
+                    value = email,
+                    enabled = editingEnabled,
+                    onValueChange = userViewModel::onEmailChange,
+                    errorMessage = emailErrorMessage
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                AccountField(
+                    label = "Passwort",
+                    value = password,
+                    enabled = editingEnabled,
+                    onValueChange = userViewModel::onPasswordChange,
+                    isPassword = true,
+                    errorMessage = passwordErrorMessage
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (editingEnabled) {
+                    Column {
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors().copy(
+                                containerColor = LiloSuccess,
+                                contentColor = Color.White,
+                            ),
+                            contentPadding = PaddingValues(16.dp),
+                            onClick = {
+                                // Bearbeitung abbrechen
+                                userViewModel.updateUserData()
+                                setEditingEnabled(false)                            },
+                        ) {
+                            Text(
+                                text = "Bestätigen",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors().copy(
+                                containerColor = LiloDanger,
+                                contentColor = Color.White,
+                            ),
+                            contentPadding = PaddingValues(16.dp),
+                            onClick = {
+                                // Bearbeitung abbrechen
+                                setEditingEnabled(false)
+                            },
+                        ) {
+                            Text(
+                                text = "Abbrechen",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        }
+                    }
+                } else {
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors().copy(
+                            containerColor = LiloOrange,
+                            contentColor = Color.White,
+                        ),
+                        contentPadding = PaddingValues(16.dp),
+                        onClick = {
+                            setEditingEnabled(true)
+                        },
+                    ) {
+                        Text(
+                            text = "Bearbeiten",
+                            style = MaterialTheme.typography.labelSmall,
+                        )
+                    }
                 }
             }
         }
     }
 }
+
+@Composable
+fun AccountField(
+    label: String,
+    value: String,
+    enabled: Boolean,
+    onValueChange: (String) -> Unit,
+    isPassword: Boolean = false,
+    errorMessage: String? = null
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onValueChange },
+        label = { Text(label) },
+        placeholder = { Text("Bitte $label eingeben") },
+        leadingIcon = {
+            Icon(
+                imageVector = if (isPassword) Icons.TwoTone.Lock else Icons.TwoTone.PermIdentity,
+                contentDescription = "Input Icon"
+            )
+        },
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        singleLine = true,
+        enabled = enabled,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text,
+            imeAction = ImeAction.Next
+        ),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        isError = errorMessage != null,
+        supportingText = {
+            errorMessage?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+    )
+}
+

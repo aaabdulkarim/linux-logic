@@ -223,33 +223,33 @@ class UserViewModel : ViewModel() {
         newEmail: String? = null,
         newPassword: String? = null
     ): Boolean {
-        val currentUser =
-            _user ?: return false // Null-Safety-Prüfung auf user, zurückgeben falls null
+        val currentUser = _user ?: return false
 
-        // Wenn eine neue E-Mail angegeben wurde, prüfen, ob sie nicht vom aktuellen Benutzer verwendet wird
-        if (newEmail != null && newEmail != currentUser.email && registeredUsers.any { it.email == newEmail })
+        // Keine Änderungen erforderlich
+        if (newUsername == null && newEmail == null && newPassword == null) return true
+
+        // Überprüfen, ob die E-Mail bereits vergeben ist
+        if (newEmail != null && newEmail != currentUser.email && registeredUsers.any { it.email == newEmail }) {
             return false // Fehler: E-Mail bereits vergeben
+        }
 
-        // Keine Änderungen vor, direkt true zurückgeben
-        if (newUsername == null && newEmail == null && newPassword == null)
-            return true // Keine Änderungen erforderlich
-
-        // Erstelle einen neuen Benutzer, nur mit den geänderten Werten
+        // Benutzer kopieren mit neuen Werten
         val updatedUser = currentUser.copy(
+            //Der Elvis-Operator in Kotlin. Er bedeutet "falls der linke Ausdruck null ist, benutze den rechten Ausdruck stattdessen".
             username = newUsername ?: currentUser.username,
             email = newEmail ?: currentUser.email,
             password = newPassword ?: currentUser.password
         )
 
-        // Benutzer in der Liste aktualisieren
-        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
-        if (index == -1) return false // Benutzer nicht gefunden
+        // Benutzer-Index suchen und aktualisieren
+        registeredUsers.find { emailExists(currentUser.email) }?.let {
+            registeredUsers[registeredUsers.indexOf(it)] = updatedUser
+            _user = updatedUser
+            return true
+        }
 
-        registeredUsers[index] = updatedUser // Benutzer aktualisieren
-        _user = updatedUser // Den aktuellen Benutzer auf die aktualisierte Version setzen
-        return true
+        return false // Benutzer nicht gefunden
     }
-
 
     /**
      * Diese Methode logout meldet den Benutzer ab und setzt den User-State auf null.

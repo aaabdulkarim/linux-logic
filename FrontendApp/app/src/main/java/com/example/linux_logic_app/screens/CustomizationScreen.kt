@@ -57,6 +57,7 @@ import com.example.linux_logic_app.components.ColorPicker
 import com.example.linux_logic_app.components.PreviewTerminal
 import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloDanger
 import com.example.linux_logic_app.ui.theme.LiloDark
 import com.example.linux_logic_app.ui.theme.LiloDarkSec
 import com.example.linux_logic_app.ui.theme.LiloLight
@@ -64,6 +65,7 @@ import com.example.linux_logic_app.ui.theme.LiloLightSec
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloMainSec
 import com.example.linux_logic_app.ui.theme.LiloOrange
+import com.example.linux_logic_app.ui.theme.LiloSuccess
 
 /*
 https://www.youtube.com/watch?v=QqcMKQgfzec
@@ -256,7 +258,7 @@ fun ColorPickerDialog(
                 modifier = Modifier
                     .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors().copy(
-                    containerColor = LiloMain,
+                    containerColor = LiloSuccess,
                     contentColor = Color.White,
                 ),
                 contentPadding = PaddingValues(16.dp),
@@ -275,7 +277,7 @@ fun ColorPickerDialog(
                 modifier = Modifier
                     .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors().copy(
-                    containerColor = LiloBlue,
+                    containerColor = LiloDanger,
                     contentColor = Color.White,
                 ),
                 contentPadding = PaddingValues(16.dp),
