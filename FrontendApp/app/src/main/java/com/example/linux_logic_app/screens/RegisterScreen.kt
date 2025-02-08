@@ -367,7 +367,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             )
                             navController.navigate(Screen.Main.route)
                             userViewModel.clearErrorMessages()
-                            userViewModel.clearAllFields()
+                            //userViewModel.clearAllFields()
                         }
                     },
                     modifier = Modifier

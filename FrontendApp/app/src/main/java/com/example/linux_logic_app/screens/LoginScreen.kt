@@ -263,7 +263,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                             Log.i("User Credentials", "E-Mail: ${email.trim()}; Password: ${password.trim()}")
                             navController.navigate(Screen.Main.route)
                             userViewModel.clearErrorMessages()
-                            userViewModel.clearAllFields()
+                            //userViewModel.clearAllFields()
                         }
                     },
                     modifier = Modifier

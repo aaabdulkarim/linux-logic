@@ -174,9 +174,9 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
         label = "Rotation of Arrow-Icon"
     )
 
-    var editedUsername by remember { mutableStateOf(userViewModel.user?.username.orEmpty()) }
-    var editedEmail by remember { mutableStateOf(userViewModel.user?.email.orEmpty()) }
-    var editedPassword by remember { mutableStateOf(userViewModel.user?.password.orEmpty()) }
+    val username = userViewModel.username
+    val email = userViewModel.email
+    val password = userViewModel.password
 
     val usernameErrorMessage = userViewModel.usernameErrorMessage
     val emailErrorMessage = userViewModel.emailErrorMessage
@@ -224,8 +224,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
-                    value = editedUsername,
-                    onValueChange = { editedUsername = it },
+                    value = username,
+                    onValueChange = { if (editingEnabled) userViewModel.onUsernameChange(it) },
                     label = {
                         Text(
                             text = "Benutzername",
@@ -267,8 +267,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 )
 
                 OutlinedTextField(
-                    value = editedEmail,
-                    onValueChange = { editedEmail = it },
+                    value = email,
+                    onValueChange = { if (editingEnabled) userViewModel.onEmailChange(it) },
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -310,8 +310,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 )
 
                 OutlinedTextField(
-                    value = editedPassword,
-                    onValueChange = { editedPassword = it },
+                    value = password,
+                    onValueChange = { if (editingEnabled) userViewModel.onPasswordChange(it) },
                     label = {
                         Text(
                             text = "Passwort",
@@ -384,20 +384,19 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                             ),
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
-                                if (userViewModel.updateUserData(
-                                        newUsername = editedUsername.trim(),
-                                        newEmail = editedEmail.trim(),
-                                        newPassword = editedPassword.trim()
+                                if (isFormValid) {
+                                    userViewModel.updateUserData(
+                                        newUsername = username,
+                                        newEmail = email,
+                                        newPassword = password
                                     )
-                                ) {
                                     userViewModel.clearErrorMessages()
                                     Log.i(
                                         "New Credentials",
-                                        "Username: ${editedUsername.trim()}; E-Mail: " +
-                                                "${editedEmail.trim()}; Password: ${editedPassword.trim()}"
+                                        "Username: ${username.trim()}; E-Mail: " +
+                                                "${email.trim()}; Password: ${password.trim()}"
                                     )
-                                    // Bearbeitung abbrechen
-                                    setEditingEnabled(false)
+                                    setEditingEnabled(false) // Bearbeitung beenden
                                 }
                             },
                             enabled = isFormValid
@@ -422,6 +421,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                             onClick = {
                                 // Bearbeitung abbrechen
                                 setEditingEnabled(false)
+                                userViewModel.clearErrorMessages()
                             },
                         ) {
                             Text(

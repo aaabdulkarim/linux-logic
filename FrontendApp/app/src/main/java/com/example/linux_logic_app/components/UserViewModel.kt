@@ -1,6 +1,5 @@
 package com.example.linux_logic_app.components
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -64,10 +63,6 @@ class UserViewModel : ViewModel() {
 
     private var _user by mutableStateOf<User?>(null)
     val user: User? get() = _user
-
-    // Temporärer Zustand im Bearbeitungsmodus (null, wenn nicht bearbeitet wird)
-    private var _editingUser by mutableStateOf<User?>(null)
-    val editingUser: User? get() = _editingUser
 
     // Liste registrierter Benutzer
     private var registeredUsers = mutableListOf<User>()
@@ -297,41 +292,5 @@ class UserViewModel : ViewModel() {
         _email = ""
         _password = ""
         _confirmPassword = ""
-    }
-
-    /**
-     * Diese Methode startEditing kopiert den aktuell angemeldeten User in eine temporäre Instanz
-     */
-    fun startEditing() {
-        _editingUser = _user?.copy()
-    }
-
-    /**
-     * Diese Methode updateEditingUser aktualisiert den temporären Bearbeitungszustand
-     * @param username ist der editierte Benutzername
-     * @param email ist die editierte E-Mail
-     * @param password ist das editierte Passwort
-     */
-    fun updateEditingUser(username: String? = null, email: String? = null, password: String? = null) {
-        _editingUser = _editingUser?.copy(
-            username = username ?: _editingUser!!.username,
-            email = email ?: _editingUser!!.email,
-            password = password ?: _editingUser!!.password
-        )
-    }
-
-    /**
-     * Diese Methode saveChanges speichert die Änderungen und beendet den Bearbeitungsmodus
-     */
-    fun saveChanges() {
-        _editingUser?.let { _user = it }
-        _editingUser = null
-    }
-
-    /**
-     * Diese Methode cancelChanges bricht den Bearbeitungsmodus ab und verwirft alle Änderungen
-     */
-    fun cancelChanges() {
-        _editingUser = null
     }
 }
