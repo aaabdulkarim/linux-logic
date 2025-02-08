@@ -156,9 +156,6 @@ fun SettingsScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-
-
-
                 AccountSettingsCard(userViewModel)
             }
         }
@@ -173,8 +170,6 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
         label = "Rotation of Arrow-Icon"
     )
 
-    val (editingEnabled, setEditingEnabled) = remember { mutableStateOf(false) }
-
     val username = userViewModel.user?.username.orEmpty()
     val email = userViewModel.user?.email.orEmpty()
     val password = userViewModel.user?.password.orEmpty()
@@ -182,6 +177,11 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
     val usernameErrorMessage = userViewModel.usernameErrorMessage
     val emailErrorMessage = userViewModel.emailErrorMessage
     val passwordErrorMessage = userViewModel.passwordErrorMessage
+
+    val (editingEnabled, setEditingEnabled) = remember { mutableStateOf(false) }
+    val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
+    val isFormValid = emailErrorMessage == null && usernameErrorMessage == null &&
+            passwordErrorMessage == null
 
     Card(
         colors = CardDefaults.cardColors(containerColor = LiloBlue)
@@ -219,27 +219,35 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
             if (expanded) {
                 Spacer(modifier = Modifier.height(16.dp))
 
+
+
                 AccountDataField(
-                    label = "Benutzername",
-                    value = username,
+                    dataLabel = "Benutzername",
+                    dataValue = username,
                     enabled = editingEnabled,
-                    onValueChange = userViewModel::onUsernameChange,
+                    onDataChange = {
+                        userViewModel.onUsernameChange(it)
+                    },
                     errorMessage = usernameErrorMessage
                 )
 
                 AccountDataField(
-                    label = "E-Mail",
-                    value = email,
+                    dataLabel = "E-Mail",
+                    dataValue = email,
                     enabled = editingEnabled,
-                    onValueChange = userViewModel::onEmailChange,
+                    onDataChange = {
+                        userViewModel.onEmailChange(it)
+                    },
                     errorMessage = emailErrorMessage
                 )
 
                 AccountDataField(
-                    label = "Passwort",
-                    value = password,
+                    dataLabel = "Passwort",
+                    dataValue = password,
                     enabled = editingEnabled,
-                    onValueChange = userViewModel::onPasswordChange,
+                    onDataChange = {
+                        userViewModel.onPasswordChange(it)
+                    },
                     isPassword = true,
                     errorMessage = passwordErrorMessage
                 )
@@ -256,11 +264,15 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
                                 // Bearbeitung abbrechen
-                                userViewModel.updateUserData()
+                                userViewModel.updateUserData(
+                                    newUsername = username,
+                                    newEmail = email,
+                                    newPassword = password
+                                )
                                 setEditingEnabled(false)                            },
                         ) {
                             Text(
-                                text = "Bestätigen",
+                                text = "Speichern",
                                 style = MaterialTheme.typography.labelSmall,
                             )
                         }
@@ -296,6 +308,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                         ),
                         contentPadding = PaddingValues(16.dp),
                         onClick = {
+                            // Bearbeitung genehmigt
                             setEditingEnabled(true)
                         },
                     ) {
@@ -312,18 +325,23 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
 
 @Composable
 fun AccountDataField(
-    label: String,
-    value: String,
+    dataLabel: String,
+    dataValue: String,
     enabled: Boolean,
-    onValueChange: (String) -> Unit,
+    onDataChange: (String) -> Unit,
     isPassword: Boolean = false,
     errorMessage: String? = null
 ) {
     OutlinedTextField(
-        value = value,
-        onValueChange = { onValueChange },
-        label = { Text(label) },
-        placeholder = { Text("Bitte $label eingeben") },
+        value = dataValue,
+        onValueChange = onDataChange,
+        label = {
+            Text(
+                text = dataLabel,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
+        placeholder = { Text("Bitte $dataLabel eingeben") },
         leadingIcon = {
             Icon(
                 imageVector = if (isPassword) Icons.TwoTone.Lock else Icons.TwoTone.PermIdentity,
