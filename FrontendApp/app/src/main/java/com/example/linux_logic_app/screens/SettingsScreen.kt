@@ -30,6 +30,7 @@ import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Visibility
 import androidx.compose.material.icons.twotone.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -188,6 +189,9 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
 
     val isFormValid = emailErrorMessage == null && usernameErrorMessage == null &&
             passwordErrorMessage == null
+
+    // Flag (Zustand mit 2 möglichen Werten), um den Passwort-Bestätigungsdialog anzuzeigen
+    var showPasswordDialog by remember { mutableStateOf(false) }
 
     Card(
         colors = CardDefaults.cardColors(containerColor = LiloBlue)
@@ -434,8 +438,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                             ),
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
-                                // Bearbeitung abbrechen
-                                setEditingEnabled(false)
+                                userViewModel.cancelChanges()
+                                setEditingEnabled(false) // Beendet den Bearbeitungsmodus in der UI
                             },
                         ) {
                             Text(
@@ -456,7 +460,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                         contentPadding = PaddingValues(16.dp),
                         onClick = {
                             // Bearbeitung genehmigt
-                            setEditingEnabled(true)
+                            showPasswordDialog = true
                         },
                     ) {
                         Text(
@@ -467,5 +471,118 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 }
             }
         }
+        // Zeige den Passwort-Bestätigungsdialog als eigenständiges Composable
+        if (showPasswordDialog) {
+            PasswordConfirmDialog(
+                userViewModel = userViewModel,
+                onConfirm = {
+                    // Passwort validiert, mache weiter mit der Logik
+                    setEditingEnabled(true)
+                    showPasswordDialog = false
+                },
+                onDismiss = {
+                    userViewModel.clearErrorMessages() // Fehlermeldungen zurücksetzen
+                    showPasswordDialog = false
+                }
+            )
+        }
     }
 }
+
+@Composable
+fun PasswordConfirmDialog(
+    userViewModel: UserViewModel,
+    onConfirm: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        containerColor = MaterialTheme.colorScheme.background,
+        iconContentColor = LiloMain,
+        titleContentColor = MaterialTheme.colorScheme.onBackground,
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Verifizieren Sie sich",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Passwort", style = MaterialTheme.typography.bodyLarge) },
+                    placeholder = { Text("Bitte Ihr Passwort eingeben", style = MaterialTheme.typography.bodyLarge) },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.TwoTone.Password, contentDescription = "Password Icon", tint = LiloMain)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description = if (passwordVisible) "Zeige Passwort" else "Verberge Passwort"
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(imageVector = image, contentDescription = description, tint = LiloOrange)
+                        }
+                    },
+                    isError = userViewModel.passwordErrorMessage != null,
+                    supportingText = {
+                        userViewModel.passwordErrorMessage?.let {
+                            Text(text = it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                )
+            }
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.TwoTone.PermIdentity,
+                contentDescription = "PermIdentity Icon"
+            )
+        },
+        confirmButton = {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 32.dp, end = 32.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = LiloSuccess, contentColor = Color.White),
+                contentPadding = PaddingValues(16.dp),
+                onClick = {
+                    userViewModel.validatePassword(password) // Passwort validieren
+                    if (userViewModel.passwordErrorMessage == null) {
+                        onConfirm(password) // Bestätigen, wenn keine Fehlermeldung vorhanden ist
+                    }
+                }
+            ) {
+                Text(text = "Bestätigen", style = MaterialTheme.typography.labelSmall)
+            }
+        },
+        dismissButton = {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 32.dp, end = 32.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = LiloDanger, contentColor = Color.White),
+                contentPadding = PaddingValues(16.dp),
+                onClick = {
+                    onDismiss()
+                }
+            ) {
+                Text(text = "Abbrechen", style = MaterialTheme.typography.labelSmall)
+            }
+        }
+    )
+}
+
+
+
