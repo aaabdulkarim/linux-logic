@@ -30,7 +30,6 @@ import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Visibility
 import androidx.compose.material.icons.twotone.VisibilityOff
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -175,6 +174,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
         label = "Rotation of Arrow-Icon"
     )
 
+    // Diese Werte aus dem ViewModel initialisieren
     var editedUsername by remember { mutableStateOf(userViewModel.user?.username.orEmpty()) }
     var editedEmail by remember { mutableStateOf(userViewModel.user?.email.orEmpty()) }
     var editedPassword by remember { mutableStateOf(userViewModel.user?.password.orEmpty()) }
@@ -227,7 +227,10 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
 
                 OutlinedTextField(
                     value = editedUsername,
-                    onValueChange = { editedUsername = it },
+                    onValueChange = {
+                        editedUsername = it
+                        userViewModel.onUsernameChange(it) // ViewModel aktualisieren
+                    },
                     label = {
                         Text(
                             text = "Benutzername",
@@ -270,7 +273,10 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
 
                 OutlinedTextField(
                     value = editedEmail,
-                    onValueChange = { editedEmail = it },
+                    onValueChange = {
+                        editedEmail = it
+                        userViewModel.onEmailChange(it) // ViewModel aktualisieren
+                    },
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -313,7 +319,10 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
 
                 OutlinedTextField(
                     value = editedPassword,
-                    onValueChange = { editedPassword = it },
+                    onValueChange = {
+                        editedPassword = it
+                        userViewModel.onPasswordChange(it) // ViewModel aktualisieren
+                    },
                     label = {
                         Text(
                             text = "Passwort",
@@ -372,6 +381,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     enabled = editingEnabled
                 )
 
+                Spacer(modifier = Modifier.height(8.dp))
+
                 if (editingEnabled) {
                     Column {
                         Button(
@@ -386,6 +397,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                             ),
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
+                                // Daten updaten, wenn der Button geklickt wird
                                 if (userViewModel.updateUserData(
                                         newUsername = editedUsername.trim(),
                                         newEmail = editedEmail.trim(),
@@ -423,7 +435,6 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
                                 // Bearbeitung abbrechen
-
                                 setEditingEnabled(false)
                             },
                         ) {
@@ -445,6 +456,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                         contentPadding = PaddingValues(16.dp),
                         onClick = {
                             // Bearbeitung genehmigt
+                            setEditingEnabled(true)
                         },
                     ) {
                         Text(

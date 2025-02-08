@@ -259,8 +259,8 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         Text(
                             text = "Hallo ${userViewModel.user?.username}",
                             modifier = Modifier
-                                .padding(16.dp),
-                            style = MaterialTheme.typography.labelLarge,
+                                .padding(vertical = 16.dp, horizontal = 8.dp),
+                            style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
