@@ -22,6 +22,8 @@ data class User(
  * automatisch neu zusammengesetzt werden, wenn sich der Zustand ändert.
  */
 class UserViewModel : ViewModel() {
+    // Verwendung von sealed class für Fehlernachrichten ?
+
     /* Kapselung
     Interner Zustand, der von Compose beobachtet werden kann.
     _email ist privat und schützt den Zustand vor direktem Zugriff von außen.
@@ -60,15 +62,12 @@ class UserViewModel : ViewModel() {
 
     // Der aktuell angemeldete Benutzer. Ist null, wenn niemand angemeldet ist.
     //private var user by mutableStateOf<User?>(null)
-
     private var _user by mutableStateOf<User?>(null)
     val user: User? get() = _user
 
     // Liste registrierter Benutzer
-    private var registeredUsers = mutableListOf<User>()
-
-    init {
-        registeredUsers.add(User("Admin", "admin@test.com", "admin123"))
+    private var registeredUsers = mutableListOf<User>().apply {
+        add(User("Admin", "admin@test.com", "Admin123#"))
     }
 
     fun onUsernameChange(newUsername: String) {
@@ -91,38 +90,37 @@ class UserViewModel : ViewModel() {
         _confPasswordMessage = validatePasswords()
     }
 
-    private fun validateEmail(email: String): String? {
-        return when {
+    // Single-Expression Functions, wenn der Funktionskörper nur einen einzelnen Ausdruck enthält
+    private fun validateEmail(email: String): String? =
+        when {
             email.isEmpty() -> "E-Mail darf nicht leer sein!"
             !email.matches(emailPattern.toRegex()) -> "Invalide E-Mail Adresse!"
             else -> null
         }
-    }
 
-    private fun validateUsername(username: String): String? {
-        return when {
+    private fun validateUsername(username: String): String? =
+        when {
             username.isBlank() -> "Benutzername darf nicht leer sein!"
             username.length !in 3..20 -> "Benutzername muss zwischen 3 - 20 Zeichen lang sein!"
             !username.matches("^[a-zA-Z0-9_-]+$".toRegex()) -> "Nur Buchstaben, Zahlen, _ und - erlaubt!"
             !username.matches("^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$".toRegex()) -> "Kein Start oder Ende mit Sonderzeichen!"
+            //^[a-zA-Z0-9_.!-]+$
             else -> null
         }
-    }
 
-    private fun validatePassword(password: String): String? {
-        return when {
+    private fun validatePassword(password: String): String? =
+        when {
             password.isEmpty() -> "Passwort darf nicht leer sein!"
             password.length < 8 -> "Passwort muss mindestens 8 Zeichen enthalten!"
+            !password.any { it.isUpperCase() } -> "Passwort muss mindestens einen Großbuchstaben enthalten!"
+            !password.any { it.isDigit() } -> "Passwort muss mindestens eine Zahl enthalten!"
+            !password.any { !it.isLetterOrDigit() } -> "Passwort muss mindestens ein Sonderzeichen enthalten!"
             else -> null
         }
-    }
 
-    private fun validatePasswords(): String? {
-        return if (_password == _confirmPassword)
-            null
-        else
-            "Passwörter stimmen nicht überein!"
-    }
+    private fun validatePasswords(): String? =
+        if (_password == _confirmPassword) null
+        else "Passwörter stimmen nicht überein!"
 
     /**
      * Diese Methode login setzt die Anmeldung eines bestehenden Benutzers um.
@@ -131,18 +129,14 @@ class UserViewModel : ViewModel() {
      * Gibt true zurück, wenn der Login erfolgreich war, sonst false.
      */
     fun login(email: String, password: String): Boolean {
-        // Eingabevalidierung durchführen
-        val emailError = validateEmail(email)
-        val passwordError = validatePassword(password)
+        clearErrorMessages()
 
-        // Fehlermeldungen setzen
-        _emailErrorMessage = emailError
-        _passwordErrorMessage = passwordError
+        // Eingabevalidierung durchführen und Fehlermeldungen setzen
+        _emailErrorMessage = validateEmail(email)
+        _passwordErrorMessage = validatePassword(password)
 
         // Falls Fehler vorliegen, abbrechen
-        if (emailError != null || passwordError != null) {
-            return false
-        }
+        if (_emailErrorMessage != null || _passwordErrorMessage != null) return false
 
         // Benutzer suchen, der mit der eingegebenen E-Mail übereinstimmt
         val registeredUser = registeredUsers.find { it.email == email }
@@ -172,35 +166,30 @@ class UserViewModel : ViewModel() {
      * Gibt true zurück, wenn die Registrierung erfolgreich war, false bei Fehlern.
      */
     fun register(username: String, email: String, password: String): Boolean {
-        var hasError = false
+        clearErrorMessages()
 
-        if (emailExists(email)) {
-            _emailErrorMessage = "E-Mail bereits registriert!"
-            hasError = true   // Fehler: E-Mail bereits vorhanden
-        }
+        if (emailExists(email)) _emailErrorMessage =
+            "E-Mail bereits registriert!"      // Fehler: E-Mail bereits vorhanden
 
-        if (usernameExists(username)) {
-            _usernameErrorMessage = "Benutzername bereits vergeben!"
-            hasError = true    // Fehler: Benutzername bereits vergeben
-        }
+        if (usernameExists(username)) _usernameErrorMessage =
+            "Benutzername bereits vergeben!"      // Fehler: Benutzername bereits vergeben
 
-        if (hasError)
-            return false
+        if (_emailErrorMessage != null || _usernameErrorMessage != null) return false
 
-        // Eingabevalidierung durchführen
-        val usernameError = validateUsername(username)
-        val emailError = validateEmail(email)
-        val passwordError = validatePassword(password)
-        val confirmPasswordError = validatePasswords()
-
-        // Fehlermeldungen setzen
-        _usernameErrorMessage = usernameError
-        _emailErrorMessage = emailError
-        _passwordErrorMessage = passwordError
-        _confPasswordMessage = confirmPasswordError
+        // Eingabevalidierung durchführen und Fehlermeldungen setzen
+        _usernameErrorMessage = validateUsername(username)
+        _emailErrorMessage = validateEmail(email)
+        _passwordErrorMessage = validatePassword(password)
+        _confPasswordMessage = validatePasswords()
 
         // Falls Fehler vorliegen, abbrechen
-        if (emailError != null || passwordError != null || usernameError != null || confirmPasswordError != null) {
+        if (listOf(
+                _usernameErrorMessage,
+                _emailErrorMessage,
+                _passwordErrorMessage,
+                _confPasswordMessage
+            ).any { it != null }
+        ) {
             return false
         }
 
@@ -222,15 +211,26 @@ class UserViewModel : ViewModel() {
         newEmail: String? = null,
         newPassword: String? = null
     ): Boolean {
+        // Sicherstellen, dass ein Benutzer eingeloggt ist.
         val currentUser = _user ?: return false
 
         // Keine Änderungen erforderlich
         if (newUsername == null && newEmail == null && newPassword == null) return true
 
-        // Überprüfen, ob die E-Mail bereits vergeben ist
-        if (newEmail != null && newEmail != currentUser.email && registeredUsers.any { it.email == newEmail }) {
-            return false // Fehler: E-Mail bereits vergeben
-        }
+        clearErrorMessages()
+
+        if (newEmail != null && newEmail != currentUser.email && emailExists(email)) _emailErrorMessage =
+            "E-Mail bereits registriert!"      // Fehler: E-Mail bereits vorhanden
+
+        if (newUsername != null && newUsername != currentUser.username && usernameExists(newUsername)) _usernameErrorMessage =
+            "Benutzername bereits vergeben!"      // Fehler: Benutzername bereits vergeben
+
+        // Eingabevalidierung durchführen und Fehlermeldungen setzen
+        _usernameErrorMessage = validateUsername(newUsername ?: currentUser.username)
+        _emailErrorMessage = validateEmail(newEmail ?: currentUser.email)
+        _passwordErrorMessage = validatePassword(newPassword ?: currentUser.password)
+
+        if (_emailErrorMessage != null || _usernameErrorMessage != null || _passwordErrorMessage != null) return false
 
         // Benutzer kopieren mit neuen Werten
         val updatedUser = currentUser.copy(
@@ -240,14 +240,14 @@ class UserViewModel : ViewModel() {
             password = newPassword ?: currentUser.password
         )
 
-        // Benutzer-Index suchen und aktualisieren
-        registeredUsers.find { emailExists(currentUser.email) }?.let {
-            registeredUsers[registeredUsers.indexOf(it)] = updatedUser
-            _user = updatedUser
-            return true
-        }
+        // Benutzer-Index suchen und Daten aktualisieren
+        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
+        if (index == -1) return false // Benutzer nicht gefunden
 
-        return false // Benutzer nicht gefunden
+        // Daten des Benutzers aktualisieren
+        registeredUsers[index] = updatedUser
+        _user = updatedUser
+        return true
     }
 
     /**
@@ -261,23 +261,21 @@ class UserViewModel : ViewModel() {
      * Diese Methode emailExists überprüft, ob eine E-Mail-Adresse bereits besetzt ist.
      * @param email ist die E-Mail welche gesucht ist
      */
-    private fun emailExists(email: String): Boolean {
-        return registeredUsers.any { it.email == email }
-    }
+    private fun emailExists(email: String): Boolean = registeredUsers.any { it.email == email }
 
     /**
      * Diese Methode usernameExists überprüft, ob ein Benutzername bereits vergeben ist.
      * @param username ist der Benutzername welcher gesucht ist
      */
-    private fun usernameExists(username: String): Boolean {
-        return registeredUsers.any { it.username == username }
-    }
+    private fun usernameExists(username: String): Boolean =
+        registeredUsers.any { it.username == username }
+
 
     /**
      * Diese Methode clearErrorMessages setzt alle ErrorMessages beim Erfolg auf null
      */
     fun clearErrorMessages() {
-        //  holt den Wert innerhalb des State Containers während ohne  versucht wird die Referenz zu ändern
+        // .value holt den Wert innerhalb des State Containers während ohne .value versucht wird die Referenz zu ändern
         _emailErrorMessage = null
         _usernameErrorMessage = null
         _passwordErrorMessage = null

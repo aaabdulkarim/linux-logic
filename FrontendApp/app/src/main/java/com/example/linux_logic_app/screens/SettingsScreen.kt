@@ -30,6 +30,7 @@ import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Visibility
 import androidx.compose.material.icons.twotone.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -174,9 +175,9 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
         label = "Rotation of Arrow-Icon"
     )
 
-    val username = userViewModel.username
-    val email = userViewModel.email
-    val password = userViewModel.password
+    var editedUsername by remember { mutableStateOf(userViewModel.user?.username.orEmpty()) }
+    var editedEmail by remember { mutableStateOf(userViewModel.user?.email.orEmpty()) }
+    var editedPassword by remember { mutableStateOf(userViewModel.user?.password.orEmpty()) }
 
     val usernameErrorMessage = userViewModel.usernameErrorMessage
     val emailErrorMessage = userViewModel.emailErrorMessage
@@ -184,6 +185,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
 
     val (editingEnabled, setEditingEnabled) = remember { mutableStateOf(false) }
     val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
+
     val isFormValid = emailErrorMessage == null && usernameErrorMessage == null &&
             passwordErrorMessage == null
 
@@ -224,8 +226,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
-                    value = username,
-                    onValueChange = { if (editingEnabled) userViewModel.onUsernameChange(it) },
+                    value = editedUsername,
+                    onValueChange = { editedUsername = it },
                     label = {
                         Text(
                             text = "Benutzername",
@@ -267,8 +269,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 )
 
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { if (editingEnabled) userViewModel.onEmailChange(it) },
+                    value = editedEmail,
+                    onValueChange = { editedEmail = it },
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -310,8 +312,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 )
 
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = { if (editingEnabled) userViewModel.onPasswordChange(it) },
+                    value = editedPassword,
+                    onValueChange = { editedPassword = it },
                     label = {
                         Text(
                             text = "Passwort",
@@ -384,19 +386,20 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                             ),
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
-                                if (isFormValid) {
-                                    userViewModel.updateUserData(
-                                        newUsername = username,
-                                        newEmail = email,
-                                        newPassword = password
+                                if (userViewModel.updateUserData(
+                                        newUsername = editedUsername.trim(),
+                                        newEmail = editedEmail.trim(),
+                                        newPassword = editedPassword.trim()
                                     )
+                                ) {
                                     userViewModel.clearErrorMessages()
                                     Log.i(
                                         "New Credentials",
-                                        "Username: ${username.trim()}; E-Mail: " +
-                                                "${email.trim()}; Password: ${password.trim()}"
+                                        "Username: ${editedUsername.trim()}; E-Mail: " +
+                                                "${editedEmail.trim()}; Password: ${editedPassword.trim()}"
                                     )
-                                    setEditingEnabled(false) // Bearbeitung beenden
+                                    // Bearbeitung abbrechen
+                                    setEditingEnabled(false)
                                 }
                             },
                             enabled = isFormValid
@@ -420,8 +423,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
                                 // Bearbeitung abbrechen
+
                                 setEditingEnabled(false)
-                                userViewModel.clearErrorMessages()
                             },
                         ) {
                             Text(
@@ -442,7 +445,6 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                         contentPadding = PaddingValues(16.dp),
                         onClick = {
                             // Bearbeitung genehmigt
-                            setEditingEnabled(true)
                         },
                     ) {
                         Text(
