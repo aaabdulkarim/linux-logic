@@ -149,7 +149,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihre E-Mail Adresse eingeben",
+                            text = "Bitte Ihre E-Mail eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -173,7 +173,8 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         emailErrorMessage?.let {
                             Text(
                                 text = it,
-                                color = MaterialTheme.colorScheme.error
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
                             )
                         }
                     }
@@ -232,7 +233,8 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         passwordErrorMessage?.let {
                             Text(
                                 text = it,
-                                color = MaterialTheme.colorScheme.error
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
                             )
                         }
                     }
@@ -258,10 +260,10 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                 Button(
                     onClick = {
                         if (userViewModel.login(email.trim(), password.trim())) {
+                            Log.i("User Credentials", "E-Mail: ${email.trim()}; Password: ${password.trim()}")
+                            navController.navigate(Screen.Main.route)
                             userViewModel.clearErrorMessages()
                             userViewModel.clearAllFields()
-                            Log.i("Credentials", "E-Mail: $email; Password: $password")
-                            navController.navigate(Screen.Main.route)
                         }
                     },
                     modifier = Modifier

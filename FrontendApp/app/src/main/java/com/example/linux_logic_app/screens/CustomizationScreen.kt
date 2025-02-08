@@ -256,7 +256,8 @@ fun ColorPickerDialog(
         confirmButton = {
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(start = 32.dp, end = 32.dp),
                 colors = ButtonDefaults.buttonColors().copy(
                     containerColor = LiloSuccess,
                     contentColor = Color.White,
@@ -275,7 +276,8 @@ fun ColorPickerDialog(
         dismissButton = {
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(start = 32.dp, end = 32.dp),
                 colors = ButtonDefaults.buttonColors().copy(
                     containerColor = LiloDanger,
                     contentColor = Color.White,

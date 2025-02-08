@@ -1,5 +1,6 @@
 package com.example.linux_logic_app.screens
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -22,10 +23,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.twotone.ArrowBackIosNew
-import androidx.compose.material.icons.twotone.Lock
+import androidx.compose.material.icons.twotone.Email
+import androidx.compose.material.icons.twotone.Password
 import androidx.compose.material.icons.twotone.PermIdentity
 import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.Visibility
+import androidx.compose.material.icons.twotone.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -170,9 +174,9 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
         label = "Rotation of Arrow-Icon"
     )
 
-    val username = userViewModel.user?.username.orEmpty()
-    val email = userViewModel.user?.email.orEmpty()
-    val password = userViewModel.user?.password.orEmpty()
+    var editedUsername by remember { mutableStateOf(userViewModel.user?.username.orEmpty()) }
+    var editedEmail by remember { mutableStateOf(userViewModel.user?.email.orEmpty()) }
+    var editedPassword by remember { mutableStateOf(userViewModel.user?.password.orEmpty()) }
 
     val usernameErrorMessage = userViewModel.usernameErrorMessage
     val emailErrorMessage = userViewModel.emailErrorMessage
@@ -219,57 +223,184 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
             if (expanded) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-
-
-                AccountDataField(
-                    dataLabel = "Benutzername",
-                    dataValue = username,
-                    enabled = editingEnabled,
-                    onDataChange = {
-                        userViewModel.onUsernameChange(it)
+                OutlinedTextField(
+                    value = editedUsername,
+                    onValueChange = { editedUsername = it },
+                    label = {
+                        Text(
+                            text = "Benutzername",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     },
-                    errorMessage = usernameErrorMessage
+                    placeholder = {
+                        Text(
+                            text = "Bitte Ihren Benutzernamen eingeben",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.TwoTone.PermIdentity,
+                            contentDescription = "Identity Icon for Register",
+                            tint = LiloMain
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
+                    singleLine = true, // Verhindert den Zeilenumbruch
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als Text-Input genutzt wird
+                        imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
+                    ),
+                    isError = usernameErrorMessage != null,
+                    supportingText = {
+                        usernameErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    },
+                    enabled = editingEnabled
                 )
 
-                AccountDataField(
-                    dataLabel = "E-Mail",
-                    dataValue = email,
-                    enabled = editingEnabled,
-                    onDataChange = {
-                        userViewModel.onEmailChange(it)
+                OutlinedTextField(
+                    value = editedEmail,
+                    onValueChange = { editedEmail = it },
+                    label = {
+                        Text(
+                            text = "E-Mail Adresse",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     },
-                    errorMessage = emailErrorMessage
+                    placeholder = {
+                        Text(
+                            text = "Bitte Ihre E-Mail eingeben",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.TwoTone.Email,
+                            contentDescription = "Email Icon for Register",
+                            tint = LiloMain
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(), // Volle Breite der Box
+                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
+                    singleLine = true, // Verhindert den Zeilenumbruch
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
+                    ),
+                    isError = emailErrorMessage != null,
+                    supportingText = {
+                        emailErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    },
+                    enabled = editingEnabled
                 )
 
-                AccountDataField(
-                    dataLabel = "Passwort",
-                    dataValue = password,
-                    enabled = editingEnabled,
-                    onDataChange = {
-                        userViewModel.onPasswordChange(it)
+                OutlinedTextField(
+                    value = editedPassword,
+                    onValueChange = { editedPassword = it },
+                    label = {
+                        Text(
+                            text = "Passwort",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     },
-                    isPassword = true,
-                    errorMessage = passwordErrorMessage
+                    placeholder = {
+                        Text(
+                            text = "Bitte Ihr Passwort eingeben",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.TwoTone.Password,
+                            contentDescription = "Password Icon for Register",
+                            tint = LiloMain
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(), // Volle Breite der Box
+                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
+                    singleLine = true, // Verhindert den Zeilenumbruch
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als Passwort-Input genutzt wird
+                        imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
+                    ),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image =
+                            if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description =
+                            if (passwordVisible) "Showed password" else "Hidden password"
+                        IconButton(
+                            onClick = {
+                                setPasswordVisible(!passwordVisible)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = image,
+                                contentDescription = description,
+                                tint = LiloOrange
+                            )
+                        }
+                    },
+                    isError = passwordErrorMessage != null,
+                    supportingText = {
+                        passwordErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    },
+                    enabled = editingEnabled
                 )
 
                 if (editingEnabled) {
                     Column {
                         Button(
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .padding(start = 32.dp, end = 32.dp),
                             colors = ButtonDefaults.buttonColors().copy(
                                 containerColor = LiloSuccess,
                                 contentColor = Color.White,
+                                disabledContainerColor = Color(0xFFCECECE),
+                                disabledContentColor = Color(0xFF7F7F7F)
                             ),
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
-                                // Bearbeitung abbrechen
-                                userViewModel.updateUserData(
-                                    newUsername = username,
-                                    newEmail = email,
-                                    newPassword = password
-                                )
-                                setEditingEnabled(false)                            },
+                                if (userViewModel.updateUserData(
+                                        newUsername = editedUsername.trim(),
+                                        newEmail = editedEmail.trim(),
+                                        newPassword = editedPassword.trim()
+                                    )
+                                ) {
+                                    userViewModel.clearErrorMessages()
+                                    Log.i(
+                                        "New Credentials",
+                                        "Username: ${editedUsername.trim()}; E-Mail: " +
+                                                "${editedEmail.trim()}; Password: ${editedPassword.trim()}"
+                                    )
+                                    // Bearbeitung abbrechen
+                                    setEditingEnabled(false)
+                                }
+                            },
+                            enabled = isFormValid
                         ) {
                             Text(
                                 text = "Speichern",
@@ -281,7 +412,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
 
                         Button(
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .padding(start = 32.dp, end = 32.dp),
                             colors = ButtonDefaults.buttonColors().copy(
                                 containerColor = LiloDanger,
                                 contentColor = Color.White,
@@ -301,7 +433,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 } else {
                     Button(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .padding(start = 32.dp, end = 32.dp),
                         colors = ButtonDefaults.buttonColors().copy(
                             containerColor = LiloOrange,
                             contentColor = Color.White,
@@ -322,51 +455,3 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
         }
     }
 }
-
-@Composable
-fun AccountDataField(
-    dataLabel: String,
-    dataValue: String,
-    enabled: Boolean,
-    onDataChange: (String) -> Unit,
-    isPassword: Boolean = false,
-    errorMessage: String? = null
-) {
-    OutlinedTextField(
-        value = dataValue,
-        onValueChange = onDataChange,
-        label = {
-            Text(
-                text = dataLabel,
-                style = MaterialTheme.typography.bodyLarge
-            )
-        },
-        placeholder = { Text("Bitte $dataLabel eingeben") },
-        leadingIcon = {
-            Icon(
-                imageVector = if (isPassword) Icons.TwoTone.Lock else Icons.TwoTone.PermIdentity,
-                contentDescription = "Input Icon"
-            )
-        },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(8.dp),
-        singleLine = true,
-        enabled = enabled,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text,
-            imeAction = ImeAction.Next
-        ),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-        isError = errorMessage != null,
-        supportingText = {
-            errorMessage?.let {
-                Text(
-                    text = it,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-    )
-}
-

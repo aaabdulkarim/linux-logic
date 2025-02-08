@@ -65,6 +65,10 @@ class UserViewModel : ViewModel() {
     private var _user by mutableStateOf<User?>(null)
     val user: User? get() = _user
 
+    // Temporärer Zustand im Bearbeitungsmodus (null, wenn nicht bearbeitet wird)
+    private var _editingUser by mutableStateOf<User?>(null)
+    val editingUser: User? get() = _editingUser
+
     // Liste registrierter Benutzer
     private var registeredUsers = mutableListOf<User>()
 
@@ -260,6 +264,7 @@ class UserViewModel : ViewModel() {
 
     /**
      * Diese Methode emailExists überprüft, ob eine E-Mail-Adresse bereits besetzt ist.
+     * @param email ist die E-Mail welche gesucht ist
      */
     private fun emailExists(email: String): Boolean {
         return registeredUsers.any { it.email == email }
@@ -267,6 +272,7 @@ class UserViewModel : ViewModel() {
 
     /**
      * Diese Methode usernameExists überprüft, ob ein Benutzername bereits vergeben ist.
+     * @param username ist der Benutzername welcher gesucht ist
      */
     private fun usernameExists(username: String): Boolean {
         return registeredUsers.any { it.username == username }
@@ -291,5 +297,41 @@ class UserViewModel : ViewModel() {
         _email = ""
         _password = ""
         _confirmPassword = ""
+    }
+
+    /**
+     * Diese Methode startEditing kopiert den aktuell angemeldeten User in eine temporäre Instanz
+     */
+    fun startEditing() {
+        _editingUser = _user?.copy()
+    }
+
+    /**
+     * Diese Methode updateEditingUser aktualisiert den temporären Bearbeitungszustand
+     * @param username ist der editierte Benutzername
+     * @param email ist die editierte E-Mail
+     * @param password ist das editierte Passwort
+     */
+    fun updateEditingUser(username: String? = null, email: String? = null, password: String? = null) {
+        _editingUser = _editingUser?.copy(
+            username = username ?: _editingUser!!.username,
+            email = email ?: _editingUser!!.email,
+            password = password ?: _editingUser!!.password
+        )
+    }
+
+    /**
+     * Diese Methode saveChanges speichert die Änderungen und beendet den Bearbeitungsmodus
+     */
+    fun saveChanges() {
+        _editingUser?.let { _user = it }
+        _editingUser = null
+    }
+
+    /**
+     * Diese Methode cancelChanges bricht den Bearbeitungsmodus ab und verwirft alle Änderungen
+     */
+    fun cancelChanges() {
+        _editingUser = null
     }
 }

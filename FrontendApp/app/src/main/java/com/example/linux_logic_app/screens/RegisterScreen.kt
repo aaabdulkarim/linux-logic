@@ -174,7 +174,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als Text-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
                     isError = usernameErrorMessage != null,
@@ -200,7 +200,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihre E-Mail Adresse eingeben",
+                            text = "Bitte Ihre E-Mail eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -222,7 +222,11 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     isError = emailErrorMessage != null,
                     supportingText = {
                         emailErrorMessage?.let {
-                            Text(it, color = MaterialTheme.colorScheme.error)
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 )
@@ -245,7 +249,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.TwoTone.Password,
-                            contentDescription = "Password Icon for Login",
+                            contentDescription = "Password Icon for Register",
                             tint = LiloMain
                         )
                     },
@@ -254,7 +258,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als Passwort-Input genutzt wird
                         imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -278,7 +282,11 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     isError = passwordErrorMessage != null,
                     supportingText = {
                         passwordErrorMessage?.let {
-                            Text(it, color = MaterialTheme.colorScheme.error)
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 )
@@ -301,7 +309,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.TwoTone.Repeat,
-                            contentDescription = "Password Confirmation Icon",
+                            contentDescription = "Password Confirmation Icon for Register",
                             tint = LiloMain
                         )
                     },
@@ -334,7 +342,11 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     isError = confPasswordMessage != null,
                     supportingText = {
                         confPasswordMessage?.let {
-                            Text(it, color = MaterialTheme.colorScheme.error)
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 )
@@ -349,13 +361,13 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                                 password.trim()
                             )
                         ) {
-                            userViewModel.clearErrorMessages()
-                            userViewModel.clearAllFields()
                             Log.i(
-                                "Credentials",
-                                "Username: $username; E-Mail: $email; Password: $password"
+                                "New User Credentials",
+                                "Username: ${username.trim()}; E-Mail: ${email.trim()}; Password: ${password.trim()}"
                             )
                             navController.navigate(Screen.Main.route)
+                            userViewModel.clearErrorMessages()
+                            userViewModel.clearAllFields()
                         }
                     },
                     modifier = Modifier
