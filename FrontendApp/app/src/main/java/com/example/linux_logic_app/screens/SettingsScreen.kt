@@ -495,7 +495,7 @@ fun PasswordConfirmDialog(
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var password by remember { mutableStateOf("") }
+    val password = userViewModel.verifyPassword
     val passwordErrorMessage = userViewModel.passwordErrorMessage
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -515,7 +515,7 @@ fun PasswordConfirmDialog(
             Column {
                 OutlinedTextField(
                     value = password,
-                    onValueChange = { password = it },
+                    onValueChange = { userViewModel.onVerifyPasswordChange(it) },
                     label = { Text("Passwort", style = MaterialTheme.typography.bodyLarge) },
                     placeholder = {
                         Text(

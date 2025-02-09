@@ -45,6 +45,9 @@ class UserViewModel : ViewModel() {
     private var _confirmPassword by mutableStateOf("")
     val confirmPassword: String get() = _confirmPassword
 
+    private var _verifyPassword by mutableStateOf("")
+    val verifyPassword: String get() = _verifyPassword
+
     private var _emailErrorMessage by mutableStateOf<String?>(null)
     val emailErrorMessage: String? get() = _emailErrorMessage
 
@@ -88,6 +91,11 @@ class UserViewModel : ViewModel() {
     fun onConfirmPasswordChange(newConfirmPassword: String) {
         _confirmPassword = newConfirmPassword
         _confPasswordMessage = validatePasswords()
+    }
+
+    fun onVerifyPasswordChange(verifyPassword: String) {
+        _verifyPassword = verifyPassword
+        _passwordErrorMessage = validatePassword(verifyPassword) // Die Fehlernachricht wird hier einmal gesetzt
     }
 
     // Single-Expression Functions, wenn der Funktionskörper nur einen einzelnen Ausdruck enthält
@@ -299,15 +307,25 @@ class UserViewModel : ViewModel() {
     /**
      * Diese Methode clearAllFields setzt alle EingabeFelder zurück
      */
-    fun clearAllFields() {
+    private fun clearAllFields() {
         _username = ""
         _email = ""
         _password = ""
         _confirmPassword = ""
     }
 
-    fun verifyPassword(password: String): Boolean {
-        _passwordErrorMessage = validatePassword(password)
-        return _user?.password == password
+    fun verifyPassword(verifyPassword: String): Boolean {
+        clearErrorMessages() // Fehlernachrichten zurücksetzen
+
+        // Prüfe, ob die Passwortvalidierung bereits einen Fehler zurückgegeben hat
+        if (_passwordErrorMessage != null) return false
+
+        // Prüfe, ob das Passwort mit dem gespeicherten übereinstimmt
+        return if (_user?.password == verifyPassword) {
+            true // Erfolgreiche Validierung
+        } else {
+            _passwordErrorMessage = "Passwort stimmt nicht überein!" // Fehler setzen
+            false // Fehlerfall
+        }
     }
 }
