@@ -95,7 +95,7 @@ class UserViewModel : ViewModel() {
 
     fun onVerifyPasswordChange(verifyPassword: String) {
         _verifyPassword = verifyPassword
-        _passwordErrorMessage = validatePassword(verifyPassword) // Die Fehlernachricht wird hier einmal gesetzt
+        _passwordErrorMessage = validatePassword(verifyPassword)    // Die Fehlernachricht wird hier einmal gesetzt
     }
 
     // Single-Expression Functions, wenn der Funktionskörper nur einen einzelnen Ausdruck enthält
@@ -322,10 +322,17 @@ class UserViewModel : ViewModel() {
 
         // Prüfe, ob das Passwort mit dem gespeicherten übereinstimmt
         return if (_user?.password == verifyPassword) {
+            _verifyPassword = ""
             true // Erfolgreiche Validierung
         } else {
             _passwordErrorMessage = "Passwort stimmt nicht überein!" // Fehler setzen
             false // Fehlerfall
         }
+    }
+
+    fun cancelVerification() {
+        _verifyPassword = ""    // Löschen des Inputs für die Passwort Verifizierung
+        clearErrorMessages()    // Löschen aller angezeigten Fehlermeldungen.
+
     }
 }

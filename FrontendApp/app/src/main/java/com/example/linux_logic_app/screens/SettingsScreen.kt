@@ -356,20 +356,22 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
-                        val image =
-                            if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
-                        val description =
-                            if (passwordVisible) "Showed password" else "Hidden password"
-                        IconButton(
-                            onClick = {
-                                setPasswordVisible(!passwordVisible)
+                        if (editingEnabled) {
+                            val image =
+                                if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                            val description =
+                                if (passwordVisible) "Showed password" else "Hidden password"
+                            IconButton(
+                                onClick = {
+                                    setPasswordVisible(!passwordVisible)
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = image,
+                                    contentDescription = description,
+                                    tint = LiloOrange
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = image,
-                                contentDescription = description,
-                                tint = LiloOrange
-                            )
                         }
                     },
                     isError = passwordErrorMessage != null,
@@ -481,7 +483,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     setEditingEnabled(true)
                 },
                 onDismiss = {
-                    userViewModel.clearErrorMessages() // Fehlermeldungen zurücksetzen
+                    userViewModel.cancelVerification()
                     showPasswordDialog = false
                 }
             )
