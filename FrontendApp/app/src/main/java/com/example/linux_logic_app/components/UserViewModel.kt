@@ -95,7 +95,8 @@ class UserViewModel : ViewModel() {
 
     fun onVerifyPasswordChange(verifyPassword: String) {
         _verifyPassword = verifyPassword
-        _passwordErrorMessage = validatePassword(verifyPassword)    // Die Fehlernachricht wird hier einmal gesetzt
+        _passwordErrorMessage =
+            validatePassword(verifyPassword)    // Die Fehlernachricht wird hier einmal gesetzt
     }
 
     // Single-Expression Functions, wenn der Funktionskörper nur einen einzelnen Ausdruck enthält
@@ -333,6 +334,5 @@ class UserViewModel : ViewModel() {
     fun cancelVerification() {
         _verifyPassword = ""    // Löschen des Inputs für die Passwort Verifizierung
         clearErrorMessages()    // Löschen aller angezeigten Fehlermeldungen.
-
     }
 }
