@@ -108,8 +108,8 @@ class UserViewModel : ViewModel() {
             else -> null
         }
 
-    //Innerhalb des Moduls (UI und Logik)
-    internal fun validatePassword(password: String): String? =
+    //internal als Zugriffsmodifikator Innerhalb des Moduls (UI und Logik)
+    private fun validatePassword(password: String): String? =
         when {
             password.isEmpty() -> "Passwort darf nicht leer sein!"
             password.length < 8 -> "Passwort muss mindestens 8 Zeichen enthalten!"
@@ -267,6 +267,8 @@ class UserViewModel : ViewModel() {
      */
     fun logout() {
         _user = null
+        clearAllFields()
+        clearErrorMessages()
     }
 
     /**
@@ -302,5 +304,10 @@ class UserViewModel : ViewModel() {
         _email = ""
         _password = ""
         _confirmPassword = ""
+    }
+
+    fun verifyPassword(password: String): Boolean {
+        _passwordErrorMessage = validatePassword(password)
+        return _user?.password == password
     }
 }

@@ -477,8 +477,8 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 userViewModel = userViewModel,
                 onConfirm = {
                     // Passwort validiert, mache weiter mit der Logik
-                    setEditingEnabled(true)
                     showPasswordDialog = false
+                    setEditingEnabled(true)
                 },
                 onDismiss = {
                     userViewModel.clearErrorMessages() // Fehlermeldungen zurücksetzen
@@ -496,6 +496,7 @@ fun PasswordConfirmDialog(
     onDismiss: () -> Unit
 ) {
     var password by remember { mutableStateOf("") }
+    val passwordErrorMessage = userViewModel.passwordErrorMessage
     var passwordVisible by remember { mutableStateOf(false) }
 
     AlertDialog(
@@ -516,9 +517,18 @@ fun PasswordConfirmDialog(
                     value = password,
                     onValueChange = { password = it },
                     label = { Text("Passwort", style = MaterialTheme.typography.bodyLarge) },
-                    placeholder = { Text("Bitte Ihr Passwort eingeben", style = MaterialTheme.typography.bodyLarge) },
+                    placeholder = {
+                        Text(
+                            "Bitte Ihr Passwort eingeben",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    },
                     leadingIcon = {
-                        Icon(imageVector = Icons.TwoTone.Password, contentDescription = "Password Icon", tint = LiloMain)
+                        Icon(
+                            imageVector = Icons.TwoTone.Password,
+                            contentDescription = "Password Icon",
+                            tint = LiloMain
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -529,16 +539,26 @@ fun PasswordConfirmDialog(
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
-                        val description = if (passwordVisible) "Zeige Passwort" else "Verberge Passwort"
+                        val image =
+                            if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description =
+                            if (passwordVisible) "Zeige Passwort" else "Verberge Passwort"
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(imageVector = image, contentDescription = description, tint = LiloOrange)
+                            Icon(
+                                imageVector = image,
+                                contentDescription = description,
+                                tint = LiloOrange
+                            )
                         }
                     },
-                    isError = userViewModel.passwordErrorMessage != null,
+                    isError = passwordErrorMessage != null,
                     supportingText = {
-                        userViewModel.passwordErrorMessage?.let {
-                            Text(text = it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                        passwordErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 )
@@ -555,16 +575,24 @@ fun PasswordConfirmDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 32.dp, end = 32.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = LiloSuccess, contentColor = Color.White),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LiloSuccess,
+                    contentColor = Color.White,
+                    disabledContainerColor = Color(0xFFCECECE),
+                    disabledContentColor = Color(0xFF7F7F7F)
+                ),
                 contentPadding = PaddingValues(16.dp),
                 onClick = {
-                    userViewModel.validatePassword(password) // Passwort validieren
-                    if (userViewModel.passwordErrorMessage == null) {
-                        onConfirm(password) // Bestätigen, wenn keine Fehlermeldung vorhanden ist
+                    if (userViewModel.verifyPassword(password)) {
+                        onConfirm(password)
                     }
-                }
+                },
+                enabled = passwordErrorMessage == null
             ) {
-                Text(text = "Bestätigen", style = MaterialTheme.typography.labelSmall)
+                Text(
+                    text = "Verifizieren",
+                    style = MaterialTheme.typography.labelSmall
+                )
             }
         },
         dismissButton = {
@@ -572,17 +600,20 @@ fun PasswordConfirmDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 32.dp, end = 32.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = LiloDanger, contentColor = Color.White),
+                colors = ButtonDefaults.buttonColors().copy(
+                    containerColor = LiloDanger,
+                    contentColor = Color.White,
+                ),
                 contentPadding = PaddingValues(16.dp),
                 onClick = {
                     onDismiss()
-                }
+                },
             ) {
-                Text(text = "Abbrechen", style = MaterialTheme.typography.labelSmall)
+                Text(
+                    text = "Abbrechen",
+                    style = MaterialTheme.typography.labelSmall,
+                )
             }
         }
     )
 }
-
-
-
