@@ -6,13 +6,21 @@
       <div class="icon-container">
         <i class="pi pi-sun icon"></i>
         <i class="pi pi-cog icon"></i>
-        <i class="pi pi-user icon"></i>
+        <i class="pi pi-user icon" @click="navigateToProfile"></i>
+
         <i class="pi pi-bars icon"></i>
       </div>
 
     </div>
   </template>
   <script>
+  export default {
+  methods: {
+    navigateToProfile() {
+      this.$router.push({ name: 'profil' });
+    }
+  }
+};
   showLogo = false;
   </script>
   <style scoped>
