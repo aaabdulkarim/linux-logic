@@ -104,7 +104,7 @@ export default {
   width: 100%;
   max-width: 1200px;
   margin-top: 20px;
-  padding: 0 20px;
+  padding: 0 0;
 }
 
 .right-icons {

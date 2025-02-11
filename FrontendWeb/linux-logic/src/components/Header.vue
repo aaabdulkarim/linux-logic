@@ -13,7 +13,7 @@
     </div>
   </template>
   <script>
-  showLogo = false;
+  showLogo = true;
   </script>
   <style scoped>
   .header {
