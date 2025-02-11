@@ -1,63 +1,117 @@
-from fastapi import FastAPI
-from fastapi.websockets import WebSocket
-import docker
-import websockets
+from typing import Annotated
+from validate_email import validate_email
+from fastapi import FastAPI, HTTPException, Depends
+from pydantic import BaseModel
+from dotenv import load_dotenv, get_key
+from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 
+# docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
+# sqlmodel docs: https://sqlmodel.tiangolo.com/tutorial/where/#where-land
+
+# Laden des Connection Strings
+load_dotenv()
+connectionString = get_key(".env", "CONNECTION_STRING")
+
+
+# Das Erstellen der psql/Neon Engine
+engine = create_engine(connectionString)
+
+
+class User(SQLModel, table=True):
+    """
+    Model Klasse für einen Linux Logic user
+    """
+    id: int | None = Field(default=None, primary_key=True)
+    username: str = Field(index=True)
+    email: str | None = Field(default=None, index=True)
+    password_hash: int
+
+
+
+# FastAPI App Variable
 app = FastAPI()
 
 
-@app.websocket("/ws")
-async def websocket(mainsocket: WebSocket):
-    await mainsocket.accept()
-    client = docker.from_env()
-    tagname = "testtag"
-
-    # Erstellt ein Image aus einem Dockerfile mit einem tag(Namen)
-    # client.images.build(path="./test/dockerfolder", tag=tagname)
-    # container = client.containers.run(
-    #     tagname,
-    #     detach=True,
-    #     tty=True,
-    #     ports={"1000/tcp": 1000}, 
-    #     name="theone"
-    # )
+def get_session():
+    with Session(engine) as session:
+        yield session
 
 
-    # Connection mit dem docker socket mit dem Framework Socket
-    container_socket_url = "ws://127.0.0.1:1000/dockersocket"
-    try:
-        async with websockets.connect(container_socket_url) as container_socket:
-            print("connected to external")
-            while True:
+SessionDep = Annotated[Session, Depends(get_session)]
 
-                # Interaktion mit Frontend Socket
-                frontend_cmd = await mainsocket.receive_text()
+@app.get("/login/{userId}")
+async def login(userId : int, session: SessionDep):
+    """
+    Die Datenbank wird nach userId durchsucht und wenn der User gefunden wurde, dann wird dieser zurückgegeben
+    """
+    user = session.get(User, userId)
 
-                try:
-                    await container_socket.send(frontend_cmd)
-                    data = await container_socket.recv()
-                    await mainsocket.send_text(data)
-                    print(data)
+    if not user:
+        raise HTTPException(status_code=404, detail=f"User with Id {userId} not found")
+    return user        
 
-            
-                except WebSocketDisconnect:
-                    print("WebSocket client disconnected")
-                    break
 
-    except Exception as e:
-        print(f"Error with external WebSocket: {e}")
+@app.get("/login/")
+async def login(userName : str, userPassword : str, session: SessionDep):
+    """
+    Die Datenbank wird nach userNamen durchsucht und wenn das Passwort übereinstimmt, dann wird true zurückgegeben
+    """
+    statement = select(User)
+    results = session.exec(statement)
 
-    finally:
-        await mainsocket.close()
-        # container.stop()
-        # container.remove()
-        print("WebSocket stopped and container removed")
+    for user in results:
+        print(user)
+        if user.username == userName and user.password_hash == userPassword:
+            return True
+        
+    return False
+
+@app.post("/register")
+async def register(userModel : User, session: SessionDep):
+    """
+    Ein User wird registriert und zur Datenbank hinzugefügt
+    """
+
+    # Check ob das übergebene User Model invalide Daten hat
+    email = userModel.email
+
+    # Überprüfen ob die Email existiert
+    if validate_email(userModel.email, check_blacklist=False) == False:
+        return False
     
-    client.close()
+
+    # Überprüfen ob die Email schon in unserem System vorhanden ist
+    statement = select(User)
+    userlist = session.exec(statement)
+    for user in userlist:
+        if user.email == email:
+            return False
+    
+    # Überprüfen ob das Password nicht leer ist
+    if len(userModel.password_hash) < 1:
+        return False
+    
+    session.add(userModel)
+    session.commit()
+
+    return True
+    
 
 
-@app.get("/")
-async def root():
-    print("Auf root gegangen")
-    return {"message": "Hello World"}
+@app.get("/progress")
+async def getProgress(userId : int, session: SessionDep):
+    """
+    Der Progress wird als Zahl zurückgegeben. Die Zahl ist die ID des Progress.
+    """
+    try:
+        userId = int(userId)
+        for i in fakeProgress:
+            if i["userId"] == userId:
+                return {"userId": userId, "progress": i["scenarioId"]}
+    
+    except ValueError:
+        raise HTTPException(status_code=404, detail=f"Invalid Paramater Value given as User ID")
+
+    # Exception nachdem der User nicht gefunden wurde
+    raise HTTPException(status_code=404, detail=f"Progress not found with User Id {userId}")
