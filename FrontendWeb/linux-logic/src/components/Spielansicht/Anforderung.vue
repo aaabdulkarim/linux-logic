@@ -74,6 +74,7 @@ export default {
   align-items: center;
   justify-content: center;
   max-width: 1200px;
+  width: 100%;
   padding-left: 10px;
   padding-right: 10px;
 }

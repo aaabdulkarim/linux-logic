@@ -7,6 +7,8 @@
       <!-- Terminal output is rendered here -->
     </div>
   </div>
+  <div class="terminal-bottom">
+  </div>
 </template>
 
 <script>
@@ -21,7 +23,7 @@ export default {
       terminal: null,
       fitAddon: null,
       socketClient: null,
-      promptLength: 13 // Länge des Prompts "logic@linux:~$ "
+      promptLength: 69 // Länge des Prompts "logic@linux:~$ "
     };
   },
   mounted() {
@@ -154,7 +156,6 @@ export default {
 
 <style scoped>
 .terminal-container {
-
   width: 100%;
   height: 100%;
   background-color: #1e1e1e;
@@ -178,7 +179,12 @@ export default {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
-
+.terminal-bottom {
+  background-color: #1e1e1e; 
+  padding-top: 12px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
 
 
 ::v-deep(.xterm-screen) {
