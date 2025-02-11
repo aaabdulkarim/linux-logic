@@ -16,18 +16,16 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.twotone.AccountCircle
+import androidx.compose.material.icons.twotone.Feedback
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material.icons.twotone.ManageAccounts
 import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material.icons.twotone.NotificationsActive
 import androidx.compose.material.icons.twotone.PlayArrow
-import androidx.compose.material.icons.twotone.RateReview
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Terminal
-import androidx.compose.material.icons.twotone.Tour
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -61,12 +59,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.components.TerminalViewModel
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 import kotlinx.coroutines.launch
 
@@ -85,12 +88,12 @@ data class BottomNavigationItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val endDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(1) }
-    val navController = rememberNavController()
+    val navControllerMain = rememberNavController()
     val context = LocalContext.current
     val liloWebUrl = "https://www.linux-logic.com"
     val liloIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(liloWebUrl)) }
@@ -116,6 +119,8 @@ fun MainScreen() {
         )
     )
 
+    val terminalViewModel: TerminalViewModel = viewModel()
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen,
@@ -123,7 +128,10 @@ fun MainScreen() {
             ModalDrawerSheet(
                 drawerContainerColor = MaterialTheme.colorScheme.background,
                 drawerContentColor = MaterialTheme.colorScheme.onBackground,
-                drawerShape = RoundedCornerShape(topEnd = 64.dp, bottomEnd = 64.dp), // Abgerundete Ecken am Ende
+                drawerShape = RoundedCornerShape(
+                    topEnd = 64.dp,
+                    bottomEnd = 64.dp
+                ), // Abgerundete Ecken am Ende
                 drawerState = endDrawerState, // Der EndDrawerState (Verwendung von `rememberDrawerState()` zur Initialisierung)
             ) {
                 Row(
@@ -133,7 +141,8 @@ fun MainScreen() {
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.Shortcut,
-                        contentDescription = "Shortcut Icon for Main"
+                        contentDescription = "Shortcut Icon for Main",
+                        tint = LiloMain
                     )
 
                     Text(
@@ -152,8 +161,35 @@ fun MainScreen() {
                 NavigationDrawerItem(
                     label = {
                         Text(
+                            text = "Account Informationen",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    },
+                    selected = false,
+                    icon = {
+                        Icon(
+                            Icons.TwoTone.Security,
+                            contentDescription = "Security icon for Main",
+                            tint = LiloMain
+                        )
+                    },
+                    onClick = {
+
+                    }
+                )
+
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = LiloBlue
+                )
+
+                NavigationDrawerItem(
+                    label = {
+                        Text(
                             text = "Suchen",
                             style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     },
                     selected = false,
@@ -161,6 +197,7 @@ fun MainScreen() {
                         Icon(
                             Icons.TwoTone.Search,
                             contentDescription = "Search Icon for Main",
+                            tint = LiloMain
                         )
                     },
                     onClick = {
@@ -176,31 +213,7 @@ fun MainScreen() {
                 NavigationDrawerItem(
                     label = {
                         Text(
-                            text = "Alle Level",
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    },
-                    selected = false,
-                    icon = {
-                        Icon(
-                            Icons.TwoTone.Tour,
-                            contentDescription = "Tour Icon for Main",
-                        )
-                    },
-                    onClick = {
-
-                    }
-                )
-
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = LiloBlue
-                )
-
-                NavigationDrawerItem(
-                    label = {
-                        Text(
-                            text ="Mehr über Linux Logic",
+                            text = "Mehr über Linux Logic",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -210,6 +223,7 @@ fun MainScreen() {
                         Icon(
                             Icons.TwoTone.Info,
                             contentDescription = "Info Icon for Main",
+                            tint = LiloMain
                         )
                     },
                     onClick = {
@@ -226,7 +240,10 @@ fun MainScreen() {
                 ModalDrawerSheet(
                     drawerContainerColor = MaterialTheme.colorScheme.background,
                     drawerContentColor = MaterialTheme.colorScheme.onBackground,
-                    drawerShape = RoundedCornerShape(topEnd = 64.dp, bottomEnd = 64.dp), // Abgerundete Ecken am Ende
+                    drawerShape = RoundedCornerShape(
+                        topEnd = 64.dp,
+                        bottomEnd = 64.dp
+                    ), // Abgerundete Ecken am Ende
                     drawerState = endDrawerState, // Der EndDrawerState (Verwendung von `rememberDrawerState()` zur Initialisierung)
                 ) {
                     Row(
@@ -235,14 +252,16 @@ fun MainScreen() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.TwoTone.ManageAccounts,
-                            contentDescription = "ManageAccounts Icon for Main"
+                            imageVector = Icons.TwoTone.AccountCircle,
+                            contentDescription = "ManageAccounts Icon for Main",
+                            tint = LiloMain
                         )
                         Text(
-                            text = "Ihr Profil",
+                            text = "Hallo ${userViewModel.user?.username}",
                             modifier = Modifier
-                                .padding(16.dp),
-                            style = MaterialTheme.typography.labelLarge
+                                .padding(vertical = 16.dp, horizontal = 8.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -255,43 +274,21 @@ fun MainScreen() {
                     NavigationDrawerItem(
                         label = {
                             Text(
-                                text = "Account Informationen",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        },
-                        selected = false,
-                        icon = {
-                            Icon(
-                                Icons.TwoTone.Security,
-                                contentDescription = "Security icon for Main"
-                            )
-                        },
-                        onClick = {
-
-                        }
-                    )
-
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = LiloBlue
-                    )
-
-                    NavigationDrawerItem(
-                        label = {
-                            Text(
                                 text = "Einstellungen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.Settings,
-                                contentDescription = "Settings Icon for Main"
+                                contentDescription = "Settings Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Settings.route)
                         }
                     )
 
@@ -304,18 +301,20 @@ fun MainScreen() {
                         label = {
                             Text(
                                 text = "Mitteilungen",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.TwoTone.NotificationsActive,
-                                contentDescription = "NotificationsActive Icon for Main"
+                                contentDescription = "NotificationsActive Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Notifications.route)
                         }
                     )
 
@@ -328,18 +327,20 @@ fun MainScreen() {
                         label = {
                             Text(
                                 text = "Feedback senden",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
-                                Icons.TwoTone.RateReview,
-                                contentDescription = "RateReview Icon for Main"
+                                Icons.TwoTone.Feedback,
+                                contentDescription = "RateReview Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Feedback.route)
                         }
                     )
 
@@ -352,18 +353,20 @@ fun MainScreen() {
                         label = {
                             Text(
                                 text = "Hilfe",
-                                style = MaterialTheme.typography.bodyLarge
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.AutoMirrored.TwoTone.Help,
-                                contentDescription = "Help Icon for Main"
+                                contentDescription = "Help Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
-
+                            navController.navigate(Screen.Help.route)
                         }
                     )
 
@@ -377,16 +380,19 @@ fun MainScreen() {
                             Text(
                                 text = "Abmelden",
                                 style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         },
                         selected = false,
                         icon = {
                             Icon(
                                 Icons.AutoMirrored.TwoTone.Logout,
-                                contentDescription = "Logout Icon for Main"
+                                contentDescription = "Logout Icon for Main",
+                                tint = LiloMain
                             )
                         },
                         onClick = {
+                            userViewModel.logout()
                             navController.navigate(Screen.Start.route)
                         }
                     )
@@ -450,11 +456,11 @@ fun MainScreen() {
                             }
                         },
                         colors = TopAppBarColors(
-                            containerColor = Color(0xFF569191),
-                            scrolledContainerColor = Color(0xFF569191),
+                            containerColor = LiloMain,
+                            scrolledContainerColor = LiloMain,
                             navigationIconContentColor = Color.White, // Hier setze ich die Farbe Weiß für die Icons ?
                             titleContentColor = Color.White,
-                            actionIconContentColor = Color(0xFF569191)
+                            actionIconContentColor = LiloMain
                         )
                     )
                 },
@@ -495,8 +501,8 @@ fun MainScreen() {
                                 selected = selectedItemIndex == index,
                                 onClick = {
                                     selectedItemIndex = index
-                                    navController.navigate(item.title) {
-                                        popUpTo(navController.graph.startDestinationId) {
+                                    navControllerMain.navigate(item.title) {
+                                        popUpTo(navControllerMain.graph.startDestinationId) {
                                             saveState = true
                                         }
                                         launchSingleTop = true
@@ -506,7 +512,7 @@ fun MainScreen() {
                                 icon = {
                                     BadgedBox(
                                         badge = {
-                                            if(item.badgeCount != null) {
+                                            if (item.badgeCount != null) {
                                                 Badge(
                                                     containerColor = Color(0xFFA00000),
                                                 ) {
@@ -515,13 +521,13 @@ fun MainScreen() {
                                                         style = MaterialTheme.typography.labelSmall
                                                     )
                                                 }
-                                            } else if(item.hasNews) {
+                                            } else if (item.hasNews) {
                                                 Badge()
                                             }
                                         }
                                     ) {
                                         Icon(
-                                            imageVector = if(index == selectedItemIndex) {
+                                            imageVector = if (index == selectedItemIndex) {
                                                 item.selectedIcon
                                             } else {
                                                 item.unselectedIcon
@@ -608,14 +614,14 @@ fun MainScreen() {
                         .padding(innerPadding)
                 ) {
                     NavHost(
-                        navController = navController,
+                        navController = navControllerMain,
                         startDestination = "Home",
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        composable("Home") { HomeScreen() }
-                        composable("Terminal") { CustomizeScreen() }
-                        composable("Spielen") { PlayScreen() }
+                        composable(Screen.Customize.route) { CustomizationScreen(terminalViewModel = terminalViewModel) }
+                        composable(Screen.Home.route) { HomeScreen(terminalViewModel = terminalViewModel) }
+                        composable(Screen.Play.route) { PlayScreen() }
                     }
                 }
             }
