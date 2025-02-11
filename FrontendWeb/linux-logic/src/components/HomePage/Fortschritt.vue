@@ -102,12 +102,23 @@ Der Python-REST-API-Server kann erfolgreich eine Verbindung zur Datenbank herste
                 {
                     "berichtName": "Bericht 6",
                     "datum": "19.12. - 14.01.",
-                    "text": `Über die Weihnachtsferien war einiges geplant für die Realisierung des Diplomprojekts Linux Logic. Folgenden Fortschritt haben wir im Zeitraum vom 19.12. bis zum 14.01. erreicht:
-Backend: REST API mit Datenbankanbindung, Register Funktion, login
-Web Frontend: Spielansicht mit erweitertem terminal xtermjs
-UX: Website styling
-Datenbank: Szenarien geschrieben, Schema überarbeitet`,
-                    "link": "https://linux-logic.com/f/fortschrittsbericht-1912---1401"
+                    "text": `Fortschrittsbericht Linux Logic (Zeitraum: 19.12. bis 14.01.)
+
+Im Rahmen des Diplomprojekts "Linux Logic" wurden während der Weihnachtsferien signifikante Fortschritte in den Bereichen App-Frontend, Backend, Web-Frontend, UX-Design und Datenbankmanagement erzielt. Nachfolgend eine Übersicht über den Fortschritt:
+
+App-Frontend:
+Die Entwicklung der mobilen Applikation "Linux Logic" konnte trotz anfänglicher technischer Herausforderungen erfolgreich vorangetrieben werden. Aufgrund eines schwerwiegenden Kompilierungsfehlers in Flutter wurde entschieden, die App auf Jetpack Compose umzustellen. Die Umsetzung umfasst inzwischen eine vollständig funktionale Startseite sowie Frontend-Komponenten für die Benutzerauthentifizierung (Registrierung und Anmeldung). Darüber hinaus wurde das Grundgerüst der Hauptseite erstellt, welches verschiedene Navigationsmöglichkeiten, darunter eine Top-App-Bar, Bottom-App-Bar und ein Navigation Drawer, integriert.
+
+Backend:
+Parallel zur Frontend-Entwicklung wurde das Backend als REST-API mit Datenbankanbindung weiterentwickelt. Neben allgemeinen Schnittstellen wurde auch die Funktion zur Benutzerregistrierung implementiert. Diese bildet eine essenzielle Basis für die vollständige Nutzerverwaltung und das reibungslose Zusammenspiel mit dem Frontend.
+Web-Frontend:
+Im Web-Frontend erfolgte die Darstellung der einzelnen Kurse (Level). Ein wesentlicher Fortschritt war die Integration eines webbasierten Terminals, welches durch die Einbindung der gut dokumentierten Drittanbieter-Library xterm.js realisiert wurde. Diese Komponente bildet (im Web) einen zentralen Bestandteil für interaktive Übungen innerhalb der Lernplattform.
+
+UX-Design:
+Im Bereich User Experience (UX) Design wurde das Styling des Web-Frontends weiter optimiert. Durch gezielte Anpassungen und Designentscheidungen konnte die Benutzerfreundlichkeit sowie das visuelle Erscheinungsbild der Plattform verbessert werden. Das Ziel besteht darin, ein ansprechendes Nutzererlebnis für die Webseite zu gewährleisten.
+
+Datenbankmanagement:
+Für die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur überarbeitet und erweitert. Dies beinhaltete sowohl die Modellierung eines neuen Datenbankschemas als auch die Implementierung von Mechanismen zur Kommunikation zwischen Sockets. Die neu entwickelten Szenarien bilden die Basis für praxisnahe und interaktive Lernaufgaben.`
                 }
             ]
 

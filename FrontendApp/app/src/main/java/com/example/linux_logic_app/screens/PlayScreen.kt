@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.Course
 import com.example.linux_logic_app.components.courseList
@@ -173,7 +174,8 @@ fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit) {
                                         .padding(horizontal = 16.dp),
                                     maxLines = if (isExpanded) Int.MAX_VALUE else 2,
                                     style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onBackground
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    textAlign = TextAlign.Justify
                                 )
                             }
                         }

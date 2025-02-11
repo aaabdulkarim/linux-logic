@@ -33,7 +33,6 @@ fun ColorPicker(onColorSelected: (Color) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -52,7 +51,7 @@ fun ColorPicker(onColorSelected: (Color) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(fraction = 0.7f)
-                .padding(8.dp),
+                .padding(16.dp),
             controller = controller,
             onColorChanged = { colorEnvelope ->
                 val color = colorEnvelope.color

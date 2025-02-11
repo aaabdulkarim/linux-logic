@@ -33,10 +33,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,29 +48,26 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    val (email, setEmail) = rememberSaveable { mutableStateOf("") }
-    val (password, setPassword) = rememberSaveable { mutableStateOf("") }
-    val (passwordVisible, setPasswordVisible) = rememberSaveable { mutableStateOf(false) }
+fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
+    // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
+    val email = userViewModel.email
+    val password = userViewModel.password
+    val emailErrorMessage = userViewModel.emailErrorMessage
+    val passwordErrorMessage = userViewModel.passwordErrorMessage
     /*
-    ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
+    Folgender Ausdruck ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
     Funktionen zurückgegebenen Werte direkt in separate Variablen auspacken können. Kotlin erlaubt
     es, dieses Objekt in zwei Variablen zu zerlegen: eine zum Lesen des Wertes und eine zum Aktualisieren
      */
-
-    // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
-    var emailErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
-
-    // Regular expression to validate email format
-    val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
-
-    val isFormValid = emailErrorMessage == null && password.isNotEmpty() && password.length >= 8
+    val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
+    val isFormValid = emailErrorMessage == null && passwordErrorMessage == null
 
     Column(
         modifier = Modifier
@@ -95,13 +90,6 @@ fun LoginScreen(navController: NavController) {
                     painter = painterResource(id = R.drawable.linux_logic_pinguin),
                     contentDescription = "Linux Logic Penguin",
                 )
-
-                /*Image(
-                    painter = painterResource(id = R.drawable.linux_logic_main_transparent_2),
-                    contentDescription = "Linux Logic Logo White",
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                )*/
 
                 Row(
                     modifier = Modifier
@@ -133,7 +121,7 @@ fun LoginScreen(navController: NavController) {
                 .fillMaxSize()
                 .weight(0.75f)
                 .padding(16.dp) // Padding hinzufügen für den gesamten Inhalt
-                //.clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+            //.clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             Column(
                 modifier = Modifier
@@ -148,21 +136,11 @@ fun LoginScreen(navController: NavController) {
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = email,
-                    onValueChange = {
-                        setEmail(it)
-                        emailErrorMessage = if (it.matches(emailPattern.toRegex())) {
-                            null
-                        } else {
-                            "Invalide E-Mail Adresse!"
-                        }
-                    },
-                    /*colors = OutlinedTextFieldDefaults.colors(
-                        cursorColor = LiloMain,
-                    ),*/
+                    onValueChange = { userViewModel.onEmailChange(it) },
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -171,8 +149,8 @@ fun LoginScreen(navController: NavController) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihre E-Mail Adresse eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            text = "Bitte Ihre E-Mail eingeben",
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -190,18 +168,25 @@ fun LoginScreen(navController: NavController) {
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = emailErrorMessage != null
+                    isError = emailErrorMessage != null,
+                    supportingText = {
+                        emailErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = password,
-                    onValueChange = setPassword,
+                    onValueChange = { userViewModel.onPasswordChange(it) },
                     colors = OutlinedTextFieldDefaults.colors(
                         cursorColor = LiloMain,
 
-                    ),
+                        ),
                     label = {
                         Text(
                             text = "Passwort",
@@ -211,7 +196,7 @@ fun LoginScreen(navController: NavController) {
                     placeholder = {
                         Text(
                             text = "Bitte Ihr Passwort eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -230,10 +215,11 @@ fun LoginScreen(navController: NavController) {
                         imeAction = ImeAction.Done // Es wird Das Formular abgeschickt
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
-                        val description = if (passwordVisible) "Showed password" else "Hidden password"
+                        val image =
+                            if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description =
+                            if (passwordVisible) "Showed password" else "Hidden password"
                         IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(
                                 imageVector = image,
@@ -242,9 +228,19 @@ fun LoginScreen(navController: NavController) {
                             )
                         }
                     },
+                    isError = passwordErrorMessage != null,
+                    supportingText = {
+                        passwordErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
                     text = "Passwort vergessen?",
@@ -263,8 +259,12 @@ fun LoginScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        navController.navigate(Screen.Main.route)
-                        Log.i("Credentials", "E-Mail: $email; Password: $password")
+                        if (userViewModel.login(email.trim(), password.trim())) {
+                            Log.i("User Credentials", "E-Mail: ${email.trim()}; Password: ${password.trim()}")
+                            navController.navigate(Screen.Main.route)
+                            userViewModel.clearErrorMessages()
+                            //userViewModel.clearAllFields()
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -284,7 +284,7 @@ fun LoginScreen(navController: NavController) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                //Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier
@@ -330,8 +330,6 @@ fun LoginScreen(navController: NavController) {
                     )*/
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
@@ -348,8 +346,8 @@ fun LoginScreen(navController: NavController) {
                         text = "Registrieren",
                         modifier = Modifier
                             .clickable {
-                                navController.navigate(Screen.Register.route)
                                 Log.i("LoginScreen", "User is performing - Action: \"Register\" -")
+                                navController.navigate(Screen.Register.route)
                             },
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
@@ -360,4 +358,3 @@ fun LoginScreen(navController: NavController) {
         }
     }
 }
-

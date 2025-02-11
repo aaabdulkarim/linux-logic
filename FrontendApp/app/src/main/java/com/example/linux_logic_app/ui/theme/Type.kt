@@ -64,7 +64,7 @@ val LiloTypography = Typography(
     bodySmall = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Normal,
-        fontSize = 13.sp,
+        fontSize = 11.sp,
         lineHeight = 17.sp
     ),
     // Beschriftungen, z. B. für Buttons oder kleine Labels

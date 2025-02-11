@@ -1,0 +1,1 @@
+Erstellt ein Dockerimage mit den nötigen

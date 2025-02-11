@@ -28,3 +28,6 @@ val LiloDark = Color(0xFF404242)
 val LiloDarkSec = Color(0xFF4E5050)
 val LiloDarkText = Color(0XFFFFFFFF)
 
+val LiloSuccess = Color(0xFF218938)
+val LiloDanger = Color(0xFFdc3545)
+

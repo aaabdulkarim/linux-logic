@@ -20,8 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Email
-import androidx.compose.material.icons.twotone.Lock
-import androidx.compose.material.icons.twotone.LockOpen
 import androidx.compose.material.icons.twotone.Password
 import androidx.compose.material.icons.twotone.PermIdentity
 import androidx.compose.material.icons.twotone.PersonAddAlt
@@ -36,10 +34,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,18 +49,24 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
-fun RegisterScreen(navController: NavController) {
-    val (email, setEmail) = rememberSaveable { mutableStateOf("") }
-    val (username, setUsername) = rememberSaveable { mutableStateOf("") }
-    val (password, setPassword) = rememberSaveable { mutableStateOf("") }
-    val (passwordVisible, setPasswordVisible) = rememberSaveable { mutableStateOf(false) }
-    val (confirmPassword, setConfirmPassword) = rememberSaveable { mutableStateOf("") }
-    var confirmPasswordErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
+fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
+    val username = userViewModel.username
+    val email = userViewModel.email
+    val password = userViewModel.password
+    val confirmPassword = userViewModel.confirmPassword
+
+    val emailErrorMessage = userViewModel.emailErrorMessage
+    val usernameErrorMessage = userViewModel.usernameErrorMessage
+    val passwordErrorMessage = userViewModel.passwordErrorMessage
+    val confPasswordMessage = userViewModel.confPasswordMessage
+
+    val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
     /*
     ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
     Funktionen zurückgegebenen Werte direkt in separate Variablen auspacken können. Kotlin erlaubt
@@ -72,19 +74,9 @@ fun RegisterScreen(navController: NavController) {
      */
 
     // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
-    var emailErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
 
-    var usernameErrorMessage by rememberSaveable { mutableStateOf<String?>(null) }
-
-    val isFormValid = emailErrorMessage == null &&
-            usernameErrorMessage == null &&
-            password.isNotEmpty() &&
-            password.length >= 8 &&
-            password == confirmPassword
-
-    // Regular expression to validate email format
-    val emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
-
+    val isFormValid = emailErrorMessage == null && usernameErrorMessage == null &&
+            passwordErrorMessage == null && confPasswordMessage == null
 
     Column(
         modifier = Modifier
@@ -138,7 +130,7 @@ fun RegisterScreen(navController: NavController) {
                 .fillMaxSize()
                 .weight(0.75f)
                 .padding(16.dp) // Padding hinzufügen für den gesamten Inhalt
-                //.clip(RoundedCornerShape(topStart = 1.dp, topEnd = 16.dp))
+            //.clip(RoundedCornerShape(topStart = 1.dp, topEnd = 16.dp))
         ) {
             Column(
                 modifier = Modifier
@@ -153,22 +145,11 @@ fun RegisterScreen(navController: NavController) {
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = username,
-                    onValueChange = {
-                        setUsername(it)
-                        setUsername(it)
-                        usernameErrorMessage = when {
-                            it.isBlank() -> "Der Benutzername darf nicht leer sein!"
-                            it.length !in 3..20 -> "Der Benutzername muss zwischen 3 und 20 Zeichen lang sein!"
-                            !it.matches("^[a-zA-Z0-9_-]+$".toRegex()) -> "Nur Buchstaben, Zahlen, _ und - sind erlaubt!"
-                            !it.matches("^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$".toRegex()) -> "Kein Start oder Ende mit Sonderzeichen!"
-                            "".any { word -> it.contains(word, ignoreCase = true) } -> "Der Benutzername enthält verbotene Wörter!"
-                            else -> null // Benutzername ist gültig
-                        }
-                    },
+                    onValueChange = { userViewModel.onUsernameChange(it) },
                     label = {
                         Text(
                             text = "Benutzername",
@@ -178,7 +159,7 @@ fun RegisterScreen(navController: NavController) {
                     placeholder = {
                         Text(
                             text = "Bitte Ihren Benutzernamen eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -193,24 +174,24 @@ fun RegisterScreen(navController: NavController) {
                     shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als Text-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = usernameErrorMessage != null
+                    isError = usernameErrorMessage != null,
+                    supportingText = {
+                        usernameErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = email,
-                    onValueChange = {
-                        setEmail(it)
-                        emailErrorMessage = if (it.matches(emailPattern.toRegex())) {
-                            null
-                        } else {
-                            "Invalide E-Mail Adresse!"
-                        }
-                    },
+                    onValueChange = { userViewModel.onEmailChange(it) },
                     label = {
                         Text(
                             text = "E-Mail Adresse",
@@ -219,8 +200,8 @@ fun RegisterScreen(navController: NavController) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihre E-Mail Adresse eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            text = "Bitte Ihre E-Mail eingeben",
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
@@ -238,14 +219,21 @@ fun RegisterScreen(navController: NavController) {
                         keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
                         imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
                     ),
-                    isError = emailErrorMessage != null
+                    isError = emailErrorMessage != null,
+                    supportingText = {
+                        emailErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = password,
-                    onValueChange = setPassword,
+                    onValueChange = { userViewModel.onPasswordChange(it) },
                     label = {
                         Text(
                             text = "Passwort",
@@ -255,13 +243,13 @@ fun RegisterScreen(navController: NavController) {
                     placeholder = {
                         Text(
                             text = "Bitte Ihr Passwort eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.TwoTone.Password,
-                            contentDescription = "Password Icon for Login",
+                            contentDescription = "Password Icon for Register",
                             tint = LiloMain
                         )
                     },
@@ -270,14 +258,15 @@ fun RegisterScreen(navController: NavController) {
                     shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als Passwort-Input genutzt wird
                         imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = password.isNotEmpty() && password.length < 8,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
-                        val description = if (passwordVisible) "Showed password" else "Hidden password"
+                        val image =
+                            if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description =
+                            if (passwordVisible) "Showed password" else "Hidden password"
                         IconButton(
                             onClick = {
                                 setPasswordVisible(!passwordVisible)
@@ -290,20 +279,21 @@ fun RegisterScreen(navController: NavController) {
                             )
                         }
                     },
+                    isError = passwordErrorMessage != null,
+                    supportingText = {
+                        passwordErrorMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
                     value = confirmPassword,
-                    onValueChange = {
-                        setConfirmPassword(it)
-                        confirmPasswordErrorMessage = if (it == password) {
-                            null
-                        } else {
-                            "Passwörter stimmen nicht überein!"
-                        }
-                    },
+                    onValueChange = { userViewModel.onConfirmPasswordChange(it) },
                     label = {
                         Text(
                             text = "Passwort bestätigen",
@@ -313,13 +303,13 @@ fun RegisterScreen(navController: NavController) {
                     placeholder = {
                         Text(
                             text = "Bitte Passwort erneut eingeben",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.TwoTone.Repeat,
-                            contentDescription = "Password Confirmation Icon",
+                            contentDescription = "Password Confirmation Icon for Register",
                             tint = LiloMain
                         )
                     },
@@ -332,10 +322,11 @@ fun RegisterScreen(navController: NavController) {
                         imeAction = ImeAction.Done // Fertigstellen der Eingabe
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    isError = confirmPasswordErrorMessage != null,
                     trailingIcon = {
-                        val image = if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
-                        val description = if (passwordVisible) "Showed password" else "Hidden password"
+                        val image =
+                            if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                        val description =
+                            if (passwordVisible) "Showed password" else "Hidden password"
                         IconButton(
                             onClick = {
                                 setPasswordVisible(!passwordVisible)
@@ -348,14 +339,36 @@ fun RegisterScreen(navController: NavController) {
                             )
                         }
                     },
+                    isError = confPasswordMessage != null,
+                    supportingText = {
+                        confPasswordMessage?.let {
+                            Text(
+                                text = it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
                     onClick = {
-                        navController.navigate(Screen.Main.route)
-                        Log.i("Credentials", "Username: $username; E-Mail: $email; Password: $password")
+                        if (userViewModel.register(
+                                username.trim(),
+                                email.trim(),
+                                password.trim()
+                            )
+                        ) {
+                            Log.i(
+                                "New User Credentials",
+                                "Username: ${username.trim()}; E-Mail: ${email.trim()}; Password: ${password.trim()}"
+                            )
+                            navController.navigate(Screen.Main.route)
+                            userViewModel.clearErrorMessages()
+                            //userViewModel.clearAllFields()
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -375,7 +388,7 @@ fun RegisterScreen(navController: NavController) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                //Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
                     modifier = Modifier
@@ -420,8 +433,6 @@ fun RegisterScreen(navController: NavController) {
                             }
                     )*/
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.Center,
