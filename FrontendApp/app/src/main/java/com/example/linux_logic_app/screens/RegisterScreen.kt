@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Email
 import androidx.compose.material.icons.twotone.Password
@@ -135,7 +137,8 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .align(Alignment.Center), // Vertikale Zentrierung
+                    .align(Alignment.Center) // Vertikale Zentrierung
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally, // Horizontale Zentrierung
             ) {
                 Text(
@@ -158,7 +161,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihren Benutzernamen eingeben",
+                            text = "Bitte Benutzernamen eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -200,7 +203,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihre E-Mail eingeben",
+                            text = "Bitte E-Mail eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -242,7 +245,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihr Passwort eingeben",
+                            text = "Bitte Passwort eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -302,7 +305,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Passwort erneut eingeben",
+                            text = "Bitte Passwort bestätigen",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },

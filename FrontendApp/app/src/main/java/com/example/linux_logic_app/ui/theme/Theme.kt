@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 
 // Definition der Farbpalette jeweils für Light-Mode und Dark-Mode
 private val DarkColorScheme = darkColorScheme(
-    primary = LiloMain,
+    /*primary = LiloMain,
     secondary = LiloMainSec,
     tertiary = LiloOrange,
     background = LiloDark,
@@ -21,7 +21,7 @@ private val DarkColorScheme = darkColorScheme(
     onSecondary = LiloDarkText,
     onTertiary = LiloDarkText,
     onBackground = LiloDarkText,
-    onSurface = LiloDarkText
+    onSurface = LiloDarkText*/
 
     /* primary = Purple80,
     secondary = PurpleGrey80,
@@ -30,7 +30,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = LiloMain,
+    /*primary = LiloMain,
     secondary = LiloMainSec,
     tertiary = LiloOrange,
     background = LiloLight,
@@ -39,7 +39,7 @@ private val LightColorScheme = lightColorScheme(
     onSecondary = LiloLightText,
     onTertiary = LiloLightText,
     onBackground = LiloLightText,
-    onSurface = LiloLightText
+    onSurface = LiloLightText*/
 
     /* primary = Purple40,
     secondary = PurpleGrey40,

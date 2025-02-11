@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            enableEdgeToEdge()
+            //enableEdgeToEdge()
             Linux_logic_appTheme {
                 val userViewModel: UserViewModel = viewModel()
                 LinuxLogicNavigator(userViewModel = userViewModel)

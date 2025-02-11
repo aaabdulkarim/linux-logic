@@ -243,7 +243,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihren Benutzernamen eingeben",
+                            text = "Bitte Benutzernamen eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -289,7 +289,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihre E-Mail eingeben",
+                            text = "Bitte E-Mail eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -335,7 +335,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihr Passwort eingeben",
+                            text = "Bitte Passwort eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -521,7 +521,7 @@ fun PasswordConfirmDialog(
                     label = { Text("Passwort", style = MaterialTheme.typography.bodyLarge) },
                     placeholder = {
                         Text(
-                            "Bitte Ihr Passwort eingeben",
+                            "Bitte Passwort verifizieren",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
