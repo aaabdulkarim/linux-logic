@@ -57,49 +57,81 @@ export default {
         'p-splitter-panel': SplitterPanel
     },
     mounted() {
-        const canvas = document.getElementById('linuxChart');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-                    datasets: [
-                        {
-                            label: 'Teilnehmer',
-                            data: [0, 3, 2, 3, 2, 5, 2, 1, 2, 0],
-                            backgroundColor: 'rgba(86, 145, 145, 0.6)',
-                            borderColor: 'rgba(86, 145, 145, 1)',
-                            borderWidth: 1
-                        }
-                    ]
+    const canvas = document.getElementById('linuxChart');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(86, 145, 145, 1)');
+        gradient.addColorStop(1, 'rgba(86, 145, 145, 0.3)');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                datasets: [{
+                    label: 'Teilnehmer',
+                    data: [0, 3, 2, 3, 2, 5, 2, 1, 2, 0],
+                    backgroundColor: gradient,
+                    borderColor: 'rgba(86, 145, 145, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8, 
+                    hoverBackgroundColor: 'rgba(86, 145, 145, 0.8)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false  
+                    },
+                    tooltip: {
+                        backgroundColor: '#569191',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderWidth: 1,
+                        borderColor: '#fff'
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Linux-Kenntnisse'
-                            }
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Linux-Kenntnisse',
+                            color: '#3D525C',
+                            font: { weight: 'bold' }
                         },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Teilnehmer'
-                            },
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            },
-                            suggestedMax: 7
+                        grid: {
+                            display: false 
                         }
                     },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Teilnehmer',
+                            color: '#3D525C',
+                            font: { weight: 'bold' }
+                        },
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: '#3D525C'
+                        },
+                        grid: {
+                            color: 'rgba(86, 145, 145, 0.2)'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuart'
                 }
-            });
-        }
+            }
+        });
     }
+}
+
 };
 </script>
 
