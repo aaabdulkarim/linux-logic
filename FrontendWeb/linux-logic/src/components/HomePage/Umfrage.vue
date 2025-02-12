@@ -70,9 +70,9 @@ export default {
             data: {
                 labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
                 datasets: [{
-                    label: 'Teilnehmer',
+                    label: 'Anzahl der Teilnehmer',
                     data: [0, 3, 2, 3, 2, 5, 2, 1, 2, 0],
-                    backgroundColor: gradient,
+                    backgroundColor: 'rgba(86, 145, 145, 1)',
                     borderColor: 'rgba(86, 145, 145, 1)',
                     borderWidth: 2,
                     borderRadius: 8, 
@@ -109,7 +109,7 @@ export default {
                     y: {
                         title: {
                             display: true,
-                            text: 'Teilnehmer',
+                            text: 'Anzahl der Teilnehmer',
                             color: '#3D525C',
                             font: { weight: 'bold' }
                         },
