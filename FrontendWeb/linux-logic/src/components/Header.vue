@@ -4,10 +4,8 @@
     <div class="header grid">
     <img src="@/assets/LogoLinuxLogic.webp" alt="Logo" v-show="showLogo"  class="logo-sticky" />
       <div class="icon-container">
-        <i class="pi pi-sun icon"></i>
         <i class="pi pi-cog icon"></i>
         <i class="pi pi-user icon"></i>
-        <i class="pi pi-bars icon"></i>
       </div>
 
     </div>
