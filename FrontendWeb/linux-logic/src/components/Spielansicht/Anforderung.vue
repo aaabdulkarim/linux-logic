@@ -74,6 +74,7 @@ export default {
   align-items: center;
   justify-content: center;
   max-width: 1200px;
+  width: 100%;
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -104,7 +105,7 @@ export default {
   width: 100%;
   max-width: 1200px;
   margin-top: 20px;
-  padding: 0 20px;
+  padding: 0 0;
 }
 
 .right-icons {
