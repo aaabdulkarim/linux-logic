@@ -1,5 +1,5 @@
 <template>
-<div class="all grid">
+<div class="all grid " :style="backgroundStyle">
   <div class="container">
     <div class="header ">
       <h1>Level 1</h1>
@@ -17,14 +17,23 @@
       <Terminal/>
     </div>
     <div class="icon-container">
-      <i class="pi pi-angle-left icon"></i>
+      <i class="pi pi-angle-left icon" title="Voheriges Level"></i>
       <div class="right-icons">
-        <i class="pi pi-pencil icon" @click="showModal('edit')"></i>
-        <i class="pi pi-key icon" @click="showModal('key')"></i>
-        <i class="pi pi-angle-right icon"></i>
+        <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="showModal('hint')"></i>
+        <i class="pi pi-key icon" title="Lösung anzeigen" @click="showModal('key')"></i>
+        <i class="pi pi-angle-right icon" title="Aufgabe abgeben" @click="submitLevel"></i>
       </div>
     </div>
-    
+    <div v-if="showRating" class="rating-popup">
+      <h2>Level abgeschlossen!</h2>
+      <h5>Deine Bewertung</h5>
+      <div class="stars">
+        <i class="pi pi-star" @click="rateLevel(1)" :class="{ 'pi-star-filled': rating >= 1 }"></i>
+        <i class="pi pi-star" @click="rateLevel(2)" :class="{ 'pi-star-filled': rating >= 2 }"></i>
+        <i class="pi pi-star" @click="rateLevel(3)" :class="{ 'pi-star-filled': rating >= 3 }"></i>
+      </div>
+      <Button label="Nächstes Level" @click="nextLevel" severity="success" class="w-full" />
+    </div>
     <div v-if="isModalVisible" class="modal">
       <div class="modal-content">
         <span class="close" @click="closeModal">&times;</span>
@@ -37,28 +46,66 @@
 
 <script>
 import Terminal from './Terminal.vue';
+import  Button  from 'primevue/button';
 export default {
   name: 'Anforderung',
   components: {
-    Terminal
+    Terminal,
+    Button
   },
   data() {
     return {
       isModalVisible: false,
-      modalContent: ''
+      modalContent: '',
+      showRating: false,
+      rating: 0,
+      stars: 3
     };
   },
   methods: {
     showModal(type) {
+      if (type === 'hint' && this.stars > 0) {
+        this.stars--;
+      } else if (type === 'key' && this.stars > 0) {
+        this.stars = Math.max(0, this.stars - 2); // Minimum 0 Sterne
+      }
       this.isModalVisible = true;
-      this.modalContent = type === 'edit' ? 'Hier kannst du deine Aufgabe bearbeiten!' : 'Dies ist der Schlüsselhinweis!';
+      this.modalContent = type === 'hint' ? 'Der Hinweiß der Aufgabe!' : 'Die Lösung der Aufgabe!';
     },
     closeModal() {
       this.isModalVisible = false;
       this.modalContent = '';
+    },
+    submitLevel() {
+      if (this.stars > 0) {
+        this.showRatingPopup();
+      } else {
+        alert("Du hast keine Sterne erreicht! Versuche es noch einmal.");
+      }
+    },
+    showRatingPopup() {
+      this.showRating = true;
+    },
+    rateLevel() {
+      console.log("Bewertung:", this.stars);
+    },
+    nextLevel() {
+      this.showRating = false;
+      alert("Hier geht es zum nächsten Level (noch nicht implementiert)"); // Platzhalter
+      // this.$router.push('/level2'); // Beispiel mit Vue Router (entfernt)
+    },
+  },
+  computed: {
+    backgroundStyle() {
+      return {
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
     }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -66,9 +113,15 @@ export default {
   background-color: white;
   padding-bottom: 18rem;
   justify-content: center;
+  background-color: #569191;
+  background-image: url('@/assets/abstract_background_3.webp');
+  background-size: cover;
+  background-position: top;
+  background-repeat: no-repeat;
 }
 .container {
-  background-color: white;
+  opacity: 0.9;
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,8 +140,8 @@ export default {
 }
 
 .header {
-  padding: 10px;
-  color: white;
+  padding-top: 8rem;
+
 }
 
 .terminal-container {
@@ -117,4 +170,39 @@ export default {
   font-size: 24px;
   cursor: pointer;
 }
+
+.rating-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.stars i {
+  padding: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: gold;
+}
+.pi-star-filled{
+  color: gold;
+}
+button {
+  margin-top: 10px;
+  padding: 0.6rem;
+  border: 1px solid #569191;
+  color: #569191;
+  background-color: transparent;
+}
+button:hover {
+  border: 1px solid white !important;
+  color: white !important;
+  background-color: #569191 !important;
+}
+
 </style>

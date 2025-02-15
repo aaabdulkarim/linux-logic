@@ -156,6 +156,7 @@ export default {
 
 <style scoped>
 .terminal-container {
+  opacity: 0.8;
   width: 100%;
   height: 100%;
   background-color: #1e1e1e;
