@@ -215,4 +215,19 @@ FÃ¼r die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur Ã
 .fade-leave-to {
     opacity: 0;
 }
+@media (max-width: 768px) {
+    .card>>>.p-tablist-tab-list {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .card>>>.p-tabpanels {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .card>>>.p-button {
+        width: 100%;
+    }
+}
 </style>

@@ -57,49 +57,81 @@ export default {
         'p-splitter-panel': SplitterPanel
     },
     mounted() {
-        const canvas = document.getElementById('linuxChart');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-                    datasets: [
-                        {
-                            label: 'Teilnehmer',
-                            data: [0, 3, 2, 3, 2, 5, 2, 1, 2, 0],
-                            backgroundColor: 'rgba(86, 145, 145, 0.6)',
-                            borderColor: 'rgba(86, 145, 145, 1)',
-                            borderWidth: 1
-                        }
-                    ]
+    const canvas = document.getElementById('linuxChart');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(86, 145, 145, 1)');
+        gradient.addColorStop(1, 'rgba(86, 145, 145, 0.3)');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                datasets: [{
+                    label: 'Anzahl der Teilnehmer',
+                    data: [0, 3, 2, 3, 2, 5, 2, 1, 2, 0],
+                    backgroundColor: 'rgba(86, 145, 145, 1)',
+                    borderColor: 'rgba(86, 145, 145, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8, 
+                    hoverBackgroundColor: 'rgba(86, 145, 145, 0.8)'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false  
+                    },
+                    tooltip: {
+                        backgroundColor: '#569191',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderWidth: 1,
+                        borderColor: '#fff'
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Linux-Kenntnisse'
-                            }
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Linux-Kenntnisse',
+                            color: '#3D525C',
+                            font: { weight: 'bold' }
                         },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Teilnehmer'
-                            },
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            },
-                            suggestedMax: 7
+                        grid: {
+                            display: false 
                         }
                     },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Anzahl der Teilnehmer',
+                            color: '#3D525C',
+                            font: { weight: 'bold' }
+                        },
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            color: '#3D525C'
+                        },
+                        grid: {
+                            color: 'rgba(86, 145, 145, 0.2)'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuart'
                 }
-            });
-        }
+            }
+        });
     }
+}
+
 };
 </script>
 
@@ -154,5 +186,34 @@ canvas {
 .p-splitter >>> .p-splitter-gutter {
     background: transparent; 
     border: none;
+}
+@media (max-width: 768px) {
+    .splitter {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;  /* Abstand zwischen den beiden Panels */
+    }
+
+    .splitter-left,
+    .splitter-right {
+        width: 100%;
+    }
+
+    .splitter-left {
+        padding-right: 0;
+    }
+
+    /* Verschiebe den rechten Bereich (Fazit) unter den linken Bereich */
+    .splitter-right {
+        order: 2;  /* Verschiebt den rechten Bereich nach unten */
+    }
+
+    /* Optional: Reduziere die Innenabstände für mobile Geräte */
+    .oben, .unten {
+        padding-left: 5rem;
+        padding-right: 5rem;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
 }
 </style>

@@ -10,6 +10,7 @@ Das Backend bleibt gleich für beide Branches, weswegen eine Änderungen immer i
 - getProgress(userId) **GET-Method** 
 - login(userName, password) **GET-Method**
 - login(email, password) **GET-Method**
+- editPassword(userName, password) **PUT-Method**
 
 - register(userName, email, password) **POST-Method**
 - saveProgress(userId, solvedChallengeId) **POST-Method**
