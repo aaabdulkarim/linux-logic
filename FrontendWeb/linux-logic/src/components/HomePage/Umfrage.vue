@@ -187,4 +187,33 @@ canvas {
     background: transparent; 
     border: none;
 }
+@media (max-width: 768px) {
+    .splitter {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;  /* Abstand zwischen den beiden Panels */
+    }
+
+    .splitter-left,
+    .splitter-right {
+        width: 100%;
+    }
+
+    .splitter-left {
+        padding-right: 0;
+    }
+
+    /* Verschiebe den rechten Bereich (Fazit) unter den linken Bereich */
+    .splitter-right {
+        order: 2;  /* Verschiebt den rechten Bereich nach unten */
+    }
+
+    /* Optional: Reduziere die Innenabstände für mobile Geräte */
+    .oben, .unten {
+        padding-left: 5rem;
+        padding-right: 5rem;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+}
 </style>
