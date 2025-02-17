@@ -4,7 +4,7 @@
             <h1 style="color: white;">Fortschrittsberichte</h1>
         </div>
         <div class="card col-12">
-            <Tabs v-model="activeIndex">
+            <Tabs v-model="activeIndex" scrollable>
                 <TabList>
                     <Tab v-for="(bericht, index) in berichte" :key="index" :value="index">
                         Fortschrittsbericht {{ index + 1 }}
