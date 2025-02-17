@@ -143,6 +143,7 @@ Für die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur �
 <style scoped>
 .Fortschritte {
     background-color: white;
+    
 }
 
 ::v-deep .card {
@@ -228,6 +229,12 @@ Für die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur �
 
     .card>>>.p-button {
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .Überschrift h1 {
+        font-size: 2rem; /* Noch kleinere Schriftgröße für sehr kleine Bildschirme */
     }
 }
 </style>

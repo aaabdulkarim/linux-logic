@@ -82,6 +82,7 @@ export default {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                // aspectRatio: 1.5, 
                 plugins: {
                     legend: {
                         display: false  
@@ -176,10 +177,26 @@ export default {
     border: none;
 
 }
-canvas {  
-    width: 100% !important; /* Erzwingt die Anpassung an die Containerbreite */
-    height: fit-content !important; /* Erzwingt die Anpassung an die Containerhöhe */
+
+.chart-container {
+    color: #569191;
+    background-color: white;
+    padding: 2rem; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    margin: auto; 
 }
+
+canvas {  
+    width: 100% !important; 
+    height: fit-content !important; 
+    max-height: 400px; 
+}
+
+
 .splitter-left {
     padding-right: 2rem;
 }
@@ -214,6 +231,15 @@ canvas {
         padding-right: 5rem;
         padding-top: 2rem;
         padding-bottom: 2rem;
+    }
+
+    .chart-container {
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    canvas {
+        max-height: 300px; /* Größer auf Mobilgeräten */
     }
 }
 </style>
