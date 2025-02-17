@@ -2,7 +2,7 @@
     <div class="Umfrage grid">
         <div class="oben col-12">
             <h1 style="color: white;">Umfrage Linux-Kenntnisse</h1>
-            <p style="max-width: 60%;">In einer groß angelegten Studie am TGM wurden 20 Schülerinnen und Schüler nach ihren Linux-Kenntnissen und wie sie diese erlangt haben, befragt. Sie sollten auf einer Skala von 1 bis 10 ihre Linux-Kenntnisse bewerten und angeben, wie sie diese Kenntnisse erworben haben.</p>
+            <p >In einer groß angelegten Studie am TGM wurden 20 Schülerinnen und Schüler nach ihren Linux-Kenntnissen und wie sie diese erlangt haben, befragt. Sie sollten auf einer Skala von 1 bis 10 ihre Linux-Kenntnisse bewerten und angeben, wie sie diese Kenntnisse erworben haben.</p>
         </div>
         <div class="chart-container col-12">
             <canvas id="linuxChart"></canvas>
@@ -10,7 +10,7 @@
         <div class="unten col-12 md-8 grid">
         <p-splitter class="splitter" >
             <!-- Linke Seite: Wissensübersicht und Verteilung -->
-            <p-splitter-panel class="splitter-left" minSize="50" size="75">
+            <p-splitter-panel class="splitter-left"  size="75">
                 <div>
                 <h2>Durchschnittliche Linux-Kenntnisse</h2>
                 <p>Durchschnittlicher Wert: Der durchschnittliche Kenntnisstand in Linux liegt bei etwa 5,1, was auf ein mittleres Niveau hinweist. Dies zeigt, dass die Gruppe insgesamt eine moderate Vertrautheit mit Linux hat, mit einigen Ausreißern nach oben und unten.</p>
