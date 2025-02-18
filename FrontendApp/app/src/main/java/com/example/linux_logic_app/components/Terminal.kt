@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -197,6 +198,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: Ter
                                     fontSize = 14.sp,
                                     fontFamily = FontFamily.Monospace
                                 ),
+                                cursorBrush = SolidColor(terminalColors.cursorColor),
                                 readOnly = preview,  // verhindert, dass im Preview-Modus Eingaben verarbeitet werden
                                 keyboardOptions = KeyboardOptions.Default.copy(
                                     imeAction = ImeAction.Done
@@ -233,5 +235,5 @@ fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: Ter
 
 @Composable
 fun PreviewTerminal(terminalViewModel: TerminalViewModel) {
-    Terminal("ws://10.0.107.0:8000/ws", preview = true, terminalViewModel = terminalViewModel)
+    Terminal("ws://172.20.10.2:8000/ws", preview = true, terminalViewModel = terminalViewModel)
 }

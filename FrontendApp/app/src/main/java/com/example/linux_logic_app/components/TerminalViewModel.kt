@@ -13,7 +13,8 @@ data class TerminalColors(
     val bodyColor: Color,
     val headerTextColor: Color,
     val shellPromptColor: Color,
-    val commandColor: Color
+    val commandColor: Color,
+    val cursorColor: Color
 )
 
 // 2. Festlegen der Default-Farben als Konstante
@@ -22,7 +23,8 @@ val defaultTerminalColors = TerminalColors(
     bodyColor = LiloDark,
     headerTextColor = Color.White,
     shellPromptColor = Color.Green,
-    commandColor = Color.White
+    commandColor = Color.White,
+    cursorColor = Color.Green
 )
 
 // 3. Erstellen des ViewModels, welches den State zentral verwaltet

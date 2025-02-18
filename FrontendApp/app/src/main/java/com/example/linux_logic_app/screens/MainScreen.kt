@@ -13,7 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.Shortcut
 import androidx.compose.material.icons.automirrored.twotone.Help
 import androidx.compose.material.icons.automirrored.twotone.Logout
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.Feedback
@@ -21,10 +21,10 @@ import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.material.icons.twotone.NotificationsActive
-import androidx.compose.material.icons.twotone.PlayArrow
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.Security
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.SportsEsports
 import androidx.compose.material.icons.twotone.Terminal
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -113,8 +113,8 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
         ),
         BottomNavigationItem(
             title = "Spielen",
-            selectedIcon = Icons.Filled.PlayArrow,
-            unselectedIcon = Icons.TwoTone.PlayArrow,
+            selectedIcon = Icons.Filled.SportsEsports,
+            unselectedIcon = Icons.TwoTone.SportsEsports,
             hasNews = false,
         )
     )
@@ -621,8 +621,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                     ) {
                         composable(Screen.Customize.route) { CustomizationScreen(terminalViewModel = terminalViewModel) }
                         composable(Screen.Home.route) { HomeScreen(terminalViewModel = terminalViewModel) }
-                        composable(Screen.Play.route) { PlayScreen(navController = navControllerMain) }
-                        composable(Screen.Level.route) { LevelScreen() }
+                        composable(Screen.Play.route) { PlayScreen(navController = navController) }
                     }
                 }
             }
