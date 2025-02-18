@@ -7,8 +7,7 @@
       <!-- Terminal output is rendered here -->
     </div>
   </div>
-  <div class="terminal-bottom">
-  </div>
+  <div class="terminal-bottom"></div>
 </template>
 
 <script>
@@ -17,13 +16,13 @@ import "xterm/css/xterm.css";
 import { FitAddon } from "xterm-addon-fit";
 
 export default {
-  name: 'Terminal',
+  name: "Terminal",
   data() {
     return {
       terminal: null,
       fitAddon: null,
       socketClient: null,
-      promptLength: 69 // Länge des Prompts "logic@linux:~$ "
+      promptLength: 69, // Länge des Prompts "logic@linux:~$ "
     };
   },
   mounted() {
@@ -32,9 +31,9 @@ export default {
       rows: 26,
       cols: 120,
       theme: {
-        background: '#1e1e1e',
-        foreground: '#dcdcdc',
-        cursor: '#dcdcdc'
+        background: "#1e1e1e",
+        foreground: "#dcdcdc",
+        cursor: "#dcdcdc",
       },
       screenReaderMode: true,
       allowProposedApi: true,
@@ -46,14 +45,12 @@ export default {
     this.fitAddon.fit();
 
     // WebSocket Initialization (Move this above onmessage assignment)
-    let url = "ws://10.0.107.0:8000/ws";
+    let url = "ws://172.20.10.2:8000/ws";
     this.socketClient = new WebSocket(url);
 
     // WebSocket event handlers must be assigned AFTER initialization
     this.socketClient.onopen = () => {
       console.log("WebSocket connection established.");
-
-
     };
 
     this.socketClient.onmessage = (event) => {
@@ -69,35 +66,32 @@ export default {
       console.warn("WebSocket connection closed.");
 
       setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
-
     };
 
     this.terminal.onData(this.handleInput);
   },
   methods: {
     initWebSocket() {
-    let url = "ws://localhost:8000/ws";
-    this.socketClient = new WebSocket(url);
+      let url = "ws://172.20.10.2:8000/ws";
+      this.socketClient = new WebSocket(url);
 
-    this.socketClient.onopen = () => {
-      console.log("WebSocket connection established.");
-      
-    };
+      this.socketClient.onopen = () => {
+        console.log("WebSocket connection established.");
+      };
 
-    this.socketClient.onmessage = (event) => {
-      this.terminal.write(`\r\n${event.data}`);
-      this.writePrompt();
-    };
+      this.socketClient.onmessage = (event) => {
+        this.terminal.write(`\r\n${event.data}`);
+        this.writePrompt();
+      };
 
-    this.socketClient.onerror = (error) => {
-      console.error("WebSocket Error:", error);
-    };
+      this.socketClient.onerror = (error) => {
+        console.error("WebSocket Error:", error);
+      };
 
-    this.socketClient.onclose = () => {
-      console.warn("WebSocket connection closed. Reconnecting...");
-    };       
-  },
-
+      this.socketClient.onclose = () => {
+        console.warn("WebSocket connection closed. Reconnecting...");
+      };
+    },
 
     writePrompt() {
       this.terminal.write("\r\nlogic@linux:~$ ");
@@ -105,29 +99,30 @@ export default {
     handleInput(data) {
       const char = data.charCodeAt(0);
 
-      if (char === 13) { // Enter key
-        const line = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY);
+      if (char === 13) {
+        // Enter key
+        const line = this.terminal.buffer.active.getLine(
+          this.terminal.buffer.active.cursorY
+        );
         console.log("Line Object:", line);
 
         if (line) {
-            const lineText = line.translateToString();
-            console.log("Full Line Text:", lineText);
-            console.log("Prompt Length:", this.promptLength);
-            console.log("Extracted Input:", lineText.slice(this.promptLength));
-            this.respondToInput(lineText.slice(14));
-
+          const lineText = line.translateToString();
+          console.log("Full Line Text:", lineText);
+          console.log("Prompt Length:", this.promptLength);
+          console.log("Extracted Input:", lineText.slice(this.promptLength));
+          this.respondToInput(lineText.slice(14));
         }
-        
-      } else if (char === 127) { // Backspace
+      } else if (char === 127) {
+        // Backspace
         if (this.terminal.buffer.active.cursorX > this.promptLength) {
-          this.terminal.write('\b \b');
+          this.terminal.write("\b \b");
         }
       } else {
         this.terminal.write(data);
       }
     },
     respondToInput(input) {
-      
       if (input.toLowerCase() == "clear") {
         this.terminal.clear();
         this.writePrompt();
@@ -135,22 +130,17 @@ export default {
       }
 
       if (this.socketClient.readyState === WebSocket.OPEN) {
-        console.log("SENDING")
+        console.log("SENDING");
         setTimeout(() => {
           this.socketClient.send(input);
           console.log("should be send");
         }, 100); // Delay for 100ms
-        console.log("should be send")
-
+        console.log("should be send");
       } else {
         this.terminal.write("\r\n[Error] WebSocket not connected.");
       }
-
-
-
-      
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -164,8 +154,8 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .terminal-header {
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #111; 
+  font-family: "Courier New", Courier, monospace;
+  background-color: #111;
   color: #fff;
   padding-left: 10px;
   padding-top: 4px;
@@ -181,17 +171,14 @@ export default {
   border-bottom-right-radius: 5px;
 }
 .terminal-bottom {
-  background-color: #1e1e1e; 
+  background-color: #1e1e1e;
   padding-top: 12px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
-
 
 ::v-deep(.xterm-screen) {
   text-align: left !important;
   padding-left: 10px;
 }
 </style>
-
-
