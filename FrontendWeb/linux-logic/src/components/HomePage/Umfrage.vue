@@ -34,7 +34,7 @@
                 </div>
             </p-splitter-panel>
             <!-- Rechte Seite: Fazit -->
-            <p-splitter-panel class="splitter-right" minSize="50" size="25">
+            <p-splitter-panel class="splitter-right" size="25">
                 <div>
                 <h2>Fazit</h2>
                 <p>Die Umfrage zeigt, dass praktische Erfahrung ("Learning by doing") in Kombination mit hoher Eigeninitiative die effektivsten Methoden zur Entwicklung von Linux-Kenntnissen sind. Das Diplomprojekt "Linux Logic" greift dieses Konzept auf und ergänzt es durch spielerische Aufgaben, die eine praxisnahe und interaktive Erlernung von Linux ermöglichen. Der schulische Unterricht an einer IT-HTL bietet eine grundlegende Einführung, reicht jedoch oft nicht aus, um fortgeschrittene Kenntnisse zu erreichen. Auch Videos und Online-Ressourcen sind wertvolle Hilfsmittel für das autodidaktische Lernen.</p>
@@ -175,7 +175,6 @@ export default {
     color: #3D525C;
     background-color: white;
     border: none;
-
 }
 
 .chart-container {
@@ -201,23 +200,23 @@ canvas {
     padding-right: 2rem;
 }
 .p-splitter >>> .p-splitter-gutter {
-    background: transparent; 
-    border: none;
+    display: none;
 }
 @media (max-width: 768px) {
     .splitter {
         display: flex;
         flex-direction: column;
-        gap: 2rem;  /* Abstand zwischen den beiden Panels */
+        gap: 2rem; 
     }
 
     .splitter-left,
     .splitter-right {
         width: 100%;
+        padding-top: 0;
     }
 
     .splitter-left {
-        padding-right: 0;
+        padding-bottom: 6rem;
     }
 
     /* Verschiebe den rechten Bereich (Fazit) unter den linken Bereich */
@@ -229,7 +228,7 @@ canvas {
     .oben, .unten {
         padding-left: 5rem;
         padding-right: 5rem;
-        padding-top: 2rem;
+        padding-top: 1rem;
         padding-bottom: 2rem;
     }
 
