@@ -49,15 +49,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.linux_logic_app.components.Course
 import com.example.linux_logic_app.components.courseList
+import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDarkText
 import com.example.linux_logic_app.ui.theme.LiloMain
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
-fun PlayScreen() {
+fun PlayScreen(navController: NavController) {
     var selectedCourse by remember { mutableStateOf<Course?>(null) }
 
     SharedTransitionLayout(
@@ -89,12 +91,18 @@ fun PlayScreen() {
                 }
             }
         }
-        CourseEditDetails(course = selectedCourse, onPlayClick = { selectedCourse = null })
+        CourseEditDetails(
+            course = selectedCourse,
+            onPlayClick = {
+                navController.navigate(Screen.Level.route)
+            },
+            onCancelClick = { selectedCourse = null }
+        )
     }
 }
 
 @Composable
-fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit) {
+fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit, onCancelClick: () -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
         targetValue = if (isExpanded) 180f else 0f,
@@ -114,8 +122,7 @@ fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit) {
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
-                    .align(Alignment.Center)
-                    ,
+                    .align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
@@ -187,7 +194,7 @@ fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit) {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Button(
-                                    onPlayClick,
+                                    onCancelClick,
                                     modifier = Modifier
                                         .padding(horizontal = 8.dp)
                                         .weight(1f),

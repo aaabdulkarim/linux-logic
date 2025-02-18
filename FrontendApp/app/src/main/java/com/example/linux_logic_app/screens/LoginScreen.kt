@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.DoorBack
+import androidx.compose.material.icons.automirrored.twotone.Login
 import androidx.compose.material.icons.twotone.Email
 import androidx.compose.material.icons.twotone.Password
 import androidx.compose.material.icons.twotone.Visibility
@@ -97,7 +97,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        imageVector = Icons.TwoTone.DoorBack,
+                        imageVector = Icons.AutoMirrored.TwoTone.Login,
                         contentDescription = "DoorBack Icon for Login",
                         tint = Color.White,
                         modifier = Modifier
@@ -149,7 +149,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihre E-Mail eingeben",
+                            text = "Bitte E-Mail eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },
@@ -185,8 +185,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     onValueChange = { userViewModel.onPasswordChange(it) },
                     colors = OutlinedTextFieldDefaults.colors(
                         cursorColor = LiloMain,
-
-                        ),
+                    ),
                     label = {
                         Text(
                             text = "Passwort",
@@ -195,7 +194,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     },
                     placeholder = {
                         Text(
-                            text = "Bitte Ihr Passwort eingeben",
+                            text = "Bitte Passwort eingeben",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     },

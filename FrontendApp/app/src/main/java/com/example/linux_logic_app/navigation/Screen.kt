@@ -36,4 +36,5 @@ sealed class Screen(val route: String) {
     data object Customize : Screen("Terminal")
     data object Home : Screen("Home")
     data object Play : Screen("Spielen")
+    data object Level : Screen("level")
 }

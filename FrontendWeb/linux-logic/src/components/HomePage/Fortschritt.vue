@@ -4,7 +4,7 @@
             <h1 style="color: white;">Fortschrittsberichte</h1>
         </div>
         <div class="card col-12">
-            <Tabs v-model="activeIndex">
+            <Tabs v-model="activeIndex" scrollable>
                 <TabList>
                     <Tab v-for="(bericht, index) in berichte" :key="index" :value="index">
                         Fortschrittsbericht {{ index + 1 }}
@@ -143,6 +143,7 @@ Für die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur �
 <style scoped>
 .Fortschritte {
     background-color: white;
+    
 }
 
 ::v-deep .card {
@@ -214,5 +215,26 @@ Für die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur �
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+@media (max-width: 768px) {
+    .card>>>.p-tablist-tab-list {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .card>>>.p-tabpanels {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .card>>>.p-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .Überschrift h1 {
+        font-size: 2rem; /* Noch kleinere Schriftgröße für sehr kleine Bildschirme */
+    }
 }
 </style>

@@ -621,7 +621,8 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                     ) {
                         composable(Screen.Customize.route) { CustomizationScreen(terminalViewModel = terminalViewModel) }
                         composable(Screen.Home.route) { HomeScreen(terminalViewModel = terminalViewModel) }
-                        composable(Screen.Play.route) { PlayScreen() }
+                        composable(Screen.Play.route) { PlayScreen(navController = navControllerMain) }
+                        composable(Screen.Level.route) { LevelScreen() }
                     }
                 }
             }

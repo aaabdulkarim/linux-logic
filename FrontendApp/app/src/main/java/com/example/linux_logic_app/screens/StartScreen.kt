@@ -33,11 +33,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.navigation.HyperlinkText
 import com.example.linux_logic_app.navigation.Screen
 
 @Composable
@@ -60,14 +60,15 @@ fun StartScreen(navController: NavController) {
 
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.4f)
-                .align(Alignment.BottomCenter)
+                .fillMaxSize(),
+                //.fillMaxHeight(0.45f)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
                     text = "Willkommen bei LINUX LOGIC",
@@ -79,10 +80,13 @@ fun StartScreen(navController: NavController) {
                 Spacer(modifier = Modifier.size(16.dp))
 
                 Text(
-                    text = "Eine Lernplattform zum Erwerb grundlegender und essenzieller Linux-Kenntnisse.\nFür näheres besuchen Sie bitte unsere Webseite unter:",
+                    text = "Eine Lernplattform zum Erwerb grundlegender und essenzieller Linux-Kenntnisse. Für näheres besuchen Sie bitte unsere Webseite unter:",
                     color = Color.White,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.align(Alignment.Start)
+                    modifier = Modifier
+                        .align(Alignment.Start),
+                    textAlign = TextAlign.Justify
+
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))
@@ -122,11 +126,11 @@ fun StartScreen(navController: NavController) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     ExtendedFloatingActionButton(
-                        modifier = Modifier
-                            .padding(horizontal = 4.dp),
+                        modifier = Modifier,
                         onClick = {
                             navController.navigate(Screen.Login.route)
                             Log.i("StartScreen", "User is performing - Action: \"Login\" -")
@@ -148,9 +152,10 @@ fun StartScreen(navController: NavController) {
                         containerColor = Color(0xFF445a65),
                     )
 
+                    Spacer(modifier = Modifier.width(4.dp))
+
                     ExtendedFloatingActionButton(
-                        modifier = Modifier
-                            .padding(horizontal = 4.dp),
+                        modifier = Modifier,
                         onClick = {
                             navController.navigate(Screen.Register.route)
                             Log.i("StartScreen", "User is performing - Action: \"Register\" -")
@@ -169,7 +174,7 @@ fun StartScreen(navController: NavController) {
                                 color = Color.White
                             )
                         },
-                        containerColor = Color(0xFFFF8c00),
+                        containerColor = Color(0xFFFF8c00)
                     )
                 }
             }

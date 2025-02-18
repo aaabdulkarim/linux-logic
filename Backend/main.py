@@ -49,6 +49,7 @@ async def login(userId : int, session: SessionDep):
 
     if not user:
         raise HTTPException(status_code=404, detail=f"User with Id {userId} not found")
+
     return user        
 
 
@@ -63,6 +64,7 @@ async def login(userName : str, userPassword : str, session: SessionDep):
     for user in results:
         print(user)
         if user.username == userName and user.password_hash == userPassword:
+            # TODO: User ID zurückgegben
             return True
         
     return False
@@ -75,11 +77,12 @@ async def register(userModel : User, session: SessionDep):
 
     # Check ob das übergebene User Model invalide Daten hat
     email = userModel.email
-
+    print(email)
     # Überprüfen ob die Email existiert
     if validate_email(userModel.email, check_blacklist=False) == False:
         return False
     
+    print("email valid")
 
     # Überprüfen ob die Email schon in unserem System vorhanden ist
     statement = select(User)
@@ -97,6 +100,20 @@ async def register(userModel : User, session: SessionDep):
 
     return True
     
+@app.put("/edit")
+async def editPassword(userId: int, userName : str, userPassword : str, session: SessionDep):
+    statement = select(User)
+    user = session.get(User, userId)
+
+    if not user:
+        raise HTTPException(status_code=404, detail=f"User with Id {userId} not found")
+
+
+    new_hashed_password = userPassword # Benötigt Password Hashing
+    user.password_hash = new_hashed_password
+    session.add(user)
+    session.commit()
+    return user
 
 
 @app.get("/progress")

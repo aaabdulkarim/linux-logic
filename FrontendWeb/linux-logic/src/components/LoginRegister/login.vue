@@ -48,7 +48,7 @@ export default {
     return {
       email: '',
       password: '',
-      stayLoggedIn: false
+      stayLoggedIn: 0,
     };
   },
   computed: {
