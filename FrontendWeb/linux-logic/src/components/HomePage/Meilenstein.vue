@@ -80,7 +80,7 @@ export default {
           status: "BETA-VERSION ENTWICKELT",
           event: "Beta-Version",
           details: "Beta-Version der funktionierenden Applikationen entwickelt",
-          color: "#808080",
+          color: "#569191",
           icon: "pi pi-check",
           direction: "normal", 
         },
