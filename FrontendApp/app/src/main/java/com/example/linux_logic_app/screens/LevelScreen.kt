@@ -86,7 +86,7 @@ fun LevelScreen(navController: NavController) {
             modifier = Modifier
                 .padding(innerPadding)
         ) {
-
+            // Der Code für die Level Details Ansicht
         }
     }
 }
