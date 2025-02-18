@@ -42,7 +42,6 @@ export default {
     this.terminal = new Terminal({
       cursorBlink: true,  // Cursor blinks to improve visibility
       rows: 30,           // Set initial number of rows
-      cols: 420,           // Set initial number of columns
       theme: {
         background: '#1e1e1e', // Dark background color for better contrast
         foreground: '#dcdcdc', // Light text color

@@ -2,47 +2,48 @@
   <div class="LevelOben grid">
     <h1 style="color: white;">Chapters</h1>
   </div>
-  <div>
-    <div class="beschreibung grid">
-      <h3>Kapitel I: Mittelalter</h3>
-      <p> 
-        Der König plant eine große Eröffnung für das neue Schloss und hat dich mit
-        einfachen, aber wichtigen Aufgaben beauftragt, um sicherzustellen, dass alles
-        perfekt vorbereitet ist. Die Diener eilen geschäftig durch die großen Hallen, um die letzten Vorbereitungen zu treffen, während der königliche Gärtner die prachtvollen Blumenbeete inspiziert. Die Köche in der Schlossküche bereiten ein Festmahl vor, das die Gäste in Staunen versetzen soll. Doch plötzlich erreicht eine eilende Botschaft den König – ein unerwarteter Gast von weit her kündigt sein Kommen an.
+  <div class="all grid">
+    <div class="container">
+      <div class="beschreibung">
+        <h3>Kapitel I: Mittelalter</h3>
+        <p> 
+          Der König plant eine große Eröffnung für das neue Schloss und hat dich mit
+          einfachen, aber wichtigen Aufgaben beauftragt, um sicherzustellen, dass alles
+          perfekt vorbereitet ist. Die Diener eilen geschäftig durch die großen Hallen, um die letzten Vorbereitungen zu treffen, während der königliche Gärtner die prachtvollen Blumenbeete inspiziert. Die Köche in der Schlossküche bereiten ein Festmahl vor, das die Gäste in Staunen versetzen soll. Doch plötzlich erreicht eine eilende Botschaft den König – ein unerwarteter Gast von weit her kündigt sein Kommen an.
 
-      </p>
-    </div>
-    <div class="card grid">
-      <div class="col-12 cards-container">
-        <Card 
-          style="width: 20rem; overflow: hidden;" 
-          v-for="level in levels" 
-          :key="level.id"
-        >
-          <template #header>
-            
-            <h2 style="color: white;">{{ level.name }}</h2>
-            <small>Schwierigkeit: {{ level.difficulty }}</small>
-          </template>
-          <template #content>
-            <p class="m-0">
-              {{ level.description }}
-            </p>
-          </template>
-          <template #footer>
-            <div class="flex gap-4 mt-1">
-              <Button label="Start" @click="selectLevel(level.id)" severity="success" class="w-full" />
-            </div>
-          </template>
-        </Card>
+        </p>
+      </div>
+      <div class="card grid">
+        <div class="col-12 cards-container">
+          <Card 
+            style="width: 20rem; overflow: hidden;" 
+            v-for="level in levels" 
+            :key="level.id"
+          >
+            <template #header>
+              
+              <h2 style="color: white;">{{ level.name }}</h2>
+              <small>Schwierigkeit: {{ level.difficulty }}</small>
+            </template>
+            <template #content>
+              <p class="m-0">
+                {{ level.description }}
+              </p>
+            </template>
+            <template #footer>
+              <div class="flex gap-4 mt-1">
+                <Button label="Start" @click="selectLevel(level.id)" severity="success" class="w-full" />
+              </div>
+            </template>
+          </Card>
+        </div>
+      </div>
+      <div class="beschreibung grid">
+        <h3>Kapitel II: </h3>
+        <p>Gesperrt</p>
       </div>
     </div>
-    <div class="beschreibung grid">
-      <h3>Kapitel II: </h3>
-      <p>Gesperrt</p>
-    </div>
-    
-  </div>
+  </div> 
 </template>
 
 <script>
@@ -101,6 +102,20 @@ export default {
 </script>
 
 <style scoped>
+.all {
+  background-color: white;
+  padding-bottom: 18rem;
+  justify-content: center;
+}
+.container {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1600px;
+  width: 100%;
+}
 .LevelOben {
   justify-content: center;
   text-align: center;
@@ -108,7 +123,7 @@ export default {
   padding: 2rem 0;
 }
 .beschreibung {
-  padding: 2rem;
+  padding-top: 2rem;
   padding-left: 38px;
   background-color: white;
   justify-content: left;
@@ -119,7 +134,8 @@ export default {
   background-color: white;
   padding: 2rem 0;
   padding-bottom: 7rem;
-  position: static;
+  max-width: 1600px;
+  width: 100%;
 }
 .cards-container {
   display: flex;
@@ -158,11 +174,5 @@ export default {
 
 .m-0 {
   margin: 0;
-}
-
-@media (max-width: 1200px) {
-  .cards-container {
-    flex-wrap: wrap;
-  }
 }
 </style>

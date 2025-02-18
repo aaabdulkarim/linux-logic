@@ -7,6 +7,8 @@
       <!-- Terminal output is rendered here -->
     </div>
   </div>
+  <div class="terminal-bottom">
+  </div>
 </template>
 
 <script>
@@ -21,20 +23,21 @@ export default {
       terminal: null,
       fitAddon: null,
       socketClient: null,
-      promptLength: 13 // Länge des Prompts "logic@linux:~$ "
+      promptLength: 69 // Länge des Prompts "logic@linux:~$ "
     };
   },
   mounted() {
     this.terminal = new Terminal({
       cursorBlink: true,
-      rows: 30,
+      rows: 26,
+      cols: 120,
       theme: {
         background: '#1e1e1e',
         foreground: '#dcdcdc',
         cursor: '#dcdcdc'
       },
       screenReaderMode: true,
-      allowProposedApi: true
+      allowProposedApi: true,
     });
 
     this.fitAddon = new FitAddon();
@@ -73,7 +76,7 @@ export default {
   },
   methods: {
     initWebSocket() {
-    let url = "ws://192.168.0.76:8000/ws";
+    let url = "ws://localhost:8000/ws";
     this.socketClient = new WebSocket(url);
 
     this.socketClient.onopen = () => {
@@ -171,12 +174,22 @@ export default {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
-
 .terminal-output {
-  text-align: center;
   color: #dcdcdc;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+}
+.terminal-bottom {
+  background-color: #1e1e1e; 
+  padding-top: 12px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+
+::v-deep(.xterm-screen) {
+  text-align: left !important;
+  padding-left: 10px;
 }
 </style>
 
