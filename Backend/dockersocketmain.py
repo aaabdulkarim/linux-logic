@@ -2,9 +2,22 @@ from fastapi import FastAPI
 from fastapi.websockets import WebSocket
 import docker
 import websockets
+import asyncio
 
 
 app = FastAPI()
+
+
+def run_docker_commands(docker_dir_path):
+    client = docker.from_env()
+    try:
+        client.images.build(path=docker_dir_path, tag="newone")
+        
+        container = client.containers.run("newone", ports={1000: 1000}, detach=True)
+        return container
+    except docker.errors.DockerException as e:
+        print(f"Error: {e}")
+
 
 
 @app.websocket("/ws")
@@ -23,6 +36,8 @@ async def websocket(mainsocket: WebSocket):
     #     name="theone"
     # )
 
+    
+    container = run_docker_commands("test/dockerfolder/.")
 
     # Connection mit dem docker socket mit dem Framework Socket
     container_socket_url = "ws://127.0.0.1:1000/dockersocket"
@@ -50,9 +65,10 @@ async def websocket(mainsocket: WebSocket):
 
     finally:
         await mainsocket.close()
-        # container.stop()
-        # container.remove()
-        print("WebSocket stopped and container removed")
+        if container:
+            container.stop()
+            container.remove()
+            print("WebSocket stopped and container removed")
     
     client.close()
 
