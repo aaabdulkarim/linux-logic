@@ -11,11 +11,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-venv \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
 COPY dockersocket.py .
+COPY healthcheck.py .
 
 
 RUN bash -c "python3 -m venv .venv && source .venv/bin/activate && pip install 'fastapi[all]'"
 
 CMD ["bash", "-c", "source .venv/bin/activate && uvicorn dockersocket:app --host 0.0.0.0 --port 1000"]
 
-HEALTHCHECK --interval=60 CMD ["python3 healthcheck_socket.py"]
+HEALTHCHECK --interval=10s CMD ["bash" , "-c", "source .venv/bin/activate && python3 healthcheck.py"]
