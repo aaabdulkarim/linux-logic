@@ -433,6 +433,17 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         },
                         defaultColorList = defaultColorList
                     )
+
+                    ColorCustomizationOption(
+                        option = "Cursor:",
+                        selectedColor = currentColors.cursorColor,
+                        onColorSelected = {
+                            terminalViewModel.updateColors(
+                                currentColors.copy(cursorColor = it)
+                            )
+                        },
+                        defaultColorList = defaultColorList
+                    )
                 }
 
                 Row(

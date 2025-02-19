@@ -4,11 +4,23 @@
       <img src="@/assets/LogoLinuxLogic.webp" alt="Logo" class="logo-sticky" />
     </a>
     <div class="icon-container grid">
-      <i class="pi pi-cog icon"></i>
-      <i class="pi pi-user icon"></i>
+      <i class="pi pi-star icon"></i>
+      <i class="pi pi-user icon" @click="navigate"></i>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: "Header",
+methods: {
+  navigate() {
+    this.$router.push("/profil");
+  },
+},
+};
+
+</script>
 
 <style scoped>
 .header {
@@ -19,7 +31,7 @@
   padding: 0.5rem 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
   transition: background-color 0.3s ease;
   z-index: 1000;
 }

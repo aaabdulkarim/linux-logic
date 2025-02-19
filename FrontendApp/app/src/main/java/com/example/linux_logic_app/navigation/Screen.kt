@@ -31,10 +31,10 @@ sealed class Screen(val route: String) {
     data object Notifications : Screen("notifications")
     data object Feedback : Screen("feedback")
     data object Help : Screen("help")
+    data object Level : Screen("level")
 
     // Folgende Screens gehören zur Navigation innerhalb des Main-Screens
     data object Customize : Screen("Terminal")
     data object Home : Screen("Home")
     data object Play : Screen("Spielen")
-    data object Level : Screen("level")
 }

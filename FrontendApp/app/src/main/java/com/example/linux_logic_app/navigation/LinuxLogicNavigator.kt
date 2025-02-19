@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.screens.FeedbackScreen
 import com.example.linux_logic_app.screens.HelpScreen
+import com.example.linux_logic_app.screens.LevelScreen
 import com.example.linux_logic_app.screens.LoginScreen
 import com.example.linux_logic_app.screens.MainScreen
 import com.example.linux_logic_app.screens.NotificationScreen
@@ -78,6 +79,12 @@ fun LinuxLogicNavigator(userViewModel: UserViewModel) {
             route = Screen.Main.route,
         ) {
             MainScreen(navController = navController, userViewModel = userViewModel)
+        }
+
+        composable(
+            route = Screen.Level.route
+        ) {
+            LevelScreen(navController = navController)
         }
 
         composable(
