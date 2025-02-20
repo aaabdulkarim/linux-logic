@@ -1,0 +1,1 @@
+# Für jede Subaufgabe eine Funktion

@@ -46,7 +46,7 @@ export default {
     this.fitAddon.fit();
 
     // WebSocket Initialization (Move this above onmessage assignment)
-    let url = "ws://172.20.10.2:8000/ws";
+    let url = "ws://10.0.106.149:8000/ws";
     this.socketClient = new WebSocket(url);
 
     // WebSocket event handlers must be assigned AFTER initialization
@@ -77,7 +77,7 @@ export default {
   
   methods: {
     initWebSocket() {
-      let url = "ws://172.20.10.2:8000/ws";
+      let url = "ws://10.0.106.149:8000/ws";
       this.socketClient = new WebSocket(url);
 
       this.socketClient.onopen = () => {

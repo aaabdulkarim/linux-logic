@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.websockets import WebSocket
+from fastapi import WebSocketDisconnect
 import docker
 import websockets
 import time
@@ -31,7 +32,11 @@ async def websocket(mainsocket: WebSocket):
     client = docker.from_env()
     tagname = "testtag"
     
-    container = run_docker_commands("test/dockerfolder/.")
+    frontend_container_choice = await mainsocket.receive_text()
+    docker_path = f"scenarios/{frontend_container_choice}/."
+    print(docker_path)
+    container = run_docker_commands(docker_path)
+
 
     if container:
 
@@ -39,6 +44,7 @@ async def websocket(mainsocket: WebSocket):
             print(get_container_health(container))
             time.sleep(1)
             
+        await mainsocket.send_text("Container Startup successful")
         # Connection mit dem docker socket mit dem Framework Socket
         container_socket_url = "ws://127.0.0.1:1000/dockersocket"
         try:
