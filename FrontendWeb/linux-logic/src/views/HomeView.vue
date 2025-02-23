@@ -10,6 +10,8 @@
     <a href="/#/register">To Register</a>
     <br>
     <a href="/#/auswahl">To Auswahl</a>
+    <br>
+    <a href="/#/profil">To Benutzer</a>
 
     <Terminal/>
   </div>

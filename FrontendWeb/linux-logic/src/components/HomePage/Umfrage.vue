@@ -209,36 +209,38 @@ canvas {
         gap: 2rem; 
     }
 
-    .splitter-left,
-    .splitter-right {
+    .splitter-left, .splitter-right {
         width: 100%;
-        padding-top: 0;
+        padding: 1rem;
+        flex-grow: 1;
+    }
+
+    .splitter-right {
+        order: 2;  
+        min-height: 250px;
+        min-height: auto;
     }
 
     .splitter-left {
-        padding-bottom: 6rem;
+        order: 1;
+        padding-bottom: 2rem; 
     }
 
-    /* Verschiebe den rechten Bereich (Fazit) unter den linken Bereich */
-    .splitter-right {
-        order: 2;  /* Verschiebt den rechten Bereich nach unten */
-    }
-
-    /* Optional: Reduziere die Innenabstände für mobile Geräte */
     .oben, .unten {
-        padding-left: 5rem;
-        padding-right: 5rem;
-        padding-top: 1rem;
-        padding-bottom: 2rem;
+        padding: 1rem; 
+        text-align: center;
     }
 
     .chart-container {
-        padding: 1rem;
+        padding: 0.5rem;
         max-width: 100%;
     }
 
     canvas {
-        max-height: 300px; /* Größer auf Mobilgeräten */
+        max-height: 250px;
     }
+
+    
+
 }
 </style>

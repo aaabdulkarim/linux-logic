@@ -44,6 +44,7 @@ import Team from '@/components/HomePage/Team.vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
 import Impressum from '@/components/HomePage/Impressum.vue';
+import "../style/home.css"
 
 export default {
   name: 'AboutView',
