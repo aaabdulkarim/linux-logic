@@ -15,6 +15,8 @@ def run_docker_commands(docker_dir_path):
         
         container = client.containers.run("newone", name="theone", ports={1000: 1000}, detach=True)
         return container
+
+
     except docker.errors.DockerException as e:
         print(f"Error: {e}")
 
@@ -26,6 +28,28 @@ def get_container_health(container):
     return inspect_results['State']['Health']['Status']
 
 
+def get_scenario_data(docker_dir_path):
+    # Liste von Tuples
+    scenario_list = []
+    md_file = docker_dir_path + "/Aufgabenstellung.md"
+    print(md_file)
+    with open(md_file) as file:
+        lines = file.readlines()
+
+        subtask_index = 0
+        current_hint = ""
+        for l in lines:
+
+            if l[0:2] == "\_" :
+                current_hint += l[1:]
+ 
+            elif l[0:2] != "\n":
+                scenario_list.append((l, current_hint))
+                current_hint = ""
+
+    return scenario_list
+
+
 @app.websocket("/ws")
 async def websocket(mainsocket: WebSocket):
     await mainsocket.accept()
@@ -33,10 +57,12 @@ async def websocket(mainsocket: WebSocket):
     tagname = "testtag"
     
     frontend_container_choice = await mainsocket.receive_text()
-    docker_path = f"scenarios/{frontend_container_choice}/."
-    print(docker_path)
-    container = run_docker_commands(docker_path)
+    docker_path = f"scenarios/{frontend_container_choice}"
 
+    container = run_docker_commands(docker_path)
+    scenario_data = get_scenario_data(docker_path)
+    for da in scenario_data:
+        print(da)
 
     if container:
 

@@ -1,5 +1,5 @@
 // Test WebSocket
-const socket = new WebSocket("ws://10.0.106.149:8000/ws");
+const socket = new WebSocket("ws://10.0.107.7:8000/ws");
 
 // Elements
 var input = document.getElementById("inputTerminal");
