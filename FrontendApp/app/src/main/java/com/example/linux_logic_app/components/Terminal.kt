@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -49,7 +51,7 @@ class WebSocketClient(url: String) {
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 println("Connected to WebSocket")
-                output = "Connected to"
+                output = "Container starting"
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
@@ -92,11 +94,10 @@ class WebSocketClient(url: String) {
 @Composable
 fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: TerminalViewModel) {
     val terminalColors = terminalViewModel.terminalColors
-    var terminalOutput by remember { mutableStateOf(listOf("Welcome to logic terminal!")) }
+    var terminalOutput by remember { mutableStateOf(listOf<AnnotatedString>()) }
     var userInput by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
-    // Im Preview-Modus wird kein WebSocket-Client erstellt
     val webSocketClient = remember { if (!preview) WebSocketClient(socketUrl) else null }
 
     if (!preview) {
@@ -105,26 +106,23 @@ fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: Ter
         }
     }
 
+    LaunchedEffect(terminalOutput) {
+        scrollState.animateScrollTo(scrollState.maxValue)
+    }
+
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    color = terminalColors.bodyColor,
-                    shape = RoundedCornerShape(16.dp)
-                )
+                .background(terminalColors.bodyColor, shape = RoundedCornerShape(16.dp))
         ) {
             // Header
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        terminalColors.headerColor,
-                        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
-                    )
+                    .background(terminalColors.headerColor, shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
                     .padding(12.dp)
             ) {
                 Text(
@@ -136,23 +134,22 @@ fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: Ter
                 )
             }
 
-            // Terminal Output und Input
+            // Terminal Output & Input
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .background(
-                        terminalColors.bodyColor,
-                        shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
-                    )
+                    .background(terminalColors.bodyColor, shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp))
                     .padding(8.dp)
                     .verticalScroll(scrollState)
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .imePadding()
+                ) {
                     // Ausgabe
                     terminalOutput.forEach { line ->
                         Text(
                             text = line,
-                            color = terminalColors.commandColor,
                             fontSize = 14.sp,
                             fontFamily = FontFamily.Monospace
                         )
@@ -160,46 +157,28 @@ fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: Ter
 
                     // Eingabezeile
                     Row {
-                        if (preview) {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
-                                        append("lilo@beta:~$ ")
-                                    }
-                                    withStyle(style = SpanStyle(color = terminalColors.commandColor)) {
-                                        append("ls\n__pycache__    scenario_x.txt\n")
-                                    }
-                                },
-                                fontSize = 14.sp,
-                                fontFamily = FontFamily.Monospace
-                            )
-                        } else {
-                            Text(
-                                text = buildAnnotatedString {
-                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
-                                        append("lilo@beta:")
-                                    }
-                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
-                                        append("~")
-                                    }
-                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
-                                        append("$ ")
-                                    }
-                                },
-                                fontSize = 14.sp,
-                                fontFamily = FontFamily.Monospace
-                            )
-                            // Im Preview-Modus schalten wir den TextField auf readOnly
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
+                                    append("lilo@beta:~$ ")
+                                }
+                            },
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+
+                        if (!preview) {
                             BasicTextField(
                                 value = userInput,
                                 onValueChange = { userInput = it },
+                                modifier = Modifier
+                                    .fillMaxWidth(),
                                 textStyle = TextStyle(
                                     color = terminalColors.commandColor,
                                     fontSize = 14.sp,
                                     fontFamily = FontFamily.Monospace
                                 ),
                                 cursorBrush = SolidColor(terminalColors.cursorColor),
-                                readOnly = preview,  // verhindert, dass im Preview-Modus Eingaben verarbeitet werden
                                 keyboardOptions = KeyboardOptions.Default.copy(
                                     imeAction = ImeAction.Done
                                 ),
@@ -207,17 +186,33 @@ fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: Ter
                                     onDone = {
                                         if (userInput.isNotBlank()) {
                                             if (userInput == "clear") {
-                                                terminalOutput = listOf("")
+                                                terminalOutput = listOf()
                                             } else {
                                                 webSocketClient?.sendMessage(userInput)
-                                                // Temporärer Fix: Warte, falls der Client noch Message erwartet
+
                                                 while (webSocketClient?.waiting() == true) {
-                                                    continue
+                                                    break
                                                 }
 
-                                                terminalOutput = terminalOutput +
-                                                        "lilo@beta:~$ $userInput" +
-                                                        (webSocketClient?.output ?: "")
+                                                // Prompt + eingegebenen Befehl hinzufügen
+                                                val promptAndCommand = buildAnnotatedString {
+                                                    withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
+                                                        append("lilo@beta:~$ ")
+                                                    }
+                                                    withStyle(style = SpanStyle(color = terminalColors.commandColor)) {
+                                                        append(userInput)
+                                                    }
+                                                }
+
+                                                // Antwort des Servers hinzufügen
+                                                val responseText = buildAnnotatedString {
+                                                    withStyle(style = SpanStyle(color = terminalColors.commandColor)) {
+                                                        append(webSocketClient?.output ?: "Command not found")
+                                                    }
+                                                }
+
+                                                // Terminal-Ausgabe Zeile für Zeile aktualisieren
+                                                terminalOutput = terminalOutput + promptAndCommand + responseText
 
                                                 userInput = "" // Eingabe leeren
                                             }
