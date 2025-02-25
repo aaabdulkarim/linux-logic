@@ -18,6 +18,6 @@ fun HomeScreen(terminalViewModel: TerminalViewModel) {
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp),
     ) {
-        Terminal("ws://192.168.80.1:8000/ws", terminalViewModel = terminalViewModel)
+        Terminal("ws://172.20.10.2:8000/ws", preview = false, terminalViewModel = terminalViewModel)
     }
 }
