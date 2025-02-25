@@ -17,7 +17,7 @@
       <Terminal/>
     </div>
     <div class="icon-container">
-      <i class="pi pi-angle-left icon" title="Voheriges Level"></i>
+      <i class="pi pi-angle-left icon" title="Zurück zum Levelmenü" @click="exitToMenu"></i>
       <div class="right-icons">
         <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="showModal('hint')"></i>
         <i class="pi pi-key icon" title="Lösung anzeigen" @click="showModal('key')"></i>
@@ -94,6 +94,9 @@ export default {
       alert("Hier geht es zum nächsten Level (noch nicht implementiert)"); // Platzhalter
       // this.$router.push('/level2'); // Beispiel mit Vue Router (entfernt)
     },
+    exitToMenu() {
+      this.$router.push('/auswahl');
+    }
   },
   computed: {
     backgroundStyle() {
