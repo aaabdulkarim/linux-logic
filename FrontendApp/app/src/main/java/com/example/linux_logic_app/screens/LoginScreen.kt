@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -72,13 +73,14 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(LiloMain),
+            .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
                 .weight(0.25f)
+                .background(LiloMain)
         ) {
             Column(
                 modifier = Modifier
@@ -93,7 +95,10 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(Screen.Main.route)
+                        },
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
@@ -109,7 +114,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     Text(
                         text = "Willkommen zurück!",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = Color.White
+                        color = Color.White,
                     )
                 }
             }
