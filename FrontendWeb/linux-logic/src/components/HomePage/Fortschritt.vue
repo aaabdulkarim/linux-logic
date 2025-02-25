@@ -157,8 +157,8 @@ FÃ¼r die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur Ã
 .card>>>.p-tablist-tab-list {
     background-color: white;
     border-bottom: none;
-    margin-left: 10rem;
-    margin-right: 10rem;
+    max-width: 80%;  /* Begrenzung der Breite */
+    margin: 0 auto;
 }
 
 .card>>>.p-tab {
@@ -193,9 +193,9 @@ FÃ¼r die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur Ã
 
 .card>>>.p-tabpanels {
     background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    margin-left: 10rem;
-    margin-right: 10rem;
+    
+    max-width: 80%;
+    margin: 0 auto;
 }
 
 .Ãœberschrift {
@@ -205,6 +205,15 @@ FÃ¼r die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur Ã
 
 .card >>> .p-tabpanel {
     color: #3D525C;
+}
+.card >>> .p-tablist-nav-button  {
+    background-color: white !important;
+    color: gray !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.card >>> .p-tablist-nav-button:hover {
+    color: #569191 !important;
 }
 
 /* VueJs Transition styles */
@@ -216,15 +225,23 @@ FÃ¼r die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur Ã
 .fade-leave-to {
     opacity: 0;
 }
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .card>>>.p-tablist-tab-list {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
+        max-width: 90%;
     }
 
     .card>>>.p-tabpanels {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
+        max-width: 90%;
+    }
+    
+}
+@media (max-width: 768px) {
+    .card>>>.p-tablist-tab-list {
+        max-width: 95%;
+    }
+
+    .card>>>.p-tabpanels {
+        max-width: 95%;
     }
 
     .card>>>.p-button {
