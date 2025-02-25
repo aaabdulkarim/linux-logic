@@ -4,8 +4,15 @@ import HomeView from '../views/HomeView.vue'
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    redirect: "/about"
+  },
+  {
+    path: '/profil',
+    redirect: "/tbc"
+  },
+  {
+    path: '/auswahl',
+    redirect: "/tbc"
   },
   {
     path: '/about',
@@ -16,30 +23,10 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/terminal',
-    name: 'game',
-    component: () => import(/* webpackChunkName: "game" */ '../views/GameView.vue')
-  },
-  {
-    path: '/Auswahl',
-    name: 'Auswahl',
-    component: () => import(/* webpackChunkName: "selection" */ '../views/AuswahlView.vue')
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/LoginView.vue')
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: () => import(/* webpackChunkName: "register" */ '../views/RegisterView.vue')
-  },
-  {
-    path: '/profil',
-    name: 'profil',
-    component: () => import(/* webpackChunkName: "profil" */ '../views/BenutzerView.vue')
-  },
+    path: '/tbc',
+    name: 'tobecontinued',
+    component: () => import('../views/TBC.vue')
+  }
 ]
 
 const router = createRouter({
