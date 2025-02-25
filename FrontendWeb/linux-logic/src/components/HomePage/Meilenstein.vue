@@ -89,7 +89,7 @@ export default {
           status: "TESTPHASE ABGESCHLOSSEN",
           event: "Testphase ",
           details: "Tests, Fehlerbehebungen und Optimierungen abgeschlossen",
-          color: "#808080",
+          color: "#569191",
           icon: "pi pi-check",
           direction: "opposite"
 

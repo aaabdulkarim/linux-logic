@@ -46,7 +46,7 @@ export default {
     this.fitAddon.fit();
 
     // WebSocket Initialization (Move this above onmessage assignment)
-    let url = "ws://10.0.107.0:8000/ws";
+    let url = "ws://10.0.106.149:8000/ws";
     this.socketClient = new WebSocket(url);
 
     // WebSocket event handlers must be assigned AFTER initialization
@@ -74,29 +74,30 @@ export default {
 
     this.terminal.onData(this.handleInput);
   },
+  
   methods: {
     initWebSocket() {
-    let url = "ws://localhost:8000/ws";
-    this.socketClient = new WebSocket(url);
+      let url = "ws://10.0.106.149:8000/ws";
+      this.socketClient = new WebSocket(url);
 
-    this.socketClient.onopen = () => {
-      console.log("WebSocket connection established.");
-      
-    };
+      this.socketClient.onopen = () => {
+        console.log("WebSocket connection established.");
+        
+      };
 
-    this.socketClient.onmessage = (event) => {
-      this.terminal.write(`\r\n${event.data}`);
-      this.writePrompt();
-    };
+      this.socketClient.onmessage = (event) => {
+        this.terminal.write(`\r\n${event.data}`);
+        this.writePrompt();
+      };
 
-    this.socketClient.onerror = (error) => {
-      console.error("WebSocket Error:", error);
-    };
+      this.socketClient.onerror = (error) => {
+        console.error("WebSocket Error:", error);
+      };
 
-    this.socketClient.onclose = () => {
-      console.warn("WebSocket connection closed. Reconnecting...");
-    };       
-  },
+      this.socketClient.onclose = () => {
+        console.warn("WebSocket connection closed. Reconnecting...");
+      };       
+    },
 
 
     writePrompt() {
