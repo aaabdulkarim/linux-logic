@@ -1,7 +1,6 @@
 <template>
   <div class="profile-container">
     <div class="profile-header">
-      <div class="profile-image"></div>
       <div class="profile-info">
         <h1 class="profile-name">Profilname</h1>
         <p class="profile-progress">Fortschritt: <span class="level">Level 5</span></p>
@@ -12,19 +11,29 @@
       </div>
     </div>
 
-    <div class="navigation-buttons">
-      <button class="back-to-menu">Zurück zum Spielmenü</button>
-      <button class="next-level">Nächstes Level</button>
-    </div>
-
-    <div class="current-course">
-      <h2>Weiterlernen</h2>
-      <div class="course-list">
-        <div class="course-card" v-for="(course, index) in courses" :key="index">
-          <div class="course-content">{{ course.name }}</div>
-          <div class="course-stars">
-            <span v-for="star in course.stars" :key="star" class="star">⭐</span>
+    <div class="course-progress">
+      <div class="completed-levels">
+        <h2>Abgeschlossene Level</h2>
+        <div class="course-list" v-for="(chapter, index) in chapters" :key="index">
+          <h3 @click="toggleChapter(index)" class="chapter-header">{{ chapter.name }}</h3>
+          <div v-if="chapter.expanded" class="course-cards">
+            <div class="course-card" v-for="(course, index) in chapter.courses" :key="index">
+              <div class="course-content">{{ course.name }}</div>
+              <div class="course-stars">
+                <span v-for="star in course.stars" :key="star" class="star">⭐</span>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
+      <div class="next-course">
+        <h2>Nächstes Level</h2>
+        <div class="next-course-card">
+          <div class="course-content">{{ nextCourse.name }}</div>
+          <div class="course-stars">
+            <span v-for="star in nextCourse.stars" :key="star" class="star">⭐</span>
+          </div>
+          <button class="next-level" @click="playNextLevel">Nächstes Level spielen</button>
         </div>
       </div>
     </div>
@@ -45,14 +54,44 @@
 export default {
   data() {
     return {
-      courses: [
-        { name: "1st", stars: 3 },
-        { name: "2nd", stars: 2 },
-        { name: "3rd", stars: 4 },
-        { name: "4th", stars: 1 }
+      chapters: [
+        {
+          name: "Kapitel 1",
+          expanded: false,
+          courses: [
+            { name: "Level 1", stars: 3 },
+            { name: "Level 2", stars: 2 },
+            { name: "Level 3", stars: 4 },
+            { name: "Level 4", stars: 1 },
+            { name: "Level 5", stars: 3 }
+          ]
+        },
+        {
+          name: "Kapitel 2",
+          expanded: false,
+          courses: [
+            { name: "Level 6", stars: 3 },
+            { name: "Level 7", stars: 2 },
+            { name: "Level 8", stars: 4 },
+            { name: "Level 9", stars: 1 },
+            { name: "Level 10", stars: 3 }
+          ]
+        }
       ],
+      nextCourse: { name: "Level 11", stars: 0 },
       badges: ["Label", "Label", "Label", "Label", "Label", "Label"]
     };
+  },
+  methods: {
+    navigateToMenu() {
+      this.$router.push('/auswahl');
+    },
+    playNextLevel() {
+      this.$router.push('/terminal');
+    },
+    toggleChapter(index) {
+      this.chapters[index].expanded = !this.chapters[index].expanded;
+    }
   }
 };
 </script>
@@ -112,19 +151,36 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
-.current-course, .achievements {
+.course-progress {
+  display: flex;
   width: 100%;
   max-width: 800px;
   margin-top: 30px;
 }
-.course-list, .achievement-list {
+.course-list {
   display: flex;
+  flex-direction: column;
   gap: 10px;
+  flex: 1;
+}
+.chapter-header {
+  cursor: pointer;
+  background: #569191;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  margin: 5px;
+}
+.course-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  margin: 5px;
 }
 .course-card {
-  flex: 1;
-  min-width: 150px;
-  height: 150px;
+  width: 100%;
   background: #7a9a9a;
   border-radius: 10px;
   display: flex;
@@ -134,6 +190,7 @@ export default {
   color: white;
   font-size: 18px;
   font-weight: bold;
+  padding: 10px;
 }
 .course-stars {
   margin-top: 10px;
@@ -142,7 +199,35 @@ export default {
   font-size: 20px;
   color: gold;
 }
+.next-course {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20px;
+}
+.next-course-card {
+  width: 100%;
+  background: #7a9a9a;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 20px;
+}
+.achievements {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 30px;
+}
 .achievement-list {
+  display: flex;
+  gap: 10px;
   justify-content: center;
 }
 .achievement {
