@@ -4,7 +4,7 @@
             <h1 style="color: white;">Fortschrittsberichte</h1>
         </div>
         <div class="card col-12">
-            <Tabs v-model="activeIndex">
+            <Tabs v-model="activeIndex" scrollable>
                 <TabList>
                     <Tab v-for="(bericht, index) in berichte" :key="index" :value="index">
                         Fortschrittsbericht {{ index + 1 }}
@@ -119,6 +119,40 @@ Im Bereich User Experience (UX) Design wurde das Styling des Web-Frontends weite
 
 Datenbankmanagement:
 Für die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur überarbeitet und erweitert. Dies beinhaltete sowohl die Modellierung eines neuen Datenbankschemas als auch die Implementierung von Mechanismen zur Kommunikation zwischen Sockets. Die neu entwickelten Szenarien bilden die Basis für praxisnahe und interaktive Lernaufgaben.`
+                },
+                {
+                    "berichtName": "Bericht 7",
+                    "datum": "14.01 - 28.01",
+                    "text": `Im Zeitraum vom 14. bis zum 28. Jänner brachte das Team Verbesserungen in allen Bereichen zusammen.
+
+Seitens Backend hat sich einiges an den Socket Verbindungen geändert, und wie die Befehle von außerhalb im Container ausgeführt werden. Eine Bash Instanz bleibt von Anfang an erhalten, weswegen es jetzt möglich ist mit Umgebungsvariablen zu arbeiten. (z.B Ausführung von cd)
+
+Die Entwickler der Webseite schafften es erstmals, ein xterm.js Terminal mit dem Backend zu verbinden, womit die erste Realisierung zu Stande kam und der Ansatz einer Kursübersicht existiert ebenso bereits.
+
+Auch in der App, kann man sich mit dem Backend Verbinden und mit einer Live Linux Umgebung kommunizieren. Eine Kursübersicht mit Animationen und Beschreibungen wurde auch entwickelt.`
+                },
+                {
+                    "berichtName": "Bericht 8",
+                    "datum": "29.01 - 19.02",
+                    "text": `In diesem Zeitraum wurde in jedem Knoten der Applikationsstruktur an weiteren Funktionen gearbeitet.
+
+
+
+Web Frontend
+
+Das Web Team hat sich mit der Responsivität der Web Seite befasst, wodurch die WebApp sowohl auf dem mobilen Browser als auch auf dem Desktop Browser anspruchsvoll ausschaut. In der About Page wurden die meisten Fehler behoben. Die Page mit dem Terminal wurde verschönert indem das Hintergrundbild geändert wurde. Außerdem wurde eine Profil Seite angefertigt.
+
+
+
+App Frontend
+
+In der App hat sich einiges an dem Programmflow geändert, da jetzt die Navigation auf einen LevelScreen bei der Kursübersicht möglich ist. Das Design ähnelt einer DrawerPage.
+
+
+
+Backend
+
+Die Datenbank hat eine Schema-Update bekommen, da jetzt auch User Kommentare und Bewertungen speicherbar sind. Jetzt ist auch ein Verlauf an Szenarien ermöglicht worden. Weitere Szenarien wurden implementiert mit den Aufgabenbeschreibungen und den Bash Scripts. Der Zentralen Socket ist es jetzt auch möglich die Lebenszeit des Containers zu überprüfen und diesen eigenständig zu bauen und zu launchen.`
                 }
             ]
 
@@ -143,6 +177,7 @@ Für die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur �
 <style scoped>
 .Fortschritte {
     background-color: white;
+    
 }
 
 ::v-deep .card {
@@ -228,6 +263,12 @@ Für die spielerischen Szenarien der Lernplattform wurde die Datenbankstruktur �
 
     .card>>>.p-button {
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .Überschrift h1 {
+        font-size: 2rem; /* Noch kleinere Schriftgröße für sehr kleine Bildschirme */
     }
 }
 </style>

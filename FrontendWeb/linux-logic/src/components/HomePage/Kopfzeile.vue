@@ -7,7 +7,7 @@
   
       
       <div class="flex flex-column align-items-center">
-        <button @click="navigate"class="button p-3 mb-3 text-lg font-bold">Spielen</button>
+        <button @click="navigate" class="button p-3 mb-3 text-lg font-bold">Spielen</button>
         <!-- Button-Container Für den Anfang verstecken-->
         <!-- <span class="text-sm cursor-pointer">
           <u>Registrieren</u>
