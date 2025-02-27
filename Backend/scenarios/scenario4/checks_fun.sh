@@ -3,65 +3,59 @@
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
     if [ -f "$1" ]; then
-        echo "true"
+        echo "[OK] $1 existiert."
     else
-        echo "false"
+        echo "[FEHLER] $1 fehlt!"
     fi
 }
 
 # Funktion zur Überprüfung, ob ein Verzeichnis existiert
 check_directory() {
     if [ -d "$1" ]; then
-        echo "true"
+        echo "[OK] $1 existiert."
     else
-        echo "false"
+        echo "[FEHLER] $1 fehlt!"
     fi
 }
 
-# Funktion zur Überprüfung, ob die Nachricht verschlüsselt wurde
-check_kommunikation() {
-    check_file "/home/Kommunikation/nachricht_geheim.txt.gpg"
-}
+# 1. Den königlichen Kommunikationskanal sichern
+echo "Überprüfung: Kommunikationskanal..."
+check_file "/home/Kommunikation/nachricht_geheim.txt.gpg"
 
-# Funktion zur Überprüfung, ob die Blacklist zurückgesetzt wurde
-check_sicherheit() {
-    if [ ! -f "/home/Sicherheit/blacklist_ip.txt" ]; then
-        echo "true"
-    else
-        echo "false"
-    fi
-}
+# 2. Verdächtige Aktivitäten überwachen
+echo "Überprüfung: Sicherheitsprotokolle..."
+if [ ! -f "/home/Sicherheit/blacklist_ip.txt" ]; then
+    echo "[OK] Blacklist wurde entfernt."
+else
+    echo "[FEHLER] Blacklist existiert noch!"
+fi
 
-# Funktion zur Überprüfung, ob das Hauptquartier wiederhergestellt wurde
-check_hauptquartier() {
-    check_file "/home/Hauptquartier/bericht.txt"
-}
+# 3. Das königliche Hauptquartier wiederherstellen
+echo "Überprüfung: Hauptquartier..."
+check_file "/home/Hauptquartier/bericht.txt"
 
-# Funktion zur Überprüfung, ob das Schatzkammer-Backup existiert
-check_schatzkammer() {
-    check_file "/home/Sicherheit/schatzkammer_backup.tar.gz"
-}
+# 4. Die königliche Schatzkammer sichern
+echo "Überprüfung: Schatzkammer..."
+check_file "/home/Sicherheit/schatzkammer_backup.tar.gz"
 
-# Funktion zur Überprüfung, ob Exploits entfernt wurden
-check_burgmauer() {
-    if [ ! -f "/home/Burgmauer/exploit.txt" ]; then
-        echo "true"
-    else
-        echo "false"
-    fi
-}
+# 5. Die Burgmauern auf Exploits prüfen
+echo "Überprüfung: Burgmauern..."
+if [ ! -f "/home/Burgmauer/exploit.txt" ]; then
+    echo "[OK] Exploit wurde entfernt."
+else
+    echo "[FEHLER] Exploit existiert noch!"
+fi
 
-# Funktion zur Überprüfung, ob der Geheimdienst aktiviert wurde
-check_geheimdienst() {
-    check_file "/home/Geheimdienst/ergebnisse.txt"
-}
+# 6. Den königlichen Geheimdienst aktivieren
+echo "Überprüfung: Geheimdienst..."
+check_file "/home/Geheimdienst/ergebnisse.txt"
 
-# Funktion zur Überprüfung, ob das Versorgungssystem repariert wurde
-check_versorgung() {
-    check_file "/home/Versorgung/config_neu.txt"
-}
+# 7. Das Versorgungssystem reparieren
+echo "Überprüfung: Versorgungssystem..."
+check_file "/home/Versorgung/config_neu.txt"
 
-# Funktion zur Überprüfung, ob das Archiv gesichert wurde
-check_archiv() {
-    check_directory "/mnt/externer_speicher/wichtige_daten"
-}
+# 8. Das königliche Archiv retten
+echo "Überprüfung: Archiv..."
+check_directory "/mnt/externer_speicher/wichtige_daten"
+
+echo "Überprüfung abgeschlossen!"

@@ -3,51 +3,41 @@
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
     if [ -f "$1" ]; then
-        echo "true"
+        echo "[OK] $1 existiert."
     else
-        echo "false"
+        echo "[FEHLER] $1 fehlt!"
     fi
 }
 
 # Funktion zur Überprüfung, ob ein Verzeichnis existiert
 check_directory() {
     if [ -d "$1" ]; then
-        echo "true"
+        echo "[OK] $1 existiert."
     else
-        echo "false"
+        echo "[FEHLER] $1 fehlt!"
     fi
 }
 
-# Funktion zur Überprüfung, ob das Gartenverzeichnis existiert
-check_gartenverzeichnis() {
-    check_directory "/home/MagischerGarten"
-}
+# 1. Spurensuche beginnen
+echo "Überprüfung: Archiv..."
+check_file "/home/Archiv/artefakt_hinweis.txt"
 
-# Funktion zur Überprüfung, ob die Heilrezepte gesichert wurden
-check_heilrezepte() {
-    check_file "/home/MagischerGarten/rezepte_backup.txt"
-}
+# 2. Verschlüsselte Botschaften entschlüsseln
+echo "Überprüfung: Entschlüsselung..."
+check_file "/home/Archiv/geheime_nachricht.txt.gpg"
 
-# Funktion zur Überprüfung, ob vergiftete Pflanzen dokumentiert wurden
-check_heilung() {
-    check_file "/home/MagischerGarten/heilung.txt"
-}
+# 3. Geheime Kammer betreten
+echo "Überprüfung: Geheime Kammer..."
+check_directory "/home/GeheimeKammer"
 
-# Funktion zur Überprüfung, ob Zaubertränke existieren
-check_zaubertraenke() {
-    check_file "/home/MagischerGarten/zaubertraenke.txt"
-}
+# 4. Artefakt bergen
+echo "Überprüfung: Artefakt..."
+check_file "/home/Tresor/artefakt.txt"
 
-# Funktion zur Überprüfung, ob die Zaubertränke geschützt wurden
-check_zauberschutz() {
-    if [ -f "/home/MagischerGarten/zaubertraenke.txt" ] && [ "$(stat -c %a /home/MagischerGarten/zaubertraenke.txt)" = "600" ]; then
-        echo "true"
-    else
-        echo "false"
-    fi
-}
+# 5. Sicherheitsmaßnahmen erhöhen
+echo "Überprüfung: Sicherheitsmaßnahmen..."
+check_file "/home/Tresor/artefakt.txt"
+check_file "/home/GeheimeKammer/sicherheitsprotokoll.txt"
+check_file "/home/GeheimeKammer/aktivieren_alarm.sh"
 
-# Funktion zur Überprüfung, ob der Fortschritt dokumentiert wurde
-check_fortschritt() {
-    check_file "/home/MagischerGarten/fortschritt.txt"
-}
+echo "Überprüfung abgeschlossen!"
