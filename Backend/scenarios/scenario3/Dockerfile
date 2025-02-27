@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY dockersocket.py .
 COPY healthcheck.py .
+COPY ICHBIN_SCENARIO3 .
 
 
 RUN bash -c "python3 -m venv .venv && source .venv/bin/activate && pip install 'fastapi[all]'"

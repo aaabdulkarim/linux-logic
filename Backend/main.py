@@ -28,6 +28,13 @@ class User(SQLModel, table=True):
     password_hash: int
 
 
+class Bewertung(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int = Field(index=True)
+    scenario_id: int = Field(index=True)
+    bewertung: int
+    kommentar: str = None   
+
 
 # FastAPI App Variable
 app = FastAPI()
@@ -69,6 +76,7 @@ async def login(userName : str, userPassword : str, session: SessionDep):
         
     return False
 
+
 @app.post("/register")
 async def register(userModel : User, session: SessionDep):
     """
@@ -100,6 +108,8 @@ async def register(userModel : User, session: SessionDep):
 
     return True
     
+
+
 @app.put("/edit")
 async def editPassword(userId: int, userName : str, userPassword : str, session: SessionDep):
     statement = select(User)
@@ -115,6 +125,22 @@ async def editPassword(userId: int, userName : str, userPassword : str, session:
     session.commit()
     return user
 
+
+@app.post("/bewertung")
+async def addBewertung(userId : int, levelId : int, value : int, kommentar : str, session: SessionDep):
+    bewertung = Bewertung()
+    bewertung.user_id = userId
+    bewertung.scenario_id = levelId
+    bewertung.bewertung = value
+    bewertung.kommentar = kommentar
+
+
+    session.add(bewertung)
+    session.commit()
+    return bewertung
+
+
+    
 
 @app.get("/progress")
 async def getProgress(userId : int, session: SessionDep):
