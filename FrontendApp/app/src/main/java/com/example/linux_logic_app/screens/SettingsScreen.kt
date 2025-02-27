@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -201,6 +202,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 .clickable { expanded = !expanded }
                 .padding(16.dp)
                 .animateContentSize()
+                .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -514,7 +516,10 @@ fun PasswordConfirmDialog(
             )
         },
         text = {
-            Column {
+            Column(
+                modifier = Modifier
+                    .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
+            ) {
                 OutlinedTextField(
                     value = password,
                     onValueChange = { userViewModel.onVerifyPasswordChange(it) },
