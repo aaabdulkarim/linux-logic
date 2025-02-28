@@ -147,3 +147,46 @@ Im Backend/dockerfolder
 
 
 und *dockersocketmain.py* starten wie bei [Ausführen-der-Api](#ausführen-der-api) nur dass, der Name der Datei *dockersocketmain.py* ist
+
+
+## Launch Commands für Railway
+**Ohne Backend zu starten**:
+Custom Build Command:
+
+```bash
+cd FrontendWeb/linux-logic && npm install && npm run build
+```
+
+*Pre Deploy:*
+
+```bash
+npm install -g serve 
+```
+
+*Custom Start:*
+
+```bash
+cd FrontendWeb/linux-logic && npx serve -s dist -l $PORT
+```
+
+
+**Mit Backend starten**
+*Custom Build Command:*
+
+```bash
+cd FrontendWeb/linux-logic && npm install && npm run build 
+```
+
+
+*Pre Deploy:*
+
+```bash
+npm install -g serve
+```
+
+
+*Custom Start:*
+
+```bash
+cd Backend && ls -a && python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt && exec uvicorn dockersocketmain:app --host 0.0.0.0 --port $PORT & cd FrontendWeb/linux-logic && npx serve -s dist -l $PORT
+```
