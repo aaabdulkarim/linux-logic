@@ -1,6 +1,3 @@
-
-
-# garten_tasks.sh
 #!/bin/bash
 
 # Funktion zur Überprüfung, ob eine Datei existiert
@@ -12,31 +9,41 @@ check_file() {
     fi
 }
 
-# Betrete den Garten
-cd /home/Garten || mkdir -p /home/Garten && cd /home/Garten
+# Funktion zur Überprüfung, ob ein Verzeichnis existiert
+check_directory() {
+    if [ -d "$1" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
 
-echo "Gartenverzeichnis betreten."
+# Funktion zur Überprüfung, ob der Garten existiert
+check_garten() {
+    check_directory "/home/Garten"
+}
 
-# Zustand des Gartens erkunden
-ls
+# Funktion zur Überprüfung, ob Unkraut entfernt wurde
+check_unkraut() {
+    if ls /home/Garten/Unkraut*.txt 2>/dev/null; then
+        echo "false"
+    else
+        echo "true"
+    fi
+}
 
-echo "Garteninhalt aufgelistet."
+# Funktion zur Überprüfung, ob magische Blumen gepflanzt wurden
+check_magische_blumen() {
+    check_file "/home/Garten/Zauberblume1.txt"
+    check_file "/home/Garten/Zauberblume2.txt"
+}
 
-# Unkraut entfernen
-rm -f Unkraut*.txt
-
-echo "Unkraut entfernt."
-
-# Magische Blumen pflanzen
-touch Zauberblume1.txt Zauberblume2.txt
-
-echo "Magische Blumen gepflanzt."
-
-# Überprüfung der magischen Blumen
-check_file Zauberblume1.txt
-check_file Zauberblume2.txt
-
-# Garten verzaubern
-chmod 644 Zauberblume*.txt
-
-echo "Magische Blumen verzaubert."
+# Funktion zur Überprüfung, ob die magischen Blumen verzaubert wurden
+check_verzauberung() {
+    if [ -f "/home/Garten/Zauberblume1.txt" ] && [ "$(stat -c %a /home/Garten/Zauberblume1.txt)" = "644" ] && \
+       [ -f "/home/Garten/Zauberblume2.txt" ] && [ "$(stat -c %a /home/Garten/Zauberblume2.txt)" = "644" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}

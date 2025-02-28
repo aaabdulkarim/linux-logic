@@ -1,37 +1,42 @@
-# Szenario 3: Die Verteidigung der königlichen Mauern
+# Szenario 5: Die Rettung des königlichen Artefakts
 
-Die Mauern des Schlosses sind das Rückgrat seiner Verteidigung. Sie müssen überprüft, repariert und mit Schutzzaubern verstärkt werden.
+Das wertvolle königliche Artefakt wurde gestohlen und versteckt. Es ist von Schutzmechanismen umgeben, die nur mit präzisen Maßnahmen überwunden werden können. Deine Aufgabe ist es, das Artefakt wiederzuerlangen und es sicher im Schloss zu verwahren.
 
 ## Subszenarien
 
-### 1. Wechsel in das Mauer-Verzeichnis
+### 1. Spurensuche beginnen
 
-Gehe zum Verzeichnis der Burgmauern, um mit der Verteidigungsinspektion zu beginnen.
+Um das Artefakt zu finden, müssen erste Hinweise gesammelt und analysiert werden.
 
-\_- Navigiere zum Mauerverzeichnis mit `cd /home/Burgmauer`.
+\_- Wechsel in das Verzeichnis des königlichen Archivs mit `cd /home/Archiv`.
+\_- Suche nach Hinweisen in Dokumenten mit `grep "Artefakt" *`.
 
-### 2. Überprüfe die Mauern
+### 2. Verschlüsselte Botschaften entschlüsseln
 
-Untersuche den aktuellen Zustand der Mauern, um eventuelle Schwachstellen zu identifizieren.
+Die Hinweise sind in einem geheimen Code verfasst und müssen entschlüsselt werden.
 
-\_- Zeige alle Dateien an mit `ls`.
+\_- Entschlüssele die Nachricht mit `gpg -d geheime_nachricht.txt.gpg`.
+\_- Speichere den entschlüsselten Inhalt in `artefakt_hinweis.txt`.
 
-### 3. Sichere die Pläne
+### 3. Geheime Kammer betreten
 
-Erstelle eine Sicherheitskopie der wichtigen Pläne, um sie vor Verlust zu schützen.
+Das Artefakt ist in einer verborgenen Kammer eingeschlossen. Zugang erhält nur, wer die richtigen Schalter betätigt.
 
-\_- Kopiere die Datei `sicherung.txt` als Backup mit `cp sicherung.txt sicherung_sicher.txt`.
+\_- Wechsle in das Kammer-Verzeichnis mit `cd /home/GeheimeKammer`.
+\_- Aktiviere den geheimen Mechanismus mit `bash schalter_aktivieren.sh`.
 
-### 4. Repariere beschädigte Mauern
+### 4. Artefakt bergen
 
-Dokumentiere die notwendigen Reparaturen, um die Integrität der Mauern zu gewährleisten.
+Nachdem der Mechanismus deaktiviert wurde, kann das Artefakt entnommen und gesichert werden.
 
-\_- Erstelle eine Datei für Reparaturdetails mit `nano reparatur.txt`.
+\_- Verschiebe das Artefakt in den königlichen Tresor mit `mv artefakt.txt /home/Tresor`.
+\_- Stelle sicher, dass das Artefakt gesperrt ist mit `chmod 400 /home/Tresor/artefakt.txt`.
 
-### 5. Füge Schutzzauber hinzu
+### 5. Sicherheitsmaßnahmen erhöhen
 
-Erhöhe die Sicherheit der gespeicherten Pläne durch spezielle Schutzmaßnahmen.
+Um zukünftige Diebstähle zu verhindern, müssen neue Schutzmaßnahmen implementiert werden.
 
-\_- Ändere die Datei-Eigenschaften für höhere Sicherheit mit `chmod 600 sicherung_sicher.txt`.
+\_- Erstelle eine Protokolldatei über den Vorfall mit `nano sicherheitsprotokoll.txt`.
+\_- Aktiviere das Alarmsystem mit `bash aktivieren_alarm.sh`.
 
-Die Mauern sind nun verstärkt, repariert und mit Schutzzaubern gesichert, um das Schloss zu verteidigen!
+Das königliche Artefakt ist nun sicher verwahrt, und das Schloss wurde mit neuen Schutzmaßnahmen verstärkt!

@@ -1,46 +1,43 @@
-# garten_tasks.sh
 #!/bin/bash
 
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
     if [ -f "$1" ]; then
-        echo "true"
+        echo "[OK] $1 existiert."
     else
-        echo "false"
+        echo "[FEHLER] $1 fehlt!"
     fi
 }
 
-# Betrete das Garten-Verzeichnis
-cd /home/MagischerGarten || mkdir -p /home/MagischerGarten && cd /home/MagischerGarten
+# Funktion zur Überprüfung, ob ein Verzeichnis existiert
+check_directory() {
+    if [ -d "$1" ]; then
+        echo "[OK] $1 existiert."
+    else
+        echo "[FEHLER] $1 fehlt!"
+    fi
+}
 
-echo "Gartenverzeichnis betreten."
+# 1. Spurensuche beginnen
+echo "Überprüfung: Archiv..."
+check_file "/home/Archiv/artefakt_hinweis.txt"
 
-# Pflanzen überprüfen
-ls -l
+# 2. Verschlüsselte Botschaften entschlüsseln
+echo "Überprüfung: Entschlüsselung..."
+check_file "/home/Archiv/geheime_nachricht.txt.gpg"
 
-echo "Pflanzeninhalt aufgelistet."
+# 3. Geheime Kammer betreten
+echo "Überprüfung: Geheime Kammer..."
+check_directory "/home/GeheimeKammer"
 
-# Heilrezepte sichern
-cp -f rezepte.txt rezepte_backup.txt
+# 4. Artefakt bergen
+echo "Überprüfung: Artefakt..."
+check_file "/home/Tresor/artefakt.txt"
 
-echo "Heilrezepte gesichert."
+# 5. Sicherheitsmaßnahmen erhöhen
+echo "Überprüfung: Sicherheitsmaßnahmen..."
+check_file "/home/Tresor/artefakt.txt"
+check_file "/home/GeheimeKammer/sicherheitsprotokoll.txt"
+check_file "/home/GeheimeKammer/aktivieren_alarm.sh"
 
-# Vergiftete Pflanzen heilen
-touch heilung.txt
-echo "Heilungsdetails hier eintragen" > heilung.txt
-
-echo "Vergiftete Pflanzen dokumentiert."
-
-# Überprüfung der Zaubertränke
-check_file zaubertraenke.txt
-
-# Berechtigungen für Zaubertränke hinzufügen
-chmod 600 zaubertraenke.txt
-
-echo "Zaubertränke sind nun geschützt."
-
-# Fortschritt dokumentieren
-touch fortschritt.txt
-echo "Fortschritt dokumentieren."
-
-echo "Wiederherstellungsprozess dokumentiert."
+echo "Überprüfung abgeschlossen!"

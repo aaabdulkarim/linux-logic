@@ -1,4 +1,3 @@
-# mauer_tasks.sh
 #!/bin/bash
 
 # Funktion zur Überprüfung, ob eine Datei existiert
@@ -10,31 +9,35 @@ check_file() {
     fi
 }
 
-# Betrete das Mauer-Verzeichnis
-cd /home/Burgmauer || mkdir -p /home/Burgmauer && cd /home/Burgmauer
+# Funktion zur Überprüfung, ob ein Verzeichnis existiert
+check_directory() {
+    if [ -d "$1" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
 
-echo "Mauerverzeichnis betreten."
+# Funktion zur Überprüfung, ob das Mauerverzeichnis existiert
+check_mauerverzeichnis() {
+    check_directory "/home/Burgmauer"
+}
 
-# Mauern überprüfen
-ls
+# Funktion zur Überprüfung, ob die Pläne gesichert wurden
+check_sicherung() {
+    check_file "/home/Burgmauer/sicherung_sicher.txt"
+}
 
-echo "Mauerinhalt aufgelistet."
+# Funktion zur Überprüfung, ob Reparaturen dokumentiert wurden
+check_reparaturen() {
+    check_file "/home/Burgmauer/reparatur.txt"
+}
 
-# Pläne sichern
-cp -f sicherung.txt sicherung_sicher.txt
-
-echo "Pläne gesichert."
-
-# Reparaturen dokumentieren
-touch reparatur.txt
-echo "Reparaturdetails hier eintragen" > reparatur.txt
-
-echo "Reparaturen dokumentiert."
-
-# Überprüfung der Sicherung
-check_file sicherung_sicher.txt
-
-# Schutzzauber hinzufügen
-chmod 600 sicherung_sicher.txt
-
-echo "Schutzzauber hinzugefügt. Mauern sind nun geschützt."
+# Funktion zur Überprüfung, ob der Schutzzauber aktiv ist
+check_schutzzauber() {
+    if [ -f "/home/Burgmauer/sicherung_sicher.txt" ] && [ "$(stat -c %a /home/Burgmauer/sicherung_sicher.txt)" = "600" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
