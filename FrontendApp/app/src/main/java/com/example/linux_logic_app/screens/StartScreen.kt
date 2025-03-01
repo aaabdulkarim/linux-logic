@@ -60,15 +60,16 @@ fun StartScreen(navController: NavController) {
 
         Box(
             modifier = Modifier
-                .fillMaxSize(),
-                //.fillMaxHeight(0.45f)
+                //.fillMaxSize(),
+                .fillMaxHeight(0.45f)
+                .align(Alignment.BottomCenter)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
+                //verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
                     text = "Willkommen bei LINUX LOGIC",
@@ -181,4 +182,3 @@ fun StartScreen(navController: NavController) {
         }
     }
 }
-

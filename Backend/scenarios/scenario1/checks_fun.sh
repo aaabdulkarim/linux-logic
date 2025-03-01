@@ -1,4 +1,3 @@
-# koenigliche_eroeffnung.sh
 #!/bin/bash
 
 # Funktion zur Überprüfung, ob eine Datei existiert
@@ -19,69 +18,42 @@ check_directory() {
     fi
 }
 
-# 1. Den roten Teppich ausrollen
-mkdir -p /home/Veranstaltung
-cd /home/Veranstaltung
+# Funktion zur Überprüfung, ob die Gästeliste existiert
+check_gaesteliste() {
+    check_file "/home/Einladungen/gaesteliste.txt"
+}
 
-touch roter_teppich.txt
-echo "Roter Teppich ausgerollt."
-check_file roter_teppich.txt
+# Funktion zur Überprüfung, ob der rote Teppich ausgerollt wurde
+check_roter_teppich() {
+    check_file "/home/Veranstaltung/roter_teppich.txt"
+}
 
-# 2. Die Einladungen überprüfen
-mkdir -p /home/Einladungen
-cd /home/Einladungen
+# Funktion zur Überprüfung, ob das Banner aufgehängt wurde
+check_banner() {
+    check_file "/home/Veranstaltung/banner.txt"
+}
 
-echo "Gästeliste prüfen:"
-ls
-echo "Existiert die Gästeliste?"
-check_file gaesteliste.txt
+# Funktion zur Überprüfung, ob das Menü vorbereitet wurde
+check_menue() {
+    check_file "/home/Kueche/menue.txt"
+}
 
-# 3. Das königliche Banner aufhängen
-mkdir -p /home/Dekoration
-cd /home/Dekoration
+# Funktion zur Überprüfung, ob die Musikliste vorbereitet wurde
+check_musik() {
+    check_file "/home/Musik/musikliste.txt"
+}
 
-touch banner.txt
-cp banner.txt /home/Veranstaltung/
-echo "Banner aufgehängt."
-check_file /home/Veranstaltung/banner.txt
+# Funktion zur Überprüfung, ob die Beleuchtung eingerichtet wurde
+check_beleuchtung() {
+    check_file "/home/Beleuchtung/licht1.txt"
+}
 
-# 4. Das königliche Menü prüfen
-mkdir -p /home/Kueche
-cd /home/Kueche
+# Funktion zur Überprüfung, ob das Schloss gereinigt wurde
+check_reinigung() {
+    check_file "/home/Reinigung/boden_sauber.txt"
+}
 
-touch menue.txt
-echo "Gericht: Königlicher Festschmaus" > menue.txt
-echo "Menü geprüft und aktualisiert."
-check_file menue.txt
-
-# 5. Die Musik vorbereiten
-mkdir -p /home/Musik
-cd /home/Musik
-
-touch musikliste.txt
-echo "Musikliste vorbereitet."
-check_file musikliste.txt
-
-# 6. Die Beleuchtung überprüfen
-mkdir -p /home/Beleuchtung
-cd /home/Beleuchtung
-
-touch licht1.txt
-echo "Beleuchtung überprüft."
-check_file licht1.txt
-
-# 7. Das Schloss reinigen
-mkdir -p /home/Reinigung
-cd /home/Reinigung
-
-touch boden_sauber.txt
-echo "Schloss gereinigt."
-check_file boden_sauber.txt
-
-# 8. Die königliche Uhr stellen
-mkdir -p /home/Uhr
-cd /home/Uhr
-
-echo "12:00" > zeit.txt
-echo "Uhr gestellt."
-check_file zeit.txt
+# Funktion zur Überprüfung, ob die königliche Uhr gestellt wurde
+check_uhr() {
+    check_file "/home/Uhr/zeit.txt"
+}
