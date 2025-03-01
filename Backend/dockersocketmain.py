@@ -28,26 +28,7 @@ def get_container_health(container):
     return inspect_results['State']['Health']['Status']
 
 
-def get_scenario_data(docker_dir_path):
-    # Liste von Tuples
-    scenario_list = []
-    md_file = docker_dir_path + "/Aufgabenstellung.md"
-    print(md_file)
-    with open(md_file) as file:
-        lines = file.readlines()
 
-        subtask_index = 0
-        current_hint = ""
-        for l in lines:
-
-            if l[0:2] == "\_" :
-                current_hint += l[1:]
- 
-            elif l[0:2] != "\n":
-                scenario_list.append((l, current_hint))
-                current_hint = ""
-
-    return scenario_list
 
 
 @app.websocket("/ws")
@@ -60,6 +41,8 @@ async def websocket(mainsocket: WebSocket):
     docker_path = f"scenarios/{frontend_container_choice}"
 
     container = run_docker_commands(docker_path)
+
+    # Test Clues
     scenario_data = get_scenario_data(docker_path)
     for da in scenario_data:
         print(da)
@@ -84,6 +67,9 @@ async def websocket(mainsocket: WebSocket):
                     try:
                         await container_socket.send(frontend_cmd)
                         data = await container_socket.recv()
+                        if ">clue" in data:
+                            await mainsocket.send_text(get_clue())
+                            
                         await mainsocket.send_text(data)
                         print(data)
 
