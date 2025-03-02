@@ -11,9 +11,6 @@ app = FastAPI()
 scm = ScenarioTrack()
 
 
-
-
-
 def run_docker_commands(docker_dir_path):
     client = docker.from_env()
     try:
@@ -52,7 +49,7 @@ async def websocket(mainsocket: WebSocket):
 
     # Test Clues
     scenario_data = scm.set_scenario_data(docker_path_copy)
-    
+    clues = scm.get_clue(3)
 
     if container:
 

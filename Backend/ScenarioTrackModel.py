@@ -12,13 +12,9 @@ class ScenarioTrack:
 
         with open(md_file) as file:
             lines = file.readlines()
-
-            print(lines[-1])
-
             current_hint = ""
             prev_row_hint = False
             for l in lines:
-                print(l is lines[-1])
 
                 # Falls ein neues Subszenario anfängt, ein neues Tuple zur Liste hinzufügen
                 if l[0:2] == "\_" :
@@ -37,7 +33,6 @@ class ScenarioTrack:
                 elif l[0:3] == "###":
                     
                     self.scenario_number += 1
-                    print(l[3:])
 
 
         self.scenario_data = scenario_list
@@ -48,4 +43,7 @@ class ScenarioTrack:
 
 
     def get_clue(self, userScenarioIndex):
-        pass
+
+        hints = [p[1] for p in self.scenario_data if p[0] == userScenarioIndex]
+        print(hints)
+        return hints
