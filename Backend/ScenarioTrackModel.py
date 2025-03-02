@@ -4,14 +4,11 @@ class ScenarioTrack:
         self.scenario_data = []
         
 
-    def set_scenario_data(self, new_scenario_data):
-        self.scenario_data = new_scenario_data
-
-
 
     def set_scenario_data(self, docker_dir_path):
         # Liste von Tuples
         scenario_list = []
+        print(f"Type von docker_path: {type(docker_dir_path)}")
         md_file = docker_dir_path + "/Aufgabenstellung.md"
         print(md_file)
         with open(md_file) as file:
@@ -28,19 +25,21 @@ class ScenarioTrack:
 
                 elif prev_row_hint:
                     #append to list
-                    self.scenario_data.append((self.scenario_number, current_hint))
+                    scenario_list.append((self.scenario_number, current_hint))
                     prev_row_hint = False
                     current_hint = ""
 
                 elif l[0:3] == "###":
+                    
                     self.scenario_number += 1
+                    print(l[3:])
 
 
-                
+        self.scenario_data = scenario_list
+
         for da in self.scenario_data:
             print(da)
 
-        self.set_scenario_data(scenario_list)
 
 
     def get_clue(self, userScenarioIndex):

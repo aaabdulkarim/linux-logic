@@ -45,11 +45,14 @@ async def websocket(mainsocket: WebSocket):
     
     frontend_container_choice = await mainsocket.receive_text()
     docker_path = f"scenarios/{frontend_container_choice}"
+    docker_path_copy = f"scenarios/{frontend_container_choice}"
+
+    print(f"Type von docker_path: {type(docker_path)}")
 
     container = run_docker_commands(docker_path)
 
     # Test Clues
-    scenario_data = scm.set_scenario_data(docker_path)
+    scenario_data = scm.set_scenario_data(docker_path_copy)
     
 
     if container:
