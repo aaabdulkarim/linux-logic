@@ -4,8 +4,14 @@ from fastapi import WebSocketDisconnect
 import docker
 import websockets
 import time
+from ScenarioTrackModel import ScenarioTrack
 
 app = FastAPI()
+
+scm = ScenarioTrack()
+
+
+
 
 
 def run_docker_commands(docker_dir_path):
@@ -43,9 +49,8 @@ async def websocket(mainsocket: WebSocket):
     container = run_docker_commands(docker_path)
 
     # Test Clues
-    scenario_data = get_scenario_data(docker_path)
-    for da in scenario_data:
-        print(da)
+    scenario_data = scm.set_scenario_data(docker_path)
+    
 
     if container:
 
