@@ -1,9 +1,12 @@
 class ScenarioTrack:
     def __init__(self):
+        self.subscenario_progress = 0
         self.scenario_number = 0
         self.scenario_data = []
         
 
+    def update_progress(self):
+        self.subscenario_progress += 1
 
     def set_scenario_data(self, docker_dir_path):
         # Liste von Tuples
@@ -42,8 +45,8 @@ class ScenarioTrack:
 
 
 
-    def get_clue(self, userScenarioIndex):
+    def get_clue(self):
 
-        hints = [p[1] for p in self.scenario_data if p[0] == userScenarioIndex]
+        hints = [p[1] for p in self.scenario_data if p[0] == self.subscenario_progress]
         print(hints)
         return hints
