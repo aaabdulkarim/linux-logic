@@ -40,3 +40,4 @@ Um zukünftige Diebstähle zu verhindern, müssen neue Schutzmaßnahmen implemen
 \_- Aktiviere das Alarmsystem mit `bash aktivieren_alarm.sh`.
 
 Das königliche Artefakt ist nun sicher verwahrt, und das Schloss wurde mit neuen Schutzmaßnahmen verstärkt!
+# EOF

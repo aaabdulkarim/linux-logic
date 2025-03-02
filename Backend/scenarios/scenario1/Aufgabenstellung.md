@@ -68,3 +68,4 @@ Sorge dafür, dass die königliche Uhr korrekt eingestellt ist, damit die Verans
 \_- Wechsle ins Uhrenverzeichnis mit `cd /home/Uhr`.
 \_- Stelle die Uhrzeit in der Datei `zeit.txt` mit `echo "12:00" > zeit.txt` ein.
 \_- Überprüfe den Inhalt der Datei mit `cat zeit.txt`.
+# EOF

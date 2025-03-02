@@ -35,3 +35,4 @@ Erhöhe die Sicherheit der gespeicherten Pläne durch spezielle Schutzmaßnahmen
 \_- Ändere die Datei-Eigenschaften für höhere Sicherheit mit `chmod 600 sicherung_sicher.txt`.
 
 Die Mauern sind nun verstärkt, repariert und mit Schutzzaubern gesichert, um das Schloss zu verteidigen!
+# EOF
