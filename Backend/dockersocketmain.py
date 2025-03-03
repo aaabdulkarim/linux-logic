@@ -75,8 +75,10 @@ async def websocket(mainsocket: WebSocket):
                             clues = "".join(scm.get_clue())
                             await mainsocket.send_text(clues)
 
-                        else:
+                        if ">check" == frontend_cmd:
+                            pass
 
+                        else:
                             await container_socket.send(frontend_cmd)
                             data = await container_socket.recv()
                             await mainsocket.send_text(data)
