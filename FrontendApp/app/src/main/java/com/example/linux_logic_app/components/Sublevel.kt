@@ -7,7 +7,8 @@ package com.example.linux_logic_app.components
  * @property description Eine kurze Beschreibung des Kurses.
  */
 data class Sublevel(
-    //val id: Int,
-    val name: String = "Level ",
     val description: String
-)
+) {
+    val name: String
+        get() = "Level x" // Der Name wird später dynamisch aus dem Key generiert
+}

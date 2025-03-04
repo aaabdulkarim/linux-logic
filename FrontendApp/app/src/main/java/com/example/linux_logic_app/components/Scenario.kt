@@ -15,7 +15,52 @@ data class Scenario(
     val description: String,
     val imageRes: Int,
     val subcourses: LinkedHashMap<Int, Sublevel>
-)
+) {
+    /**
+     * Diese Methode hasSublevel
+     */
+    fun hasSublevel(id: Int): Boolean = subcourses.containsKey(id)
+
+    /**
+     * Diese Methode hasNextSublevel prüft, ob ein weiteres Level existiert
+     */
+    fun hasNextSublevel(currentId: Int): Boolean = subcourses.containsKey(currentId + 1)
+
+    /**
+     * Diese Methode getSublevel
+     */
+    fun getSublevel(id: Int): Result<Sublevel> {
+        // Prüft, ob die LinkedHashMap `subcourses` das Sublevel mit der gegebenen ID enthält.
+        return subcourses[id]?.let {
+            // Falls das Sublevel existiert, wird ein erfolgreicher `Result` zurückgegeben.
+            Result.success(it)
+        } ?: Result.failure(Exception("Fehler: Sublevel mit der ID $id nicht vorhanden!"))
+        // Falls kein Sublevel mit der ID existiert, wird ein fehlgeschlagenes `Result` mit einer Exception erzeugt.
+    }
+
+    /**
+     * Diese Methode getNextSublevel holt das nächste Sublevel, falls es vorhanden ist
+     */
+    fun getNextSublevel(currentId: Int): Result<Sublevel> {
+        // Prüft, ob die LinkedHashMap `subcourses` das Sublevel mit der nächsten ID enthält.
+        return subcourses[currentId + 1]?.let {
+            // Falls ein nächstes Sublevel existiert, wird ein erfolgreicher `Result` zurückgegeben.
+            Result.success(it)
+        } ?: Result.failure(Exception("Fehler: Kein nächstes Sublevel vorhanden!"))
+        // Falls kein Sublevel mit einer nächsten ID existiert, wird ein fehlgeschlagenes `Result` mit einer Exception erzeugt.
+    }
+
+    /**
+     * Diese Methode getLastSublevel holt das letzte Sublevel
+     */
+
+    fun getLastSubcourse(): Sublevel? = subcourses[subcourses.keys.maxOrNull()]
+
+    // Dynamische Namensgenerierung für ein Level
+    fun getSubcourseName(id: Int): String = "Level $id"
+
+
+}
 
 /**
  * Eine vordefinierte Liste von Kursen, die für die Darstellung in der App verwendet wird.
@@ -29,35 +74,27 @@ val courseList = listOf(
         imageRes = R.drawable.linux_basics_course,
         subcourses = linkedMapOf(
             1 to Sublevel(
-                name = "",
                 description = "Lerne die Geschichte und die grundlegenden Konzepte von Linux kennen. Erfahre, warum Linux in Servern, Embedded Systems und der Softwareentwicklung so weit verbreitet ist."
             ),
             2 to Sublevel(
-                name = "",
                 description = "Mache dich mit der Kommandozeile vertraut und lerne grundlegende Befehle wie `ls`, `cd`, `pwd` und `man`, um dich im Dateisystem zu bewegen."
             ),
             3 to Sublevel(
-                name = "",
                 description = "Lerne, wie du Dateien erstellst, bearbeitest, verschiebst, umbenennst und löschst. Erfahre, wie du mit Verzeichnissen arbeitest und deren Berechtigungen verwaltest."
             ),
             4 to Sublevel(
-                name = "",
                 description = "Verstehe, wie Linux-Prozesse arbeiten, wie du sie mit `ps`, `top` oder `kill` steuerst und wie Benutzer- und Gruppenrechte funktionieren."
             ),
             5 to Sublevel(
-                name = "",
                 description = "Lerne, was Shell-Skripte sind und wie du sie erstellst. Erfahre, wie du Skripte ausführbar machst und welche grundlegenden Strukturen es gibt."
             ),
             6 to Sublevel(
-                name = "",
                 description = "Nutze Variablen, um Werte zu speichern, und verwende Schleifen (`for`, `while`, `until`), um Abläufe effizient zu automatisieren."
             ),
             7 to Sublevel(
-                name = "",
                 description = "Lerne Techniken zur Fehlerbehandlung und Protokollierung, damit deine Skripte robust und fehlertolerant sind."
             ),
             8 to Sublevel(
-                name = "",
                 description = "Erfahre, wie du Hintergrundprozesse startest, beendest und steuerst. Nutze `nohup`, `jobs`, `fg`, `bg` und `disown`, um Skripte effizient auszuführen."
             ),
         )
