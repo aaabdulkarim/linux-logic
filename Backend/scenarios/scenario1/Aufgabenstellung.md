@@ -8,7 +8,7 @@ Der König plant eine große Eröffnung für das neue Schloss und hat dich mit e
 
 ### 1. Den roten Teppich ausrollen
 
-Begib dich zum Ort der Veranstaltungsvorbereitung mithilfe von cd "Name des Verzeichnisses" und stelle sicher, dass der rote Teppich für den Empfang bereitliegt.
+Begib dich zum Ort der Veranstaltungsvorbereitung mithilfe von cd "Name des Verzeichnisses" und stelle sicher, dass der rote Teppich für den Empfang bereitliegt. (Mit ls sieht man alle Verzeichnisse)
 
 \_- Navigiere zum Veranstaltungsverzeichnis mit `cd /home/Veranstaltung`.
 \_- Erstelle eine Datei für den roten Teppich mit `touch roter_teppich.txt`.
@@ -31,20 +31,18 @@ Finde das königliche Banner in der Dekorationssammlung und bringe es am Veranst
 
 ### 4. Das königliche Menü prüfen
 
-Betrete die königliche Küche und erstelle eine Liste der geplanten Gerichte. Falls erforderlich, füge neue Speisen hinzu. Dafür gehe in die /Kueche und bearbeite das menue.txt. Anschließlich speichere alles ab.
+Betrete die königliche Küche und erstelle eine Liste der geplanten Gerichte. Falls erforderlich, füge neue Speisen hinzu. Dafür gehe in die /Kueche und bearbeite das menue.txt mithilfe von nano. Anschließlich speichere alles ab.
 
 \_- Gehe in das Verzeichnis der Küche mit `cd /home/Kueche`.
-\_- Erstelle eine Datei für die Menüliste mit `touch menue.txt`.
 \_- Öffne die Datei mit `nano menue.txt` und füge ein Gericht hinzu.
 \_- Speichere die Datei mit `STRG + X`, dann `Y` und `Enter`.
 
 ### 5. Die Musik vorbereiten
 
-Wechsle zur Musikabteilung und stelle sicher, dass eine Liste der gespielten Stücke existiert. Erstelle eine musikliste.txt Datei in einem schon erstelltem Musikverzeichniss
+Wechsle zur Musikabteilung und stelle sicher, dass eine Liste der gespielten Stücke existiert. Gibt es Musik?
 
 \_- Wechsle ins Musikverzeichnis mit `cd /home/Musik`.
 \_- Zeige die vorhandenen Dateien mit `ls` an.
-\_- Falls `musikliste.txt` nicht existiert, erstelle sie mit `touch musikliste.txt`.
 
 ### 6. Die Beleuchtung überprüfen
 

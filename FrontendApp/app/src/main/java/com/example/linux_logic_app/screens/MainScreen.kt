@@ -2,8 +2,6 @@ package com.example.linux_logic_app.screens
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -177,7 +175,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         )
                     },
                     onClick = {
-
+                        navController.navigate(Screen.Settings.route)
                     }
                 )
 
@@ -395,7 +393,12 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         },
                         onClick = {
                             userViewModel.logout()
-                            navController.navigate(Screen.Start.route)
+                            navController.navigate(Screen.Start.route) {
+                                // Löscht den gesamten Navigationsverlauf, damit der Nutzer nicht zurückkehren kann
+                                popUpTo(0) { inclusive = true }
+                                // Stellt sicher, dass keine doppelte Instanz des Startscreens erstellt wird
+                                launchSingleTop = true
+                            }
                         }
                     )
                 }
@@ -621,9 +624,23 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        composable(Screen.Customize.route) { CustomizationScreen(terminalViewModel = terminalViewModel) }
-                        composable(Screen.Home.route) { HomeScreen(terminalViewModel = terminalViewModel) }
-                        composable(Screen.Play.route) { PlayScreen(navController = navController) }
+                        composable(
+                            route = Screen.Customize.route
+                        ) {
+                            CustomizationScreen(terminalViewModel = terminalViewModel)
+                        }
+
+                        composable(
+                            route = Screen.Home.route
+                        ) {
+                            HomeScreen(terminalViewModel = terminalViewModel)
+                        }
+
+                        composable(
+                            route = Screen.Play.route
+                        ) {
+                            PlayScreen(navController = navController)
+                        }
                     }
                 }
             }

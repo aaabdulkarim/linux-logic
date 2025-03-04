@@ -113,7 +113,6 @@ export default {
 
 <style scoped>
 .all {
-  background-color: white;
   min-height: fit-content;
   padding-bottom: 18rem;
   justify-content: center;
