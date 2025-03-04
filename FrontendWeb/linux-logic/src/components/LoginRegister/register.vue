@@ -15,10 +15,12 @@
             <div class="p-field">
                 <label for="email"><h5>Email</h5></label>
                 <InputText id="email" v-model="email"/>
+                <label for="username"><h5>Benutzername</h5></label>
+                <InputText id="username" v-model="username"/>
                 <label for="password"><h5>Passwort</h5></label>
                 <Password id="password" v-model="password" :feedback="false" toggleMask/>
                 <label for="password_2"><h5>Passwort bestätigen</h5></label>
-                <Password id="password_2" v-model="password" :feedback="false" toggleMask/>
+                <Password id="password_2" v-model="password_2" :feedback="false" toggleMask/>
             </div>
             <div class="register-actions">
                 <div class="stay-logged-in">
@@ -73,28 +75,31 @@
     
     <style scoped>
     .register-page {
+        min-height: 100vh;
+        padding-bottom: 69rem;
         background-color: #569191;
-        background-image: url('@/assets/abstract_background.webp');
+        background-image: url('@/assets/abstract_background_3.webp');
         background-size: cover;
-        background-position: bottom;
-
+        background-position: top;
+        background-repeat: no-repeat;
     }
     
     .register-container {
         background: rgba(255, 255, 255, 0.5);
-        padding: 2rem;
+        margin-top: 2rem;
+        padding: 1rem;
         border-radius: 1rem;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         width: 40%;
         min-width: 420px;
     }
     .name {
+        margin-bottom: -1rem;
         display: flex;
         flex-direction: row;
         gap: 1.6rem;
     }
     .name label {
-        margin-bottom: -1rem;
         width: 50%;
         display: flex;
         align-items: left;
@@ -103,15 +108,15 @@
         display: flex;
         flex-direction: row; 
         align-items: flex-start; 
-        margin-bottom: 1rem;
+        margin-bottom: 0rem;
         gap: 1.6rem;
     }
     .p-field-name label {
-        margin-bottom: -1rem;
+        margin-bottom: -2rem;
     }
     .p-field-name input {
         padding: 0.8rem;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.9);
         color: #3D525C;
         border: none;
         width: 50%;
@@ -125,15 +130,15 @@
         display: flex;
         flex-direction: column; 
         align-items: flex-start; 
-        margin-top: 1rem;
-        margin-bottom: 1rem;
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
     }
     .p-field label {
         margin-bottom: -1rem;
     }
     .p-field input {
         padding: 0.8rem;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.9);
         color: #3D525C;
         border: none;
         width: 100%;
@@ -148,7 +153,7 @@
     }
     ::v-deep .p-password .p-inputtext {
         padding: 0.8rem;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.9);
         color: #3D525C;
         border: none;
         width: 100%;
@@ -165,7 +170,7 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1rem;
-        margin-top: 4rem;
+        margin-top: 3rem;
     }
     .p-checkbox {
         margin-right: 0.5rem;
