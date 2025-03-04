@@ -22,7 +22,7 @@
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
           </div>
         </div>
-          <Button label="Anmelden" />
+          <Button @click="check" label="Anmelden" />
       </form>
 
       <div class="register-link">
@@ -38,6 +38,7 @@ import  InputText  from 'primevue/inputtext';
 import  Password  from 'primevue/password';
 import  Checkbox  from 'primevue/checkbox';
 import  Button  from 'primevue/button';
+import axios from 'axios';
 
 export default {
   components: { 
@@ -51,6 +52,7 @@ export default {
       email: '',
       password: '',
       stayLoggedIn: 0,
+      base_url : "http://10.0.107.220:8001"
     };
   },
   computed: {
@@ -63,6 +65,26 @@ export default {
       };
     }
   },
+  methods: {
+    onSubmit() {
+      console.log('submit');
+    },
+    check() {
+      console.log('check');
+      axios.get(this.base_url + '/login', {
+        params: {
+          userName: this.email,
+          userPassword: this.password,
+        }
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  }
 };
 </script>
 
