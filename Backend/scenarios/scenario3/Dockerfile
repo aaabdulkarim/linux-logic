@@ -11,6 +11,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-venv \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /home/Burgmauer
+
+RUN touch /home/Burgmauer/sicherung.txt && echo "Keine Sicherheit :(" > /home/Burgmauer/sicherung.txt \
+
 
 COPY dockersocket.py .
 COPY healthcheck.py .
