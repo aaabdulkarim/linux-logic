@@ -191,7 +191,7 @@ Die Datenbank hat eine Schema-Update bekommen, da jetzt auch User Kommentare und
 .card>>>.p-tablist-tab-list {
     background-color: white;
     border-bottom: none;
-    max-width: 80%;  /* Begrenzung der Breite */
+    max-width: 80%;  
     margin: 0 auto;
 }
 
@@ -227,7 +227,6 @@ Die Datenbank hat eine Schema-Update bekommen, da jetzt auch User Kommentare und
 
 .card>>>.p-tabpanels {
     background-color: white;
-    
     max-width: 80%;
     margin: 0 auto;
 }
