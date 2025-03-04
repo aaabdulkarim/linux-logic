@@ -35,3 +35,4 @@ Gib den magischen Blumen besondere Eigenschaften, damit ihre Kraft zurückkehren
 \_- Verändere die Rechte der magischen Blumen mit `chmod 644 Zauberblume*.txt`.
 
 Nun ist der königliche Garten wieder in voller Blüte und seine Magie erstrahlt erneut!
+# EOF

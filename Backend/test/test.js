@@ -1,7 +1,7 @@
 // Test WebSocket
-const socket = new WebSocket("ws://10.0.107.7:8000/ws");
+const socket = new WebSocket("http://192.168.0.76:8000/ws");
 
-// Elements
+// Elements^^
 var input = document.getElementById("inputTerminal");
 var button = document.getElementById("sendButton");
 
