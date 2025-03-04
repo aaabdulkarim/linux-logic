@@ -31,7 +31,6 @@ RUN mkdir -p /home/Veranstaltung \
 COPY dockersocket.py .
 COPY healthcheck.py .
 COPY ICHBIN_SCENARIO1 .
-COPY checks_fun.sh
 
 
 # Set up Python virtual environment and install dependencies
