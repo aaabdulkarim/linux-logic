@@ -4,8 +4,11 @@ from fastapi import WebSocketDisconnect
 import docker
 import websockets
 import time
+from ScenarioTrackModel import ScenarioTrack
 
 app = FastAPI()
+
+scm = ScenarioTrack()
 
 
 def run_docker_commands(docker_dir_path):
@@ -15,6 +18,8 @@ def run_docker_commands(docker_dir_path):
         
         container = client.containers.run("newone", name="theone", ports={1000: 1000}, detach=True)
         return container
+
+
     except docker.errors.DockerException as e:
         print(f"Error: {e}")
 
@@ -26,6 +31,9 @@ def get_container_health(container):
     return inspect_results['State']['Health']['Status']
 
 
+
+
+
 @app.websocket("/ws")
 async def websocket(mainsocket: WebSocket):
     await mainsocket.accept()
@@ -33,10 +41,16 @@ async def websocket(mainsocket: WebSocket):
     tagname = "testtag"
     
     frontend_container_choice = await mainsocket.receive_text()
-    docker_path = f"scenarios/{frontend_container_choice}/."
-    print(docker_path)
+    docker_path = f"scenarios/{frontend_container_choice}"
+    docker_path_copy = f"scenarios/{frontend_container_choice}"
+
+
     container = run_docker_commands(docker_path)
 
+    # Test Clues
+    scenario_data = scm.set_scenario_data(docker_path_copy)
+    # clues = scm.get_clue(3)
+    # await mainsocket.send_text("".join(clues))
 
     if container:
 
@@ -56,10 +70,19 @@ async def websocket(mainsocket: WebSocket):
                     frontend_cmd = await mainsocket.receive_text()
 
                     try:
-                        await container_socket.send(frontend_cmd)
-                        data = await container_socket.recv()
-                        await mainsocket.send_text(data)
-                        print(data)
+                        if ">clue" == frontend_cmd:
+                            scm.update_progress()
+                            clues = "".join(scm.get_clue())
+                            await mainsocket.send_text(clues)
+
+                        if ">check" == frontend_cmd:
+                            pass
+
+                        else:
+                            await container_socket.send(frontend_cmd)
+                            data = await container_socket.recv()
+                            await mainsocket.send_text(data)
+                            print(data)
 
                 
                     except WebSocketDisconnect:

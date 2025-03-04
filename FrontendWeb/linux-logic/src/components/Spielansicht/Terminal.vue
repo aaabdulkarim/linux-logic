@@ -23,7 +23,8 @@ export default {
       terminal: null,
       fitAddon: null,
       socketClient: null,
-      promptLength: 69 // Länge des Prompts "logic@linux:~$ "
+      promptLength: 69,
+      socketUrl: "http://192.168.0.76:8000/ws"
     };
   },
   mounted() {
@@ -46,8 +47,7 @@ export default {
     this.fitAddon.fit();
 
     // WebSocket Initialization (Move this above onmessage assignment)
-    let url = "ws://10.0.106.149:8000/ws";
-    this.socketClient = new WebSocket(url);
+    this.socketClient = new WebSocket(this.socketUrl);
 
     // WebSocket event handlers must be assigned AFTER initialization
     this.socketClient.onopen = () => {
@@ -77,8 +77,7 @@ export default {
   
   methods: {
     initWebSocket() {
-      let url = "ws://10.0.106.149:8000/ws";
-      this.socketClient = new WebSocket(url);
+      this.socketClient = new WebSocket(this.socketUrl);
 
       this.socketClient.onopen = () => {
         console.log("WebSocket connection established.");
