@@ -4,7 +4,8 @@
       <img src="@/assets/LogoLinuxLogic.webp" alt="Logo" class="logo-sticky" />
     </a>
     <div class="icon-container grid">
-      <i class="pi pi-star icon"></i>
+
+      <i class="pi pi-star icon">anzahl</i>
       <i class="pi pi-user icon" @click="navigate"></i>
     </div>
   </div>

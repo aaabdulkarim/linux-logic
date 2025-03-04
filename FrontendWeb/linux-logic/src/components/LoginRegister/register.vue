@@ -27,7 +27,7 @@
                 
                 </div>
             </div>
-                <Button label="Registrieren" />
+                <Button @click="create" label="Registrieren" />
             </form>
     
             <div class="login-link">
@@ -43,6 +43,7 @@
     import  Password  from 'primevue/password';
     import  Checkbox  from 'primevue/checkbox';
     import  Button  from 'primevue/button';
+    import axios from 'axios';
     
     export default {
         components: { 
@@ -55,7 +56,8 @@
         return {
             email: '',
             password: '',
-            stayLoggedIn: false
+            stayLoggedIn: false,
+            base_url : "http://10.0.107.220:8001"
         };
         },
         computed: {
@@ -68,6 +70,15 @@
             };
         }
         },
+        methods: {
+        onSubmit() {
+            console.log(this.email);
+        },
+        create() {
+            axios.post('http://');
+
+        },
+    },
     };
     </script>
     
