@@ -9,6 +9,8 @@
           <InputText id="email" v-model="email"/>
           <label for="password"><h5>Passwort</h5></label>
           <Password id="password" v-model="password" :feedback="false" toggleMask/>
+          <label for="code"><h5>Access Code</h5></label>
+          <Password id="code" v-model="code" :feedback="false" toggleMask/>
         </div>
 
         <div class="login-actions">
@@ -66,15 +68,19 @@ export default {
 
 <style scoped>
 .login-page {
+  min-height: 100vh;
+  padding-bottom: 69rem;
   background-color: #569191;
-  background-image: url('@/assets/abstract_background.webp');
+  background-image: url('@/assets/abstract_background_3.webp');
   background-size: cover;
-  background-position: bottom;
+  background-position: top;
+  background-repeat: no-repeat;
 }
 
 .login-container {
+  margin-top: 2rem;
   background: rgba(255, 255, 255, 0.5);
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   width: 40%;
@@ -94,7 +100,7 @@ export default {
 
 .p-field input {
   padding: 0.8rem;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.69);
   color: #3D525C;
   border: none;
   width: 100%;
@@ -126,7 +132,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  margin-top: 4rem;
+  margin-top: 3rem;
 }
 .p-checkbox {
   margin-right: 0.5rem;
