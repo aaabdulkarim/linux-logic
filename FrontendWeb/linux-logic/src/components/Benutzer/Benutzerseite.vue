@@ -1,5 +1,5 @@
 <template>
-  <div class="profile-container">
+  <div class="profile-container grid">
     <div class="profile-header">
       <div class="profile-info">
         <h1 class="profile-name">Profilname</h1>

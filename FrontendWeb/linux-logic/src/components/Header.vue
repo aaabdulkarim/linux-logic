@@ -3,7 +3,7 @@
     <a href="/#/about" class="logo-link">
       <img src="@/assets/LogoLinuxLogic.webp" alt="Logo" class="logo-sticky" />
     </a>
-    <div class="icon-container grid">
+    <div class="icon-container">
       <i class="pi pi-star icon"></i>
       <i class="pi pi-user icon" @click="navigate"></i>
     </div>
@@ -24,8 +24,8 @@ methods: {
 
 <style scoped>
 .header {
-  position: sticky;
   width: 100%;
+  height: 4.80rem;
   top: 0;
   background-color: #569191;
   padding: 0.5rem 1.5rem;
@@ -42,7 +42,7 @@ methods: {
 }
 
 .logo-sticky {
-  height: 40px;
+  height: 3rem;
 }
 
 .icon-container {
