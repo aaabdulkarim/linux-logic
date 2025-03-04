@@ -198,7 +198,11 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
     ) {
         Column(
             modifier = Modifier
-                .clickable { expanded = !expanded }
+                .clickable {
+                    // Aktualisiert direkt im ViewModel!
+                    //settingsViewModel.updateAccountCardExpanded(!expanded)
+                    expanded = !expanded
+                }
                 .padding(16.dp)
                 .animateContentSize()
                 .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
