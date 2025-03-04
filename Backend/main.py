@@ -5,6 +5,8 @@ from pydantic import BaseModel
 from dotenv import load_dotenv, get_key
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
+from fastapi.middleware.cors import CORSMiddleware
+
 
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
 # sqlmodel docs: https://sqlmodel.tiangolo.com/tutorial/where/#where-land
@@ -38,6 +40,21 @@ class Bewertung(SQLModel, table=True):
 
 # FastAPI App Variable
 app = FastAPI()
+
+
+
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_session():
