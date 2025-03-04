@@ -50,7 +50,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.linux_logic_app.components.Course
+import com.example.linux_logic_app.components.Scenario
 import com.example.linux_logic_app.components.courseList
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
@@ -60,7 +60,7 @@ import com.example.linux_logic_app.ui.theme.LiloMain
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun PlayScreen(navController: NavController) {
-    var selectedCourse by remember { mutableStateOf<Course?>(null) }
+    var selectedCourse by remember { mutableStateOf<Scenario?>(null) }
 
     SharedTransitionLayout(
         modifier = Modifier.fillMaxSize()
@@ -102,7 +102,7 @@ fun PlayScreen(navController: NavController) {
 }
 
 @Composable
-fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit, onCancelClick: () -> Unit) {
+fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick: () -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
         targetValue = if (isExpanded) 180f else 0f,
@@ -241,7 +241,7 @@ fun CourseEditDetails(course: Course?, onPlayClick: () -> Unit, onCancelClick: (
 }
 
 @Composable
-fun CourseCard(course: Course, onSelectClick: () -> Unit) {
+fun CourseCard(course: Scenario, onSelectClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
