@@ -120,6 +120,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
     )
 
     val terminalViewModel: TerminalViewModel = viewModel()
+    //val settingsViewModel: SettingsViewModel = viewModel()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -175,6 +176,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         )
                     },
                     onClick = {
+                        //settingsViewModel.updateAccountCardExpanded(expanded = true)
                         navController.navigate(Screen.Settings.route)
                     }
                 )

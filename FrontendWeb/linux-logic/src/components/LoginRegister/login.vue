@@ -5,7 +5,7 @@
 
       <form @submit.prevent="onSubmit">
         <div class="p-field">
-          <label for="email"><h5>Email</h5></label>
+          <label for="email"><h5>Benutzername</h5></label>
           <InputText id="email" v-model="email"/>
           <label for="password"><h5>Passwort</h5></label>
           <Password id="password" v-model="password" :feedback="false" toggleMask/>
@@ -22,7 +22,7 @@
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
           </div>
         </div>
-          <Button label="Anmelden" />
+          <Button @click="check" label="Anmelden" />
       </form>
 
       <div class="register-link">
@@ -38,6 +38,7 @@ import  InputText  from 'primevue/inputtext';
 import  Password  from 'primevue/password';
 import  Checkbox  from 'primevue/checkbox';
 import  Button  from 'primevue/button';
+import axios from 'axios';
 
 export default {
   components: { 
@@ -51,6 +52,8 @@ export default {
       email: '',
       password: '',
       stayLoggedIn: 0,
+      base_url : "http://10.0.107.220:8001",
+      response: false,
     };
   },
   computed: {
@@ -63,6 +66,34 @@ export default {
       };
     }
   },
+  methods: {
+    onSubmit() {
+      console.log('submit');
+    },
+    check() {
+      console.log('check');
+      axios.get(this.base_url + '/login', {
+        params: {
+          userName: this.email,
+          userPassword: this.password,
+        }
+      })
+      .then((response) => {
+    console.log(response.data);
+    if (response.data === true) {
+        console.log("yo reroute");
+        this.$router.push('/auswahl');
+    } else {
+        alert("Benutzername oder Passwort ist falsch!");
+        this.email = '';
+        this.password = '';
+    }
+})
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  }
 };
 </script>
 

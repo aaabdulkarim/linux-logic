@@ -11,11 +11,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-venv \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /home/Burgmauer
+
+RUN touch /home/Burgmauer/sicherung.txt && echo "Keine Sicherheit :(" > /home/Burgmauer/sicherung.txt \
+
 
 COPY dockersocket.py .
 COPY healthcheck.py .
 COPY ICHBIN_SCENARIO3 .
-COPY checks_fun.sh
+COPY checks_fun.sh .
 
 RUN bash -c "python3 -m venv .venv && source .venv/bin/activate && pip install 'fastapi[all]'"
 
