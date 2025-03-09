@@ -65,7 +65,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.components.UserViewModel
-import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDanger
 import com.example.linux_logic_app.ui.theme.LiloMain
@@ -96,7 +95,7 @@ fun SettingsScreen(navController: NavController, userViewModel: UserViewModel) {
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigate(Screen.Main.route)
+                            navController.navigateUp()
                         }
                     ) {
                         Icon(
@@ -199,7 +198,11 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
     ) {
         Column(
             modifier = Modifier
-                .clickable { expanded = !expanded }
+                .clickable {
+                    // Aktualisiert direkt im ViewModel!
+                    //settingsViewModel.updateAccountCardExpanded(!expanded)
+                    expanded = !expanded
+                }
                 .padding(16.dp)
                 .animateContentSize()
                 .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.

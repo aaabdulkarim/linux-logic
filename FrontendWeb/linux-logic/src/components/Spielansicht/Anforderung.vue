@@ -17,7 +17,9 @@
       <Terminal/>
     </div>
     <div class="icon-container">
-      <i class="pi pi-angle-left icon" title="Zurück zum Levelmenü" @click="exitToMenu"></i>
+      <div class="left-icons">
+        <i class="pi pi-sign-out icon" title="Zurück zum enü" @click="exitToMenu"></i>
+      </div>
       <div class="right-icons">
         <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="showModal('hint')"></i>
         <i class="pi pi-key icon" title="Lösung anzeigen" @click="showModal('key')"></i>
@@ -113,7 +115,6 @@ export default {
 
 <style scoped>
 .all {
-  background-color: white;
   min-height: fit-content;
   padding-bottom: 18rem;
   justify-content: center;
@@ -163,12 +164,48 @@ export default {
   max-width: 1200px;
   margin-top: 20px;
   padding: 0 0;
+  transition: transform 0.2s ease;
 }
-
+.left-icons {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+.left-icons:hover {
+  transform: translateX(-5px) rotate(180deg);
+}
+.right-icons {
+  display: flex;
+  gap: 15px;
+  transition: transform 0.2s ease;
+}
 .right-icons {
   display: flex;
   gap: 15px;
 }
+
+.right-icons >>> .pi-angle-right {
+  transition: transform 0.2s ease-in-out;
+}
+.right-icons >>> .pi-angle-right:hover {
+  transform: translateX(5px);
+}
+
+/* Bounce-Animation für die anderen beiden Icons */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.right-icons >>> .pi-lightbulb,
+.right-icons >>> .pi-key {
+  transition: transform 0.3s ease-in-out;
+}
+
+.right-icons >>> .pi-lightbulb:hover,
+.right-icons >>> .pi-key:hover {
+  animation: bounce 0.4s ease-in-out;
+}
+
 
 .icon {
   font-size: 24px;

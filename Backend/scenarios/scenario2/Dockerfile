@@ -10,12 +10,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \
     python3-venv \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Erstelle die benötigten Verzeichnisse und Dateien
+RUN mkdir -p /home/Garten 
 
+RUN touch /home/Garten/Loewenzahn.txt \
+/home/Garten/Lavendel.txt \
+/home/Garten/Unkraut_Brennnessel.txt \
+/home/Garten/Unkraut2.txt \
+/home/Garten/Unkraut3.txt \
+/home/Garten/Unkraut4.txt \
+/home/Garten/Gänseblümchen.txt
 
 COPY dockersocket.py .
 COPY healthcheck.py .
 COPY ICHBIN_SCENARIO2 .
-
+COPY checks_fun.sh .
 
 RUN bash -c "python3 -m venv .venv && source .venv/bin/activate && pip install 'fastapi[all]'"
 

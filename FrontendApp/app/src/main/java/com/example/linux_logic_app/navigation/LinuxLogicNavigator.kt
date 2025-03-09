@@ -93,6 +93,16 @@ fun LinuxLogicNavigator(userViewModel: UserViewModel) {
             SettingsScreen(navController = navController, userViewModel = userViewModel)
         }
 
+        /*composable(route = Screen.Settings.route) { backStackEntry ->
+            // Hol dir das ViewModel aus dem gleichen Store
+            val settingsViewModel: SettingsViewModel = viewModel(backStackEntry)
+            SettingsScreen(
+                navController = navController,
+                userViewModel = userViewModel,
+                settingsViewModel = settingsViewModel
+            )
+        }*/
+
         composable(
             route = Screen.Notifications.route,
         ) {

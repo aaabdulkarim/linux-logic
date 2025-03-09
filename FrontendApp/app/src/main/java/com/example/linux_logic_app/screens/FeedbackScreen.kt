@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloMain
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +49,7 @@ fun FeedbackScreen(navController: NavController) {
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigate(Screen.Main.route)
+                            navController.navigateUp()
                         }
                     ) {
                         Icon(

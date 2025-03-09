@@ -5,10 +5,12 @@
 
       <form @submit.prevent="onSubmit">
         <div class="p-field">
-          <label for="email"><h5>Email</h5></label>
+          <label for="email"><h5>Benutzername</h5></label>
           <InputText id="email" v-model="email"/>
           <label for="password"><h5>Passwort</h5></label>
           <Password id="password" v-model="password" :feedback="false" toggleMask/>
+          <label for="code"><h5>Access Code</h5></label>
+          <Password id="code" v-model="code" :feedback="false" toggleMask/>
         </div>
 
         <div class="login-actions">
@@ -20,7 +22,7 @@
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
           </div>
         </div>
-          <Button label="Anmelden" />
+          <Button @click="check" label="Anmelden" />
       </form>
 
       <div class="register-link">
@@ -36,6 +38,7 @@ import  InputText  from 'primevue/inputtext';
 import  Password  from 'primevue/password';
 import  Checkbox  from 'primevue/checkbox';
 import  Button  from 'primevue/button';
+import axios from 'axios';
 
 export default {
   components: { 
@@ -49,6 +52,8 @@ export default {
       email: '',
       password: '',
       stayLoggedIn: 0,
+      base_url : "http://10.0.107.220:8001",
+      response: false,
     };
   },
   computed: {
@@ -61,20 +66,52 @@ export default {
       };
     }
   },
+  methods: {
+    onSubmit() {
+      console.log('submit');
+    },
+    check() {
+      console.log('check');
+      axios.get(this.base_url + '/login', {
+        params: {
+          userName: this.email,
+          userPassword: this.password,
+        }
+      })
+      .then((response) => {
+    console.log(response.data);
+    if (response.data === true) {
+        console.log("yo reroute");
+        this.$router.push('/auswahl');
+    } else {
+        alert("Benutzername oder Passwort ist falsch!");
+        this.email = '';
+        this.password = '';
+    }
+})
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  }
 };
 </script>
 
 <style scoped>
 .login-page {
+  min-height: 100vh;
+  padding-bottom: 69rem;
   background-color: #569191;
-  background-image: url('@/assets/abstract_background.webp');
+  background-image: url('@/assets/abstract_background_3.webp');
   background-size: cover;
-  background-position: bottom;
+  background-position: top;
+  background-repeat: no-repeat;
 }
 
 .login-container {
+  margin-top: 2rem;
   background: rgba(255, 255, 255, 0.5);
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   width: 40%;
@@ -94,7 +131,7 @@ export default {
 
 .p-field input {
   padding: 0.8rem;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.69);
   color: #3D525C;
   border: none;
   width: 100%;
@@ -126,7 +163,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  margin-top: 4rem;
+  margin-top: 3rem;
 }
 .p-checkbox {
   margin-right: 0.5rem;

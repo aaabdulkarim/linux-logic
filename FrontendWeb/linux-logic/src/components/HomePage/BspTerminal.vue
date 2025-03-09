@@ -1,8 +1,13 @@
-
 <template>
-  <div id="terminal-container" ref="terminalContainer">
+  <div 
+    id="terminal-container" 
+    ref="terminalContainer"
+    role="log"
+    aria-live="polite"
+    aria-labelledby="terminal-label"
+  >
     <div class="terminal-header">
-      <span>logic Terminal</span>
+      <span>Logic Terminal</span>
     </div>
     <div class="terminal-output">
       <!-- Terminal output is rendered here -->
@@ -38,47 +43,38 @@ export default {
     };
   },
   mounted() {
-    // Create and configure the terminal
     this.terminal = new Terminal({
-      cursorBlink: true,  // Cursor blinks to improve visibility
-      rows: 30,           // Set initial number of rows
+      cursorBlink: true,
+      rows: 30,
       theme: {
-        background: '#1e1e1e', // Dark background color for better contrast
-        foreground: '#dcdcdc', // Light text color
-        cursor: '#dcdcdc',     // Cursor color
-        selection: 'rgba(255, 255, 255, 0.3)', // Selection color
-        borderColor: '#fff' // Border color
+        background: '#1e1e1e',
+        foreground: '#dcdcdc', 
+        cursor: '#dcdcdc',
+        selection: 'rgba(255, 255, 255, 0.3)',
+        borderColor: '#fff'
       },
     });
 
-    // Create an instance of the FitAddon to allow the terminal to resize dynamically
     this.fitAddon = new FitAddon();
     this.terminal.loadAddon(this.fitAddon);
 
-    // Attach the terminal to the DOM
     this.terminal.open(this.$refs.terminalContainer);
-    this.fitAddon.fit(); // Adjusts terminal size to its container
+    this.fitAddon.fit(); 
 
-    // Start typing the first message
     this.startTyping();  
   },
   methods: {
     simpleWrite(text){
-        this.stopTyping = true;
-        console.log(text);
-        
-        this.terminal.clear();
-
-        // logic@linux:~& ausgeben nachdem das Terminal gecleared wird 
-        // this.terminal.write("logic@linux:~$ " + text); // Add the prompt again before the text
+      this.stopTyping = true;
+      this.terminal.clear();
     },
 
     typeTerminal() {
       const currentMessage = this.messages[this.currentMessageIndex];
-      const prompt = " logic@linux:~$ "; // Terminal prompt
+      const prompt = " logic@linux:~$ ";
 
       if (this.currentCharIndex === 0) {
-        this.terminal.write(prompt); // Write the prompt before the first message
+        this.terminal.write(prompt);
       }
 
       if (this.currentCharIndex < currentMessage.length) {
@@ -87,27 +83,23 @@ export default {
       } else {
         this.currentCharIndex = 0;
         this.currentMessageIndex = (this.currentMessageIndex + 1) % this.messages.length;
-        clearInterval(this.typingInterval); // Stop the current interval
-        this.terminal.write('\r\n'); // Move to the next line
+        clearInterval(this.typingInterval);
+        this.terminal.write('\r\n');
         setTimeout(() => {
-          this.terminal.clear(); // Clear the terminal but keep the prompt
-
-          // logic@linux:~& ausgeben nachdem das Terminal gecleared wird 
-          // this.terminal.write(prompt); // Add the prompt again before starting the next message
-
+          this.terminal.clear();
           setTimeout(() => {
-            this.startTyping(); // Start typing the next message
-          }, 500); // Wait for 500ms before starting the next message
-        }, 1000); // Wait for 1000ms before clearing the terminal
+            this.startTyping();
+          }, 500);
+        }, 1000);
       }
     },
 
     startTyping() {
       this.typingInterval = setInterval(() => {
-        if (this.stopTyping == false){
+        if (!this.stopTyping) {
           this.typeTerminal();
         }
-      }, 100); // Adjust the typing speed by changing the interval
+      }, 100);
     }
   },
   beforeDestroy() {
@@ -115,6 +107,7 @@ export default {
   }
 }
 </script>
+
 
 
 <style scoped>
