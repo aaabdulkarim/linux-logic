@@ -13,7 +13,7 @@ data class User(
     val username: String,
     val email: String,
     val password: String, // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
-    val terminalColors: TerminalColors = defaultTerminalColors // Terminalfarben für den Benutzer)
+    val terminalColors: TerminalColors = defaultTerminalColors // Terminalfarben für den Benutzer
 )
 
 /**
