@@ -12,7 +12,8 @@ import androidx.lifecycle.ViewModel
 data class User(
     val username: String,
     val email: String,
-    val password: String // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
+    val password: String, // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
+    val terminalColors: TerminalColors = defaultTerminalColors // Standardfarben, falls noch keine gesetzt sind)
 )
 
 /**
@@ -168,6 +169,7 @@ class UserViewModel : ViewModel() {
 
         // Erfolgreicher Login
         _user = registeredUser
+        terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
         return true
     }
 
@@ -209,6 +211,12 @@ class UserViewModel : ViewModel() {
         val newUser = User(username, email, password)
         registeredUsers.add(newUser)
         _user = newUser      // Automatische Anmeldung nach Registrierung
+        /*
+        Automatisch alle Felder und Errors zurücksetzen, sodass man beim erfolgreichen Registrieren
+        sich danach der Anmeldung unterziehen muss, was eine gewisse Identiät erfordert.
+         */
+        clearAllFields()
+        clearErrorMessages()
         return true
     }
 

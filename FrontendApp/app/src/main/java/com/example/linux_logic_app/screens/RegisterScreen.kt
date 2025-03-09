@@ -375,7 +375,8 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                                 "New User Credentials",
                                 "Username: ${username.trim()}; E-Mail: ${email.trim()}; Password: ${password.trim()}"
                             )
-                            navController.navigate(Screen.Main.route)
+                            //Vorher navController.navigate(Screen.Main.route), Nachher:
+                            navController.navigate(Screen.Login.route)
                             userViewModel.clearErrorMessages()
                             //userViewModel.clearAllFields()
                         }

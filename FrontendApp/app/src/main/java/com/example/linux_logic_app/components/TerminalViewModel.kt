@@ -28,13 +28,13 @@ val defaultTerminalColors = TerminalColors(
 )
 
 // 3. Erstellen des ViewModels, welches den State zentral verwaltet
-class TerminalViewModel : ViewModel() {
+class TerminalViewModel(terminalColors: TerminalColors = defaultTerminalColors) : ViewModel() {
     // Der aktuell verwendete Farb-State (initial die Default-Farben)
-    var terminalColors by mutableStateOf(defaultTerminalColors)
+    var terminalColors by mutableStateOf(terminalColors)
         private set
 
     // Wenn Default-Farben verwendet werden
-    var useDefaultColors by mutableStateOf(true)
+    var useDefaultColors by mutableStateOf(terminalColors == defaultTerminalColors)
         private set
 
     /**
@@ -60,4 +60,3 @@ class TerminalViewModel : ViewModel() {
         }
     }
 }
-
