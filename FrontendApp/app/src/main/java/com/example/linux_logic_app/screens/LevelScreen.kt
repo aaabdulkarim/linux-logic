@@ -3,16 +3,20 @@ package com.example.linux_logic_app.screens
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.twotone.ArrowBackIosNew
@@ -37,7 +41,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
@@ -105,7 +112,31 @@ fun LevelScreen(navController: NavController) {
             modifier = Modifier
                 .padding(innerPadding)
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 1: ") }
+                        append("Beschreibung in der Card lesen\n")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 2: ") }
+                        append("Mit dem Terminal interagieren\n")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 3: ") }
+                        append("Ihre Ergebnisse überprüfen lassen")
+                    },
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                LevelCard()
+            }
         }
     }
 }
@@ -118,8 +149,6 @@ fun LevelCard() {
         targetValue = if (expanded) 180f else 0f,
         label = "Rotation of Arrow-Icon"
     )
-
-
 
     Card(
         colors = CardDefaults.cardColors(containerColor = LiloBlue)
@@ -146,7 +175,7 @@ fun LevelCard() {
                     tint = LiloMain
                 )
                 Text(
-                    text = "Name",
+                    text = "Account Informationen",
                     color = Color.White,
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold
@@ -161,7 +190,6 @@ fun LevelCard() {
 
             if (expanded) {
                 Spacer(modifier = Modifier.height(16.dp))
-
 
             }
         }
