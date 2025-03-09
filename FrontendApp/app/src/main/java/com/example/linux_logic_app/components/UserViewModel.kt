@@ -3,9 +3,7 @@ package com.example.linux_logic_app.components
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.example.linux_logic_app.ui.theme.LiloDark
 
 /**
  * Dies ist die Datenklasse für den Linux Logic Benutzer.
@@ -15,7 +13,7 @@ data class User(
     val username: String,
     val email: String,
     val password: String, // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
-    val terminalColors: TerminalColors = defaultTerminalColors // Standardfarben, falls noch keine gesetzt sind)
+    val terminalColors: TerminalColors = defaultTerminalColors // Terminalfarben für den Benutzer)
 )
 
 /**
@@ -75,17 +73,16 @@ class UserViewModel : ViewModel() {
     private var registeredUsers = mutableListOf<User>().apply {
         add(
             User(
-                username= "Admin",
+                username = "Admin",
                 email = "admin@test.com",
-                password= "Admin123#",
-                terminalColors = TerminalColors(
-                    headerColor = Color.Blue,
-                    bodyColor = LiloDark,
-                    headerTextColor = Color.White,
-                    shellPromptColor = Color.Green,
-                    commandColor = Color.White,
-                    cursorColor = Color.Green
-                )
+                password = "Admin123#"
+            )
+        )
+        add(
+            User(
+                username = "Tester",
+                email = "test@test.com",
+                password = "Test123#"
             )
         )
     }
@@ -185,8 +182,8 @@ class UserViewModel : ViewModel() {
         // Erfolgreicher Login
         _user = registeredUser
 
-        // Setzen der benutzerdefinierte Farben aus dem User-Modell
-        terminalViewModel.updateColors(registeredUser.terminalColors)
+        // Initialisieren des TerminalViewModels mit den Terminalfarben des Benutzers
+        terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
 
         return true
     }
@@ -305,7 +302,6 @@ class UserViewModel : ViewModel() {
      */
     fun logout() {
         _user = null
-        terminalViewModel.updateColors(terminalViewModel.terminalColors)
         clearAllFields()
         clearErrorMessages()
     }
