@@ -87,7 +87,11 @@ class UserViewModel : ViewModel() {
         )
     }
 
-    var terminalViewModel by mutableStateOf(TerminalViewModel()) // Das terminalViewModel kann nicht null sein
+    //var terminalViewModel by mutableStateOf(TerminalViewModel()) // Das terminalViewModel kann nicht null sein
+
+    // Verwaltet den TerminalViewModel für den aktuell angemeldeten Benutzer
+    private var _terminalViewModel: TerminalViewModel = TerminalViewModel(defaultTerminalColors)
+    val terminalViewModel: TerminalViewModel get() = _terminalViewModel
 
     fun onUsernameChange(newUsername: String) {
         _username = newUsername
@@ -182,8 +186,8 @@ class UserViewModel : ViewModel() {
         // Erfolgreicher Login
         _user = registeredUser
 
-        // Initialisieren des TerminalViewModels mit den Terminalfarben des Benutzers
-        terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
+        // Initialisiere das TerminalViewModel mit den Terminalfarben des Benutzers
+        _terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
 
         return true
     }
@@ -360,5 +364,34 @@ class UserViewModel : ViewModel() {
     fun cancelVerification() {
         _verifyPassword = ""    // Löschen des Inputs für die Passwort Verifizierung
         clearErrorMessages()    // Löschen aller angezeigten Fehlermeldungen.
+    }
+
+    fun updateTerminalColors(newColors: TerminalColors) {
+        val currentUser = _user ?: return
+        val updatedUser = currentUser.copy(terminalColors = newColors)
+
+        // Benutzer in der registrierten Liste aktualisieren
+        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
+        if (index != -1) {
+            registeredUsers[index] = updatedUser
+            _user = updatedUser  // Aktualisieren des aktuellen Benutzers
+        }
+
+        // TerminalViewModel auch aktualisieren
+        _terminalViewModel.updateColors(newColors)
+    }
+
+    fun updateDefaultColors(useDefault: Boolean) {
+        val currentUser = _user ?: return
+        val updatedUser = currentUser.copy(terminalColors = defaultTerminalColors)
+
+        // Benutzer in der registrierten Liste aktualisieren
+        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
+        if (index != -1) {
+            registeredUsers[index] = updatedUser
+            _user = updatedUser  // Aktualisieren des aktuellen Benutzers
+        }
+
+        _terminalViewModel.updateDefaultMode(useDefault) // Wenn terminalViewModel null ist, Standardwert true
     }
 }

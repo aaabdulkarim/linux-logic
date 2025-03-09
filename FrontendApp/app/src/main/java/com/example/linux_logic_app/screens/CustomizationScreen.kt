@@ -330,7 +330,6 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
 
     val currentColors = userViewModel.terminalViewModel.terminalColors
     val useDefaultColors = userViewModel.terminalViewModel.useDefaultColors
-    val terminalViewModel = userViewModel.terminalViewModel
 
     Card(
         colors = CardDefaults.cardColors(
@@ -384,7 +383,7 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                         option = "Terminal Kopf:",
                         selectedColor = currentColors.headerColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(headerColor = it)
                             )
                         },
@@ -395,7 +394,7 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                         option = "Terminal Körper:",
                         selectedColor = currentColors.bodyColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(bodyColor = it)
                             )
                         },
@@ -406,7 +405,7 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                         option = "Terminal Kopf (Text):",
                         selectedColor = currentColors.headerTextColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(headerTextColor = it)
                             )
                         },
@@ -417,7 +416,7 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                         option = "Shell Prompt:",
                         selectedColor = currentColors.shellPromptColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(shellPromptColor = it)
                             )
                         },
@@ -428,7 +427,7 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                         option = "Befehle:",
                         selectedColor = currentColors.commandColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(commandColor = it)
                             )
                         },
@@ -439,7 +438,7 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                         option = "Cursor:",
                         selectedColor = currentColors.cursorColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(cursorColor = it)
                             )
                         },
@@ -465,7 +464,7 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                     Switch(
                         checked = useDefaultColors,
                         onCheckedChange = {
-                            terminalViewModel.updateDefaultMode(it)
+                            userViewModel.updateDefaultColors(it)
                         },
                         thumbContent = {
                             if (useDefaultColors) {
