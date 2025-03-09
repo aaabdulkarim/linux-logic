@@ -10,7 +10,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \  
     python3-venv \  
     gpg \  
+    sudo \  
     && apt-get clean && rm -rf /var/lib/apt/lists/*  
+
+# Create a user 'user' with password 'password'  
+RUN useradd -m -s /bin/bash user && \
+    echo 'user:password' | chpasswd && \
+    adduser user sudo && \  
+    chmod 755 /home/user 
 
 # Verzeichnisse erstellen  
 RUN mkdir -p /home/Archiv \  
@@ -33,6 +40,12 @@ COPY checks_fun.sh .
 
 # Python-Umgebung einrichten  
 RUN bash -c "python3 -m venv .venv && source .venv/bin/activate && pip install 'fastapi[all]'"  
+
+# Setze den Besitzer der Dateien auf den neuen Benutzer  
+RUN chown -R user:user /app
+
+# Wechsel zum Benutzer 'user'  
+USER user
 
 # FastAPI starten  
 CMD ["bash", "-c", "source .venv/bin/activate && uvicorn dockersocket:app --host 0.0.0.0 --port 1000"]  
