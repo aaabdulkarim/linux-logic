@@ -103,6 +103,7 @@ fun LinuxLogicNavigator(userViewModel: UserViewModel) {
             route = Screen.Feedback.route,
         ) {
             FeedbackScreen(navController = navController)
+            //ComponentsScreen()
         }
 
         composable(
