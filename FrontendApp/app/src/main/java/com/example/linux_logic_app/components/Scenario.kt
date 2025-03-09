@@ -22,6 +22,11 @@ data class Scenario(
     fun hasSublevel(id: Int): Boolean = subcourses.containsKey(id)
 
     /**
+     * Diese Methode hasSublevel
+     */
+    fun existSublevels(): Boolean = subcourses.isNotEmpty()
+
+    /**
      * Diese Methode hasNextSublevel prüft, ob ein weiteres Level existiert
      */
     fun hasNextSublevel(currentId: Int): Boolean = subcourses.containsKey(currentId + 1)
@@ -51,15 +56,17 @@ data class Scenario(
     }
 
     /**
-     * Diese Methode getLastSublevel holt das letzte Sublevel
+     * Diese Methode `getLastSublevel` holt das letzte Sublevel in der Reihenfolge.
      */
+    fun getLastSublevel(): Result<Sublevel> {
+        if (!existSublevels()) {
+            return Result.failure(Exception("Fehler: Keine Sublevels in diesem Szenario $name vorhanden!"))
+        }
 
-    fun getLastSubcourse(): Sublevel? = subcourses[subcourses.keys.maxOrNull()]
-
-    // Dynamische Namensgenerierung für ein Level
-    fun getSubcourseName(id: Int): String = "Level $id"
-
-
+        // Sagt aus, dass man zu 100% sicher ist, dass dieser Wert nicht null ist
+        val lastKey = subcourses.keys.maxOrNull()!!
+        return Result.success(subcourses[lastKey]!!)
+    }
 }
 
 /**
