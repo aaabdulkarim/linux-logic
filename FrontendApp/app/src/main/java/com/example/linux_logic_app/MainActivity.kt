@@ -19,8 +19,7 @@ class MainActivity : ComponentActivity() {
             enableEdgeToEdge()
             Linux_logic_appTheme {
                 val userViewModel: UserViewModel = viewModel()
-                val terminalViewModel: TerminalViewModel = viewModel()
-                LinuxLogicNavigator(userViewModel = userViewModel, terminalViewModel = terminalViewModel)
+                LinuxLogicNavigator(userViewModel = userViewModel)
             }
         }
     }
@@ -31,7 +30,6 @@ class MainActivity : ComponentActivity() {
 fun LinuxLogicAppPreview() {
     Linux_logic_appTheme {
         val userViewModel: UserViewModel = viewModel()
-        val terminalViewModel: TerminalViewModel = viewModel()
-        LinuxLogicNavigator(userViewModel = userViewModel,  terminalViewModel = terminalViewModel)
+        LinuxLogicNavigator(userViewModel = userViewModel)
     }
 }

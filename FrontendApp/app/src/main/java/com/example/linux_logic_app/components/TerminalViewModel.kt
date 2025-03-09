@@ -7,7 +7,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.example.linux_logic_app.ui.theme.LiloDark
 
-// 1. Definieren des Color-Modells als Data-Klasse
+/**
+ * Dies ist die Datenklasse für den Linux Logic Terminal Farben
+ * Sie nethält alle möglichen Farben zur Gestaltung aller möglichen Komponenten des Terminals
+ */
 data class TerminalColors(
     val headerColor: Color,
     val bodyColor: Color,
@@ -17,7 +20,7 @@ data class TerminalColors(
     val cursorColor: Color
 )
 
-// 2. Festlegen der Default-Farben als Konstante
+// Festlegen der Default-Farben als Konstante
 val defaultTerminalColors = TerminalColors(
     headerColor = Color.Black,
     bodyColor = LiloDark,
@@ -27,7 +30,11 @@ val defaultTerminalColors = TerminalColors(
     cursorColor = Color.Green
 )
 
-// 3. Erstellen des ViewModels, welches den State zentral verwaltet
+/**
+ * Das TerminalViewModel verwaltet den Zustand der aktuellen Farben für jeden Benutzer individuell.
+ * Es stellt Methoden zum Updaten der Farben und die Default-Farben zur Verfügung und managed
+ * den State der Farben des Users.
+ */
 class TerminalViewModel(terminalColors: TerminalColors = defaultTerminalColors) : ViewModel() {
     // Der aktuell verwendete Farb-State (initial die Default-Farben)
     var terminalColors by mutableStateOf(terminalColors)

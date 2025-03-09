@@ -50,13 +50,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.components.Terminal
-import com.example.linux_logic_app.components.TerminalViewModel
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LevelScreen(navController: NavController, terminalViewModel: TerminalViewModel) {
+fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -146,7 +146,7 @@ fun LevelScreen(navController: NavController, terminalViewModel: TerminalViewMod
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    Terminal("ws://10.0.107.7:8000/ws", preview = false, terminalViewModel = terminalViewModel)
+                    Terminal("ws://10.0.107.7:8000/ws", preview = false, userViewModel = userViewModel)
                 }
             }
         }

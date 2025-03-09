@@ -3,7 +3,9 @@ package com.example.linux_logic_app.components
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.example.linux_logic_app.ui.theme.LiloDark
 
 /**
  * Dies ist die Datenklasse für den Linux Logic Benutzer.
@@ -71,11 +73,24 @@ class UserViewModel : ViewModel() {
 
     // Liste registrierter Benutzer
     private var registeredUsers = mutableListOf<User>().apply {
-        add(User("Admin", "admin@test.com", "Admin123#"))
+        add(
+            User(
+                username= "Admin",
+                email = "admin@test.com",
+                password= "Admin123#",
+                terminalColors = TerminalColors(
+                    headerColor = Color.Blue,
+                    bodyColor = LiloDark,
+                    headerTextColor = Color.White,
+                    shellPromptColor = Color.Green,
+                    commandColor = Color.White,
+                    cursorColor = Color.Green
+                )
+            )
+        )
     }
 
-    var terminalViewModel by mutableStateOf<TerminalViewModel?>(null)
-        private set
+    var terminalViewModel by mutableStateOf(TerminalViewModel()) // Das terminalViewModel kann nicht null sein
 
     fun onUsernameChange(newUsername: String) {
         _username = newUsername
@@ -169,7 +184,10 @@ class UserViewModel : ViewModel() {
 
         // Erfolgreicher Login
         _user = registeredUser
-        terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
+
+        // Setzen der benutzerdefinierte Farben aus dem User-Modell
+        terminalViewModel.updateColors(registeredUser.terminalColors)
+
         return true
     }
 
@@ -287,6 +305,7 @@ class UserViewModel : ViewModel() {
      */
     fun logout() {
         _user = null
+        terminalViewModel.updateColors(terminalViewModel.terminalColors)
         clearAllFields()
         clearErrorMessages()
     }
