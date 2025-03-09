@@ -73,6 +73,9 @@ class UserViewModel : ViewModel() {
         add(User("Admin", "admin@test.com", "Admin123#"))
     }
 
+    var terminalViewModel by mutableStateOf<TerminalViewModel?>(null)
+        private set
+
     fun onUsernameChange(newUsername: String) {
         _username = newUsername
         _usernameErrorMessage = validateUsername(newUsername)

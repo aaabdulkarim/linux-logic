@@ -59,7 +59,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -88,7 +87,7 @@ data class BottomNavigationItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
+fun MainScreen(navController: NavController, userViewModel: UserViewModel, terminalViewModel: TerminalViewModel) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val endDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -119,7 +118,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
         )
     )
 
-    val terminalViewModel: TerminalViewModel = viewModel()
+    //val terminalViewModel: TerminalViewModel = viewModel()
     //val settingsViewModel: SettingsViewModel = viewModel()
 
     ModalNavigationDrawer(

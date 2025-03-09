@@ -44,16 +44,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.components.Terminal
+import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LevelScreen(navController: NavController) {
+fun LevelScreen(navController: NavController, terminalViewModel: TerminalViewModel) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -67,7 +70,7 @@ fun LevelScreen(navController: NavController) {
                         )
 
                         Text(
-                            text = "Level",
+                            text = "Level x",
                             style = MaterialTheme.typography.labelMedium
                         )
                     }
@@ -93,7 +96,7 @@ fun LevelScreen(navController: NavController) {
                     ) {
                         Icon(
                             Icons.TwoTone.SportsEsports,
-                            contentDescription = "NotificationsActive Icon for Notifications",
+                            contentDescription = "SportsEsports Icon for Level",
                             tint = Color.White
                         )
                     }
@@ -136,6 +139,15 @@ fun LevelScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 LevelCard()
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    Terminal("ws://10.0.107.7:8000/ws", preview = false, terminalViewModel = terminalViewModel)
+                }
             }
         }
     }
@@ -175,7 +187,7 @@ fun LevelCard() {
                     tint = LiloMain
                 )
                 Text(
-                    text = "Account Informationen",
+                    text = "Level x: Beschreibung",
                     color = Color.White,
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold
@@ -191,6 +203,12 @@ fun LevelCard() {
             if (expanded) {
                 Spacer(modifier = Modifier.height(16.dp))
 
+                Text(
+                    text = "Beschreibungs Text hier",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Justify
+                )
             }
         }
     }

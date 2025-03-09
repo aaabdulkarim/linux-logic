@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.Linux_logic_appTheme
 import com.example.linux_logic_app.navigation.*
@@ -18,7 +19,8 @@ class MainActivity : ComponentActivity() {
             enableEdgeToEdge()
             Linux_logic_appTheme {
                 val userViewModel: UserViewModel = viewModel()
-                LinuxLogicNavigator(userViewModel = userViewModel)
+                val terminalViewModel: TerminalViewModel = viewModel()
+                LinuxLogicNavigator(userViewModel = userViewModel, terminalViewModel = terminalViewModel)
             }
         }
     }
@@ -29,6 +31,7 @@ class MainActivity : ComponentActivity() {
 fun LinuxLogicAppPreview() {
     Linux_logic_appTheme {
         val userViewModel: UserViewModel = viewModel()
-        LinuxLogicNavigator(userViewModel = userViewModel)
+        val terminalViewModel: TerminalViewModel = viewModel()
+        LinuxLogicNavigator(userViewModel = userViewModel,  terminalViewModel = terminalViewModel)
     }
 }
