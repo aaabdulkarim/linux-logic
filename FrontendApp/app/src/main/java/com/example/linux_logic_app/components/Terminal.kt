@@ -92,8 +92,8 @@ class WebSocketClient(url: String) {
 }
 
 @Composable
-fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: TerminalViewModel) {
-    val terminalColors = terminalViewModel.terminalColors
+fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserViewModel) {
+    val terminalColors = userViewModel.terminalViewModel.terminalColors
     var terminalOutput by remember { mutableStateOf(listOf<AnnotatedString>()) }
     var userInput by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
@@ -229,6 +229,6 @@ fun Terminal(socketUrl: String, preview: Boolean = false, terminalViewModel: Ter
 }
 
 @Composable
-fun PreviewTerminal(terminalViewModel: TerminalViewModel) {
-    Terminal("ws://172.20.10.2:8000/ws", preview = true, terminalViewModel = terminalViewModel)
+fun PreviewTerminal(userViewModel: UserViewModel) {
+    Terminal("ws://172.20.10.2:8000/ws", preview = true, userViewModel = userViewModel)
 }

@@ -55,7 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
 import com.example.linux_logic_app.components.PreviewTerminal
-import com.example.linux_logic_app.components.TerminalViewModel
+import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDanger
 import com.example.linux_logic_app.ui.theme.LiloDark
@@ -73,7 +73,7 @@ https://mvnrepository.com/artifact/com.godaddy.android.colorpicker/compose-color
 https://github.com/skydoves/colorpicker-compose/tree/main
  */
 @Composable
-fun CustomizationScreen(terminalViewModel: TerminalViewModel) {
+fun CustomizationScreen(userViewModel: UserViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +93,7 @@ fun CustomizationScreen(terminalViewModel: TerminalViewModel) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        ColorCustomizationCard(terminalViewModel = terminalViewModel)
+        ColorCustomizationCard(userViewModel = userViewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -105,7 +105,7 @@ fun CustomizationScreen(terminalViewModel: TerminalViewModel) {
             modifier = Modifier
                 .weight(1f)
         ) {
-            PreviewTerminal(terminalViewModel = terminalViewModel)
+            PreviewTerminal(userViewModel = userViewModel)
         }
     }
 }
@@ -300,7 +300,7 @@ fun ColorPickerDialog(
 https://www.youtube.com/watch?v=SNcMCH5DqaM
  */
 @Composable
-fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
+fun ColorCustomizationCard(userViewModel: UserViewModel) {
     val defaultColorList = listOf(
         Color.White to "Weiß",
         Color.Black to "Schwarz",
@@ -328,8 +328,8 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
         label = "Rotation of Arrow-Icon"
     )
 
-    val currentColors = terminalViewModel.terminalColors
-    val useDefaultColors = terminalViewModel.useDefaultColors
+    val currentColors = userViewModel.terminalViewModel.terminalColors
+    val useDefaultColors = userViewModel.terminalViewModel.useDefaultColors
 
     Card(
         colors = CardDefaults.cardColors(
@@ -383,7 +383,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         option = "Terminal Kopf:",
                         selectedColor = currentColors.headerColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(headerColor = it)
                             )
                         },
@@ -394,7 +394,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         option = "Terminal Körper:",
                         selectedColor = currentColors.bodyColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(bodyColor = it)
                             )
                         },
@@ -405,7 +405,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         option = "Terminal Kopf (Text):",
                         selectedColor = currentColors.headerTextColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(headerTextColor = it)
                             )
                         },
@@ -416,7 +416,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         option = "Shell Prompt:",
                         selectedColor = currentColors.shellPromptColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(shellPromptColor = it)
                             )
                         },
@@ -427,7 +427,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         option = "Befehle:",
                         selectedColor = currentColors.commandColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(commandColor = it)
                             )
                         },
@@ -438,7 +438,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                         option = "Cursor:",
                         selectedColor = currentColors.cursorColor,
                         onColorSelected = {
-                            terminalViewModel.updateColors(
+                            userViewModel.updateTerminalColors(
                                 currentColors.copy(cursorColor = it)
                             )
                         },
@@ -464,7 +464,7 @@ fun ColorCustomizationCard(terminalViewModel: TerminalViewModel) {
                     Switch(
                         checked = useDefaultColors,
                         onCheckedChange = {
-                            terminalViewModel.updateDefaultMode(it)
+                            userViewModel.updateDefaultColors(it)
                         },
                         thumbContent = {
                             if (useDefaultColors) {

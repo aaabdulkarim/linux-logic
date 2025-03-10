@@ -84,7 +84,7 @@ fun LinuxLogicNavigator(userViewModel: UserViewModel) {
         composable(
             route = Screen.Level.route
         ) {
-            LevelScreen(navController = navController)
+            LevelScreen(navController = navController, userViewModel = userViewModel)
         }
 
         composable(
@@ -113,6 +113,7 @@ fun LinuxLogicNavigator(userViewModel: UserViewModel) {
             route = Screen.Feedback.route,
         ) {
             FeedbackScreen(navController = navController)
+            //ComponentsScreen()
         }
 
         composable(

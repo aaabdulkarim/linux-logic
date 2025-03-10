@@ -59,13 +59,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.components.TerminalViewModel
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
@@ -119,7 +117,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
         )
     )
 
-    val terminalViewModel: TerminalViewModel = viewModel()
+    //val terminalViewModel: TerminalViewModel = viewModel()
     //val settingsViewModel: SettingsViewModel = viewModel()
 
     ModalNavigationDrawer(
@@ -629,13 +627,13 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         composable(
                             route = Screen.Customize.route
                         ) {
-                            CustomizationScreen(terminalViewModel = terminalViewModel)
+                            CustomizationScreen(userViewModel = userViewModel)
                         }
 
                         composable(
                             route = Screen.Home.route
                         ) {
-                            HomeScreen(terminalViewModel = terminalViewModel)
+                            HomeScreen(userViewModel = userViewModel)
                         }
 
                         composable(

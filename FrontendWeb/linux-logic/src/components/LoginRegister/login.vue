@@ -52,7 +52,7 @@ export default {
       email: '',
       password: '',
       stayLoggedIn: 0,
-      base_url : "http://10.0.107.220:8001",
+      base_url : "http://localhost:8000",
       response: false,
     };
   },
