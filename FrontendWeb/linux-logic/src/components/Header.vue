@@ -4,23 +4,42 @@
       <img src="@/assets/LogoLinuxLogic.webp" alt="Logo" class="logo-sticky" />
     </a>
     <div class="icon-container">
-
-      <i class="pi pi-star icon">anzahl</i>
+      <i class="pi pi-star icon">{{ starCount }}</i>
       <i class="pi pi-user icon" @click="navigate"></i>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "Header",
-methods: {
-  navigate() {
-    this.$router.push("/profil");
+  data() {
+    return {
+      starCount: 0,
+      base_url: "http://localhost:8000"
+    };
   },
-},
+  methods: {
+    navigate() {
+      this.$router.push("/profil");
+    },
+    async fetchStarCount() {
+      try {
+        const response = await axios.get(this.base_url + "/starCount")
+        .then((response) => {
+          this.starCount = response.data.starCount;
+        });
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Sternanzahl:', error);
+      }
+    }
+  },
+  mounted() {
+    this.fetchStarCount();
+  }
 };
-
 </script>
 
 <style scoped>

@@ -2,11 +2,11 @@
   <div class="profile-container grid">
     <div class="profile-header">
       <div class="profile-info">
-        <h1 class="profile-name">Profilname</h1>
-        <p class="profile-progress">Fortschritt: <span class="level">Level 5</span></p>
+        <h1 class="profile-name">{{ profileName }}</h1>
+        <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}</span></p>
       </div>
       <div class="profile-actions">
-        <p class="stay-logged-in">Email</p>
+        <p class="stay-logged-in">{{ email }}</p>
         <button class="change-password">Passwort ändern</button>
       </div>
     </div>
@@ -51,35 +51,17 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      chapters: [
-        {
-          name: "Kapitel 1",
-          expanded: false,
-          courses: [
-            { name: "Level 1", stars: 3 },
-            { name: "Level 2", stars: 2 },
-            { name: "Level 3", stars: 4 },
-            { name: "Level 4", stars: 1 },
-            { name: "Level 5", stars: 3 }
-          ]
-        },
-        {
-          name: "Kapitel 2",
-          expanded: false,
-          courses: [
-            { name: "Level 6", stars: 3 },
-            { name: "Level 7", stars: 2 },
-            { name: "Level 8", stars: 4 },
-            { name: "Level 9", stars: 1 },
-            { name: "Level 10", stars: 3 }
-          ]
-        }
-      ],
-      nextCourse: { name: "Level 11", stars: 0 },
-      badges: ["Label", "Label", "Label", "Label", "Label", "Label"]
+      profileName: '',
+      email: '',
+      progressLevel: '',
+      chapters: [],
+      nextCourse: { name: "", stars: 0 },
+      badges: []
     };
   },
   methods: {
@@ -91,7 +73,25 @@ export default {
     },
     toggleChapter(index) {
       this.chapters[index].expanded = !this.chapters[index].expanded;
+    },
+    fetchUserData() {
+      axios.get('/api/user/profile')
+        .then(response => {
+          const data = response.data;
+          this.profileName = data.name;
+          this.email = data.email;
+          this.progressLevel = data.progressLevel;
+          this.chapters = data.chapters;
+          this.nextCourse = data.nextCourse;
+          this.badges = data.badges;
+        })
+        .catch(error => {
+          console.error('Fehler beim Abrufen der Benutzerdaten:', error);
+        });
     }
+  },
+  mounted() {
+    this.fetchUserData();
   }
 };
 </script>
