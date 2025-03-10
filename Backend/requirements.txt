@@ -20,6 +20,7 @@ markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
 psycopg2==2.9.10
+py3-validate-email==1.0.5.post2
 pydantic==2.9.2
 pydantic_core==2.23.4
 Pygments==2.18.0
