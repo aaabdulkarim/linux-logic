@@ -49,8 +49,6 @@ async def websocket(mainsocket: WebSocket):
 
     # Test Clues
     scenario_data = scm.set_scenario_data(docker_path_copy)
-    # clues = scm.get_clue(3)
-    # await mainsocket.send_text("".join(clues))
 
     if container:
 
@@ -76,7 +74,10 @@ async def websocket(mainsocket: WebSocket):
                             await mainsocket.send_text(clues)
 
                         if ">check" == frontend_cmd:
-                            pass
+                            await container_socket.send("bash /app/checks_fun.sh")
+                            data = await container_socket.recv()
+                            await mainsocket.send_text(data)
+                            print(data)
 
                         else:
                             await container_socket.send(frontend_cmd)

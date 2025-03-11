@@ -8,15 +8,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.Terminal
-import com.example.linux_logic_app.components.TerminalViewModel
+import com.example.linux_logic_app.components.UserViewModel
 
 @Composable
-fun HomeScreen(terminalViewModel: TerminalViewModel) {
+fun HomeScreen(userViewModel: UserViewModel) {
     Box(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp),
     ) {
-        Terminal("ws://10.0.107.7:8000/ws", preview = false, terminalViewModel = terminalViewModel)
+        Terminal("ws://10.0.107.7:8000/ws", preview = false, userViewModel = userViewModel)
     }
 }

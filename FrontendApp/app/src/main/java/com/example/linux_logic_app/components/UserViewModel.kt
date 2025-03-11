@@ -12,7 +12,8 @@ import androidx.lifecycle.ViewModel
 data class User(
     val username: String,
     val email: String,
-    val password: String // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
+    val password: String, // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
+    val terminalColors: TerminalColors = defaultTerminalColors // Terminalfarben für den Benutzer
 )
 
 /**
@@ -70,8 +71,27 @@ class UserViewModel : ViewModel() {
 
     // Liste registrierter Benutzer
     private var registeredUsers = mutableListOf<User>().apply {
-        add(User("Admin", "admin@test.com", "Admin123#"))
+        add(
+            User(
+                username = "Admin",
+                email = "admin@test.com",
+                password = "Admin123#"
+            )
+        )
+        add(
+            User(
+                username = "Tester",
+                email = "test@test.com",
+                password = "Test123#"
+            )
+        )
     }
+
+    //var terminalViewModel by mutableStateOf(TerminalViewModel()) // Das terminalViewModel kann nicht null sein
+
+    // Verwaltet den TerminalViewModel für den aktuell angemeldeten Benutzer
+    private var _terminalViewModel: TerminalViewModel = TerminalViewModel(defaultTerminalColors)
+    val terminalViewModel: TerminalViewModel get() = _terminalViewModel
 
     fun onUsernameChange(newUsername: String) {
         _username = newUsername
@@ -165,6 +185,10 @@ class UserViewModel : ViewModel() {
 
         // Erfolgreicher Login
         _user = registeredUser
+
+        // Initialisiere das TerminalViewModel mit den Terminalfarben des Benutzers
+        _terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
+
         return true
     }
 
@@ -206,6 +230,12 @@ class UserViewModel : ViewModel() {
         val newUser = User(username, email, password)
         registeredUsers.add(newUser)
         _user = newUser      // Automatische Anmeldung nach Registrierung
+        /*
+        Automatisch alle Felder und Errors zurücksetzen, sodass man beim erfolgreichen Registrieren
+        sich danach der Anmeldung unterziehen muss, was eine gewisse Identiät erfordert.
+         */
+        clearAllFields()
+        clearErrorMessages()
         return true
     }
 
@@ -334,5 +364,34 @@ class UserViewModel : ViewModel() {
     fun cancelVerification() {
         _verifyPassword = ""    // Löschen des Inputs für die Passwort Verifizierung
         clearErrorMessages()    // Löschen aller angezeigten Fehlermeldungen.
+    }
+
+    fun updateTerminalColors(newColors: TerminalColors) {
+        val currentUser = _user ?: return
+        val updatedUser = currentUser.copy(terminalColors = newColors)
+
+        // Benutzer in der registrierten Liste aktualisieren
+        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
+        if (index != -1) {
+            registeredUsers[index] = updatedUser
+            _user = updatedUser  // Aktualisieren des aktuellen Benutzers
+        }
+
+        // TerminalViewModel auch aktualisieren
+        _terminalViewModel.updateColors(newColors)
+    }
+
+    fun updateDefaultColors(useDefault: Boolean) {
+        val currentUser = _user ?: return
+        val updatedUser = currentUser.copy(terminalColors = defaultTerminalColors)
+
+        // Benutzer in der registrierten Liste aktualisieren
+        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
+        if (index != -1) {
+            registeredUsers[index] = updatedUser
+            _user = updatedUser  // Aktualisieren des aktuellen Benutzers
+        }
+
+        _terminalViewModel.updateDefaultMode(useDefault) // Wenn terminalViewModel null ist, Standardwert true
     }
 }
