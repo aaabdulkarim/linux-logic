@@ -58,7 +58,7 @@ class DockerManager():
     def addConnection(self, userSessionId, userName, frontendChoice):
         container_name, container  = self.createDockerContainer(userSessionId, userName, frontendChoice)
         if container_name:
-            self.userContainerConnections[container_name] = container_name  # Container-Name als Key
+            self.userContainerConnections[container_name] = container_name  
             print(f"Container gestartet: {container_name}")
             return container_name
         else:

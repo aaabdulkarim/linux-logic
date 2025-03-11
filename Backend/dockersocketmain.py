@@ -25,8 +25,12 @@ async def websocket(mainsocket: WebSocket):
 
     session_id = str(uuid.uuid4()),
     frontend_user_name = await mainsocket.receive_text()    
-    frontend_container_choice = await mainsocket.receive_text()
     
+    print(frontend_user_name)
+    
+    frontend_container_choice = await mainsocket.receive_text()
+
+    print(frontend_container_choice)
     scm = ScenarioTrack()
 
 
@@ -35,6 +39,8 @@ async def websocket(mainsocket: WebSocket):
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
     )
+
+
 
     # TODO: Graceful Closure
 
@@ -47,7 +53,9 @@ async def websocket(mainsocket: WebSocket):
             
         await mainsocket.send_text("Container Startup successful")
         container_socket_port = dm.get_dynamic_port(container_name)
-        
+        print("Das isses: ", container_socket_port)
+
+
         # Connection mit dem docker socket mit dem modul websockets
         container_socket_url = f"ws://127.0.0.1:{container_socket_port}/dockersocket"
         try:
@@ -60,6 +68,8 @@ async def websocket(mainsocket: WebSocket):
 
                     try:
                         if ">clue" == frontend_cmd:
+                            # TODO: SCM Korrekt mit User Connection identifizieren 
+                            # TODO: Update Progress wird nur bei einem Check ausgeführt
                             scm.update_progress()
                             clues = "".join(scm.get_clue())
                             await mainsocket.send_text(clues)
@@ -86,12 +96,12 @@ async def websocket(mainsocket: WebSocket):
 
         finally:
             await mainsocket.close()
-            if container:
-                container.stop()
-                container.remove()
-                print("WebSocket stopped and container removed")
+            # if container:
+            #     container.stop()
+            #     container.remove()
+            #     print("WebSocket stopped and container removed")
         
-        dm.close(container)
+            dm.close(container_name)
 
     else:
         print("Help")
