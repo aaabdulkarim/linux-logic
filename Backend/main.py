@@ -202,7 +202,7 @@ async def getProgress(userId : int, session: SessionDep):
 
         return progressList
 
-        
+
     except ValueError:
         raise HTTPException(status_code=404, detail=f"Invalid Paramater Value given as User ID")
 
@@ -214,7 +214,34 @@ async def getProgress(userId : int, session: SessionDep):
 async def getSterne(userId : int, session : SessionDep):
     """
     Die Sterne für jedes Szenario die ein User abgeschlossen hat werden zusammengezählt und zurückgegeben
+
+    wenn hints_verwendet > 0, dann bekommt der User 2 Sterne für das Szenario
+    wenn loesungen_verwendet > 0, dann bekommt der User 1 Stern für das Szenario
+    ansonsten bekommt er 3 
     """    
     statement = select(Progress)
-    for i in statement:
-        print(i)
+    results = session.exec(statement)
+    anzahlSterne = 0
+
+    try:
+        for resObj in results:
+            if resObj.user_id == userId:
+                erreichbareSterne = 3
+                if resObj.hints_verwendet > 0:
+                    erreichbareSterne = 2
+
+                if resObj.loesungen_verwendet > 0:
+                    erreichbareSterne = 1
+
+                anzahlSterne += erreichbareSterne 
+
+        return anzahlSterne
+
+        
+    except ValueError:
+        raise HTTPException(status_code=404, detail=f"Invalid Paramater Value given as User ID")
+
+    
+    # Exception nachdem der User nicht gefunden wurde
+    raise HTTPException(status_code=404, detail=f"Progress not found with User Id {userId}")
+
