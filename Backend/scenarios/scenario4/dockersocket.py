@@ -36,7 +36,7 @@ class BashRunner:
                 while True:
                     print(str(loop_c + 1) + " noch nd gelesen")
                     try:
-                        line = await asyncio.wait_for(self.process.stdout.readline(), timeout=0.5)
+                        line = await asyncio.wait_for(self.process.stdout.readline(), timeout=2)
                         print("JO, gelesen")
 
                         if not line:

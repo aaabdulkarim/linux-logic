@@ -12,7 +12,7 @@ from DockerManager import DockerManager
 app = FastAPI()
 
 scm = ScenarioTrack()
-dm = DockerManager
+dm = DockerManager()
 
 
 
@@ -30,7 +30,7 @@ async def websocket(mainsocket: WebSocket):
     scm = ScenarioTrack()
 
 
-    container = dm.addConnection(
+    container_name = dm.addConnection(
         userSessionId=session_id,
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
@@ -38,16 +38,18 @@ async def websocket(mainsocket: WebSocket):
 
     # TODO: Graceful Closure
 
-    if container:
+    if container_name:
 
         # TODO: Nach 1h Inaktivität automatisch schließen 
-        while dm.get_container_health(container) != "healthy":
-            print(dm.get_container_health(container))
+        while dm.get_container_health(container_name) != "healthy":
+            print(dm.get_container_health(container_name))
             time.sleep(2)
             
         await mainsocket.send_text("Container Startup successful")
+        container_socket_port = dm.get_dynamic_port(container_name)
+        
         # Connection mit dem docker socket mit dem modul websockets
-        container_socket_url = "ws://127.0.0.1:1000/dockersocket"
+        container_socket_url = f"ws://127.0.0.1:{container_socket_port}/dockersocket"
         try:
             async with websockets.connect(container_socket_url) as container_socket:
                 print("connected to external")

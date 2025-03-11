@@ -13,7 +13,7 @@ class DockerManager():
     userId inform von SessionId die bei Socket Verbindung mitgegeben wird
     """
     
-    userContainerConnections = []    
+    userContainerConnections = {} 
     client = docker.from_env()
 
     
@@ -21,27 +21,34 @@ class DockerManager():
 
         docker_dir_path = f"scenarios/{frontendChoice}"
 
-        container_tag = userName+frontendChoice 
-        container_name = userSessionId[:4] + frontendChoice + userName
-        """
-        Erstellt von einer Auswahl an Namen einen neuen Namen mit Zahlen der userSessionId
-        """
-        client = docker.from_env()
+        container_tag = userName + frontendChoice
+        container_name = f"{userName}_{frontendChoice}_{userSessionId[:8]}"
+      
         try:
-            client.images.build(path=docker_dir_path, tag=container_tag)
+            self.client.images.build(path=docker_dir_path, tag=container_tag)
             
-            container = client.containers.run(container_tag, name=container_name, ports={1000: 1000}, detach=True)
-            return container
+            # TODO: Dynamische Ports
+            container = self.client.containers.run(
+                container_tag, 
+                name=container_name, 
+                ports={1000: None}, 
+                detach=True)
+            return container_name, container  
 
 
         except docker.errors.DockerException as e:
             print(f"Error: {e}")
 
+    def get_dynamic_port(self, container_name):
+        container = self.client.containers.get(container_name)
+        ports = container.attrs['NetworkSettings']['Ports']
+        return ports['8000/tcp'][0]['HostPort']
+
 
     # https://stackoverflow.com/questions/60291082/wait-for-docker-container-healthcheck-to-succeed-before-detaching
-    def get_container_health(self, container):
+    def get_container_health(self, container_name):
         api_client = docker.APIClient()
-        inspect_results = api_client.inspect_container(container.name)
+        inspect_results = api_client.inspect_container(container_name)
         return inspect_results['State']['Health']['Status']
 
 
@@ -49,16 +56,14 @@ class DockerManager():
 
 
     def addConnection(self, userSessionId, userName, frontendChoice):
-        container = self.createDockerContainer(userSessionId, userName, frontendChoice)
-        try:
-            userDockerConnection = {
-                userSessionId : container
-            }
-            self.userContainerConnections.append(userDockerConnection)
-                
-
-        except ValueError:
-            print("sessionId Value is invalid")
+        container_name, container  = self.createDockerContainer(userSessionId, userName, frontendChoice)
+        if container_name:
+            self.userContainerConnections[container_name] = container_name  # Container-Name als Key
+            print(f"Container gestartet: {container_name}")
+            return container_name
+        else:
+            print("Fehler beim Erstellen des Containers")
+            return None
 
     def close(self, userSessionId):
         """
