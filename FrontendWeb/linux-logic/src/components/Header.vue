@@ -27,9 +27,9 @@ export default {
     },
     async fetchStarCount() {
       try {
-        const response = await axios.get(this.base_url + "/starCount")
+        const response = await axios.get(this.base_url + "/sterne?userId=8")
         .then((response) => {
-          this.starCount = response.data.starCount;
+          this.starCount = response.data;
         });
       } catch (error) {
         console.error('Fehler beim Abrufen der Sternanzahl:', error);
