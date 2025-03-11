@@ -12,28 +12,30 @@
     </div>
 
     <div class="course-progress">
-      <div class="completed-levels">
-        <h2>Abgeschlossene Level</h2>
-        <div class="course-list" v-for="(chapter, index) in chapters" :key="index">
-          <h3 @click="toggleChapter(index)" class="chapter-header">{{ chapter.name }}</h3>
-          <div v-if="chapter.expanded" class="course-cards">
-            <div class="course-card" v-for="(course, index) in chapter.courses" :key="index">
-              <div class="course-content">{{ course.name }}</div>
-              <div class="course-stars">
-                <span v-for="star in course.stars" :key="star" class="star">⭐</span>
+      <div class="header-row">
+        <div class="completed-levels">
+          <h2>Abgeschlossene Level</h2>
+          <div class="course-list" v-for="(chapter, index) in chapters" :key="index">
+            <h3 @click="toggleChapter(index)" class="chapter-header">{{ chapter.name }}</h3>
+            <div v-if="chapter.expanded" class="course-cards">
+              <div class="course-card" v-for="(course, index) in chapter.courses" :key="index">
+                <div class="course-content">{{ course.name }}</div>
+                <div class="course-stars">
+                  <span v-for="star in course.stars" :key="star" class="star">⭐</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="next-course">
-        <h2>Nächstes Level</h2>
-        <div class="next-course-card">
-          <div class="course-content">{{ nextCourse.name }}</div>
-          <div class="course-stars">
-            <span v-for="star in nextCourse.stars" :key="star" class="star">⭐</span>
+        <div class="next-course">
+          <h2>Nächstes Level</h2>
+          <div class="next-course-card">
+            <div class="course-content">{{ nextCourse.name }}</div>
+            <div class="course-stars">
+              <span v-for="star in nextCourse.stars" :key="star" class="star">⭐</span>
+            </div>
+            <button class="next-level" @click="playNextLevel">Nächstes Level spielen</button>
           </div>
-          <button class="next-level" @click="playNextLevel">Nächstes Level spielen</button>
         </div>
       </div>
     </div>
@@ -59,8 +61,31 @@ export default {
       profileName: '',
       email: '',
       progressLevel: '',
-      chapters: [],
-      nextCourse: { name: "", stars: 0 },
+      chapters: [
+        {
+          name: "Kapitel 1",
+          expanded: true,
+          courses: [
+            { name: "Level 1", stars: 0 },
+            { name: "Level 2", stars: 0 },
+            { name: "Level 3", stars: 0 },
+            { name: "Level 4", stars: 0 },
+            { name: "Level 5", stars: 0 }
+          ]
+        },
+        {
+          name: "Kapitel 2",
+          expanded: true,
+          courses: [
+            { name: "Level 6", stars: 0 },
+            { name: "Level 7", stars: 0 },
+            { name: "Level 8", stars: 0 },
+            { name: "Level 9", stars: 0 },
+            { name: "Level 10", stars: 0 }
+          ]
+        }
+      ],
+      nextCourse: { name: "Level 11", stars: 0 },
       badges: []
     };
   },
@@ -81,7 +106,14 @@ export default {
           this.profileName = data.name;
           this.email = data.email;
           this.progressLevel = data.progressLevel;
-          this.chapters = data.chapters;
+          this.chapters = data.chapters.map(chapter => ({
+            ...chapter,
+            expanded: true,
+            courses: chapter.courses.map(course => ({
+              ...course,
+              stars: course.stars || 0
+            }))
+          }));
           this.nextCourse = data.nextCourse;
           this.badges = data.badges;
         })
@@ -157,11 +189,18 @@ export default {
   max-width: 800px;
   margin-top: 30px;
 }
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.completed-levels {
+  flex: 1;
+}
 .course-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  flex: 1;
 }
 .chapter-header {
   cursor: pointer;
@@ -170,14 +209,12 @@ export default {
   padding: 10px;
   border-radius: 5px;
   text-align: center;
-  margin: 5px;
 }
 .course-cards {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 10px;
-  margin: 5px;
 }
 .course-card {
   width: 100%;
@@ -200,11 +237,11 @@ export default {
   color: gold;
 }
 .next-course {
-  flex: 1;
+  flex: 0 0 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-left: 20px;
 }
 .next-course-card {
