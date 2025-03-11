@@ -5,21 +5,6 @@ Das Backend bleibt gleich für beide Branches, weswegen eine Änderungen immer i
 
 # REST - API
 
-## Endpoints
-
-- getProgress(userId) **GET-Method** 
-- login(userName, password) **GET-Method**
-- login(email, password) **GET-Method**
-- editPassword(userName, password) **PUT-Method**
-
-- register(userName, email, password) **POST-Method**
-- saveProgress(userId, solvedChallengeId) **POST-Method**
-- addComment(userId, text) **POST-Method**
-
-- addChallenge(docker-file) **POST-Method**
-    - Dass diese Methode für das Frontend zugänglich ist, ist noch nicht fix, da wir noch nicht wissen ob der User Challenges hinzufügen kann. Jedoch wird das nicht zur Datenbank hinzugefügt, sondern in einer Speicherstrategie, wo die vorgefertigten Docker Files bestehen
-
-
 ## Anbindung an die Datenbank
 
 Die Datenbank läuft auf Neon über psql weil FastAPI gut für diese Datenbank geeignet ist. Das Python Package sqlmodel ist geschrieben von dem Autor von FastAPI und basiert auf SQLAlchemy mit Pydantic: 
