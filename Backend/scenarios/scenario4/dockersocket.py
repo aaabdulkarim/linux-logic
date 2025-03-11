@@ -86,7 +86,7 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             data = await websocket.receive_text()
 
-        
+            
             output = await bash_runner.run_command(data)
             print(output)
             await websocket.send_text(output)

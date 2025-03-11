@@ -23,6 +23,10 @@
     <Team />
   </section>
 
+  <section id="download">
+    <DownloadApp />
+  </section>
+
   <section id="impressum">
     <Impressum />
   </section>
@@ -30,6 +34,8 @@
   <section id="footer">
     <Footer />
   </section>
+
+  <FloatingActionButton />
 
 </template>
 
@@ -44,6 +50,8 @@ import Team from '@/components/HomePage/Team.vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
 import Impressum from '@/components/HomePage/Impressum.vue';
+import DownloadApp from '@/components/HomePage/DownloadApp.vue';
+import FloatingActionButton from '@/components/HomePage/FloatingActionButton.vue';
 import "../style/home.css"
 
 export default {
@@ -54,10 +62,12 @@ export default {
     Meilenstein,
     Umfrage,
     Fortschritt,
+    DownloadApp,
     Team,
     Footer,
     Impressum,
-    Header
+    Header,
+    FloatingActionButton
   }
 }
 </script>
