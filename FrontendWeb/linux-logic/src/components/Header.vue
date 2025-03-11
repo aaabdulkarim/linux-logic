@@ -4,7 +4,7 @@
       <img src="@/assets/LogoLinuxLogic.webp" alt="Logo" class="logo-sticky" />
     </a>
     <div class="icon-container">
-      <i class="pi pi-star icon">{{ starCount }}</i>
+      <i class="pi pi-star icon"><span class="starCount">{{ starCount }}</span></i>
       <i class="pi pi-user icon" @click="navigate"></i>
     </div>
   </div>
@@ -78,5 +78,11 @@ export default {
 
 .icon:hover {
   transform: scale(1.05);
+}
+.starCount {
+  font-family: 'Ubuntu', monospace, sans-serif;
+  padding-left: 0.6rem;
+  font-size: 1.6rem;
+  color: white;
 }
 </style>
