@@ -1,34 +1,18 @@
 from fastapi import FastAPI
 from fastapi.websockets import WebSocket
 from fastapi import WebSocketDisconnect
-import docker
+
 import websockets
 import time
-from ScenarioTrackModel import ScenarioTrack
+import uuid
+
+from ScenarioTrack import ScenarioTrack
+from DockerManager import DockerManager 
 
 app = FastAPI()
 
 scm = ScenarioTrack()
-
-
-def run_docker_commands(docker_dir_path):
-    client = docker.from_env()
-    try:
-        client.images.build(path=docker_dir_path, tag="newone")
-        
-        container = client.containers.run("newone", name="theone", ports={1000: 1000}, detach=True)
-        return container
-
-
-    except docker.errors.DockerException as e:
-        print(f"Error: {e}")
-
-
-# https://stackoverflow.com/questions/60291082/wait-for-docker-container-healthcheck-to-succeed-before-detaching
-def get_container_health(container):
-    api_client = docker.APIClient()
-    inspect_results = api_client.inspect_container(container.name)
-    return inspect_results['State']['Health']['Status']
+dm = DockerManager
 
 
 
@@ -37,27 +21,32 @@ def get_container_health(container):
 @app.websocket("/ws")
 async def websocket(mainsocket: WebSocket):
     await mainsocket.accept()
-    client = docker.from_env()
-    tagname = "testtag"
     
+
+    session_id = str(uuid.uuid4()),
+    frontend_user_name = await mainsocket.receive_text()    
     frontend_container_choice = await mainsocket.receive_text()
-    docker_path = f"scenarios/{frontend_container_choice}"
-    docker_path_copy = f"scenarios/{frontend_container_choice}"
+    
+    scm = ScenarioTrack()
 
 
-    container = run_docker_commands(docker_path)
+    container = dm.addConnection(
+        userSessionId=session_id,
+        userName=frontend_user_name,
+        frontendChoice=frontend_container_choice
+    )
 
-    # Test Clues
-    scenario_data = scm.set_scenario_data(docker_path_copy)
+    # TODO: Graceful Closure
 
     if container:
 
-        while get_container_health(container) != "healthy":
-            print(get_container_health(container))
-            time.sleep(1)
+        # TODO: Nach 1h Inaktivität automatisch schließen 
+        while dm.get_container_health(container) != "healthy":
+            print(dm.get_container_health(container))
+            time.sleep(2)
             
         await mainsocket.send_text("Container Startup successful")
-        # Connection mit dem docker socket mit dem Framework Socket
+        # Connection mit dem docker socket mit dem modul websockets
         container_socket_url = "ws://127.0.0.1:1000/dockersocket"
         try:
             async with websockets.connect(container_socket_url) as container_socket:
@@ -100,7 +89,7 @@ async def websocket(mainsocket: WebSocket):
                 container.remove()
                 print("WebSocket stopped and container removed")
         
-        client.close()
+        dm.close(container)
 
     else:
         print("Help")
