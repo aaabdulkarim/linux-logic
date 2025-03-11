@@ -1,11 +1,12 @@
 from typing import Annotated
 from validate_email import validate_email
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Response
 from pydantic import BaseModel
 from dotenv import load_dotenv, get_key
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 from fastapi.middleware.cors import CORSMiddleware
+
 
 
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
@@ -19,7 +20,7 @@ connectionString = get_key(".env", "CONNECTION_STRING")
 # Das Erstellen der psql/Neon Engine
 engine = create_engine(connectionString)
 
-
+# SQL Models
 class User(SQLModel, table=True):
     """
     Model Klasse für einen Linux Logic user
@@ -30,12 +31,30 @@ class User(SQLModel, table=True):
     password_hash: int
 
 
+class Progress(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    user_id: int = Field(index=True, foreign_key="user.id")
+    scenario_id: int = Field(index=True, foreign_key="scenarios.id")
+    hints_verwendet: int = Field(index=True)
+    loesungen_verwendet: int = Field(index=True)
+    
+    
 class Bewertung(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(index=True)
     scenario_id: int = Field(index=True)
     bewertung: int
     kommentar: str = None   
+
+
+
+# Pydantic Models
+
+class ProgressPyModel(BaseModel):
+    loesungen_verwendet : int
+    hints_verwendet : int
+    scenario_id : int
+
 
 
 # FastAPI App Variable
@@ -164,14 +183,38 @@ async def getProgress(userId : int, session: SessionDep):
     """
     Der Progress wird als Zahl zurückgegeben. Die Zahl ist die ID des Progress.
     """
-    try:
-        userId = int(userId)
-        for i in fakeProgress:
-            if i["userId"] == userId:
-                return {"userId": userId, "progress": i["scenarioId"]}
+
+    progressList = []
     
+    try:
+        statement = select(Progress)
+        results = session.exec(statement)
+
+
+        for resObj in results:
+            if resObj.user_id == userId:
+                progressObj = ProgressPyModel(
+                    loesungen_verwendet = resObj.loesungen_verwendet,
+                    hints_verwendet = resObj.hints_verwendet,
+                    scenario_id = resObj.scenario_id,
+                )
+                progressList.append(progressObj)
+
+        return progressList
+
+        
     except ValueError:
         raise HTTPException(status_code=404, detail=f"Invalid Paramater Value given as User ID")
 
     # Exception nachdem der User nicht gefunden wurde
     raise HTTPException(status_code=404, detail=f"Progress not found with User Id {userId}")
+
+
+@app.get("/sterne")
+async def getSterne(userId : int, session : SessionDep):
+    """
+    Die Sterne für jedes Szenario die ein User abgeschlossen hat werden zusammengezählt und zurückgegeben
+    """    
+    statement = select(Progress)
+    for i in statement:
+        print(i)
