@@ -105,7 +105,7 @@ async def login(userName : str, userPassword : str, session: SessionDep):
     results = session.exec(statement)
 
     for user in results:
-        print(user)
+
         if user.username == userName and user.password_hash == userPassword:
             # TODO: User ID zurückgegben
             return True
