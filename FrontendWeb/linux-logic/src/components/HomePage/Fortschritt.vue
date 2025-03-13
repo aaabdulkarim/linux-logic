@@ -153,7 +153,22 @@ In der App hat sich einiges an dem Programmflow geändert, da jetzt die Navigati
 Backend
 
 Die Datenbank hat eine Schema-Update bekommen, da jetzt auch User Kommentare und Bewertungen speicherbar sind. Jetzt ist auch ein Verlauf an Szenarien ermöglicht worden. Weitere Szenarien wurden implementiert mit den Aufgabenbeschreibungen und den Bash Scripts. Der Zentralen Socket ist es jetzt auch möglich die Lebenszeit des Containers zu überprüfen und diesen eigenständig zu bauen und zu launchen.`
-                }
+                }, 
+                {
+                    "berichtName": "Bericht 9",
+                    "datum": "19.02 - 04.03",
+                    "text": `In diesem Zeitraum wurde in jedem Knoten der Applikationsstruktur an weiteren Funktionen gearbeitet.
+
+
+Backend:
+Die Website wurde erfolgreich auf der vorgesehenen Domain gelauncht. Während einer aktiven Socket-Verbindung können nun verschiedene Container flexibel ausgewählt werden. Zudem wurde ein umfassender Healthcheck für Docker-Container implementiert, um deren Stabilität sicherzustellen. Während der Socket-Verbindung erhalten Nutzer nun hilfreiche Hinweise zur besseren Orientierung. Die Datenbank wurde angepasst, um eine persistente Speicherung des Fortschritts zu ermöglichen.
+
+App:
+Die individuelle Anpassung des Terminals ist nun für jeden Nutzer separat möglich, sodass jeder sein eigenes, modifiziertes Terminal besitzt. Zudem wurden diverse Fehler behoben und Feinheiten verbessert, darunter das Abmeldeverhalten, das Tastaturlayout bei Eingaben sowie gegenläufige Transitionseffekte zwischen den Screens. Außerdem wurde mit der Entwicklung des Level-Screens begonnen, und die grundlegende Logik hierfür wurde implementiert.
+
+Web:
+Die Barrierefreiheit der Website wurde gemäß AA-Standard optimiert. Ein Access-Code-System wurde eingeführt, um ausgewählten Nutzern den Zugang zu gewähren. Darüber hinaus wurde der Header überarbeitet und verbessert. Die Anbindung der Datenbank an das Frontend wurde erfolgreich umgesetzt, sodass erste Features nun nutzerabhängig funktionieren.`                
+                }, 
             ]
 
         };
