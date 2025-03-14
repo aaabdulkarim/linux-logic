@@ -52,7 +52,7 @@ fun HomeScreen(userViewModel: UserViewModel) {
                 ),
                 contentPadding = PaddingValues(32.dp),
                 onClick = {
-                    // Weiterpspielen redirecten
+                    // Weiterpspielen redirecten und umsetzen
                 },
             ) {
                 Row(
