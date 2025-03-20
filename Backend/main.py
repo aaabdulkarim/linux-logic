@@ -7,7 +7,9 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 from fastapi.middleware.cors import CORSMiddleware
 
+from models.UserModels import *
 
+import uuid
 
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
 # sqlmodel docs: https://sqlmodel.tiangolo.com/tutorial/where/#where-land
@@ -20,15 +22,6 @@ connectionString = get_key(".env", "CONNECTION_STRING")
 # Das Erstellen der psql/Neon Engine
 engine = create_engine(connectionString)
 
-# SQL Models
-class User(SQLModel, table=True):
-    """
-    Model Klasse für einen Linux Logic user
-    """
-    id: int | None = Field(default=None, primary_key=True)
-    username: str = Field(index=True)
-    email: str | None = Field(default=None, index=True)
-    password_hash: int
 
 
 class Progress(SQLModel, table=True):
@@ -88,7 +81,7 @@ async def login(userId : int, session: SessionDep):
     """
     Die Datenbank wird nach userId durchsucht und wenn der User gefunden wurde, dann wird dieser zurückgegeben
     """
-    user = session.get(User, userId)
+    user = session.get(UserDB, userId)
 
     if not user:
         raise HTTPException(status_code=404, detail=f"User with Id {userId} not found")
@@ -97,24 +90,33 @@ async def login(userId : int, session: SessionDep):
 
 
 @app.get("/login/")
-async def login(userName : str, userPassword : str, session: SessionDep):
+async def login(response : Response, userName : str, userPassword : str, session: SessionDep):
     """
     Die Datenbank wird nach userNamen durchsucht und wenn das Passwort übereinstimmt, dann wird true zurückgegeben
     """
-    statement = select(User)
-    results = session.exec(statement)
+    statement = select(UserDB).where(
+        UserDB.username == userName,
+        UserDB.password_hash == userPassword
+    )
+    user = session.exec(statement).first()  
 
-    for user in results:
+    if user:
+        session_id = str(uuid.uuid4())
 
-        if user.username == userName and user.password_hash == userPassword:
-            # TODO: User ID zurückgegben
-            return True
-        
-    return False
+        # Update der Session ID im User-Objekt
+        user.session_id = session_id
 
+        session.add(user)
+        session.commit()
+
+        # Cookie setzen
+        response.set_cookie(key="session_id", value=session_id, httponly=True)
+        return {"message": "Login erfolgreich", "user_id": user.id}
+
+    return {"message": "Login fehlgeschlagen"}
 
 @app.post("/register")
-async def register(userModel : User, session: SessionDep):
+async def register(userModel : UserCreate, session: SessionDep):
     """
     Ein User wird registriert und zur Datenbank hinzugefügt
     """
@@ -129,7 +131,7 @@ async def register(userModel : User, session: SessionDep):
     print("email valid")
 
     # Überprüfen ob die Email schon in unserem System vorhanden ist
-    statement = select(User)
+    statement = select(UserDB)
     userlist = session.exec(statement)
     for user in userlist:
         if user.email == email:
@@ -148,8 +150,8 @@ async def register(userModel : User, session: SessionDep):
 
 @app.put("/edit")
 async def editPassword(userId: int, userName : str, userPassword : str, session: SessionDep):
-    statement = select(User)
-    user = session.get(User, userId)
+    statement = select(UserDB)
+    user = session.get(UserDB, userId)
 
     if not user:
         raise HTTPException(status_code=404, detail=f"User with Id {userId} not found")
