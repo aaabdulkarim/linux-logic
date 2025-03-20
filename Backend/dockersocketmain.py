@@ -9,6 +9,8 @@ import uuid
 from ScenarioTrack import ScenarioTrack
 from DockerManager import DockerManager 
 
+import asyncio
+
 app = FastAPI()
 
 scm = ScenarioTrack()
@@ -34,25 +36,23 @@ async def websocket(mainsocket: WebSocket):
     scm = ScenarioTrack()
 
 
-    container_name = dm.addConnection(
+    container_name = await dm.addConnection(
         userSessionId=session_id,
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
     )
-
-
 
     # TODO: Graceful Closure
 
     if container_name:
 
         # TODO: Nach 1h Inaktivität automatisch schließen 
-        while dm.get_container_health(container_name) != "healthy":
-            print(dm.get_container_health(container_name))
-            time.sleep(2)
+        while await dm.get_container_health(container_name) != "healthy":
+            print(await dm.get_container_health(container_name))
+            await asyncio.sleep(2)
             
         await mainsocket.send_text("Container Startup successful")
-        container_socket_port = dm.get_dynamic_port(container_name)
+        container_socket_port = await dm.get_dynamic_port(container_name)
         print("Das isses: ", container_socket_port)
 
 
@@ -101,7 +101,7 @@ async def websocket(mainsocket: WebSocket):
             #     container.remove()
             #     print("WebSocket stopped and container removed")
         
-            dm.close(container_name)
+            await dm.close(container_name)
 
     else:
         print("Help")

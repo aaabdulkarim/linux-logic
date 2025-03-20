@@ -17,7 +17,7 @@ class DockerManager():
     client = docker.from_env()
 
     
-    def createDockerContainer(self, userSessionId, userName, frontendChoice):
+    async def createDockerContainer(self, userSessionId, userName, frontendChoice):
 
         docker_dir_path = f"scenarios/{frontendChoice}"
 
@@ -39,7 +39,7 @@ class DockerManager():
         except docker.errors.DockerException as e:
             print(f"Error: {e}")
 
-    def get_dynamic_port(self, container_name):
+    async def get_dynamic_port(self, container_name):
         container = self.client.containers.get(container_name)
         ports = container.attrs['NetworkSettings']['Ports']
         print(ports)
@@ -47,7 +47,7 @@ class DockerManager():
 
 
     # https://stackoverflow.com/questions/60291082/wait-for-docker-container-healthcheck-to-succeed-before-detaching
-    def get_container_health(self, container_name):
+    async def get_container_health(self, container_name):
         api_client = docker.APIClient()
         inspect_results = api_client.inspect_container(container_name)
         return inspect_results['State']['Health']['Status']
@@ -56,8 +56,8 @@ class DockerManager():
     
 
 
-    def addConnection(self, userSessionId, userName, frontendChoice):
-        container_name  = self.createDockerContainer(userSessionId, userName, frontendChoice)
+    async def addConnection(self, userSessionId, userName, frontendChoice):
+        container_name  = await self.createDockerContainer(userSessionId, userName, frontendChoice)
         print("Created container : " + container_name)
         if container_name:
             self.userContainerConnections[container_name] = container_name  
@@ -67,7 +67,7 @@ class DockerManager():
             print("Fehler beim Erstellen des Containers")
             return None
 
-    def close(self, userSessionId):
+    async def close(self, userSessionId):
         """
         Schließt Container und löscht Connection in der Liste
         """
