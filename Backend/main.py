@@ -9,6 +9,7 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 from fastapi.middleware.cors import CORSMiddleware
 
 from models.UserModels import *
+from models.ProgressModels import *
 
 import uuid
 
@@ -24,14 +25,6 @@ connectionString = get_key(".env", "CONNECTION_STRING")
 engine = create_engine(connectionString)
 
 
-
-class Progress(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: int = Field(index=True, foreign_key="user.id")
-    scenario_id: int = Field(index=True, foreign_key="scenarios.id")
-    hints_verwendet: int = Field(index=True)
-    loesungen_verwendet: int = Field(index=True)
-    
     
 class Bewertung(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
@@ -43,11 +36,6 @@ class Bewertung(SQLModel, table=True):
 
 
 # Pydantic Models
-
-class ProgressPyModel(BaseModel):
-    loesungen_verwendet : int
-    hints_verwendet : int
-    scenario_id : int
 
 
 
@@ -201,12 +189,12 @@ async def getProgress(request: Request, session: SessionDep):
         raise HTTPException(status_code=401, detail="Ungültige Session-ID")
 
     # SQL Abfrage
-    progress_statement = select(Progress).where(Progress.user_id == user.id)
+    progress_statement = select(ProgressDB).where(ProgressDB.user_id == user.id)
     progress_results = session.exec(progress_statement).all()
 
     # Fortschritt zusammenstellen
     progress_list = [
-        ProgressPyModel(
+        ProgressBase(
             loesungen_verwendet=progress.loesungen_verwendet,
             hints_verwendet=progress.hints_verwendet,
             scenario_id=progress.scenario_id,
@@ -225,7 +213,7 @@ async def getSterne(userId : int, session : SessionDep):
     wenn loesungen_verwendet > 0, dann bekommt der User 1 Stern für das Szenario
     ansonsten bekommt er 3 
     """    
-    statement = select(Progress)
+    statement = select(ProgressDB)
     results = session.exec(statement)
     anzahlSterne = 0
 
