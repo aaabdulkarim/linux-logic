@@ -22,7 +22,7 @@ class DockerManager():
         docker_dir_path = f"scenarios/{frontendChoice}"
 
         container_tag = userName + frontendChoice
-        container_name = f"{userName}_{frontendChoice}_{userSessionId[:8]}"
+        container_name = f"{userName}_{frontendChoice}_{userSessionId[:8].replace('-', '')}"
       
         try:
             self.client.images.build(path=docker_dir_path, tag=container_tag)
@@ -33,7 +33,7 @@ class DockerManager():
                 name=container_name, 
                 ports={1000: None}, 
                 detach=True)
-            return container_name, container  
+            return container_name  
 
 
         except docker.errors.DockerException as e:
@@ -42,7 +42,8 @@ class DockerManager():
     def get_dynamic_port(self, container_name):
         container = self.client.containers.get(container_name)
         ports = container.attrs['NetworkSettings']['Ports']
-        return ports['8000/tcp'][0]['HostPort']
+        print(ports)
+        return ports['1000/tcp'][0]['HostPort']
 
 
     # https://stackoverflow.com/questions/60291082/wait-for-docker-container-healthcheck-to-succeed-before-detaching
@@ -56,7 +57,8 @@ class DockerManager():
 
 
     def addConnection(self, userSessionId, userName, frontendChoice):
-        container_name, container  = self.createDockerContainer(userSessionId, userName, frontendChoice)
+        container_name  = self.createDockerContainer(userSessionId, userName, frontendChoice)
+        print("Created container : " + container_name)
         if container_name:
             self.userContainerConnections[container_name] = container_name  
             print(f"Container gestartet: {container_name}")

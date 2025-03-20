@@ -23,7 +23,7 @@ async def websocket(mainsocket: WebSocket):
     await mainsocket.accept()
     
 
-    session_id = str(uuid.uuid4()),
+    session_id = str(uuid.uuid4())
     frontend_user_name = await mainsocket.receive_text()    
     
     print(frontend_user_name)
