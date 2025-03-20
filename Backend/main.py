@@ -167,6 +167,55 @@ async def addBewertung(userId : int, levelId : int, value : int, kommentar : str
     return bewertung
 
 
+@app.post("/progress")
+async def saveProgress(progressBody : ProgressBase, request: Request, session: SessionDep):
+    """
+    Der Progress wird gespeichert
+    """
+
+    session_id = request.headers.get("session_id")  
+
+
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
+
+    # Benutzer per session id finden
+    user_statement = select(UserDB).where(UserDB.session_id == session_id)
+    user = session.exec(user_statement).first()
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Ungültige Session-ID")
+
+    progress_query = select(ProgressDB).where(
+        (ProgressDB.user_id == user.id) & 
+        (ProgressDB.scenario_id == progressBody.scenario_id)
+    )
+
+    
+    existing_progress = session.exec(progress_query).first()
+
+    if existing_progress:
+
+        # Nur wenn das neue Ergebnis besser ist, wird es aktualisiert
+        if existing_progress.loesungen_verwendet > progressBody.loesungen_verwendet:
+            existing_progress.loesungen_verwendet = progressBody.loesungen_verwendet
+        
+        if existing_progress.hints_verwendet > progressBody.hints_verwendet:
+            existing_progress.hints_verwendet = progressBody.hints_verwendet
+
+    else:
+        new_progress = ProgressDB(
+            user_id=user.id,
+            scenario_id=progressBody.scenario_id,
+            loesungen_verwendet = progressBody.loesungen_verwendet,
+            hints_verwendet = progressBody.hints_verwendet
+
+        )
+        session.add(new_progress)
+
+    session.commit()
+    return {"message": "Progress erfolgreich gespeichert oder aktualisiert"}
+
     
 
 @app.get("/progress")
@@ -203,6 +252,7 @@ async def getProgress(request: Request, session: SessionDep):
     ]
 
     return progress_list
+
 
 @app.get("/sterne")
 async def getSterne(userId : int, session : SessionDep):
