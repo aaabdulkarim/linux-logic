@@ -1,6 +1,7 @@
-from typing import Annotated
+from typing import Annotated, Optional
 from validate_email import validate_email
-from fastapi import FastAPI, HTTPException, Depends, Response
+from fastapi import FastAPI, HTTPException, Depends, Response, Cookie, Request
+
 from pydantic import BaseModel
 from dotenv import load_dotenv, get_key
 from sqlmodel import Field, Session, SQLModel, create_engine, select
@@ -181,36 +182,39 @@ async def addBewertung(userId : int, levelId : int, value : int, kommentar : str
     
 
 @app.get("/progress")
-async def getProgress(userId : int, session: SessionDep):
+async def getProgress(request: Request, session: SessionDep):
     """
     Der Progress wird als Zahl zurückgegeben. Die Zahl ist die ID des Progress.
     """
-
-    progressList = []
     
-    try:
-        statement = select(Progress)
-        results = session.exec(statement)
+    session_id = request.headers.get("session_id")  
 
 
-        for resObj in results:
-            if resObj.user_id == userId:
-                progressObj = ProgressPyModel(
-                    loesungen_verwendet = resObj.loesungen_verwendet,
-                    hints_verwendet = resObj.hints_verwendet,
-                    scenario_id = resObj.scenario_id,
-                )
-                progressList.append(progressObj)
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
 
-        return progressList
+    # Benutzer per session id finden
+    user_statement = select(UserDB).where(UserDB.session_id == session_id)
+    user = session.exec(user_statement).first()
 
+    if not user:
+        raise HTTPException(status_code=401, detail="Ungültige Session-ID")
 
-    except ValueError:
-        raise HTTPException(status_code=404, detail=f"Invalid Paramater Value given as User ID")
+    # SQL Abfrage
+    progress_statement = select(Progress).where(Progress.user_id == user.id)
+    progress_results = session.exec(progress_statement).all()
 
-    # Exception nachdem der User nicht gefunden wurde
-    raise HTTPException(status_code=404, detail=f"Progress not found with User Id {userId}")
+    # Fortschritt zusammenstellen
+    progress_list = [
+        ProgressPyModel(
+            loesungen_verwendet=progress.loesungen_verwendet,
+            hints_verwendet=progress.hints_verwendet,
+            scenario_id=progress.scenario_id,
+        )
+        for progress in progress_results
+    ]
 
+    return progress_list
 
 @app.get("/sterne")
 async def getSterne(userId : int, session : SessionDep):
