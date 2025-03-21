@@ -13,7 +13,6 @@ import asyncio
 
 app = FastAPI()
 
-scm = ScenarioTrack()
 dm = DockerManager()
 
 
@@ -31,12 +30,9 @@ async def websocket(mainsocket: WebSocket):
     print(frontend_user_name)
     
     frontend_container_choice = await mainsocket.receive_text()
+    
 
-    print(frontend_container_choice)
-    scm = ScenarioTrack()
-
-
-    container_name = await dm.addConnection(
+    container_name = await dm.add_connection(
         userSessionId=session_id,
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
@@ -46,6 +42,8 @@ async def websocket(mainsocket: WebSocket):
 
     if container_name:
 
+        scm = await dm.get_scm(frontend_user_name, frontend_container_choice)
+
         # TODO: Nach 1h Inaktivität automatisch schließen 
         while await dm.get_container_health(container_name) != "healthy":
             print(await dm.get_container_health(container_name))
@@ -54,7 +52,6 @@ async def websocket(mainsocket: WebSocket):
         await mainsocket.send_text("Container Startup successful")
         container_socket_port = await dm.get_dynamic_port(container_name)
         print("Das isses: ", container_socket_port)
-
 
         # Connection mit dem docker socket mit dem modul websockets
         container_socket_url = f"ws://127.0.0.1:{container_socket_port}/dockersocket"

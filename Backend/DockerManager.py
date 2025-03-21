@@ -1,4 +1,6 @@
 import docker
+from ScenarioTrack import ScenarioTrack
+from UserDockerConnection import UserDockerConnection
 
 class DockerManager():
 
@@ -17,13 +19,13 @@ class DockerManager():
     client = docker.from_env()
 
     
-    async def createDockerContainer(self, userSessionId, userName, frontendChoice):
+    async def create_docker_container(self, userSessionId, userName, frontendChoice):
 
         docker_dir_path = f"scenarios/{frontendChoice}"
 
         container_tag = userName + frontendChoice
         container_name = f"{userName}_{frontendChoice}_{userSessionId[:8].replace('-', '')}"
-      
+
         try:
             self.client.images.build(path=docker_dir_path, tag=container_tag)
             
@@ -53,21 +55,43 @@ class DockerManager():
         return inspect_results['State']['Health']['Status']
 
 
-    
+    async def reconnect(self, userSessionId, userName, frontendChoice):
+        user_container_connection = self.userContainerConnections.get(userName + frontendChoice)
+        if user_container_connection is not None:
+            return user_container_connection.container_name
 
 
-    async def addConnection(self, userSessionId, userName, frontendChoice):
-        container_name  = await self.createDockerContainer(userSessionId, userName, frontendChoice)
+
+
+    async def add_connection(self, userSessionId, userName, frontendChoice):
+        container_name  = await self.create_docker_container(userSessionId, userName, frontendChoice)
+        scm = ScenarioTrack()
+        scm.set_scenario_data("scenarios/"+frontendChoice)
+        
+
         print("Created container : " + container_name)
         if container_name:
-            self.userContainerConnections[container_name] = container_name  
+            self.userContainerConnections[userName + frontendChoice] = UserDockerConnection(scm, container_name)  
             print(f"Container gestartet: {container_name}")
             return container_name
         else:
             print("Fehler beim Erstellen des Containers")
             return None
 
-    async def close(self, userSessionId):
+
+    async def get_scm(self, userName, frontendChoice):
+        connectionKey = userName + frontendChoice
+        try:
+            user_container_connection = self.userContainerConnections[connectionKey]
+            return user_container_connection.scm
+
+
+        except Exception:
+            print("Couldn't find connection with connection key: " + connectionKey)
+
+
+
+    async def close(self, container_name):
         """
         Schließt Container und löscht Connection in der Liste
         """
