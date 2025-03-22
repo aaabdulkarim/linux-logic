@@ -9,9 +9,10 @@ import uuid
 from ScenarioTrack import ScenarioTrack
 from DockerManager import DockerManager 
 
+import asyncio
+
 app = FastAPI()
 
-scm = ScenarioTrack()
 dm = DockerManager()
 
 
@@ -23,38 +24,34 @@ async def websocket(mainsocket: WebSocket):
     await mainsocket.accept()
     
 
-    session_id = str(uuid.uuid4()),
+    session_id = str(uuid.uuid4())
     frontend_user_name = await mainsocket.receive_text()    
     
     print(frontend_user_name)
     
     frontend_container_choice = await mainsocket.receive_text()
+    
 
-    print(frontend_container_choice)
-    scm = ScenarioTrack()
-
-
-    container_name = dm.addConnection(
+    container_name = await dm.add_connection(
         userSessionId=session_id,
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
     )
 
-
-
     # TODO: Graceful Closure
 
     if container_name:
 
+        scm = await dm.get_scm(frontend_user_name, frontend_container_choice)
+
         # TODO: Nach 1h Inaktivität automatisch schließen 
-        while dm.get_container_health(container_name) != "healthy":
-            print(dm.get_container_health(container_name))
-            time.sleep(2)
+        while await dm.get_container_health(container_name) != "healthy":
+            print(await dm.get_container_health(container_name))
+            await asyncio.sleep(2)
             
         await mainsocket.send_text("Container Startup successful")
-        container_socket_port = dm.get_dynamic_port(container_name)
+        container_socket_port = await dm.get_dynamic_port(container_name)
         print("Das isses: ", container_socket_port)
-
 
         # Connection mit dem docker socket mit dem modul websockets
         container_socket_url = f"ws://127.0.0.1:{container_socket_port}/dockersocket"
@@ -101,8 +98,7 @@ async def websocket(mainsocket: WebSocket):
             #     container.remove()
             #     print("WebSocket stopped and container removed")
         
-            dm.close(container_name)
-            print("WebSocket stopped and container removed")
+            await dm.close(container_name)
 
     else:
         print("Help")
