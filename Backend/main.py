@@ -12,6 +12,7 @@ from models.UserModels import *
 from models.ProgressModels import *
 
 import uuid
+from datetime import datetime, timedelta, timezone
 
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
 # sqlmodel docs: https://sqlmodel.tiangolo.com/tutorial/where/#where-land
@@ -65,35 +66,32 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
-@app.get("/login/{userId}")
-async def login(userId : int, session: SessionDep):
-    """
-    Die Datenbank wird nach userId durchsucht und wenn der User gefunden wurde, dann wird dieser zurückgegeben
-    """
-    user = session.get(UserDB, userId)
 
-    if not user:
-        raise HTTPException(status_code=404, detail=f"User with Id {userId} not found")
-
-    return user        
-
-
-@app.get("/login/")
-async def login(response : Response, userName : str, userPassword : str, session: SessionDep):
+@app.post("/login/")
+async def login(response : Response, userModel : UserRead, session: SessionDep):
     """
     Die Datenbank wird nach userNamen durchsucht und wenn das Passwort übereinstimmt, dann wird true zurückgegeben
     """
+    userName = userModel.username
+    userPassword = userModel.password
+
     statement = select(UserDB).where(
         UserDB.username == userName,
         UserDB.password_hash == userPassword
     )
     user = session.exec(statement).first()  
-
+    
     if user:
         session_id = str(uuid.uuid4())
+        print(type(datetime.now(timezone.utc)))
+        print(type(datetime.now(timezone.utc) + timedelta(minutes=15)))
 
+        session_expiry = datetime.now(timezone.utc) + timedelta(minutes=15)
+
+        
         # Update der Session ID im User-Objekt
         user.session_id = session_id
+        user.session_expiry = session_expiry
 
         session.add(user)
         session.commit()
@@ -105,7 +103,7 @@ async def login(response : Response, userName : str, userPassword : str, session
     return {"message": "Login fehlgeschlagen"}
 
 @app.post("/register")
-async def register(userModel : UserCreate, session: SessionDep):
+async def register(userModel : UserRead, session: SessionDep):
     """
     Ein User wird registriert und zur Datenbank hinzugefügt
     """
@@ -153,7 +151,7 @@ async def editPassword(userId: int, userName : str, userPassword : str, session:
     return user
 
 
-@app.post("/bewertung")
+# @app.post("/bewertung") - Ausgeschlossene Funktion
 async def addBewertung(userId : int, levelId : int, value : int, kommentar : str, session: SessionDep):
     bewertung = Bewertung()
     bewertung.user_id = userId
@@ -179,12 +177,18 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
     if not session_id:
         raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
 
+
     # Benutzer per session id finden
     user_statement = select(UserDB).where(UserDB.session_id == session_id)
     user = session.exec(user_statement).first()
 
+
     if not user:
         raise HTTPException(status_code=401, detail="Ungültige Session-ID")
+    
+    if user.session_expiry < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Anmeldung notwendig")
+
 
     progress_query = select(ProgressDB).where(
         (ProgressDB.user_id == user.id) & 
@@ -237,6 +241,9 @@ async def getProgress(request: Request, session: SessionDep):
     if not user:
         raise HTTPException(status_code=401, detail="Ungültige Session-ID")
 
+    if user.session_expiry < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Anmeldung notwendig")
+
     # SQL Abfrage
     progress_statement = select(ProgressDB).where(ProgressDB.user_id == user.id)
     progress_results = session.exec(progress_statement).all()
@@ -255,7 +262,7 @@ async def getProgress(request: Request, session: SessionDep):
 
 
 @app.get("/sterne")
-async def getSterne(userId : int, session : SessionDep):
+async def getSterne(request: Request,  session : SessionDep):
     """
     Die Sterne für jedes Szenario die ein User abgeschlossen hat werden zusammengezählt und zurückgegeben
 
@@ -263,8 +270,25 @@ async def getSterne(userId : int, session : SessionDep):
     wenn loesungen_verwendet > 0, dann bekommt der User 1 Stern für das Szenario
     ansonsten bekommt er 3 
     """    
+    session_id = request.headers.get("session_id")  
+
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
+
+    # Benutzer per session id finden
+    user_statement = select(UserDB).where(UserDB.session_id == session_id)
+    user = session.exec(user_statement).first()
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Ungültige Session-ID")
+
+    if user.session_expiry < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Anmeldung notwendig")
+
     statement = select(ProgressDB)
     results = session.exec(statement)
+
+    userId = user.id
     anzahlSterne = 0
 
     try:
@@ -288,4 +312,26 @@ async def getSterne(userId : int, session : SessionDep):
     
     # Exception nachdem der User nicht gefunden wurde
     raise HTTPException(status_code=404, detail=f"Progress not found with User Id {userId}")
+
+
+@app.get("/logout")
+async def logout(response : Response, request: Request,  session : SessionDep):
+    session_id = request.headers.get("session_id")  
+
+    if not session_id:
+        response.delete_cookie("session_id")
+
+    else:
+        # Benutzer per session id finden
+        user_statement = select(UserDB).where(UserDB.session_id == session_id)
+        user = session.exec(user_statement).first()
+
+        if user:
+            user.session_id = None
+            user.session_expiry = None
+            session.commit()
+
+        # Cookie löschen
+        response.delete_cookie("session_id", httponly=False, secure=False)
+        return {"message": "Logout successful"}
 
