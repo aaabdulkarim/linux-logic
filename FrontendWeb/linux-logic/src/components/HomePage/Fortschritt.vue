@@ -168,7 +168,20 @@ Die individuelle Anpassung des Terminals ist nun für jeden Nutzer separat mögl
 
 Web:
 Die Barrierefreiheit der Website wurde gemäß AA-Standard optimiert. Ein Access-Code-System wurde eingeführt, um ausgewählten Nutzern den Zugang zu gewähren. Darüber hinaus wurde der Header überarbeitet und verbessert. Die Anbindung der Datenbank an das Frontend wurde erfolgreich umgesetzt, sodass erste Features nun nutzerabhängig funktionieren.`                
-                }, 
+                },
+                {
+                    "berichtName": "Bericht 10",
+                    "datum": "04.03 - 18.03",
+                    "text": `Backend:
+Für eine effizientere Verwaltung der Docker-Container wurde eine DockerManager-Klasse implementiert, die sowohl den Docker-Client als auch die Container steuert. Zusätzlich wurde das Backend um ein weiteres Modell erweitert, das den Fortschritt während eines Szenarios erfasst. Dabei wurden ein Sterne-Endpoint und ein Progress-Endpoint entwickelt.
+
+App:
+
+Die Authentifizierung und Navigation wurden weiter verfeinert. Die Logik für das Spielen eines Levels mit Sublevels und Szenarien wurde umgesetzt. Zudem kann nun jeder Nutzer ein individuelles Terminal-Design festlegen, unabhängig von der gesamten App. Die Projektstruktur wurde übersichtlicher gestaltet und teilweise kommentiert.
+
+Web:
+Die Profilseite wurde umfassend überarbeitet, optisch ansprechender gestaltet und für verschiedene Bildschirmgrößen optimiert. Auch der Header erhielt ein visuelles Update mit festen Positionierungen und ansprechenden Effekten. Zudem wurde ein Download-Button als Floating Action Button integriert – derzeit jedoch ohne verfügbare APK.`
+                } 
             ]
 
         };
