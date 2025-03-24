@@ -39,6 +39,7 @@ import Password from 'primevue/password';
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import axios from 'axios';
+import api from "@/api";
 
 export default {
   components: { 
@@ -71,14 +72,15 @@ export default {
       this.check();
     },
     check() {
-      axios.get(this.base_url + '/login', {
-        params: {
-          userName: this.email,
-          userPassword: this.password,
-        }
+      api.post('/login', {
+        
+          username: this.email,
+          password: this.password,
+        
       })
       .then((response) => {
-        if (response.data === true) {
+        console.log(response.data);
+        if (response.status === 200) {
           this.$router.push('/auswahl');
         } else {
           alert("Benutzername oder Passwort ist falsch!");
