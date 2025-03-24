@@ -102,6 +102,7 @@ async def websocket(mainsocket: WebSocket):
             #     print("WebSocket stopped and container removed")
         
             dm.close(container_name)
+            print("WebSocket stopped and container removed")
 
     else:
         print("Help")
