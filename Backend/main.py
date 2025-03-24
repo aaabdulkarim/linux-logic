@@ -173,7 +173,7 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
     Der Progress wird gespeichert
     """
 
-    session_id = request.headers.get("session_id")  
+    session_id = request.cookies.get("session_id")  
 
 
     if not session_id:
@@ -230,7 +230,7 @@ async def getProgress(request: Request, session: SessionDep):
     Der Progress wird als Zahl zurückgegeben. Die Zahl ist die ID des Progress.
     """
     
-    session_id = request.headers.get("session_id")  
+    session_id = request.cookies.get("session_id")  
 
 
     if not session_id:
@@ -272,8 +272,9 @@ async def getSterne(request: Request,  session : SessionDep):
     wenn loesungen_verwendet > 0, dann bekommt der User 1 Stern für das Szenario
     ansonsten bekommt er 3 
     """    
-    session_id = request.headers.get("session_id")  
+    session_id = request.cookies.get("session_id")  
 
+    print(session_id)
     if not session_id:
         raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
 
@@ -318,7 +319,7 @@ async def getSterne(request: Request,  session : SessionDep):
 
 @app.get("/logout")
 async def logout(response : Response, request: Request,  session : SessionDep):
-    session_id = request.headers.get("session_id")  
+    session_id = request.cookies.get("session_id")  
 
     if not session_id:
         response.delete_cookie("session_id")
