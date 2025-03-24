@@ -88,7 +88,11 @@ async def login(response : Response, userModel : UserRead, session: SessionDep):
         print(type(datetime.now(timezone.utc)))
         print(type(datetime.now(timezone.utc) + timedelta(minutes=15)))
 
-        session_expiry = datetime.now(timezone.utc) + timedelta(minutes=15)
+        if userModel.stayLoggedIn:
+            session_expiry = datetime.now(timezone.utc) + timedelta(days=30)  
+            
+        else:
+            session_expiry = datetime.now(timezone.utc) + timedelta(minutes=15) 
 
         
         # Update der Session ID im User-Objekt

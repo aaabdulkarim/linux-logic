@@ -18,7 +18,7 @@ class UserDB(UserBase, table=True):
 
 
 class UserRead(UserBase):
- 
+    stayLoggedIn : bool | None = Field(default=False) 
     email: str | None = Field(default=None, index=True)
     password: str  
 
