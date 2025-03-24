@@ -9,7 +9,7 @@
           <InputText id="email" v-model="email"/>
           <label for="password"><h5>Passwort</h5></label>
           <Password id="password" v-model="password" :feedback="false" toggleMask/>
-          <label for="code"><h5>Access Code</h5></label>
+          <label for="code"><h5>Access Code (nicht notwendig)</h5></label>
           <Password id="code" v-model="code" :feedback="false" toggleMask/>
         </div>
 
@@ -22,7 +22,7 @@
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
           </div>
         </div>
-          <Button @click="check" label="Anmelden" />
+        <Button @click="check" label="Anmelden" />
       </form>
 
       <div class="register-link">
@@ -34,10 +34,10 @@
 </template>
 
 <script>
-import  InputText  from 'primevue/inputtext';
-import  Password  from 'primevue/password';
-import  Checkbox  from 'primevue/checkbox';
-import  Button  from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+import Checkbox from 'primevue/checkbox';
+import Button from 'primevue/button';
 import axios from 'axios';
 
 export default {
@@ -51,8 +51,8 @@ export default {
     return {
       email: '',
       password: '',
-      stayLoggedIn: 0,
-      base_url : "http://localhost:8000",
+      stayLoggedIn: false,
+      base_url: "http://localhost:8000",
       response: false,
     };
   },
@@ -68,10 +68,9 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log('submit');
+      this.check();
     },
     check() {
-      console.log('check');
       axios.get(this.base_url + '/login', {
         params: {
           userName: this.email,
@@ -79,19 +78,24 @@ export default {
         }
       })
       .then((response) => {
-    console.log(response.data);
-    if (response.data === true) {
-        console.log("yo reroute");
-        this.$router.push('/auswahl');
-    } else {
-        alert("Benutzername oder Passwort ist falsch!");
-        this.email = '';
-        this.password = '';
-    }
-})
+        if (response.data === true) {
+          this.$router.push('/auswahl');
+        } else {
+          alert("Benutzername oder Passwort ist falsch!");
+          this.email = '';
+          this.password = '';
+        }
+      })
       .catch((error) => {
-        console.log(error);
+        console.error('Fehler bei der Anmeldung:', error);
       });
+    }
+  },
+  mounted() {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user'));
+    if (user) {
+      this.email = user.email;
+      this.stayLoggedIn = !!localStorage.getItem('user');
     }
   }
 };
