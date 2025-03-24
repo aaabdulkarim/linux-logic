@@ -95,3 +95,6 @@ class DockerManager():
         """
         Schließt Container und löscht Connection in der Liste
         """
+        container = self.client.containers.get(container_name)
+        container.stop()
+        container.remove()
