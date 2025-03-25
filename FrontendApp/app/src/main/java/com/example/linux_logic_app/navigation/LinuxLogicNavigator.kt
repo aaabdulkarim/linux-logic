@@ -9,12 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.screens.FeedbackScreen
 import com.example.linux_logic_app.screens.HelpScreen
-import com.example.linux_logic_app.screens.LevelScreen
-import com.example.linux_logic_app.screens.LoginScreen
+import com.example.linux_logic_app.screens.gamification.LevelScreen
+import com.example.linux_logic_app.screens.authentication.LoginScreen
 import com.example.linux_logic_app.screens.MainScreen
 import com.example.linux_logic_app.screens.NotificationScreen
-import com.example.linux_logic_app.screens.RegisterScreen
-import com.example.linux_logic_app.screens.SettingsScreen
+import com.example.linux_logic_app.screens.authentication.RegisterScreen
+import com.example.linux_logic_app.screens.authentication.SettingsScreen
 import com.example.linux_logic_app.screens.StartScreen
 
 @Composable
