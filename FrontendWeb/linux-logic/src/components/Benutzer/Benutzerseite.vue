@@ -84,7 +84,7 @@ export default {
       chapters: [
         {
           name: "Kapitel 1",
-          expanded: true,
+          expanded: false,
           courses: [
             { name: "Level 1", stars: 0 },
             { name: "Level 2", stars: 0 },
@@ -95,7 +95,7 @@ export default {
         },
         {
           name: "Kapitel 2",
-          expanded: true,
+          expanded: false,
           courses: [
             { name: "Level 6", stars: 0 },
             { name: "Level 7", stars: 0 },
@@ -197,6 +197,7 @@ export default {
 }
 
 .profile-name {
+  margin-top: 2px;
   color: #3D525C;
   font-size: 32px;
 }
@@ -206,6 +207,7 @@ export default {
 }
 
 .change-password {
+  font-size: 16px;
   background: none;
   border: none;
   color: #569191;
