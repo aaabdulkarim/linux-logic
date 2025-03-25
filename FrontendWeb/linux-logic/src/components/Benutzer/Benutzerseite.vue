@@ -10,6 +10,7 @@
           <h6 class="profile-email">{{ email }} TestEmail</h6>
           <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}TestLvl</span></p>
           <a class="change-password">Passwort ändern</a>
+          <button class="log-out" @click="logOut">Abmelden</button>
         </div>
       </div>
     <div class="next-course">
@@ -61,7 +62,7 @@ export default {
       chapters: [
         {
           name: "Kapitel 1",
-          expanded: true,
+          expanded: false,
           courses: [
             { name: "Level 1", stars: 0 },
             { name: "Level 2", stars: 0 },
@@ -72,7 +73,7 @@ export default {
         },
         {
           name: "Kapitel 2",
-          expanded: true,
+          expanded: false,
           courses: [
             { name: "Level 6", stars: 0 },
             { name: "Level 7", stars: 0 },
@@ -163,13 +164,20 @@ export default {
   margin-bottom: 0px;
 }
 .profile-name {
+  margin-top: 2px;
   color: #3D525C;
   font-size: 32px;
+}
+.profile-email {
+  margin-top: 2px;
+  color: #3D525C;
+  font-size: 12px;
 }
 .profile-progress .level {
   color: #569191;
 }
 .change-password {
+  font-size: 16px;
   background: none;
   border: none;
   color: #569191;
@@ -203,6 +211,9 @@ export default {
   border-radius: 5px;
   text-align: center;
 }
+.chapter-header:hover {
+  background: #3D525C;
+}
 .course-cards {
   display: flex;
   flex-direction: column;
@@ -222,6 +233,9 @@ export default {
   font-weight: bold;
   padding: 10px;
 }
+.course-card:hover {
+  background: #3D525C;
+}
 .next-level {
     color: white;
     background-color: #569191;
@@ -236,5 +250,89 @@ export default {
     color: #569191;
     background-color: white;
     border: 2px solid #569191;
+}
+.log-out {
+  font-size: 16px;
+  width: 123px;
+  background: none;
+  border: 2px solid darkred;
+  color: darkred;
+  cursor: pointer;
+  display: inline-block;
+  padding: 3px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.log-out:hover {
+  background: darkred;
+  color: white;
+}
+
+@media (max-width: 740px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .profile-left {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .profile-image {
+    margin-bottom: 0;
+  }
+
+  .profile-info {
+    text-align: left;
+  }
+
+  .next-course {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Zentriert Button & Überschrift */
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-left {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .profile-image {
+    margin-bottom: 10px;
+  }
+
+  .course-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .profile-info {
+    text-align: center;
+  }
+
+  .next-course {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Zentriert Button & Überschrift */
+    justify-content: center;
+  }
+
+  .course-card {
+    width: 48%;
+  }
 }
 </style>
