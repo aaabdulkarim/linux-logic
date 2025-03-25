@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.linux_logic_app.components.Terminal
+import com.example.linux_logic_app.components.terminal.Terminal
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 
