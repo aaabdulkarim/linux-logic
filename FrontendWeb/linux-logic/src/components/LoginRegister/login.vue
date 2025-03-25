@@ -15,12 +15,12 @@
 
         <div class="login-actions">
           <div class="stay-logged-in">
-            <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" />
+            <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" :disabled="false" />
             <label for="stayLoggedIn">Angemeldet bleiben</label>
           </div>
-          <div class="forgot-password">
+          <!-- <div class="forgot-password">
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
-          </div>
+          </div> -->
         </div>
         <Button @click="check" label="Anmelden" />
       </form>
@@ -183,6 +183,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: auto;
 }
 
 button {
