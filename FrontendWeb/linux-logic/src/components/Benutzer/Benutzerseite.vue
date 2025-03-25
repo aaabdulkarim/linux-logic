@@ -10,7 +10,7 @@
           <h6 class="profile-email">{{ email }} TestEmail</h6>
           <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}TestLvl</span></p>
           <a class="change-password">Passwort ändern</a>
-          <button class="log-out" @click="logOut">Abmelden</button>
+          <button class="log-out">Abmelden</button>
         </div>
       </div>
     <div class="next-course">
