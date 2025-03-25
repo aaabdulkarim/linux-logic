@@ -190,7 +190,7 @@ export default {
   transform: translateX(5px);
 }
 
-/* Bounce-Animation für die anderen beiden Icons */
+
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
