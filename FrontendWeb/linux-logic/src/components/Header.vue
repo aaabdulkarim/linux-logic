@@ -12,6 +12,7 @@
 
 <script>
 import axios from 'axios';
+import api from '@/api';
 
 export default {
   name: "Header",
@@ -27,9 +28,9 @@ export default {
     },
     async fetchStarCount() {
       try {
-        const response = await axios.get(this.base_url + "/starCount")
+        const response = await api.get('/sterne')
         .then((response) => {
-          this.starCount = response.data.starCount;
+          this.starCount = response.data;
         });
       } catch (error) {
         console.error('Fehler beim Abrufen der Sternanzahl:', error);

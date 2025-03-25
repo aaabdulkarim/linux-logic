@@ -7,6 +7,7 @@
         <div class="profile-info">
           <p class="profile-title">Profil</p>
           <h1 class="profile-name">{{ profileName }}TestName</h1>
+          <h6 class="profile-email">{{ email }} TestEmail</h6>
           <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}TestLvl</span></p>
           <a class="change-password">Passwort ändern</a>
         </div>
@@ -49,6 +50,7 @@
 
 <script>
 import axios from 'axios';
+import api from '@/api';
 
 export default {
   data() {
@@ -95,7 +97,7 @@ export default {
       this.chapters[index].expanded = !this.chapters[index].expanded;
     },
     fetchUserData() {
-      axios.get('/api/user/profile')
+      api.get('/api/user/profile')
         .then(response => {
           const data = response.data;
           this.profileName = data.name;

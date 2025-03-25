@@ -62,7 +62,7 @@ class TerminalViewModel(terminalColors: TerminalColors = defaultTerminalColors) 
      */
     fun updateDefaultMode(useDefault: Boolean) {
         useDefaultColors = useDefault
-        if (useDefault) {
+        if (useDefaultColors) {
             terminalColors = defaultTerminalColors
         }
     }
