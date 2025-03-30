@@ -413,7 +413,7 @@ class UserViewModel : ViewModel() {
      *
      * @param scenario Das auszuwählende Scenario, welches die Sublevels und Kursinformationen enthält.
      */
-    fun selectScenarioForUser(scenario: Scenario) {
+    fun selectScenarioForUser(scenario: Scenario?) {
         levelViewModel.selectScenario(scenario)
     }
 }

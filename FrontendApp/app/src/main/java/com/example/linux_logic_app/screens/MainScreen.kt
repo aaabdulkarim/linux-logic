@@ -641,7 +641,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         composable(
                             route = Screen.Play.route
                         ) {
-                            PlayScreen(navController = navController)
+                            PlayScreen(navController = navController, userViewModel = userViewModel)
                         }
                     }
                 }

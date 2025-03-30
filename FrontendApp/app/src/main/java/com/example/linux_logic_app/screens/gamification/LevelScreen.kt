@@ -203,7 +203,6 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
     }
 }
 
-
 @Composable
 fun LevelCard() {
     var expanded by remember { mutableStateOf(false) }

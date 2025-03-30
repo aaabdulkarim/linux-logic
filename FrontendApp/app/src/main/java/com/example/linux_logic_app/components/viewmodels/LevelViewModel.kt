@@ -41,7 +41,7 @@ class LevelViewModel(
      * Wählt ein neues Scenario aus und setzt den Level-Index auf 1 zurück.
      * @param scenario Das Scenario, das ausgewählt werden soll.
      */
-    fun selectScenario(scenario: Scenario) {
+    fun selectScenario(scenario: Scenario?) {
         _currentScenario = scenario
         _currentLevel = 1
     }
