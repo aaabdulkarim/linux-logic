@@ -33,9 +33,6 @@ export default {
   height: 50px;
   background-color: rgba(61, 82, 92, 0.6); /* Leichte Transparenz */
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Leichter Schatten für bessere Sichtbarkeit */
   transition: background 0.3s ease, transform 0.2s ease;
 }

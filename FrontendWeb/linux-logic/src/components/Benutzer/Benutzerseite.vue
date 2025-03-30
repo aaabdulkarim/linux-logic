@@ -7,14 +7,16 @@
         <div class="profile-info">
           <p class="profile-title">Profil</p>
           <h1 class="profile-name">{{ profileName }}TestName</h1>
+          <h6 class="profile-email">{{ email }} TestEmail</h6>
           <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}TestLvl</span></p>
-          <a class="change-password">Passwort ändern</a>
+          <a class="change-password" @click="showPasswordPopup = true">Passwort ändern</a>
+          <button class="log-out" @click="logout">Abmelden</button>
         </div>
       </div>
-    <div class="next-course">
-      <h2 style="margin-top: 0px;">Level Name</h2>
-      <button class="next-level" @click="playNextLevel">Nächstes Level</button>
-    </div>
+      <div class="next-course">
+        <h2 style="margin-top: 0px;">Level Name</h2>
+        <button class="next-level" @click="playNextLevel">Nächstes Level</button>
+      </div>
     </div>
     <div class="course-progress">
       <div class="header-row">
@@ -45,10 +47,31 @@
       </div>
     </div>
   </div>
+
+  <div v-if="showPasswordPopup" class="popup-overlay">
+    <div class="popup">
+      <h2>Passwort ändern</h2>
+      <form @submit.prevent="changePassword">
+        <div class="form-group">
+          <label for="newPassword">Neues Passwort</label>
+          <input type="password" id="newPassword" v-model="newPassword" required />
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Passwort bestätigen</label>
+          <input type="password" id="confirmPassword" v-model="confirmPassword" required />
+        </div>
+        <div class="popup-actions">
+          <button type="submit" class="save-button">Speichern</button>
+          <button type="button" class="cancel-button" @click="showPasswordPopup = false">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
+import api from '@/api';
 
 export default {
   data() {
@@ -56,10 +79,13 @@ export default {
       profileName: '',
       email: '',
       progressLevel: '',
+      showPasswordPopup: false,
+      newPassword: '',
+      confirmPassword: '',
       chapters: [
         {
           name: "Kapitel 1",
-          expanded: true,
+          expanded: false,
           courses: [
             { name: "Level 1", stars: 0 },
             { name: "Level 2", stars: 0 },
@@ -70,7 +96,7 @@ export default {
         },
         {
           name: "Kapitel 2",
-          expanded: true,
+          expanded: false,
           courses: [
             { name: "Level 6", stars: 0 },
             { name: "Level 7", stars: 0 },
@@ -95,7 +121,7 @@ export default {
       this.chapters[index].expanded = !this.chapters[index].expanded;
     },
     fetchUserData() {
-      axios.get('/api/user/profile')
+      api.get('/api/user/profile')
         .then(response => {
           const data = response.data;
           this.profileName = data.name;
@@ -115,6 +141,31 @@ export default {
         .catch(error => {
           console.error('Fehler beim Abrufen der Benutzerdaten:', error);
         });
+    },
+    logout() {
+      document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      this.$router.push('/login');
+    },
+    changePassword() {
+      if (this.newPassword !== this.confirmPassword) {
+        alert("Die Passwörter stimmen nicht überein!");
+        return;
+      }
+
+      // API-Aufruf zum Ändern des Passworts
+      api.post('/api/user/change-password', {
+        newPassword: this.newPassword
+      })
+        .then(() => {
+          alert("Passwort erfolgreich geändert!");
+          this.showPasswordPopup = false;
+          this.newPassword = '';
+          this.confirmPassword = '';
+        })
+        .catch(error => {
+          console.error("Fehler beim Ändern des Passworts:", error);
+          alert("Fehler beim Ändern des Passworts. Bitte versuchen Sie es erneut.");
+        });
     }
   },
   mounted() {
@@ -132,17 +183,20 @@ export default {
   padding: 40px 20px;
   color: #3D525C;
 }
+
 .profile-header {
   display: flex;
   width: 100%;
   max-width: 800px;
   justify-content: space-between;
 }
+
 .profile-left {
   display: flex;
   align-items: left;
 
 }
+
 .profile-image {
   width: 250px;
   height: 250px;
@@ -150,49 +204,67 @@ export default {
   border-radius: 10px;
   margin-right: 24px;
 }
+
 .profile-info {
   display: flex;
   flex-direction: column;
   text-align: left;
 }
+
 .profile-title {
   font-size: 16px;
   color: #3D525C;
   margin-bottom: 0px;
 }
+
 .profile-name {
+  margin-top: 2px;
   color: #3D525C;
   font-size: 32px;
 }
+
+.profile-email {
+  margin-top: 2px;
+  color: #3D525C;
+  font-size: 12px;
+}
+
 .profile-progress .level {
   color: #569191;
 }
+
 .change-password {
+  font-size: 16px;
   background: none;
   border: none;
   color: #569191;
   cursor: pointer;
   display: inline-block;
 }
+
 .course-progress {
   display: flex;
   width: 100%;
   max-width: 800px;
   margin-top: 30px;
 }
+
 .header-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
+
 .completed-levels {
   flex: 1;
 }
+
 .course-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 .chapter-header {
   cursor: pointer;
   background: #569191;
@@ -201,12 +273,18 @@ export default {
   border-radius: 5px;
   text-align: center;
 }
+
+.chapter-header:hover {
+  background: #3D525C;
+}
+
 .course-cards {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 10px;
 }
+
 .course-card {
   width: 100%;
   background: #7a9a9a;
@@ -220,19 +298,208 @@ export default {
   font-weight: bold;
   padding: 10px;
 }
-.next-level {
-    color: white;
-    background-color: #569191;
-    border: 2px solid #569191;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-    width: 200px;
-    height: 46px;
+
+.course-card:hover {
+  background: #3D525C;
 }
-  
+
+.next-level {
+  color: white;
+  background-color: #569191;
+  border: 2px solid #569191;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  width: 200px;
+  height: 46px;
+}
+
 .next-level:hover {
-    color: #569191;
-    background-color: white;
-    border: 2px solid #569191;
+  color: #569191;
+  background-color: white;
+  border: 2px solid #569191;
+}
+
+.log-out {
+  font-size: 16px;
+  width: 123px;
+  background: none;
+  border: 2px solid darkred;
+  color: darkred;
+  cursor: pointer;
+  display: inline-block;
+  padding: 3px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.log-out:hover {
+  background: darkred;
+  color: white;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.popup h2 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #569191;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #3D525C;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3D525C;
+  box-shadow: 0 0 5px rgba(86, 145, 145, 0.5);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #3D525C;
+  font-size: 14px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.save-button {
+  background-color: #569191;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #3D525C;
+}
+
+.cancel-button {
+  background-color: brown;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background: darkred;
+  color: white;
+}
+
+@media (max-width: 480px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-left {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .profile-image {
+    margin-bottom: 10px;
+  }
+
+  .course-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .profile-info {
+    text-align: center;
+  }
+
+  .next-course {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Zentriert Button & Überschrift */
+    justify-content: center;
+  }
+
+  .course-card {
+    width: 48%;
+  }
+
+
+  @media (max-width: 740px) {
+    .profile-header {
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .profile-left {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .profile-image {
+      margin-bottom: 0;
+    }
+
+    .profile-info {
+      text-align: left;
+    }
+
+    .next-course {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* Zentriert Button & Überschrift */
+      justify-content: center;
+    }
+  }
 }
 </style>

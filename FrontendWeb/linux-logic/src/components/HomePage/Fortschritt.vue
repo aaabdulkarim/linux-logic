@@ -186,12 +186,20 @@ Die Datenbank hat eine Schema-Update bekommen, da jetzt auch User Kommentare und
     text-align: left;
     margin-top: 6rem;
     margin-bottom: 8rem;
+    flex-direction: center;
+    align-items: center;
 }
-
+.card>>>.p-tablist {
+    max-width: 80%;
+    flex-direction: center;
+    align-items: center;
+    margin: 0 auto;
+}
 .card>>>.p-tablist-tab-list {
     background-color: white;
     border-bottom: none;
-    max-width: 80%;  
+    flex-direction: center;
+    align-items: center;
     margin: 0 auto;
 }
 
@@ -259,6 +267,9 @@ Die Datenbank hat eine Schema-Update bekommen, da jetzt auch User Kommentare und
     opacity: 0;
 }
 @media (max-width: 1024px) {
+    .card>>>.p-tablist {
+        max-width: 90%;
+    }
     .card>>>.p-tablist-tab-list {
         max-width: 90%;
     }
@@ -269,6 +280,9 @@ Die Datenbank hat eine Schema-Update bekommen, da jetzt auch User Kommentare und
     
 }
 @media (max-width: 768px) {
+    .card>>>.p-tablist {
+        max-width: 95%;
+    }
     .card>>>.p-tablist-tab-list {
         max-width: 95%;
     }

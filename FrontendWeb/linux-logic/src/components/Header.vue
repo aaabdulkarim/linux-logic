@@ -12,6 +12,7 @@
 
 <script>
 import axios from 'axios';
+import api from '@/api';
 
 export default {
   name: "Header",
@@ -27,7 +28,7 @@ export default {
     },
     async fetchStarCount() {
       try {
-        const response = await axios.get(this.base_url + "/sterne?userId=8")
+        const response = await api.get('/sterne')
         .then((response) => {
           this.starCount = response.data;
         });

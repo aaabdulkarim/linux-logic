@@ -17,7 +17,7 @@
         <div class="col-12 cards-container">
           <Card 
             style="width: 20rem; overflow: hidden;" 
-            v-for="level in levels" 
+            v-for="(level, index) in levels" 
             :key="level.id"
           >
             <template #header>
@@ -32,7 +32,13 @@
             </template>
             <template #footer>
               <div class="flex gap-4 mt-1">
-                <Button label="Start" @click="selectLevel(level.id)" severity="success" class="w-full" />
+                <Button 
+                  label="Start" 
+                  :disabled="!isLevelUnlocked(index)" 
+                  @click="selectLevel(level.id)" 
+                  severity="success" 
+                  class="w-full" 
+                />
               </div>
             </template>
           </Card>
@@ -49,6 +55,7 @@
 <script>
 import Card from 'primevue/card';
 import Button from 'primevue/button';
+import axios from 'axios';
 import router from '@/router';
 
 export default {
@@ -89,15 +96,39 @@ export default {
           difficulty: "Sehr schwer",
           description: "Netzwerkverbindungen konfigurieren."
         }
-      ]
+      ],
+      userProgress: [
+        { "levelId": 1, "stars": 3 },
+        { "levelId": 2, "stars": 2 }
+      ] // Fortschrittsdaten des Benutzers
     };
   },
   methods: {
     selectLevel(levelId) {
-      // alert(`Level ${levelId} ausgewählt!`);
-      router.push("/terminal")
-    }
-  }
+      router.push("/terminal");
+    },
+    isLevelUnlocked(index) {
+      // Das erste Level ist immer freigeschaltet
+      if (index === 0) return true;
+
+      // Überprüfen, ob das vorherige Level mit mindestens 1 Stern abgeschlossen wurde
+      const previousLevel = this.userProgress.find(progress => progress.levelId === this.levels[index - 1].id);
+      return previousLevel && previousLevel.stars >= 1;
+    },
+    // fetchUserProgress() {
+    //   // API-Aufruf, um den Fortschritt des Benutzers abzurufen
+    //   axios.get('/api/user/progress')
+    //     .then(response => {
+    //       this.userProgress = response.data; // Fortschrittsdaten speichern
+    //     })
+    //     .catch(error => {
+    //       console.error('Fehler beim Abrufen des Fortschritts:', error);
+    //     });
+    // }
+  },
+  // mounted() {
+  //   this.fetchUserProgress(); // Fortschrittsdaten beim Laden der Komponente abrufen
+  // }
 };
 </script>
 
