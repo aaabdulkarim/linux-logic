@@ -1,6 +1,5 @@
 package com.example.linux_logic_app.screens.gamification
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -20,17 +19,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.twotone.Help
-import androidx.compose.material.icons.automirrored.twotone.Login
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.twotone.ArrowBackIosNew
 import androidx.compose.material.icons.twotone.CheckCircle
-import androidx.compose.material.icons.twotone.EmojiObjects
 import androidx.compose.material.icons.twotone.Lightbulb
-import androidx.compose.material.icons.twotone.PersonAddAlt
-import androidx.compose.material.icons.twotone.PsychologyAlt
 import androidx.compose.material.icons.twotone.SportsEsports
-import androidx.compose.material.icons.twotone.TaskAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -57,9 +50,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.components.UserViewModel
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.components.terminal.Terminal
-import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange

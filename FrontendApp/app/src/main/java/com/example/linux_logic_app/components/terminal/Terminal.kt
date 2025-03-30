@@ -31,7 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.linux_logic_app.components.UserViewModel
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
