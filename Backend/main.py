@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models.UserModels import *
 from models.ProgressModels import *
+from models.ScenarioModels import *
 
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -189,7 +190,34 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
     session.commit()
     return {"message": "Progress erfolgreich gespeichert oder aktualisiert"}
 
+
+@app.get("/me")
+async def userData(request: Request, session: SessionDep):
+    session_id = request.cookies.get("session_id")  
+
+
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
+
+
+    # Benutzer per session id finden
+    user_statement = select(UserDB).where(UserDB.session_id == session_id)
+    user = session.exec(user_statement).first()
+
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Ungültige Session-ID")
     
+    if user.session_expiry < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Anmeldung notwendig")
+
+
+    return {
+        "username": user.username,
+        "email" : user.email
+    }
+
+
 
 @app.get("/progress")
 async def getProgress(request: Request, session: SessionDep):
@@ -219,10 +247,11 @@ async def getProgress(request: Request, session: SessionDep):
 
     # Fortschritt zusammenstellen
     progress_list = [
-        ProgressBase(
+        ProgressResponse(
             loesungen_verwendet=progress.loesungen_verwendet,
             hints_verwendet=progress.hints_verwendet,
             scenario_id=progress.scenario_id,
+            scenario_name = select(ScenarioBase).where(UserDB.session_id == session_id)
         )
         for progress in progress_results
     ]

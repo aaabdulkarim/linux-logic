@@ -6,8 +6,8 @@
         <img src="@/assets/LinuxLogic_Maskottchen.png" alt="Maskottchen" class="profile-image" />
         <div class="profile-info">
           <p class="profile-title">Profil</p>
-          <h1 class="profile-name">{{ profileName }}TestName</h1>
-          <h6 class="profile-email">{{ email }} TestEmail</h6>
+          <h1 class="profile-name">{{ profileName }}</h1>
+          <h6 class="profile-email">{{ email }} </h6>
           <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}TestLvl</span></p>
           <a class="change-password" @click="showPasswordPopup = true">Passwort ändern</a>
           <button class="log-out" @click="logout">Abmelden</button>
@@ -119,12 +119,11 @@ export default {
     toggleChapter(index) {
       this.chapters[index].expanded = !this.chapters[index].expanded;
     },
-    fetchUserData() {
-      api.get('/profile')
+    fetchProgress() {
+      api.get('/progress')
         .then(response => {
           const data = response.data;
-          this.profileName = data.name;
-          this.email = data.email;
+          console.log(data);
           this.progressLevel = data.progressLevel;
           this.chapters = data.chapters.map(chapter => ({
             ...chapter,
@@ -141,8 +140,21 @@ export default {
           console.error('Fehler beim Abrufen der Benutzerdaten:', error);
         });
     },
+    fetchUserData() {
+      api.get('/me')
+        .then(response => {
+          const data = response.data;
+          console.log(data);
+          
+          this.profileName = data.username;
+          this.email = data.email;
+        })
+        .catch(error => {
+          console.error('Fehler beim Abrufen der Benutzerdaten:', error);
+        });
+    },
     logout() {
-      document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      api.get("logout")
       this.$router.push('/login');
     },
     changePassword() {

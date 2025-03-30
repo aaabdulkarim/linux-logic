@@ -12,3 +12,5 @@ class ProgressDB(ProgressBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     user_id: int = Field(index=True, foreign_key="user.id")
     
+class ProgressResponse(ProgressBase):
+    username : str
