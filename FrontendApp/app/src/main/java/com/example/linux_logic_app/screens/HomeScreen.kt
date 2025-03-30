@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.History
@@ -24,13 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.linux_logic_app.components.terminal.Terminal
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 
@@ -97,48 +93,11 @@ fun HomeScreen(userViewModel: UserViewModel) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        ProgressBar(60F)
-
-        /*Box(
+        Box(
             modifier = Modifier
                 .weight(1f)
         ) {
             Terminal("ws://10.0.107.7:8000/ws", preview = false, userViewModel = userViewModel)
-        }*/
-    }
-}
-
-@Composable
-fun ProgressBar(
-    progress: Float, // Erwartet einen Wert zwischen 0f und 1f
-    modifier: Modifier = Modifier,
-    height: Dp = 20.dp,
-    horizontalPadding: Dp = 16.dp,
-    backgroundColor: Color = Color(0xFFE0E0E0),
-    // Schöner horizontaler Farbverlauf, der sich an dein CI anpassen lässt
-    indicatorBrush: Brush = Brush.horizontalGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primary,
-            MaterialTheme.colorScheme.secondary
-        )
-    )
-) {
-    // Container mit Padding, damit die Bar nicht direkt am Rand klebt
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = horizontalPadding)
-            .height(height)
-            .clip(RoundedCornerShape(percent = 50))
-            .background(backgroundColor)
-    ) {
-        // Fortschrittsanzeige, deren Breite den progress-Wert widerspiegelt
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(progress.coerceIn(0f, 1f)) // Absicherung, dass progress zwischen 0f und 1f liegt
-                .clip(RoundedCornerShape(percent = 50))
-                .background(indicatorBrush)
-        )
+        }
     }
 }
