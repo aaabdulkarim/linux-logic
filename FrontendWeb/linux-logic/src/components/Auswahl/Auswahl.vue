@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     selectLevel(levelId) {
-      router.push("/terminal");
+      router.push("/terminal?scenario_id=" + levelId);
     },
     isLevelDisabled(levelId) {
       return levelId > this.currentCourse;

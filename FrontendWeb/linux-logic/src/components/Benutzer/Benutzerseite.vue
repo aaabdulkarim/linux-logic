@@ -87,7 +87,7 @@ export default {
       this.$router.push('/auswahl');
     },
     playNextLevel() {
-      this.$router.push('/terminal');
+      this.$router.push("/terminal?scenario_id=" + this.nextCourse);
     },
     fetchProgress() {
       api.get('/progress')

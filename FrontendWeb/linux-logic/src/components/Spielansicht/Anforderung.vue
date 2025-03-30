@@ -2,7 +2,7 @@
 <div class="all grid " :style="backgroundStyle">
   <div class="container">
     <div class="header ">
-      <h1>Level 1</h1>
+      <h1>Level {{ scenario_id }}</h1>
     </div>
     <div class="content">
       <h2>Beschreibung</h2>
@@ -49,6 +49,8 @@
 <script>
 import Terminal from './Terminal.vue';
 import  Button  from 'primevue/button';
+import api from '@/api';
+
 export default {
   name: 'Anforderung',
   components: {
@@ -61,7 +63,8 @@ export default {
       modalContent: '',
       showRating: false,
       rating: 0,
-      stars: 3
+      stars: 3,
+      scenario_id: null,
     };
   },
   methods: {
@@ -110,6 +113,33 @@ export default {
       };
     }
   },
+  mounted() {
+    // Abrufen der scenario_id aus den Query-Parametern
+    const scenarioIdFromQuery = this.$route.query.scenario_id;
+    
+    // TODO: Check if user is Really authorized for this level 
+    api.get('/progress')
+      .then(response => {
+        const data = response.data;
+        if (scenarioIdFromQuery > data.nextCourse){
+          alert("Scenario noch nicht verfügbar, Stelle erst alle notwendigen Aufgaben fertig");
+          this.$router.push("/auswahl")
+
+        }
+      })
+      .catch(error => {
+        console.error('Fehler beim Abrufen der Benutzerdaten:', error);
+      });
+
+    if (scenarioIdFromQuery) {
+      this.scenario_id = parseInt(scenarioIdFromQuery); // Konvertieren in eine Zahl
+    } else {
+      
+      alert("Keine Scenario ID im URL gefunden");
+      this.$router.push("/auswahl")
+    }
+  }
+
 };
 </script>
 
