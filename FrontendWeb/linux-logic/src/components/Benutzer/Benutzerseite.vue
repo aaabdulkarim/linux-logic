@@ -70,7 +70,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import api from '@/api';
 
 export default {
@@ -121,7 +120,7 @@ export default {
       this.chapters[index].expanded = !this.chapters[index].expanded;
     },
     fetchUserData() {
-      api.get('/api/user/profile')
+      api.get('/profile')
         .then(response => {
           const data = response.data;
           this.profileName = data.name;
