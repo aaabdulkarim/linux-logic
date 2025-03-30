@@ -152,7 +152,7 @@ export default {
       }
 
       // API-Aufruf zum Ändern des Passworts
-      api.post('/api/user/change-password', {
+      api.put('/edit', {
         newPassword: this.newPassword
       })
         .then(() => {

@@ -2,6 +2,11 @@ from sqlmodel import SQLModel, Field
 from datetime import datetime
 from typing import Optional
 
+
+class UserEdit(SQLModel):
+    newPassword: str
+
+
 class UserBase(SQLModel):
     username: str = Field(index=True)
     password: str

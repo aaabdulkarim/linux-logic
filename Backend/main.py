@@ -39,12 +39,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # Datenbank-Engine erstellen
 engine = create_engine(connectionString, pool_pre_ping=True)
 
-class Bewertung(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: int = Field(index=True)
-    scenario_id: int = Field(index=True)
-    bewertung: int
-    kommentar: str = None  
 
 # FastAPI App
 app = FastAPI()
@@ -94,23 +88,38 @@ async def register(userModel: UserRead, session: SessionDep):
         raise HTTPException(status_code=400, detail="Passwort muss mindestens 8 Zeichen lang sein")
     
     hashed_password = hash_password(userModel.password)
-    new_user = UserDB(username=userModel.username, email=userModel.email, password_hash=hashed_password)
+    new_user = UserDB(username=userModel.username, email=userModel.email, password=hashed_password)
     session.add(new_user)
     session.commit()
     
     return {"message": "Registrierung erfolgreich"}
-
+ 
 @app.put("/edit")
-async def editPassword(userId: int, userPassword: str, session: SessionDep):
-    user = session.get(UserDB, userId)
+async def editPassword(request: Request, editBody : UserEdit, session: SessionDep):
+    session_id = request.cookies.get("session_id")  
+
+    print(session_id)
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
+
+    # Benutzer per session id finden
+    user_statement = select(UserDB).where(UserDB.session_id == session_id)
+    user = session.exec(user_statement).first()
+
     if not user:
-        raise HTTPException(status_code=404, detail=f"User mit ID {userId} nicht gefunden")
+        raise HTTPException(status_code=401, detail="Ungültige Session-ID")
+
+    if user.session_expiry < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Anmeldung notwendig")
     
-    user.password_hash = hash_password(userPassword)
+
+    user.password = hash_password(editBody.newPassword)
     session.add(user)
     session.commit()
     
     return {"message": "Passwort erfolgreich geändert"}
+
+
 # @app.post("/bewertung") - Ausgeschlossene Funktion
 async def addBewertung(userId : int, levelId : int, value : int, kommentar : str, session: SessionDep):
     bewertung = Bewertung()
