@@ -6,22 +6,20 @@
     <div class="container">
       <div class="beschreibung">
         <h3>Kapitel I: Mittelalter</h3>
-        <p> 
+        <p>
           Der König plant eine große Eröffnung für das neue Schloss und hat dich mit
           einfachen, aber wichtigen Aufgaben beauftragt, um sicherzustellen, dass alles
           perfekt vorbereitet ist. Die Diener eilen geschäftig durch die großen Hallen, um die letzten Vorbereitungen zu treffen, während der königliche Gärtner die prachtvollen Blumenbeete inspiziert. Die Köche in der Schlossküche bereiten ein Festmahl vor, das die Gäste in Staunen versetzen soll. Doch plötzlich erreicht eine eilende Botschaft den König – ein unerwarteter Gast von weit her kündigt sein Kommen an.
-
         </p>
       </div>
       <div class="card grid">
         <div class="col-12 cards-container">
-          <Card 
-            style="width: 20rem; overflow: hidden;" 
-            v-for="(level, index) in levels" 
+          <Card
+            style="width: 20rem; overflow: hidden;"
+            v-for="(level, index) in levels"
             :key="level.id"
           >
             <template #header>
-              
               <h2 style="color: white;">{{ level.name }}</h2>
               <small>Schwierigkeit: {{ level.difficulty }}</small>
             </template>
@@ -32,30 +30,26 @@
             </template>
             <template #footer>
               <div class="flex gap-4 mt-1">
-                <Button 
-                  label="Start" 
-                  :disabled="!isLevelUnlocked(index)" 
-                  @click="selectLevel(level.id)" 
-                  severity="success" 
-                  class="w-full" 
+                <Button
+                  label="Start"
+                  :disabled="isLevelDisabled(level.id)"
+                  @click="selectLevel(level.id)"
+                  severity="success"
+                  class="w-full"
                 />
               </div>
             </template>
           </Card>
         </div>
       </div>
-      <div class="beschreibung grid">
-        <h3>Kapitel II: </h3>
-        <p>Gesperrt</p>
-      </div>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
 import Card from 'primevue/card';
 import Button from 'primevue/button';
-import axios from 'axios';
+import api from '@/api';
 import router from '@/router';
 
 export default {
@@ -66,69 +60,43 @@ export default {
   data() {
     return {
       levels: [
-        {
-          id: 1,
-          name: "Level I",
-          difficulty: "Einfach",
-          description: "Grundlagen des Navigierens im Linux-Terminal."
-        },
-        {
-          id: 2,
-          name: "Level II",
-          difficulty: "Mittel",
-          description: "Dateien und Verzeichnisse erstellen und verwalten."
-        },
-        {
-          id: 3,
-          name: "Level III",
-          difficulty: "Schwer",
-          description: "Systemprozesse überwachen und konfigurieren."
-        },
-        {
-          id: 4,
-          name: "Level IV",
-          difficulty: "Sehr schwer",
-          description: "Benutzer und Gruppen verwalten."
-        },
-        {
-          id: 5,
-          name: "Level V",
-          difficulty: "Sehr schwer",
-          description: "Netzwerkverbindungen konfigurieren."
-        }
+        { id: 1, name: "Level I", difficulty: "Einfach", description: "Grundlagen des Navigierens im Linux-Terminal." },
+        { id: 2, name: "Level II", difficulty: "Mittel", description: "Dateien und Verzeichnisse erstellen und verwalten." },
+        { id: 3, name: "Level III", difficulty: "Schwer", description: "Systemprozesse überwachen und konfigurieren." },
+        { id: 4, name: "Level IV", difficulty: "Sehr schwer", description: "Benutzer und Gruppen verwalten." },
+        { id: 5, name: "Level V", difficulty: "Sehr schwer", description: "Netzwerkverbindungen konfigurieren." }
       ],
-      userProgress: [
-        { "levelId": 1, "stars": 3 },
-        { "levelId": 2, "stars": 2 }
-      ] // Fortschrittsdaten des Benutzers
+      currentCourse: 1, // Standardwert, wird vom API-Aufruf überschrieben
     };
   },
   methods: {
     selectLevel(levelId) {
       router.push("/terminal");
     },
-    isLevelUnlocked(index) {
-      // Das erste Level ist immer freigeschaltet
-      if (index === 0) return true;
-
-      // Überprüfen, ob das vorherige Level mit mindestens 1 Stern abgeschlossen wurde
-      const previousLevel = this.userProgress.find(progress => progress.levelId === this.levels[index - 1].id);
-      return previousLevel && previousLevel.stars >= 1;
+    isLevelDisabled(levelId) {
+      return levelId > this.currentCourse;
     },
-    // fetchUserProgress() {
-    //   // API-Aufruf, um den Fortschritt des Benutzers abzurufen
-    //   axios.get('/api/user/progress')
-    //     .then(response => {
-    //       this.userProgress = response.data; // Fortschrittsdaten speichern
-    //     })
-    //     .catch(error => {
-    //       console.error('Fehler beim Abrufen des Fortschritts:', error);
-    //     });
-    // }
+    fetchProgress() {
+      api.get('/progress')
+        .then(response => {
+          const data = response.data;
+          console.log(data);
+
+          if (data.nextCourse == -1) {
+            this.nextCourse = "Alle Kurse Fertig";
+          } else {
+            this.nextCourse = data.nextCourse;
+          }
+          this.currentCourse = data.currentCourse;
+        })
+        .catch(error => {
+          console.error('Fehler beim Abrufen der Benutzerdaten:', error);
+        });
+    },
   },
-  // mounted() {
-  //   this.fetchUserProgress(); // Fortschrittsdaten beim Laden der Komponente abrufen
-  // }
+  mounted() {
+    this.fetchProgress(); // Fortschrittsdaten beim Laden der Komponente abrufen
+  }
 };
 </script>
 
