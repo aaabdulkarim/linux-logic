@@ -14,19 +14,14 @@ from models.ProgressModels import *
 import uuid
 from datetime import datetime, timedelta, timezone
 
+
+from passlib.context import CryptContext
+import os
+
+
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
 # sqlmodel docs: https://sqlmodel.tiangolo.com/tutorial/where/#where-land
 
-import uuid
-from datetime import datetime, timedelta, timezone
-from fastapi import FastAPI, Depends, HTTPException, Response
-from sqlmodel import SQLModel, Field, Session, select
-from passlib.context import CryptContext
-from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-from email_validator import validate_email
-from typing import Annotated
-import os
 
 # Laden des Connection Strings
 load_dotenv()
@@ -72,7 +67,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 @app.post("/login/")
 async def login(response: Response, userModel: UserRead, session: SessionDep):
     user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
-    if not user or not verify_password(userModel.password, user.password_hash):
+    if not user or not verify_password(userModel.password, user.password):
         raise HTTPException(status_code=401, detail="Login fehlgeschlagen")
     
     session_id = str(uuid.uuid4())
@@ -84,7 +79,7 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     session.commit()
     
     response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True, samesite="Strict")
-    return {"message": "Login erfolgreich", "user_id": user.id}
+    return {"message": "Login erfolgreich"}
 
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
@@ -95,10 +90,10 @@ async def register(userModel: UserRead, session: SessionDep):
     if existing_user:
         raise HTTPException(status_code=400, detail="E-Mail bereits registriert")
     
-    if len(userModel.password_hash) < 8:
+    if len(userModel.password) < 8:
         raise HTTPException(status_code=400, detail="Passwort muss mindestens 8 Zeichen lang sein")
     
-    hashed_password = hash_password(userModel.password_hash)
+    hashed_password = hash_password(userModel.password)
     new_user = UserDB(username=userModel.username, email=userModel.email, password_hash=hashed_password)
     session.add(new_user)
     session.commit()
