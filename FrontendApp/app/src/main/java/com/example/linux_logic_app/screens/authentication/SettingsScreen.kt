@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.screens
+package com.example.linux_logic_app.screens.authentication
 
 import android.util.Log
 import androidx.compose.animation.animateContentSize

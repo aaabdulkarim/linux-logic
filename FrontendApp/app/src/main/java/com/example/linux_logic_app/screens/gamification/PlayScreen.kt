@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.screens
+package com.example.linux_logic_app.screens.gamification
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -50,8 +50,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.linux_logic_app.components.Scenario
-import com.example.linux_logic_app.components.courseList
+import com.example.linux_logic_app.components.scenario.Scenario
+import com.example.linux_logic_app.components.scenario.courseList
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDarkText

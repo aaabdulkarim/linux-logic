@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.screens
+package com.example.linux_logic_app.screens.gamification
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
@@ -49,7 +49,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.components.Terminal
+import com.example.linux_logic_app.components.terminal.Terminal
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain

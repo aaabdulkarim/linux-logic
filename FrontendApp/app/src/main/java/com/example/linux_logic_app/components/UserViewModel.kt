@@ -4,6 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.linux_logic_app.components.terminal.TerminalColors
+import com.example.linux_logic_app.components.terminal.TerminalViewModel
+import com.example.linux_logic_app.components.terminal.defaultTerminalColors
 
 /**
  * Dies ist die Datenklasse für den Linux Logic Benutzer.

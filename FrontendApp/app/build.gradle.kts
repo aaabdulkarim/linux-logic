@@ -58,12 +58,17 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    // Externe Libraries
+    // https://mvnrepository.com/artifact/androidx.compose.ui/ui-text-google-fonts
     implementation(libs.androidx.ui.text.google.fonts)
+    // https://mvnrepository.com/artifact/androidx.navigation/navigation-compose
     implementation(libs.androidx.navigation.compose)
+    // https://mvnrepository.com/artifact/androidx.compose.animation/animation
     implementation(libs.androidx.animation)
+    // https://mvnrepository.com/artifact/androidx.compose.material/material-icons-extended
     implementation(libs.androidx.material.icons.extended)
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation(libs.okhttp)
-
     // https://mvnrepository.com/artifact/com.github.skydoves/colorpicker-compose
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
 

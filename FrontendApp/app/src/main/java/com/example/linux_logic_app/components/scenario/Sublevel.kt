@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.components
+package com.example.linux_logic_app.components.scenario
 
 /**
  * Diese Datenklasse namens Sublevel repräsentiert die Attribute eines Sublevels mit dem Titel

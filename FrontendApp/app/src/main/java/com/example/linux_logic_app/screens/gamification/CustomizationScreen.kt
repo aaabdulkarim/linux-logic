@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.screens
+package com.example.linux_logic_app.screens.gamification
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
@@ -54,7 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.linux_logic_app.components.ColorPicker
-import com.example.linux_logic_app.components.PreviewTerminal
+import com.example.linux_logic_app.components.terminal.PreviewTerminal
 import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDanger

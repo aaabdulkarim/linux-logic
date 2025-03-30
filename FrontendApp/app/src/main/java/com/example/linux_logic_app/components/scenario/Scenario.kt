@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.components
+package com.example.linux_logic_app.components.scenario
 
 import com.example.linux_logic_app.R
 
