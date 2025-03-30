@@ -1,20 +1,19 @@
 <template>
   <div class="profile-container grid">
     <div class="profile-header">
-      <!-- Profilbild und Benutzerinfo -->
       <div class="profile-left">
         <img src="@/assets/LinuxLogic_Maskottchen.png" alt="Maskottchen" class="profile-image" />
         <div class="profile-info">
           <p class="profile-title">Profil</p>
           <h1 class="profile-name">{{ profileName }}</h1>
           <h6 class="profile-email">{{ email }} </h6>
-          <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}TestLvl</span></p>
+          <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}</span></p>
           <a class="change-password" @click="showPasswordPopup = true">Passwort ändern</a>
           <button class="log-out" @click="logout">Abmelden</button>
         </div>
       </div>
       <div class="next-course">
-        <h2 style="margin-top: 0px;">Level Name</h2>
+        <h2 style="margin-top: 0px;"> Next:  {{ nextCourse }}</h2>
         <button class="next-level" @click="playNextLevel">Nächstes Level</button>
       </div>
     </div>
@@ -22,14 +21,11 @@
       <div class="header-row">
         <div class="completed-levels">
           <h2>Abgeschlossene Level</h2>
-          <div class="course-list" v-for="(chapter, index) in chapters" :key="index">
-            <h3 @click="toggleChapter(index)" class="chapter-header">{{ chapter.name }}</h3>
-            <div v-if="chapter.expanded" class="course-cards">
-              <div class="course-card" v-for="(course, idx) in chapter.courses" :key="idx">
-                <div class="course-content">{{ course.name }}</div>
-                <div class="course-stars">
-                  <span v-for="star in course.stars" :key="star" class="star">⭐</span>
-                </div>
+          <div class="course-cards">
+            <div class="course-card" v-for="course in completedCourses" :key="course.scenario_id">
+              <div class="course-content">Scenario {{ course.scenario_id }}</div>
+              <div class="course-details">
+                Hinweise verwendet: {{ course.hints_verwendet }} | Lösungen verwendet: {{ course.loesungen_verwendet }}
               </div>
             </div>
           </div>
@@ -81,31 +77,8 @@ export default {
       showPasswordPopup: false,
       newPassword: '',
       confirmPassword: '',
-      chapters: [
-        {
-          name: "Kapitel 1",
-          expanded: false,
-          courses: [
-            { name: "Level 1", stars: 0 },
-            { name: "Level 2", stars: 0 },
-            { name: "Level 3", stars: 0 },
-            { name: "Level 4", stars: 0 },
-            { name: "Level 5", stars: 0 }
-          ]
-        },
-        {
-          name: "Kapitel 2",
-          expanded: false,
-          courses: [
-            { name: "Level 6", stars: 0 },
-            { name: "Level 7", stars: 0 },
-            { name: "Level 8", stars: 0 },
-            { name: "Level 9", stars: 0 },
-            { name: "Level 10", stars: 0 }
-          ]
-        }
-      ],
-      nextCourse: { name: "Level 11", stars: 0 },
+      completedCourses: [],
+      nextCourse: '',
       badges: []
     };
   },
@@ -116,25 +89,23 @@ export default {
     playNextLevel() {
       this.$router.push('/terminal');
     },
-    toggleChapter(index) {
-      this.chapters[index].expanded = !this.chapters[index].expanded;
-    },
     fetchProgress() {
       api.get('/progress')
         .then(response => {
           const data = response.data;
           console.log(data);
-          this.progressLevel = data.progressLevel;
-          this.chapters = data.chapters.map(chapter => ({
-            ...chapter,
-            expanded: true,
-            courses: chapter.courses.map(course => ({
-              ...course,
-              stars: course.stars || 0
-            }))
-          }));
-          this.nextCourse = data.nextCourse;
+          this.progressLevel = data.currentCourse;
+          this.completedCourses = data.completedCourses;
           this.badges = data.badges;
+          
+          if (data.nextCourse == -1){
+            this.nextCourse = "Alle Kurse Fertig"
+          } else {
+            this.nextCourse = data.nextCourse
+          }
+
+          
+
         })
         .catch(error => {
           console.error('Fehler beim Abrufen der Benutzerdaten:', error);
@@ -145,7 +116,7 @@ export default {
         .then(response => {
           const data = response.data;
           console.log(data);
-          
+
           this.profileName = data.username;
           this.email = data.email;
         })
@@ -181,6 +152,7 @@ export default {
   },
   mounted() {
     this.fetchUserData();
+    this.fetchProgress();
   }
 };
 </script>

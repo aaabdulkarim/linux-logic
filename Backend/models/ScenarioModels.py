@@ -3,13 +3,13 @@ from sqlmodel import SQLModel, Field
 
 
 
-class ScenarioBase(SQLModel):
-    id: int = Field(index=True)
-    hints_verwendet: int = Field(index=True)
-    loesungen_verwendet: int = Field(index=True)
+# class ScenarioBase(SQLModel):
+#     id: int = Field(index=True)
+#     hints_verwendet: int = Field(index=True)
+#     loesungen_verwendet: int = Field(index=True)
 
-class ScenarioDB(ScenarioBase, table=True):
-    __tablename__ = "progress" 
+# class ScenarioDB(ScenarioBase, table=True):
+#     __tablename__ = "scenarios" 
 
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: int = Field(index=True, foreign_key="user.id")
+#     id: int | None = Field(default=None, primary_key=True)
+#     user_id: int = Field(index=True, foreign_key="user.id")

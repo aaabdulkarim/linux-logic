@@ -179,7 +179,6 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
 
     else:
         new_progress = ProgressDB(
-            user_id=user.id,
             scenario_id=progressBody.scenario_id,
             loesungen_verwendet = progressBody.loesungen_verwendet,
             hints_verwendet = progressBody.hints_verwendet
@@ -245,18 +244,28 @@ async def getProgress(request: Request, session: SessionDep):
     progress_statement = select(ProgressDB).where(ProgressDB.user_id == user.id)
     progress_results = session.exec(progress_statement).all()
 
+
     # Fortschritt zusammenstellen
-    progress_list = [
-        ProgressResponse(
+    progress_list = []
+
+    highest_scenario_id = 0
+    for progress in progress_results:
+        item = ProgressBase(
             loesungen_verwendet=progress.loesungen_verwendet,
             hints_verwendet=progress.hints_verwendet,
-            scenario_id=progress.scenario_id,
-            scenario_name = select(ScenarioBase).where(UserDB.session_id == session_id)
+            scenario_id=progress.scenario_id
         )
-        for progress in progress_results
-    ]
+        if progress.scenario_id > highest_scenario_id:
+            highest_scenario_id = progress.scenario_id
 
-    return progress_list
+        progress_list.append(item)
+
+
+    nextCourse = -1
+    if highest_scenario_id < 5:
+        nextCourse = highest_scenario_id + 1
+    
+    return {"completedCourses" : progress_list, "currentCourse" : highest_scenario_id, "nextCourse" : nextCourse}
 
 
 @app.get("/sterne")
