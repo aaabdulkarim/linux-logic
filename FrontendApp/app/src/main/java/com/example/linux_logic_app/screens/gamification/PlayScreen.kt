@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.components.scenario.Scenario
 import com.example.linux_logic_app.components.scenario.courseList
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDarkText
@@ -59,8 +60,8 @@ import com.example.linux_logic_app.ui.theme.LiloMain
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
-fun PlayScreen(navController: NavController) {
-    var selectedCourse by remember { mutableStateOf<Scenario?>(null) }
+fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
+    var selectedScenario by remember { mutableStateOf<Scenario?>(null) }
 
     SharedTransitionLayout(
         modifier = Modifier.fillMaxSize()
@@ -72,7 +73,7 @@ fun PlayScreen(navController: NavController) {
         ) {
             itemsIndexed(courseList) { _, course ->
                 AnimatedVisibility(
-                    visible = course != selectedCourse,
+                    visible = course != selectedScenario,
                     enter = fadeIn() + scaleIn(),
                     exit = fadeOut() + scaleOut(),
                     modifier = Modifier.animateItem()
@@ -86,17 +87,18 @@ fun PlayScreen(navController: NavController) {
                             .background(LiloMain, RoundedCornerShape(16.dp))
                             .clip(RoundedCornerShape(16.dp))
                     ) {
-                        CourseCard(course = course, onSelectClick = { selectedCourse = course })
+                        CourseCard(course = course, onSelectClick = { selectedScenario = course })
                     }
                 }
             }
         }
         CourseEditDetails(
-            course = selectedCourse,
+            course = selectedScenario,
             onPlayClick = {
+                userViewModel.selectScenarioForUser(selectedScenario)
                 navController.navigate(Screen.Level.route)
             },
-            onCancelClick = { selectedCourse = null }
+            onCancelClick = { selectedScenario = null }
         )
     }
 }

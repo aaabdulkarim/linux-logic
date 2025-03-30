@@ -15,16 +15,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.twotone.ArrowBackIosNew
+import androidx.compose.material.icons.twotone.CheckCircle
+import androidx.compose.material.icons.twotone.Lightbulb
 import androidx.compose.material.icons.twotone.SportsEsports
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -41,18 +45,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.components.terminal.Terminal
-import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
+import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -122,19 +124,6 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 1: ") }
-                        append("Beschreibung in der Card lesen\n")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 2: ") }
-                        append("Mit dem Terminal interagieren\n")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 3: ") }
-                        append("Ihre Ergebnisse überprüfen lassen")
-                    },
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -146,13 +135,73 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    Terminal("ws://10.0.107.7:8000/ws", preview = false, userViewModel = userViewModel)
+                    Terminal(
+                        "ws://10.0.107.7:8000/ws",
+                        preview = false,
+                        userViewModel = userViewModel
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .weight(0.5f),
+                        onClick = {
+                            // ToDo
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.TwoTone.Lightbulb,
+                                contentDescription = "Login Icon for Start",
+                                tint = Color.White
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = "Hinweise",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White
+                            )
+                        },
+                        containerColor = LiloOrange,
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .weight(0.5f),
+                        onClick = {
+                            // ToDo
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.TwoTone.CheckCircle,
+                                contentDescription = "PersonAdd Icon for Start",
+                                tint = Color.White
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = "Prüfen",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White
+                            )
+                        },
+                        containerColor = LiloMain
+                    )
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun LevelCard() {

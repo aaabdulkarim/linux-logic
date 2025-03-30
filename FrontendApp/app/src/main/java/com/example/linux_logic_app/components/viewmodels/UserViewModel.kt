@@ -1,12 +1,10 @@
-package com.example.linux_logic_app.components
+package com.example.linux_logic_app.components.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.linux_logic_app.components.terminal.TerminalColors
-import com.example.linux_logic_app.components.terminal.TerminalViewModel
-import com.example.linux_logic_app.components.terminal.defaultTerminalColors
+import com.example.linux_logic_app.components.scenario.Scenario
 
 /**
  * Dies ist die Datenklasse für den Linux Logic Benutzer.
@@ -92,9 +90,21 @@ class UserViewModel : ViewModel() {
 
     //var terminalViewModel by mutableStateOf(TerminalViewModel()) // Das terminalViewModel kann nicht null sein
 
-    // Verwaltet den TerminalViewModel für den aktuell angemeldeten Benutzer
+    // TerminalViewModel für den aktuell angemeldeten Benutzer
     private var _terminalViewModel: TerminalViewModel = TerminalViewModel(defaultTerminalColors)
+    /**
+     * Liefert den aktuell verwendeten TerminalViewModel.
+     * @return Das TerminalViewModel, welches die Terminalfarben und -logik enthält.
+     */
     val terminalViewModel: TerminalViewModel get() = _terminalViewModel
+
+    // LevelViewModel für die Verwaltung der Levellogik im ausgewählten Scenario
+    private var _levelViewModel: LevelViewModel = LevelViewModel()
+    /**
+     * Liefert den aktuell verwendeten LevelViewModel.
+     * @return Das LevelViewModel, das den aktuellen Kurs, den Level-Index und die Navigation zwischen Sublevels verwaltet.
+     */
+    val levelViewModel: LevelViewModel get() = _levelViewModel
 
     fun onUsernameChange(newUsername: String) {
         _username = newUsername
@@ -396,5 +406,14 @@ class UserViewModel : ViewModel() {
         }
 
         _terminalViewModel.updateDefaultMode(useDefault) // Wenn terminalViewModel null ist, Standardwert true
+    }
+
+    /**
+     * Wählt ein Scenario für den aktuell angemeldeten Benutzer aus.
+     *
+     * @param scenario Das auszuwählende Scenario, welches die Sublevels und Kursinformationen enthält.
+     */
+    fun selectScenarioForUser(scenario: Scenario?) {
+        levelViewModel.selectScenario(scenario)
     }
 }

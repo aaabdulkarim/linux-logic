@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.components.terminal
+package com.example.linux_logic_app.components.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
