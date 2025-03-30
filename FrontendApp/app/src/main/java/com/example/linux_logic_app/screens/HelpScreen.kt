@@ -117,7 +117,7 @@ fun HelpScreen(navController: NavController) {
                 Text(
                     text = "",
 
-                )
+                    )
 
                 Text(
                     text = buildAnnotatedString {
