@@ -33,6 +33,9 @@ export default {
           this.starCount = response.data;
         });
       } catch (error) {
+        if(error.status != 200){
+          this.$router.push('/login');
+        }
         console.error('Fehler beim Abrufen der Sternanzahl:', error);
       }
     }

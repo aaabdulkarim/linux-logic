@@ -1,11 +1,13 @@
 annotated-types==0.7.0
 anyio==4.6.2.post1
+bcrypt==4.3.0
 certifi==2024.8.30
 charset-normalizer==3.4.0
 click==8.1.7
 colorama==0.4.6
 dnspython==2.7.0
 docker==7.1.0
+email_validator==2.2.0
 fastapi==0.115.2
 fastapi-cli==0.0.5
 filelock==3.16.1
@@ -19,6 +21,7 @@ Jinja2==3.1.4
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
+passlib==1.7.4
 psycopg2==2.9.10
 py3-validate-email==1.0.5.post2
 pydantic==2.9.2
@@ -26,6 +29,7 @@ pydantic_core==2.23.4
 Pygments==2.18.0
 python-dotenv==1.0.1
 python-multipart==0.0.16
+pywin32==308
 PyYAML==6.0.2
 requests==2.32.3
 rich==13.9.3
