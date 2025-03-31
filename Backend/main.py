@@ -94,8 +94,8 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
 
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
-    if not validate_email(userModel.email, check_blacklist=False):
-        raise HTTPException(status_code=400, detail="Ungültige E-Mail")
+    # if not validate_email(userModel.email, check_blacklist=False):
+    #     raise HTTPException(status_code=400, detail="Ungültige E-Mail")
     
     existing_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
     if existing_user:
@@ -109,7 +109,7 @@ async def register(userModel: UserRead, session: SessionDep):
     session.add(new_user)
     session.commit()
     
-    return {"message": "Registrierung erfolgreich"}
+    return {"message": "Registrierung erfolgreich", "username" : new_user.username, "email" : new_user.email}
  
 @app.put("/edit")
 async def editPassword(request: Request, editBody : UserEdit, session: SessionDep):

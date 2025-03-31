@@ -7,6 +7,12 @@ class UserEdit(SQLModel):
     newPassword: str
 
 
+class UserCreate(SQLModel):
+    username: str = Field(index=True)
+    email: str = Field(index=True)
+    password: str
+
+    
 class UserBase(SQLModel):
     username: str | None = Field(default=None, index=True)
     password: str

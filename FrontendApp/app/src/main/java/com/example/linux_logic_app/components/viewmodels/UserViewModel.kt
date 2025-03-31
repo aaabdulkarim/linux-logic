@@ -214,7 +214,7 @@ class UserViewModel : ViewModel() {
         _confPasswordMessage = validatePasswords()
 
         // Falls Fehler vorliegen, abbrechen
-        if (listOf(
+        /*if (listOf(
                 _usernameErrorMessage,
                 _emailErrorMessage,
                 _passwordErrorMessage,
@@ -222,17 +222,57 @@ class UserViewModel : ViewModel() {
             ).any { it != null }
         ) {
             return false
+        }*/
+
+        val result = runBlocking {
+            try {
+                val requestBody = ClientUserRead(username = username, email=email, password = password)
+                val response: String = NetworkService.client.makePostRequest(
+                    path = "/register",
+                    body = requestBody
+                ).toString()
+
+                println("Result $response")
+                val responseMap: Map<String, String> = Json.decodeFromString(response)
+                responseMap
+            } catch (e: Exception) {
+                println("Fehler beim Login: ${e.message}")
+                null
+            }
         }
 
-        val newUser = User(username, email)
-        _user = newUser      // Automatische Anmeldung nach Registrierung
-        /*
-        Automatisch alle Felder und Errors zurücksetzen, sodass man beim erfolgreichen Registrieren
-        sich danach der Anmeldung unterziehen muss, was eine gewisse Identiät erfordert.
-         */
-        clearAllFields()
-        clearErrorMessages()
-        return true
+
+        return if (result != null && result.containsKey("username") && result.containsKey("email")) {
+            _username = result["username"] ?: ""
+            _email = result["email"] ?: ""
+            _user = User(username = _username, email = _email)
+            /*
+            Automatisch alle Felder und Errors zurücksetzen, sodass man beim erfolgreichen Registrieren
+            sich danach der Anmeldung unterziehen muss, was eine gewisse Identiät erfordert.
+            */
+            println("alles Gut")
+            clearAllFields()
+            clearErrorMessages()
+            true
+        } else {
+            _passwordErrorMessage = "Registrierung nicht erfolgreich"
+            println("res" +result)
+            if (result != null) {
+                println("name" + result.containsKey("username"))
+            } else {
+                println("email key fehlt")
+            }
+            if (result != null) {
+                println("res" + result.containsKey("email"))
+            } else {
+                println("email key fehlt")
+            }
+
+            false
+        }
+
+
+
     }
 
     /**
@@ -294,6 +334,18 @@ class UserViewModel : ViewModel() {
      * Diese Methode logout meldet den Benutzer ab und setzt den User-State auf null.
      */
     fun logout() {
+        runBlocking {
+            try {
+                val response: String = NetworkService.client.makeGetRequest(
+                    path = "/logout"
+                ).toString()
+
+                println("Result $response")
+            } catch (e: Exception) {
+                println("Fehler beim Login: ${e.message}")
+                null
+            }
+        }
 
         _user = null
         clearAllFields()
