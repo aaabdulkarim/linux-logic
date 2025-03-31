@@ -71,7 +71,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     es, dieses Objekt in zwei Variablen zu zerlegen: eine zum Lesen des Wertes und eine zum Aktualisieren
      */
     val (passwordVisible, setPasswordVisible) = remember { mutableStateOf(false) }
-    val isFormValid = emailErrorMessage == null && passwordErrorMessage == null
+    //val isFormValid = emailErrorMessage == null && passwordErrorMessage == null
 
     Column(
         modifier = Modifier
@@ -288,7 +288,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                         disabledContainerColor = Color(0xFFCECECE),
                         disabledContentColor = Color(0xFF7F7F7F)
                     ),
-                    enabled = isFormValid
+                    enabled = true
                 ) {
                     Text(
                         text = "Anmelden",

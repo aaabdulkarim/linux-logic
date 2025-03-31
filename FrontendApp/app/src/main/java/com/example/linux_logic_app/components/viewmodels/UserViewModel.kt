@@ -1,10 +1,19 @@
 package com.example.linux_logic_app.components.viewmodels
 
+import ClientUserRead
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.linux_logic_app.components.scenario.Scenario
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class LoginRequest(val email: String, val password: String)
+
 
 /**
  * Dies ist die Datenklasse für den Linux Logic Benutzer.
@@ -13,7 +22,7 @@ import com.example.linux_logic_app.components.scenario.Scenario
 data class User(
     val username: String,
     val email: String,
-    val password: String, // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
+
     val terminalColors: TerminalColors = defaultTerminalColors // Terminalfarben für den Benutzer
 )
 
@@ -70,23 +79,6 @@ class UserViewModel : ViewModel() {
     private var _user by mutableStateOf<User?>(null)
     val user: User? get() = _user
 
-    // Liste registrierter Benutzer
-    private var registeredUsers = mutableListOf<User>().apply {
-        add(
-            User(
-                username = "Admin",
-                email = "admin@test.com",
-                password = "Admin123#"
-            )
-        )
-        add(
-            User(
-                username = "Tester",
-                email = "test@test.com",
-                password = "Test123#"
-            )
-        )
-    }
 
     //var terminalViewModel by mutableStateOf(TerminalViewModel()) // Das terminalViewModel kann nicht null sein
 
@@ -172,38 +164,36 @@ class UserViewModel : ViewModel() {
      * Gibt true zurück, wenn der Login erfolgreich war, sonst false.
      */
     fun login(email: String, password: String): Boolean {
-        clearErrorMessages()
+        _passwordErrorMessage = null
 
-        // Eingabevalidierung durchführen und Fehlermeldungen setzen
-        _emailErrorMessage = validateEmail(email)
-        _passwordErrorMessage = validatePassword(password)
+        val result = runBlocking {
+            try {
+                val requestBody = ClientUserRead(username = email, password = password)
+                val response: String = NetworkService.client.makePostRequest(
+                    path = "/login",
+                    body = requestBody
+                ).toString()
 
-        // Falls Fehler vorliegen, abbrechen
-        if (_emailErrorMessage != null || _passwordErrorMessage != null) return false
-
-        // Benutzer suchen, der mit der eingegebenen E-Mail übereinstimmt
-        val registeredUser = registeredUsers.find { it.email == email }
-
-        // Falls kein Benutzer mit der E-Mail existiert, Fehlermeldung setzen und abbrechen
-        if (registeredUser == null) {
-            _emailErrorMessage = "E-Mail nicht registriert!"
-            return false
+                println("Result $response")
+                val responseMap: Map<String, String> = Json.decodeFromString(response)
+                responseMap
+            } catch (e: Exception) {
+                println("Fehler beim Login: ${e.message}")
+                null
+            }
         }
 
-        // Passwort prüfen, wenn Benutzer existiert
-        if (registeredUser.password != password) {
-            _passwordErrorMessage = "Passwort stimmt nicht überein!"
-            return false
+        return if (result != null && result.containsKey("username") && result.containsKey("email")) {
+            _username = result["username"] ?: ""
+            _email = result["email"] ?: ""
+            _user = User(username = _username, email = _email)
+            true
+        } else {
+            _passwordErrorMessage = "Ungültige Login-Daten"
+            false
         }
-
-        // Erfolgreicher Login
-        _user = registeredUser
-
-        // Initialisiere das TerminalViewModel mit den Terminalfarben des Benutzers
-        _terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
-
-        return true
     }
+
 
     /**
      * Diese Methode register ist für die Registrierung eines neuen Benutzers zuständig.
@@ -214,12 +204,6 @@ class UserViewModel : ViewModel() {
      */
     fun register(username: String, email: String, password: String): Boolean {
         clearErrorMessages()
-
-        if (emailExists(email)) _emailErrorMessage =
-            "E-Mail bereits registriert!"      // Fehler: E-Mail bereits vorhanden
-
-        if (usernameExists(username)) _usernameErrorMessage =
-            "Benutzername bereits vergeben!"      // Fehler: Benutzername bereits vergeben
 
         if (_emailErrorMessage != null || _usernameErrorMessage != null) return false
 
@@ -240,8 +224,7 @@ class UserViewModel : ViewModel() {
             return false
         }
 
-        val newUser = User(username, email, password)
-        registeredUsers.add(newUser)
+        val newUser = User(username, email)
         _user = newUser      // Automatische Anmeldung nach Registrierung
         /*
         Automatisch alle Felder und Errors zurücksetzen, sodass man beim erfolgreichen Registrieren
@@ -272,16 +255,16 @@ class UserViewModel : ViewModel() {
 
         clearErrorMessages()
 
-        if (newEmail != null && newEmail != currentUser.email && emailExists(email)) _emailErrorMessage =
+        if (newEmail != null && newEmail != currentUser.email) _emailErrorMessage =
             "E-Mail bereits registriert!"      // Fehler: E-Mail bereits vorhanden
 
-        if (newUsername != null && newUsername != currentUser.username && usernameExists(newUsername)) _usernameErrorMessage =
+        if (newUsername != null && newUsername != currentUser.username) _usernameErrorMessage =
             "Benutzername bereits vergeben!"      // Fehler: Benutzername bereits vergeben
 
         // Eingabevalidierung durchführen und Fehlermeldungen setzen
         _usernameErrorMessage = validateUsername(newUsername ?: currentUser.username)
         _emailErrorMessage = validateEmail(newEmail ?: currentUser.email)
-        _passwordErrorMessage = validatePassword(newPassword ?: currentUser.password)
+        _passwordErrorMessage = validatePassword(newPassword ?: currentUser.username)
 
         if (_emailErrorMessage != null || _usernameErrorMessage != null || _passwordErrorMessage != null) return false
 
@@ -289,16 +272,9 @@ class UserViewModel : ViewModel() {
         val updatedUser = currentUser.copy(
             //Der Elvis-Operator in Kotlin. Er bedeutet "falls der linke Ausdruck null ist, benutze den rechten Ausdruck stattdessen".
             username = newUsername ?: currentUser.username,
-            email = newEmail ?: currentUser.email,
-            password = newPassword ?: currentUser.password
+            email = newEmail ?: currentUser.email
         )
 
-        // Benutzer-Index suchen und Daten aktualisieren
-        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
-        if (index == -1) return false // Benutzer nicht gefunden
-
-        // Daten des Benutzers aktualisieren
-        registeredUsers[index] = updatedUser
         _user = updatedUser
         return true
     }
@@ -307,8 +283,8 @@ class UserViewModel : ViewModel() {
         // Setze alle Eingabefelder (Bearbeitungszustand) auf die Originalwerte des aktuell angemeldeten Benutzers zurück.
         _username = _user?.username.orEmpty()
         _email = _user?.email.orEmpty()
-        _password = _user?.password.orEmpty()
-        _confirmPassword = _user?.password.orEmpty()
+        _password = _user?.username.orEmpty()
+        _confirmPassword = _user?.username.orEmpty()
 
         // Löschen aller angezeigten Fehlermeldungen.
         clearErrorMessages()
@@ -318,24 +294,11 @@ class UserViewModel : ViewModel() {
      * Diese Methode logout meldet den Benutzer ab und setzt den User-State auf null.
      */
     fun logout() {
+
         _user = null
         clearAllFields()
         clearErrorMessages()
     }
-
-    /**
-     * Diese Methode emailExists überprüft, ob eine E-Mail-Adresse bereits besetzt ist.
-     * @param email ist die E-Mail welche gesucht ist
-     */
-    private fun emailExists(email: String): Boolean = registeredUsers.any { it.email == email }
-
-    /**
-     * Diese Methode usernameExists überprüft, ob ein Benutzername bereits vergeben ist.
-     * @param username ist der Benutzername welcher gesucht ist
-     */
-    private fun usernameExists(username: String): Boolean =
-        registeredUsers.any { it.username == username }
-
 
     /**
      * Diese Methode clearErrorMessages setzt alle ErrorMessages beim Erfolg auf null
@@ -365,7 +328,17 @@ class UserViewModel : ViewModel() {
         if (_passwordErrorMessage != null) return false
 
         // Prüfe, ob das Passwort mit dem gespeicherten übereinstimmt
+
+        // TODO: Ersetzen mit Backend Methode
+        /*
         return if (_user?.password == verifyPassword) {
+            _verifyPassword = ""
+            true // Erfolgreiche Validierung
+        } else {
+            _passwordErrorMessage = "Passwort stimmt nicht überein!" // Fehler setzen
+            false // Fehlerfall
+        }*/
+        return if (_user?.username == verifyPassword) {
             _verifyPassword = ""
             true // Erfolgreiche Validierung
         } else {
@@ -384,11 +357,11 @@ class UserViewModel : ViewModel() {
         val updatedUser = currentUser.copy(terminalColors = newColors)
 
         // Benutzer in der registrierten Liste aktualisieren
-        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
+        /*val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
         if (index != -1) {
             registeredUsers[index] = updatedUser
             _user = updatedUser  // Aktualisieren des aktuellen Benutzers
-        }
+        }*/
 
         // TerminalViewModel auch aktualisieren
         _terminalViewModel.updateColors(newColors)
@@ -399,11 +372,11 @@ class UserViewModel : ViewModel() {
         val updatedUser = currentUser.copy(terminalColors = defaultTerminalColors)
 
         // Benutzer in der registrierten Liste aktualisieren
-        val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
+        /*val index = registeredUsers.indexOfFirst { it.email == currentUser.email }
         if (index != -1) {
             registeredUsers[index] = updatedUser
             _user = updatedUser  // Aktualisieren des aktuellen Benutzers
-        }
+        }*/
 
         _terminalViewModel.updateDefaultMode(useDefault) // Wenn terminalViewModel null ist, Standardwert true
     }

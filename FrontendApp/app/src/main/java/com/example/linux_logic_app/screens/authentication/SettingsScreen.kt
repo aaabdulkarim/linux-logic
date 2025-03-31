@@ -178,7 +178,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
     // Diese Werte aus dem ViewModel initialisieren
     var editedUsername by remember { mutableStateOf(userViewModel.user?.username.orEmpty()) }
     var editedEmail by remember { mutableStateOf(userViewModel.user?.email.orEmpty()) }
-    var editedPassword by remember { mutableStateOf(userViewModel.user?.password.orEmpty()) }
+    var editedPassword by remember { mutableStateOf(userViewModel.user?.username.orEmpty()) }
 
     val usernameErrorMessage = userViewModel.usernameErrorMessage
     val emailErrorMessage = userViewModel.emailErrorMessage
