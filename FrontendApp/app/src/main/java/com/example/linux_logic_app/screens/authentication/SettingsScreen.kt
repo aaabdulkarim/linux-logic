@@ -215,7 +215,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 Icon(
                     imageVector = Icons.TwoTone.Security,
                     contentDescription = "Security Icon for Customization",
-                    tint = LiloMain
+                    tint = LiloOrange
                 )
                 Text(
                     text = "Account Informationen",

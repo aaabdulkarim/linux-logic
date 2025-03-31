@@ -14,7 +14,7 @@ data class User(
     val username: String,
     val email: String,
     val password: String, // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
-    val terminalColors: TerminalColors = defaultTerminalColors // Terminalfarben für den Benutzer
+    val terminalColors: TerminalColors = defaultTerminalColors, // Terminalfarben für den Benutzer
 )
 
 /**
@@ -76,7 +76,7 @@ class UserViewModel : ViewModel() {
             User(
                 username = "Admin",
                 email = "admin@test.com",
-                password = "Admin123#"
+                password = "Admin123#",
             )
         )
         add(
@@ -92,19 +92,16 @@ class UserViewModel : ViewModel() {
 
     // TerminalViewModel für den aktuell angemeldeten Benutzer
     private var _terminalViewModel: TerminalViewModel = TerminalViewModel(defaultTerminalColors)
+
     /**
      * Liefert den aktuell verwendeten TerminalViewModel.
      * @return Das TerminalViewModel, welches die Terminalfarben und -logik enthält.
      */
     val terminalViewModel: TerminalViewModel get() = _terminalViewModel
 
-    // LevelViewModel für die Verwaltung der Levellogik im ausgewählten Scenario
-    private var _levelViewModel: LevelViewModel = LevelViewModel()
-    /**
-     * Liefert den aktuell verwendeten LevelViewModel.
-     * @return Das LevelViewModel, das den aktuellen Kurs, den Level-Index und die Navigation zwischen Sublevels verwaltet.
-     */
-    val levelViewModel: LevelViewModel get() = _levelViewModel
+    // Das LevelViewModel – wird initialisiert, sobald ein Scenario ausgewählt wird
+    private var _levelViewModel by mutableStateOf<LevelViewModel?>(null)
+    val levelViewModel: LevelViewModel? get() = _levelViewModel
 
     fun onUsernameChange(newUsername: String) {
         _username = newUsername
@@ -201,6 +198,9 @@ class UserViewModel : ViewModel() {
 
         // Initialisiere das TerminalViewModel mit den Terminalfarben des Benutzers
         _terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
+
+        // LevelViewModel bleibt zunächst null, bis ein Scenario ausgewählt wird
+        _levelViewModel = null
 
         return true
     }
@@ -409,11 +409,12 @@ class UserViewModel : ViewModel() {
     }
 
     /**
-     * Wählt ein Scenario für den aktuell angemeldeten Benutzer aus.
+     * Setzt das aktuelle Scenario und initialisiert das LevelViewModel.
+     * Diese Methode kapselt die gesamte Logik zur Szenario-Auswahl.
      *
-     * @param scenario Das auszuwählende Scenario, welches die Sublevels und Kursinformationen enthält.
+     * @param scenario Das vom Benutzer ausgewählte Scenario.
      */
     fun selectScenarioForUser(scenario: Scenario?) {
-        levelViewModel.selectScenario(scenario)
+        _levelViewModel = scenario?.let { LevelViewModel(it) }
     }
 }

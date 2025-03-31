@@ -155,11 +155,11 @@ fun ColorCustomizer(
                 contentDescription = "Dropdown Icon",
                 modifier = Modifier
                     .graphicsLayer(rotationZ = rotationAngle),
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = Color.White
             )
             Text(
                 text = selectedColorName,
-                color = MaterialTheme.colorScheme.onBackground
+                color = Color.White
             )
         }
 
@@ -350,7 +350,7 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                 Icon(
                     imageVector = Icons.TwoTone.Palette,
                     contentDescription = "Palette Icon for Customization",
-                    tint = LiloMain
+                    tint = LiloOrange
                 )
                 Text(
                     text = "Farbanpassung",
@@ -376,7 +376,8 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = Color.White
                     )
                 } else {
                     ColorCustomizationOption(
@@ -456,7 +457,8 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                     Text(
                         text = "Default",
                         style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -471,7 +473,8 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = "Check Icon for Customization",
-                                    modifier = Modifier.size(SwitchDefaults.IconSize)
+                                    modifier = Modifier.size(SwitchDefaults.IconSize),
+                                    tint = Color.White
                                 )
                             } else {
                                 Icon(
@@ -510,7 +513,8 @@ fun ColorCustomizationOption(
         Text(
             text = option,
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -520,7 +524,8 @@ fun ColorCustomizationOption(
         ) {
             Icon(
                 imageVector = Icons.Default.SubdirectoryArrowRight,
-                contentDescription = "SubdirectoryArrowRight for Customization"
+                contentDescription = "SubdirectoryArrowRight for Customization",
+                tint = Color.White
             )
             ColorCustomizer(
                 selectedColor = selectedColor,

@@ -14,6 +14,7 @@ import com.example.linux_logic_app.R
  * @property imageRes Die ID der Bildressource, die mit diesem Kurs verknüpft ist.
  */
 data class Scenario(
+    val id: Int,
     val name: String,
     val description: String,
     val imageRes: Int,
@@ -79,67 +80,90 @@ data class Scenario(
  */
 val courseList = listOf(
     Scenario(
+        id = 1,
         name = "Linux Grundlagen",
         description = "Deine ersten Schritte: Lerne die Grundlagen des Linux-Betriebssystems kennen. Du wirst verstehen, wie du dich im Terminal zurechtfindest, Dateien verwaltest und einfache Aufgaben automatisierst.",
         imageRes = R.drawable.linux_basics_course,
         sublevels = linkedMapOf(
             1 to Sublevel(
-                description = "Lerne die Geschichte und die grundlegenden Konzepte von Linux kennen. Erfahre, warum Linux in Servern, Embedded Systems und der Softwareentwicklung so weit verbreitet ist."
+                description = "Lerne die Geschichte und die grundlegenden Konzepte von Linux kennen. Erfahre, warum Linux in Servern, Embedded Systems und der Softwareentwicklung so weit verbreitet ist.",
+                id = 1,
+                done = false
             ),
             2 to Sublevel(
-                description = "Mache dich mit der Kommandozeile vertraut und lerne grundlegende Befehle wie `ls`, `cd`, `pwd` und `man`, um dich im Dateisystem zu bewegen."
+                description = "Mache dich mit der Kommandozeile vertraut und lerne grundlegende Befehle wie `ls`, `cd`, `pwd` und `man`, um dich im Dateisystem zu bewegen.",
+                id = 2,
+                done = false
             ),
             3 to Sublevel(
-                description = "Lerne, wie du Dateien erstellst, bearbeitest, verschiebst, umbenennst und löschst. Erfahre, wie du mit Verzeichnissen arbeitest und deren Berechtigungen verwaltest."
+                description = "Lerne, wie du Dateien erstellst, bearbeitest, verschiebst, umbenennst und löschst. Erfahre, wie du mit Verzeichnissen arbeitest und deren Berechtigungen verwaltest.",
+                id = 3,
+                done = false
             ),
             4 to Sublevel(
-                description = "Verstehe, wie Linux-Prozesse arbeiten, wie du sie mit `ps`, `top` oder `kill` steuerst und wie Benutzer- und Gruppenrechte funktionieren."
+                description = "Verstehe, wie Linux-Prozesse arbeiten, wie du sie mit `ps`, `top` oder `kill` steuerst und wie Benutzer- und Gruppenrechte funktionieren.",
+                id = 4,
+                done = false
             ),
             5 to Sublevel(
-                description = "Lerne, was Shell-Skripte sind und wie du sie erstellst. Erfahre, wie du Skripte ausführbar machst und welche grundlegenden Strukturen es gibt."
+                description = "Lerne, was Shell-Skripte sind und wie du sie erstellst. Erfahre, wie du Skripte ausführbar machst und welche grundlegenden Strukturen es gibt.",
+                id = 5,
+                done = false
             ),
             6 to Sublevel(
-                description = "Nutze Variablen, um Werte zu speichern, und verwende Schleifen (`for`, `while`, `until`), um Abläufe effizient zu automatisieren."
+                description = "Nutze Variablen, um Werte zu speichern, und verwende Schleifen (`for`, `while`, `until`), um Abläufe effizient zu automatisieren.",
+                id = 6,
+                done = false
             ),
             7 to Sublevel(
-                description = "Lerne Techniken zur Fehlerbehandlung und Protokollierung, damit deine Skripte robust und fehlertolerant sind."
+                description = "Lerne Techniken zur Fehlerbehandlung und Protokollierung, damit deine Skripte robust und fehlertolerant sind.",
+                id = 7,
+                done = false
             ),
             8 to Sublevel(
-                description = "Erfahre, wie du Hintergrundprozesse startest, beendest und steuerst. Nutze `nohup`, `jobs`, `fg`, `bg` und `disown`, um Skripte effizient auszuführen."
+                description = "Erfahre, wie du Hintergrundprozesse startest, beendest und steuerst. Nutze `nohup`, `jobs`, `fg`, `bg` und `disown`, um Skripte effizient auszuführen.",
+                id = 8,
+                done = false
             ),
         )
     ),
     Scenario(
+        id = 2,
         name = "Fortgeschrittene Bash",
         description = "Werde zum Bash-Profi: Erstelleeeeeeeeeeeeeeeeeeeeeee leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.\nWerde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.\nWerde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.\nWerde zum Bash-Profi: Erstelle leistungsstarke Bash-Skripte, um deine Arbeit am Computer zu automatisieren und zu beschleunigen. Erweitere deine Kenntnisse in der Shell und werde zum Experten für die Kommandozeile.",
         imageRes = R.drawable.bash_course,
         sublevels = linkedMapOf()
     ),
     Scenario(
+        id = 3,
         name = "Docker Kenntnisse",
         description = "Beherrsche Docker: Entwickle und verwalte moderne Anwendungen mit Docker Containern. Lerne, wie du deine Anwendungen portabel und skalierbar machst.",
         imageRes = R.drawable.docker_course,
         sublevels = linkedMapOf()
     ),
     Scenario(
+        id = 4,
         name = "Linux Dateisystem und Navigation",
         description = "Navigiere durch das Linux-Dateisystem: Versteh den Aufbau des Linux-Dateisystems und wie du effizient darin navigierst. Lerne, wie du Dateien und Verzeichnisse verwaltest und suchst.",
         imageRes = R.drawable.dateisystem_navigation_course,
         sublevels = linkedMapOf()
     ),
     Scenario(
+        id = 5,
         name = "Textbearbeitung mit vim und nano",
         description = "Werde zum Texteditor-Meister: Lerne die leistungsstarken Texteditoren vim und nano kennen und werde zum Profi in der Textbearbeitung.",
         imageRes = R.drawable.nano_vs_vim_course,
         sublevels = linkedMapOf()
     ),
     Scenario(
+        id = 6,
         name = "Linux Systemadministration",
         description = "Werde zum Linux-Administrator: Installiere, konfiguriere und verwalte deine eigenen Linux-Systeme. Lerne, wie du Probleme behebst und dein System optimierst.",
         imageRes = R.drawable.systemadministartion_course,
         sublevels = linkedMapOf()
     ),
     Scenario(
+        id = 7,
         name = "Netzwerkverwaltung unter Linux",
         description = "Baue deine eigenen Netzwerke: Konfiguriere Netzwerke und richte verschiedene Netzwerkdienste ein. Lerne, wie du mehrere Computer miteinander verbindest und sicher kommunizierst.",
         imageRes = R.drawable.netzwerkverwaltung_course,

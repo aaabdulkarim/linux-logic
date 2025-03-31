@@ -2,110 +2,60 @@ package com.example.linux_logic_app.components.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.linux_logic_app.components.scenario.Scenario
 import com.example.linux_logic_app.components.scenario.Sublevel
 
 /**
- * Diese Klasse namens LevelViewModel, inkludiert die Levellogik eines ausgewählten Scenarios
- * und wird separiert, um Kapselung, Wiederverwendbarkeit und Testbarkeit zu verbessern.
- * @property initialScenario Optional initial ausgewähltes Scenario.
- * @property initialLevel Der initiale Level-Index, standardmäßig 1.
+ * Das LevelViewModel verwaltet das aktuell ausgewählte Scenario und
+ * den aktuellen Level‑Index (bzw. das aktive Sublevel).
+ *
+ * @param scenario Das vom Benutzer ausgewählte Scenario.
  */
-class LevelViewModel(
-    initialScenario: Scenario? = null,
-    initialLevel: Int = 1
-) : ViewModel() {
+class LevelViewModel(private val scenario: Scenario) : ViewModel() {
 
-    // Internes Scenario, das aktuell ausgewählt wurde im private State
-    private var _currentScenario by mutableStateOf<Scenario?>(initialScenario)
-
-    /**
-     * Das aktuell ausgewählte Scenario. Kann null sein, wenn keines ausgewählt wurde.
-     * Dies ist der unveränderliche public State des Szenarios, welches von außen
-     * nicht geändert werden kann
-     */
-    val currentScenario: Scenario? get() = _currentScenario
-
-    // Aktueller Level-Index (beginnend bei 1).
-    private var _currentLevel by mutableIntStateOf(initialLevel)
-
-    /**
-     * Der aktuelle Level-Index.
-     */
+    private var _currentLevel by mutableIntStateOf(1)
     val currentLevel: Int get() = _currentLevel
 
     /**
-     * Wählt ein neues Scenario aus und setzt den Level-Index auf 1 zurück.
-     * @param scenario Das Scenario, das ausgewählt werden soll.
+     * Gibt das aktuelle Sublevel zurück. Da es immer ein gültiges Sublevel gibt, wird `!!` verwendet.
      */
-    fun selectScenario(scenario: Scenario?) {
-        _currentScenario = scenario
-        _currentLevel = 1
-    }
+    fun getCurrentSublevel(): Sublevel = scenario.sublevels[_currentLevel]!!
 
     /**
-     * Liefert das aktuell ausgewählte Sublevel als Result.
-     * @return Ein [Result] mit dem aktuellen [Sublevel] oder ein Fehler, falls kein Scenario ausgewählt wurde.
+     * Gibt den Namen des aktuellen Levels zurück.
      */
-    fun getCurrentSublevel(): Result<Sublevel> {
-        val scenario =
-            _currentScenario ?: return Result.failure(Exception("Kein Scenario ausgewählt!"))
-        return scenario.getSublevel(_currentLevel)
-    }
+    fun getCurrentLevelName(): String = "Level $_currentLevel"
 
     /**
-     * Wechselt zum nächsten Sublevel, sofern vorhanden, und liefert es als Result.
-     * @return Ein [Result] mit dem nächsten [Sublevel] oder ein Fehler, falls kein nächstes Sublevel existiert.
+     * Gibt die Beschreibung des aktuellen Sublevels zurück.
      */
-    fun nextLevel(): Result<Sublevel> {
-        val scenario =
-            _currentScenario ?: return Result.failure(Exception("Kein Scenario ausgewählt!"))
-        return if (scenario.hasNextSublevel(_currentLevel)) {
+    fun getCurrentSublevelDescription(): String = getCurrentSublevel().description
+
+    /**
+     * Prüft, ob es ein weiteres Sublevel gibt.
+     */
+    fun hasNextSublevel(): Boolean = scenario.hasNextSublevel(_currentLevel)
+
+    /**
+     * Wechselt zum nächsten Sublevel, falls vorhanden.
+     * Gibt `true` zurück, wenn das nächste Level existiert, sonst `false`.
+     */
+    fun nextSublevel(): Boolean {
+        return if (hasNextSublevel()) {
             _currentLevel += 1
-            scenario.getSublevel(_currentLevel)
+            true
         } else {
-            Result.failure(Exception("Kein nächstes Sublevel vorhanden!"))
+            false
         }
     }
 
     /**
-     * Wechselt zum vorherigen Sublevel, sofern vorhanden, und liefert es als Result.
-     * @return Ein [Result] mit dem vorherigen [Sublevel] oder ein Fehler, falls bereits beim ersten Level.
-     */
-    fun previousLevel(): Result<Sublevel> {
-        val scenario =
-            _currentScenario ?: return Result.failure(Exception("Kein Scenario ausgewählt!"))
-        return if (_currentLevel > 1) {
-            _currentLevel -= 1
-            scenario.getSublevel(_currentLevel)
-        } else {
-            Result.failure(Exception("Bereits beim ersten Level!"))
-        }
-    }
-
-    /**
-     * Liefert das letzte Sublevel des aktuell ausgewählten Scenarios als Result.
-     * @return Ein [Result] mit dem letzten [Sublevel] oder ein Fehler, falls kein Scenario ausgewählt wurde.
-     */
-    fun getLastSublevel(): Result<Sublevel> {
-        val scenario =
-            _currentScenario ?: return Result.failure(Exception("Kein Scenario ausgewählt!"))
-        return scenario.getLastSublevel()
-    }
-
-    /**
-     * Setzt den aktuellen Level wieder auf 1 zurück.
+     * Setzt das Level zurück (z.B. beim Neustart des Szenarios).
      */
     fun resetLevel() {
         _currentLevel = 1
     }
-
-    /**
-     * Gibt einen dynamischen Namen basierend auf dem aktuellen Level-Index zurück.
-     * @return Einen String im Format "Level X".
-     */
-    fun getCurrentLevelName(): String = "Level $_currentLevel"
 }
+
