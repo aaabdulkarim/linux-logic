@@ -5,13 +5,6 @@
       <h1>Level {{ scenario_id }}</h1>
     </div>
     <div class="content">
-      <h2>Beschreibung</h2>
-      <p>Den roten Teppich ausrollen:
-
-        Wechsel in das Verzeichnis der Veranstaltungsvorbereitung: cd
-        /home/Veranstaltung .
-        Erstelle eine Datei, die den roten Teppich darstellt: touch roter_teppich.txt .
-      </p>
     </div>
     <div class="terminal-container">
       <Terminal/>
@@ -65,6 +58,7 @@ export default {
       rating: 0,
       stars: 3,
       scenario_id: null,
+      aufgabe: ""
     };
   },
   methods: {
