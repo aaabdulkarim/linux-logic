@@ -13,6 +13,7 @@ class ScenarioTrack:
         scenario_list = []
         md_file = docker_dir_path + "/Aufgabenstellung.md"
 
+        # TODO: Aufgabenwechsel speichern und Triggern
         with open(md_file) as file:
             lines = file.readlines()
             current_hint = ""
