@@ -20,57 +20,23 @@ data class Scenario(
     val imageRes: Int,
     val sublevels: LinkedHashMap<Int, Sublevel>
 ) {
-    /**
-     * Diese Methode hasSublevel
-     */
+    /** Prüft, ob ein bestimmtes Sublevel existiert */
     fun hasSublevel(id: Int): Boolean = sublevels.containsKey(id)
 
-    /**
-     * Diese Methode hasSublevel
-     */
-    fun existSublevels(): Boolean = sublevels.isNotEmpty()
+    /** Prüft, ob das Szenario Sublevels enthält */
+    fun hasSublevels(): Boolean = sublevels.isNotEmpty()
 
-    /**
-     * Diese Methode hasNextSublevel prüft, ob ein weiteres Level existiert
-     */
+    /** Prüft, ob ein weiteres Sublevel existiert */
     fun hasNextSublevel(currentId: Int): Boolean = sublevels.containsKey(currentId + 1)
 
-    /**
-     * Diese Methode getSublevel
-     */
-    fun getSublevel(id: Int): Result<Sublevel> {
-        // Prüft, ob die LinkedHashMap `subcourses` das Sublevel mit der gegebenen ID enthält.
-        return sublevels[id]?.let {
-            // Falls das Sublevel existiert, wird ein erfolgreicher `Result` zurückgegeben.
-            Result.success(it)
-        } ?: Result.failure(Exception("Fehler: Sublevel mit der ID $id nicht vorhanden!"))
-        // Falls kein Sublevel mit der ID existiert, wird ein fehlgeschlagenes `Result` mit einer Exception erzeugt.
-    }
+    /** Gibt ein Sublevel anhand der ID zurück */
+    fun getSublevel(id: Int): Sublevel? = sublevels[id]
 
-    /**
-     * Diese Methode getNextSublevel holt das nächste Sublevel, falls es vorhanden ist
-     */
-    fun getNextSublevel(currentId: Int): Result<Sublevel> {
-        // Prüft, ob die LinkedHashMap `subcourses` das Sublevel mit der nächsten ID enthält.
-        return sublevels[currentId + 1]?.let {
-            // Falls ein nächstes Sublevel existiert, wird ein erfolgreicher `Result` zurückgegeben.
-            Result.success(it)
-        } ?: Result.failure(Exception("Fehler: Kein nächstes Sublevel vorhanden!"))
-        // Falls kein Sublevel mit einer nächsten ID existiert, wird ein fehlgeschlagenes `Result` mit einer Exception erzeugt.
-    }
+    /** Gibt das nächste Sublevel zurück, falls vorhanden */
+    fun getNextSublevel(currentId: Int): Sublevel? = sublevels[currentId + 1]
 
-    /**
-     * Diese Methode `getLastSublevel` holt das letzte Sublevel in der Reihenfolge.
-     */
-    fun getLastSublevel(): Result<Sublevel> {
-        if (!existSublevels()) {
-            return Result.failure(Exception("Fehler: Keine Sublevels in diesem Szenario $name vorhanden!"))
-        }
-
-        // Sagt aus, dass man zu 100% sicher ist, dass dieser Wert nicht null ist
-        val lastKey = sublevels.keys.maxOrNull()!!
-        return Result.success(sublevels[lastKey]!!)
-    }
+    /** Gibt das letzte Sublevel des Szenarios zurück */
+    fun getLastSublevel(): Sublevel? = sublevels.values.lastOrNull()
 }
 
 /**

@@ -14,48 +14,32 @@ import com.example.linux_logic_app.components.scenario.Sublevel
  * @param scenario Das vom Benutzer ausgewählte Scenario.
  */
 class LevelViewModel(private val scenario: Scenario) : ViewModel() {
+    var currentLevel by mutableIntStateOf(1)
+        private set
 
-    private var _currentLevel by mutableIntStateOf(1)
-    val currentLevel: Int get() = _currentLevel
+    /** Gibt das aktuelle Sublevel zurück oder null, falls es nicht existiert */
+    fun getCurrentSublevel(): Sublevel? = scenario.getSublevel(currentLevel)
 
-    /**
-     * Gibt das aktuelle Sublevel zurück. Da es immer ein gültiges Sublevel gibt, wird `!!` verwendet.
-     */
-    fun getCurrentSublevel(): Sublevel = scenario.sublevels[_currentLevel]!!
+    /** Gibt den Namen des aktuellen Levels zurück */
+    fun getCurrentLevelName(): String = "Level $currentLevel"
 
-    /**
-     * Gibt den Namen des aktuellen Levels zurück.
-     */
-    fun getCurrentLevelName(): String = "Level $_currentLevel"
+    /** Gibt die Beschreibung des aktuellen Sublevels zurück oder einen Platzhaltertext */
+    fun getCurrentSublevelDescription(): String =
+        getCurrentSublevel()?.description ?: "Keine Beschreibung vorhanden."
 
-    /**
-     * Gibt die Beschreibung des aktuellen Sublevels zurück.
-     */
-    fun getCurrentSublevelDescription(): String = getCurrentSublevel().description
+    /** Prüft, ob ein weiteres Sublevel existiert */
+    fun hasNextSublevel(): Boolean = scenario.hasNextSublevel(currentLevel)
 
-    /**
-     * Prüft, ob es ein weiteres Sublevel gibt.
-     */
-    fun hasNextSublevel(): Boolean = scenario.hasNextSublevel(_currentLevel)
+    /** Prüft, ob das aktuelle Sublevel das letzte ist */
+    fun isLastSublevel(): Boolean = scenario.getLastSublevel()?.id == currentLevel
 
-    /**
-     * Wechselt zum nächsten Sublevel, falls vorhanden.
-     * Gibt `true` zurück, wenn das nächste Level existiert, sonst `false`.
-     */
+    /** Wechselt zum nächsten Sublevel, falls vorhanden */
     fun nextSublevel(): Boolean {
         return if (hasNextSublevel()) {
-            _currentLevel += 1
+            currentLevel++
             true
         } else {
             false
         }
     }
-
-    /**
-     * Setzt das Level zurück (z.B. beim Neustart des Szenarios).
-     */
-    fun resetLevel() {
-        _currentLevel = 1
-    }
 }
-
