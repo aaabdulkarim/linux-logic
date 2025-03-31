@@ -1,4 +1,12 @@
 <template>
+  <div class="content">
+
+  <h2>Beschreibung</h2>
+      <p>{{ aufgabe }}
+      </p>
+
+  </div>
+
   <div id="terminal-container" ref="terminalContainer">
     <div class="terminal-header">
       <span>logic Terminal</span>
@@ -24,7 +32,8 @@ export default {
       fitAddon: null,
       socketClient: null,
       promptLength: 69,
-      socketUrl: "http://192.168.0.76:8000/ws"
+      socketUrl: "http://192.168.0.76:8000/ws",
+      aufgabe: "",
     };
   },
   mounted() {
@@ -57,6 +66,7 @@ export default {
     };
 
     this.socketClient.onmessage = (event) => {
+
       this.terminal.write(`\r\n${event.data}`);
       this.writePrompt();
     };
@@ -87,6 +97,7 @@ export default {
       this.socketClient.onmessage = (event) => {
         this.terminal.write(`\r\n${event.data}`);
         this.writePrompt();
+        // TODO: Aufgabenwechsel wird hier erkannt. und dementsprechend verarbeitet
       };
 
       this.socketClient.onerror = (error) => {
@@ -95,7 +106,9 @@ export default {
 
       this.socketClient.onclose = () => {
         console.warn("WebSocket connection closed. Reconnecting...");
-      };       
+      };      
+      
+      // TODO: Username und Scenario auswahl schicken
     },
 
 
@@ -155,6 +168,15 @@ export default {
 </script>
 
 <style scoped>
+
+.content {
+  justify-content: left;
+  text-align: left;
+  padding-left: 10px;
+  padding-right: 10px;
+
+}
+
 .terminal-container {
   opacity: 0.8;
   width: 100%;

@@ -124,7 +124,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                     .fillMaxWidth()
                     .background(
                         terminalColors.headerColor,
-                        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                     )
                     .padding(12.dp)
             ) {
@@ -143,7 +143,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                     .weight(1f)
                     .background(
                         terminalColors.bodyColor,
-                        shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
                     )
                     .padding(8.dp)
                     .verticalScroll(scrollState)

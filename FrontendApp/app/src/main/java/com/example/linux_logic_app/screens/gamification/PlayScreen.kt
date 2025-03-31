@@ -95,6 +95,7 @@ fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
         CourseEditDetails(
             course = selectedScenario,
             onPlayClick = {
+                // Scenario auswählen und LevelViewModel im UserViewModel initialisieren
                 userViewModel.selectScenarioForUser(selectedScenario)
                 navController.navigate(Screen.Level.route)
             },

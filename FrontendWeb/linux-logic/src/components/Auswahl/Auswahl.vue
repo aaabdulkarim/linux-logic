@@ -74,7 +74,7 @@ export default {
       router.push("/terminal?scenario_id=" + levelId);
     },
     isLevelDisabled(levelId) {
-      return levelId > this.currentCourse;
+      return levelId > this.currentCourse + 1;
     },
     fetchProgress() {
       api.get('/progress')
