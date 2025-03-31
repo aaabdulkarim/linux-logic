@@ -19,7 +19,6 @@ from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 import os
 
-
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
 # sqlmodel docs: https://sqlmodel.tiangolo.com/tutorial/where/#where-land
 
@@ -59,11 +58,28 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
-@app.post("/login/")
+@app.post("/login")
 async def login(response: Response, userModel: UserRead, session: SessionDep):
-    user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
-    if not user or not verify_password(userModel.password, user.password):
-        raise HTTPException(status_code=401, detail="Login fehlgeschlagen")
+
+
+    username = userModel.username
+    email = userModel.email
+    password = userModel.password
+
+    if not username and not email:
+        raise HTTPException(status_code=400, detail="Nutzername oder Password erfolderlich.")
+
+    user = None
+    if username:
+        user = session.exec(select(UserDB).where(UserDB.username == username)).first()
+    elif email:
+        user = session.exec(select(UserDB).where(UserDB.email == email)).first()
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Nutzer nicht gefunden")
+
+    if password and not verify_password(password, user.password):
+        raise HTTPException(status_code=401, detail="Passwort falsch")
     
     session_id = str(uuid.uuid4())
     session_expiry = datetime.now(timezone.utc) + (timedelta(days=30) if userModel.stayLoggedIn else timedelta(minutes=15))
@@ -73,8 +89,8 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     session.add(user)
     session.commit()
     
-    response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True, samesite="Strict")
-    return {"message": "Login erfolgreich"}
+    response.set_cookie(key="session_id", value=session_id, httponly=True, secure=False, samesite="Strict")
+    return {"message": "Login erfolgreich", "username" : user.username, "email" : user.email}
 
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):

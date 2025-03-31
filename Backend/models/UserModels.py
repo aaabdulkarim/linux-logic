@@ -8,7 +8,7 @@ class UserEdit(SQLModel):
 
 
 class UserBase(SQLModel):
-    username: str = Field(index=True)
+    username: str | None = Field(default=None, index=True)
     password: str
 
 class UserDB(UserBase, table=True):
