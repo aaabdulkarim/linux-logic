@@ -90,22 +90,38 @@ class WebSocketClient(url: String) {
     }
 }
 
+/**
+ * Composable-Funktion, die ein Terminal-Interface darstellt.
+ * Diese Funktion implementiert ein benutzerdefiniertes Terminal, das sowohl im Live- als auch im
+ * Preview-Modus verwendet werden kann. Im Live-Modus wird ein WebSocket-Client erstellt, der
+ * Benutzereingaben sendet und Antworten empfängt. Im Preview-Modus werden feste, beispielhafte
+ * Ausgaben angezeigt, um das Layout zu demonstrieren.
+ * @param socketUrl URL des WebSocket-Servers.
+ * @param preview Flag, das angibt, ob die Funktion im Preview-Modus ausgeführt wird.
+ * Ist true, wird kein WebSocket-Client erstellt und es erfolgt keine echte Kommunikation.
+ * @param userViewModel ViewModel, welches u.a. Terminal-Farben und Logik bereitstellt.
+ */
 @Composable
 fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserViewModel) {
+    // Terminal-Farben aus dem UserViewModel beziehen
     val terminalColors = userViewModel.terminalViewModel.terminalColors
+
+    // Statusvariablen: terminalOutput enthält alle bisherigen Ausgaben, userInput speichert die aktuelle Eingabe
     var terminalOutput by remember { mutableStateOf(listOf("Welcome to logic terminal!")) }
     var userInput by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
-    // Im Preview-Modus wird kein WebSocket-Client erstellt
+    // WebSocketClient wird nur erstellt, wenn nicht im Preview-Modus, um unnötige Verbindungen zu vermeiden
     val webSocketClient = remember { if (!preview) WebSocketClient(socketUrl) else null }
 
+    // Im Live-Modus wird der WebSocket-Client beim Start verbunden
     if (!preview) {
         LaunchedEffect(Unit) {
             webSocketClient?.connect()
         }
     }
 
+    // Hauptcontainer des Terminals
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -113,15 +129,17 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                // Hintergrund und abgerundete Ecken für das Terminal-Fenster
                 .background(
                     color = terminalColors.bodyColor,
                     shape = RoundedCornerShape(16.dp)
                 )
         ) {
-            // Header
+            // Header-Bereich des Terminals
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    // Header mit eigener Hintergrundfarbe und abgerundeten oberen Ecken
                     .background(
                         terminalColors.headerColor,
                         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
@@ -137,7 +155,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                 )
             }
 
-            // Terminal Output und Input
+            // Container für Terminal-Ausgabe und Eingabe
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -149,7 +167,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                     .verticalScroll(scrollState)
             ) {
                 Column {
-                    // Ausgabe
+                    // Anzeige der bisherigen Terminal-Ausgaben
                     terminalOutput.forEach { line ->
                         Text(
                             text = line,
@@ -159,9 +177,10 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                         )
                     }
 
-                    // Eingabezeile
+                    // Eingabezeile: Hier wird zwischen Preview- und Live-Modus unterschieden
                     Row {
                         if (preview) {
+                            // Im Preview-Modus: Fester Text zur Darstellung des Layouts
                             Text(
                                 text = buildAnnotatedString {
                                     withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
@@ -175,6 +194,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                                 fontFamily = FontFamily.Monospace
                             )
                         } else {
+                            // Anzeige des Shell-Prompts im Live-Modus
                             Text(
                                 text = buildAnnotatedString {
                                     withStyle(style = SpanStyle(color = terminalColors.shellPromptColor)) {
@@ -190,7 +210,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                                 fontSize = 14.sp,
                                 fontFamily = FontFamily.Monospace
                             )
-                            // Im Preview-Modus schalten wir den TextField auf readOnly
+                            // Eingabefeld zur Verarbeitung der Benutzereingabe
                             BasicTextField(
                                 value = userInput,
                                 onValueChange = { userInput = it },
@@ -200,27 +220,33 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                                     fontFamily = FontFamily.Monospace
                                 ),
                                 cursorBrush = SolidColor(terminalColors.cursorColor),
-                                readOnly = preview,  // verhindert, dass im Preview-Modus Eingaben verarbeitet werden
+                                //readOnly = preview,  Im Preview-Modus werden Eingaben nicht verarbeitet
                                 keyboardOptions = KeyboardOptions.Default.copy(
                                     imeAction = ImeAction.Done
                                 ),
                                 keyboardActions = KeyboardActions(
                                     onDone = {
+                                        // Verarbeitung der Eingabe, falls nicht leer
                                         if (userInput.isNotBlank()) {
                                             if (userInput == "clear") {
+                                                // Bei "clear" wird der Terminal-Output geleert
                                                 terminalOutput = listOf("")
                                             } else {
+                                                // Sende die Benutzereingabe an den WebSocket-Client
                                                 webSocketClient?.sendMessage(userInput)
-                                                // Temporärer Fix: Warte, falls der Client noch Message erwartet
+
+                                                // Temporärer Fix: Warte, bis der Client keine weitere Nachricht erwartet
                                                 while (webSocketClient?.waiting() == true) {
                                                     continue
                                                 }
 
+                                                // Füge die Eingabe und die Antwort des Servers dem Terminal-Output hinzu
                                                 terminalOutput = terminalOutput +
                                                         "lilo@beta:~$ $userInput" +
                                                         (webSocketClient?.output ?: "")
 
-                                                userInput = "" // Eingabe leeren
+                                                // Leere das Eingabefeld
+                                                userInput = ""
                                             }
                                         }
                                     }
@@ -234,6 +260,12 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
     }
 }
 
+/**
+ * Preview-Composable für das Terminal.
+ * Dieses Composable stellt das Terminal im Preview-Modus dar, wobei feste Daten verwendet werden, um
+ * das Layout ohne aktive Backend-Kommunikation zu visualisieren.
+ * @param userViewModel ViewModel, das zur Darstellung der Terminal-Farben und weiterer Einstellungen genutzt wird.
+ */
 @Composable
 fun PreviewTerminal(userViewModel: UserViewModel) {
     Terminal("ws://172.20.10.2:8000/ws", preview = true, userViewModel = userViewModel)

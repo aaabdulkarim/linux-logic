@@ -43,16 +43,27 @@ import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 
+/**
+ * StartScreen stellt den Startbildschirm der App dar.
+ * Relevante, komplexe Aspekte:
+ * - Kombination von Bildern, Text und Buttons, um eine ansprechende Startseite zu gestalten.
+ * - Verwendung von LocalContext und Intent, um externe Webseiten zu öffnen.
+ * - Navigation zu Login- und Registrierungs-Screens mittels NavController.
+ * @param navController Steuert die Navigation zwischen den Screens.
+ */
 @Composable
 fun StartScreen(navController: NavController) {
     val context = LocalContext.current
     val liloWebUrl = "https://www.linux-logic.com"
+    // Intent zum Öffnen der Linux Logic Webseite
     val liloIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(liloWebUrl)) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(LiloMain)
     ) {
+        // Hintergrundbild über den gesamten Bildschirm
         Image(
             alignment = Alignment.TopCenter,
             painter = painterResource(id = R.drawable.linux_logic_start),
@@ -61,9 +72,9 @@ fun StartScreen(navController: NavController) {
             modifier = Modifier.fillMaxSize()
         )
 
+        // Container für die unteren Inhalte (Text, Link und Buttons)
         Box(
             modifier = Modifier
-                //.fillMaxSize(),
                 .fillMaxHeight(0.45f)
                 .align(Alignment.BottomCenter)
         ) {
@@ -72,7 +83,7 @@ fun StartScreen(navController: NavController) {
                     .fillMaxSize()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                //verticalArrangement = Arrangement.Bottom
+                // verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
                     text = "Willkommen bei LINUX LOGIC",
@@ -87,33 +98,28 @@ fun StartScreen(navController: NavController) {
                     text = "Eine Lernplattform zum Erwerb grundlegender und essenzieller Linux-Kenntnisse. Für näheres besuchen Sie bitte unsere Webseite unter:",
                     color = Color.White,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier
-                        .align(Alignment.Start),
+                    modifier = Modifier.align(Alignment.Start),
                     textAlign = TextAlign.Justify
-
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))
 
+                // Zeile mit einem klickbaren Link, der die Webseite öffnet
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             context.startActivity(liloIntent)
-                            Log.i(
-                                "StartScreen",
-                                "User clicked Link - Action \"open Linux Logic Website\" -"
-                            )
+                            Log.i("StartScreen", "User clicked Link - Action \"open Linux Logic Website\" -")
                         },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.link_logo_transparent),
-                        contentDescription = "Ein Link Logo für die Verlinkung zu unserer Webseite",
+                        contentDescription = "Link Logo zur Webseite",
                         contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(32.dp)
+                        modifier = Modifier.size(32.dp)
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -127,15 +133,14 @@ fun StartScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Buttons für Navigation zu Login und Registrierung
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ExtendedFloatingActionButton(
-                        modifier = Modifier
-                            .weight(0.5f),
+                        modifier = Modifier.weight(0.5f),
                         onClick = {
                             navController.navigate(Screen.Login.route)
                             Log.i("StartScreen", "User is performing - Action: \"Login\" -")
@@ -143,7 +148,7 @@ fun StartScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 imageVector = Icons.AutoMirrored.TwoTone.Login,
-                                contentDescription = "Login Icon for Start",
+                                contentDescription = "Login Icon",
                                 tint = Color.White
                             )
                         },
@@ -160,8 +165,7 @@ fun StartScreen(navController: NavController) {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     ExtendedFloatingActionButton(
-                        modifier = Modifier
-                            .weight(0.5f),
+                        modifier = Modifier.weight(0.5f),
                         onClick = {
                             navController.navigate(Screen.Register.route)
                             Log.i("StartScreen", "User is performing - Action: \"Register\" -")
@@ -169,7 +173,7 @@ fun StartScreen(navController: NavController) {
                         icon = {
                             Icon(
                                 imageVector = Icons.TwoTone.PersonAddAlt,
-                                contentDescription = "PersonAdd Icon for Start",
+                                contentDescription = "Registrieren Icon",
                                 tint = Color.White
                             )
                         },

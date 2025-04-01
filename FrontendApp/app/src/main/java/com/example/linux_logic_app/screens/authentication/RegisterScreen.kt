@@ -60,6 +60,19 @@ import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 
+/**
+ * Der RegisterScreen - Registrierungsbildschirm der App.
+ * Dieses Composable implementiert den Registrierungs-Flow, indem es ein Formular mit Feldern für
+ * Benutzername, E-Mail, Passwort und Passwortbestätigung darstellt. Es validiert die Eingaben in Echtzeit
+ * und zeigt entsprechende Fehlermeldungen an. Nach erfolgreicher Registrierung wird der Nutzer zur
+ * Login-Seite navigiert.
+ * Wichtige Aspekte:
+ * - Validierung und Anzeige von Fehlermeldungen für alle Eingabefelder.
+ * - Dynamische Passwortsichtbarkeit mittels eines Trailing Icons.
+ * - Scrollbarkeit des Formulars für kleinere Bildschirme.
+ * @param navController Steuert die Navigation zwischen den Screens.
+ * @param userViewModel Verwaltet den Zustand und die Logik der Nutzerregistrierung.
+ */
 @Composable
 fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
     val username = userViewModel.username
@@ -76,10 +89,9 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
     /*
     ist in Kotlin als Destrukturierungsdeklaration bekannt, mit der man die von bestimmten
     Funktionen zurückgegebenen Werte direkt in separate Variablen auspacken können. Kotlin erlaubt
-    es, dieses Objekt in zwei Variablen zu zerlegen: eine zum Lesen des Wertes und eine zum Aktualisieren
-     */
-
-    // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
+    es, dieses Objekt in zwei Variablen zu zerlegen: eine zum Lesen des Wertes und eine zum Aktualisieren.
+    Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
+    */
 
     val isFormValid = emailErrorMessage == null && usernameErrorMessage == null &&
             passwordErrorMessage == null && confPasswordMessage == null
@@ -88,19 +100,19 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .imePadding()  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
-            .windowInsetsPadding(WindowInsets.navigationBars), // Fügt Platz für die Navigationsleiste hinzu
+            .imePadding()  // Fügt Platz hinzu, wenn die Tastatur eingeblendet wird.
+            .windowInsetsPadding(WindowInsets.navigationBars), // Platz für die Navigationsleiste
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Oberer Bereich mit Bild und Begrüßung
         Box(
             modifier = Modifier
                 .weight(0.25f)
                 .background(LiloMain)
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -110,16 +122,14 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                 )
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Icon(
                         imageVector = Icons.TwoTone.PersonAddAlt,
                         contentDescription = "PersonAddAlt Icon for Register",
                         tint = Color.White,
-                        modifier = Modifier
-                            .padding(top = 4.dp)
+                        modifier = Modifier.padding(top = 4.dp)
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -133,20 +143,21 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
             }
         }
 
+        // Formularbereich in einem scrollbaren Container
         Box(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .weight(0.75f)
-                .padding(16.dp) // Padding hinzufügen für den gesamten Inhalt
+                .padding(16.dp)
             //.clip(RoundedCornerShape(topStart = 1.dp, topEnd = 16.dp))
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .align(Alignment.Center) // Vertikale Zentrierung
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally, // Horizontale Zentrierung
+                    .align(Alignment.Center)
+                    .verticalScroll(rememberScrollState()), // Ermöglicht Scrollen bei vielen Eingabefeldern
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "Legen Sie ein Konto an",
@@ -157,6 +168,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // Benutzername Eingabefeld
                 OutlinedTextField(
                     value = username,
                     onValueChange = { userViewModel.onUsernameChange(it) },
@@ -179,13 +191,12 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             tint = LiloMain
                         )
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
-                    singleLine = true, // Verhindert den Zeilenumbruch
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als Text-Input genutzt wird
-                        imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Next
                     ),
                     isError = usernameErrorMessage != null,
                     supportingText = {
@@ -199,6 +210,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     }
                 )
 
+                // E-Mail Eingabefeld
                 OutlinedTextField(
                     value = email,
                     onValueChange = { userViewModel.onEmailChange(it) },
@@ -221,13 +233,12 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             tint = LiloMain
                         )
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
-                    singleLine = true, // Verhindert den Zeilenumbruch
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
-                        imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
                     ),
                     isError = emailErrorMessage != null,
                     supportingText = {
@@ -241,6 +252,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     }
                 )
 
+                // Passwort Eingabefeld
                 OutlinedTextField(
                     value = password,
                     onValueChange = { userViewModel.onPasswordChange(it) },
@@ -263,13 +275,12 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             tint = LiloMain
                         )
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
-                    singleLine = true, // Verhindert den Zeilenumbruch
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als Passwort-Input genutzt wird
-                        imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
@@ -277,11 +288,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
                         val description =
                             if (passwordVisible) "Showed password" else "Hidden password"
-                        IconButton(
-                            onClick = {
-                                setPasswordVisible(!passwordVisible)
-                            }
-                        ) {
+                        IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(
                                 imageVector = image,
                                 contentDescription = description,
@@ -301,6 +308,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     }
                 )
 
+                // Passwort bestätigen Eingabefeld
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { userViewModel.onConfirmPasswordChange(it) },
@@ -323,13 +331,12 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             tint = LiloMain
                         )
                     },
-                    modifier = Modifier
-                        .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
-                    singleLine = true, // Verhindert den Zeilenumbruch
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    singleLine = true,
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password, // Eingabe als Passwort
-                        imeAction = ImeAction.Done // Fertigstellen der Eingabe
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
                     ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
@@ -337,11 +344,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                             if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
                         val description =
                             if (passwordVisible) "Showed password" else "Hidden password"
-                        IconButton(
-                            onClick = {
-                                setPasswordVisible(!passwordVisible)
-                            }
-                        ) {
+                        IconButton(onClick = { setPasswordVisible(!passwordVisible) }) {
                             Icon(
                                 imageVector = image,
                                 contentDescription = description,
@@ -363,6 +366,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Registrierungs-Button
                 Button(
                     onClick = {
                         if (userViewModel.register(
@@ -375,7 +379,7 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                                 "New User Credentials",
                                 "Username: ${username.trim()}; E-Mail: ${email.trim()}; Password: ${password.trim()}"
                             )
-                            //Vorher navController.navigate(Screen.Main.route), Nachher:
+                            // Nach erfolgreicher Registrierung wird zur Login-Seite navigiert
                             navController.navigate(Screen.Login.route)
                             userViewModel.clearErrorMessages()
                             //userViewModel.clearAllFields()
@@ -399,15 +403,12 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     )
                 }
 
-                //Spacer(modifier = Modifier.height(16.dp))
-
+                // Row für alternative Registrierungsoptionen
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(40.dp)
-                        .clickable {
-
-                        },
+                        .clickable { },
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -418,37 +419,32 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
                     )
 
                     Image(
-                        painterResource(id = R.drawable.google_logo),
+                        painter = painterResource(id = R.drawable.google_logo),
                         contentDescription = "Login mittels Google Account",
-                        modifier = Modifier
-                            .size(60.dp)
+                        modifier = Modifier.size(60.dp)
                     )
 
                     /*Image(
-                        painterResource(id = R.drawable.microsoft_logo),
+                        painter = painterResource(id = R.drawable.microsoft_logo),
                         contentDescription = "Login mittels Microsoft Account",
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable {
-
-                            }
+                            .clickable { }
                     )
 
                     Image(
-                        painterResource(id = R.drawable.x_logo),
+                        painter = painterResource(id = R.drawable.x_logo),
                         contentDescription = "Login mittels X Account",
                         modifier = Modifier
                             .size(60.dp)
-                            .clickable {
-
-                            }
+                            .clickable { }
                     )*/
                 }
 
+                // Row zur Navigation zum Login-Screen, falls bereits ein Konto besteht
                 Row(
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "Sie haben bereits ein Konto?",
@@ -459,11 +455,10 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
 
                     Text(
                         text = "Anmelden",
-                        modifier = Modifier
-                            .clickable {
-                                navController.navigate(Screen.Login.route)
-                                Log.i("RegisterScreen", "User is performing - Action: \"Login\" -")
-                            },
+                        modifier = Modifier.clickable {
+                            navController.navigate(Screen.Login.route)
+                            Log.i("RegisterScreen", "User is performing - Action: \"Login\" -")
+                        },
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
                         textDecoration = TextDecoration.Underline
@@ -473,3 +468,4 @@ fun RegisterScreen(navController: NavController, userViewModel: UserViewModel) {
         }
     }
 }
+

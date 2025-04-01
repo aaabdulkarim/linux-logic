@@ -3,51 +3,65 @@ class ScenarioTrack:
         self.subscenario_progress = 0
         self.scenario_number = 0
         self.scenario_data = []
-        
 
     def update_progress(self):
         self.subscenario_progress += 1
 
     def set_scenario_data(self, docker_dir_path):
-        # Liste von Tuples
-        scenario_list = []
         md_file = docker_dir_path + "/Aufgabenstellung.md"
+        scenario_list = []
 
-        # TODO: Aufgabenwechsel speichern und Triggern
         with open(md_file) as file:
             lines = file.readlines()
             current_hint = ""
+            current_description = ""
+            current_solution = ""
+
             prev_row_hint = False
+            prev_row_desc = False
+
             for l in lines:
-
-                # Falls ein neues Subszenario anfängt, ein neues Tuple zur Liste hinzufügen
-                if l[0:2] == "\_" :
-                    current_hint += l[1:]
+                l = l.strip()
+                
+                if l.startswith("\_"):
+                    if "`" in l:
+                        current_solution = l.split("`", 2)[1]
+                    current_hint += l.lstrip("\_")
                     prev_row_hint = True
+                    prev_row_desc = False
 
-                elif prev_row_hint or l == "# EOF":
+                elif l.startswith("!!"):
+                    current_description += l[2:] + " "
+                    prev_row_desc = True
+                    prev_row_hint = False
 
-                    # Nur falls es Hinweise zum Hinzufügen gibt
-                    if current_hint != "":
-                        #append to list
-                        scenario_list.append((self.scenario_number, current_hint))
-                        prev_row_hint = False
-                        current_hint = ""
-
-                elif l[0:3] == "###":
+                elif l.startswith("###") or l == "# EOF":
+                    if current_hint or current_description or current_solution:
+                        scenario_list.append({
+                            "hint": current_hint.strip(),
+                            "solution": current_solution.strip(),
+                            "description": current_description.strip()
+                        })
                     
-                    self.scenario_number += 1
+                    if l.startswith("###"):
+                        self.scenario_number += 1
 
+                    current_hint = ""
+                    current_solution = ""
+                    current_description = ""
+                    prev_row_hint = False
+                    prev_row_desc = False
 
         self.scenario_data = scenario_list
 
-        for da in self.scenario_data:
-            print(da)
-
-
+        for scenario in self.scenario_data:
+            print(scenario)
 
     def get_clue(self):
+        return self.scenario_data[self.subscenario_progress].get("hint", "")
 
-        hints = [p[1] for p in self.scenario_data if p[0] == self.subscenario_progress]
-        print(hints)
-        return hints
+    def get_desc(self):
+        return self.scenario_data[self.subscenario_progress].get("description", "")
+    
+    def get_solution(self):
+        return self.scenario_data[self.subscenario_progress].get("solution", "")

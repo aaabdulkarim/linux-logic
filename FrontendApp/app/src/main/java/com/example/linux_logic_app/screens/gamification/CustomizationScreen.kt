@@ -53,7 +53,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.linux_logic_app.components.ColorPicker
+import com.example.linux_logic_app.components.customization.ColorPicker
 import com.example.linux_logic_app.components.terminal.PreviewTerminal
 import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
@@ -67,10 +67,18 @@ import com.example.linux_logic_app.ui.theme.LiloMainSec
 import com.example.linux_logic_app.ui.theme.LiloOrange
 import com.example.linux_logic_app.ui.theme.LiloSuccess
 
-/*
-https://www.youtube.com/watch?v=QqcMKQgfzec
-https://mvnrepository.com/artifact/com.godaddy.android.colorpicker/compose-color-picker/0.7.0
-https://github.com/skydoves/colorpicker-compose/tree/main
+/**
+ * CustomizationScreen - Der Bildschirm zur individuellen Anpassung des Terminals.
+ * Dieses Composable zeigt einen Titel, eine ColorCustomizationCard und eine Vorschau des Terminals,
+ * sodass der Benutzer die gewählten Einstellungen sofort sehen kann.
+ * Wichtige Aspekte:
+ * - Scrollable Column für dynamischen Inhalt.
+ * - Integration von ColorCustomizationCard und PreviewTerminal zur Vorschau der Änderungen.
+ * Quellen & Input:
+ * https://www.youtube.com/watch?v=QqcMKQgfzec
+ * https://mvnrepository.com/artifact/com.godaddy.android.colorpicker/compose-color-picker/0.7.0
+ * https://github.com/skydoves/colorpicker-compose/tree/main
+ * @param userViewModel Verwaltet den Zustand und die Logik des aktuell angemeldeten Nutzers.
  */
 @Composable
 fun CustomizationScreen(userViewModel: UserViewModel) {
@@ -93,6 +101,7 @@ fun CustomizationScreen(userViewModel: UserViewModel) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Die Card zur Anpassung der Terminalfarben
         ColorCustomizationCard(userViewModel = userViewModel)
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -110,7 +119,17 @@ fun CustomizationScreen(userViewModel: UserViewModel) {
     }
 }
 
-
+/**
+ * ColorCustomizer - Ein Composable zur Auswahl einer Farbe aus einer Dropdown-Liste oder via ColorPicker.
+ * Dieses Composable zeigt ein farbiges Kästchen, das bei Klick einen ColorPicker-Dialog öffnet.
+ * Außerdem kann der Benutzer über ein Dropdown-Menü aus einer Liste vordefinierter Farben wählen.
+ * Wichtige Aspekte:
+ * - Verwendung von animateFloatAsState zur Animation des Dropdown-Pfeils.
+ * - DropdownMenu zur Auswahl von vordefinierten Farben.
+ * @param selectedColor Die aktuell ausgewählte Farbe.
+ * @param onColorSelected Callback, der aufgerufen wird, wenn eine Farbe ausgewählt wurde.
+ * @param defaultColorList Liste von Farb-/Name-Paaren zur Auswahl.
+ */
 @Composable
 fun ColorCustomizer(
     selectedColor: Color,
@@ -153,8 +172,7 @@ fun ColorCustomizer(
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "Dropdown Icon",
-                modifier = Modifier
-                    .graphicsLayer(rotationZ = rotationAngle),
+                modifier = Modifier.graphicsLayer(rotationZ = rotationAngle),
                 tint = Color.White
             )
             Text(
@@ -218,6 +236,17 @@ fun ColorCustomizer(
     }
 }
 
+/**
+ * ColorPickerDialog - Ein Dialog zur Farbauswahl.
+ * Dieses Composable öffnet einen AlertDialog, in dem der Benutzer mittels eines ColorPicker
+ * eine Farbe auswählen kann. Die temporäre Farbe wird gespeichert, bis der Benutzer den Dialog bestätigt.
+ * Wichtige Aspekte:
+ * - Der Dialog passt seine Höhe an den Inhalt an (80% der Bildschirmhöhe).
+ * - Übergabe von onDismiss und onConfirm, um den Dialog zu schließen bzw. die Auswahl zu bestätigen.
+ * @param initialColor Die anfänglich ausgewählte Farbe.
+ * @param onDismiss Callback zum Schließen des Dialogs.
+ * @param onConfirm Callback, der die ausgewählte Farbe zurückgibt.
+ */
 @Composable
 fun ColorPickerDialog(
     initialColor: Color,
@@ -296,8 +325,16 @@ fun ColorPickerDialog(
     )
 }
 
-/*
-https://www.youtube.com/watch?v=SNcMCH5DqaM
+/**
+ * ColorCustomizationCard - Eine Card zur Anpassung der Terminalfarben.
+ * Dieses Composable zeigt eine Karte, in der der Benutzer per Klick auf die Karte
+ * weitere Optionen zur Farbanpassung öffnen kann. Es integriert mehrere ColorCustomizationOptionen,
+ * mit denen einzelne Aspekte des Terminaldesigns angepasst werden können.
+ * https://www.youtube.com/watch?v=SNcMCH5DqaM
+ * Wichtige Aspekte:
+ * - Animierte Expansion der Karte mittels animateContentSize.
+ * - Umschalten zwischen vordefinierten Farben und benutzerdefinierten Farben (Switch).
+ * @param userViewModel Verwaltet den Zustand der Terminalfarben des Nutzers.
  */
 @Composable
 fun ColorCustomizationCard(userViewModel: UserViewModel) {
@@ -498,6 +535,17 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
     }
 }
 
+/**
+ * ColorCustomizationOption - Ein einzelnes Element zur Farbanpassung.
+ * Dieses Composable zeigt einen Titel und integriert das ColorCustomizer-Composable,
+ * mit dem eine spezifische Farbe (z. B. für den Terminalkopf oder den Shell Prompt) angepasst werden kann.
+ * Wichtige Aspekte:
+ * - Die Option zeigt einen Titel, ein Icon und ruft ColorCustomizer auf, um die Farbauswahl zu ermöglichen.
+ * @param option Beschriftung der anzupassenden Option.
+ * @param selectedColor Die aktuell ausgewählte Farbe für diese Option.
+ * @param onColorSelected Callback, der die Auswahl der neuen Farbe verarbeitet.
+ * @param defaultColorList Liste vordefinierter Farben zur Auswahl.
+ */
 @Composable
 fun ColorCustomizationOption(
     option: String,
@@ -535,3 +583,4 @@ fun ColorCustomizationOption(
         }
     }
 }
+

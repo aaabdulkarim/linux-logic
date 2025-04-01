@@ -9,6 +9,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.linux_logic_app.R
 
+/**
+ * LiloFontFamily und LiloFontFamily2 definieren zwei unterschiedliche Schriftfamilien,
+ * die in der App verwendet werden.
+ */
 val LiloFontFamily = FontFamily(
     Font(R.font.ubuntumono_regular, FontWeight.Normal),
     Font(R.font.ubuntumono_bold, FontWeight.Bold),
@@ -22,23 +26,25 @@ val LiloFontFamily2 = FontFamily(
     Font(R.font.montserrat_italic, FontWeight.Normal, FontStyle.Italic),
 )
 
-// Definieren der Typographie von Linux Logic
+/**
+ * Die LiloTypography definiert die Typographie der App.
+ * Es werden unterschiedliche TextStyles für Überschriften, Fließtext, Unterpunkte
+ * und Labels festgelegt. Jeder Style weist eine spezifische Schriftfamilie, Gewicht,
+ * Schriftgröße und Zeilenhöhe auf, um eine konsistente visuelle Gestaltung zu gewährleisten.
+ */
 val LiloTypography = Typography(
-    // Große Überschriften
     headlineLarge = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
         fontSize = 36.sp,
-        lineHeight = 44.sp // Zeilenhöhe für bessere Lesbarkeit
+        lineHeight = 44.sp // Optimierte Zeilenhöhe für bessere Lesbarkeit
     ),
-    // Mittlere Überschriften
     headlineMedium = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
         fontSize = 26.sp,
         lineHeight = 34.sp
     ),
-    // Kleine Unterüberschriften
     headlineSmall = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
@@ -46,14 +52,12 @@ val LiloTypography = Typography(
         fontSize = 22.sp,
         lineHeight = 30.sp
     ),
-    // Normaler Fließtext
     bodyLarge = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Normal,
         fontSize = 15.sp,
         lineHeight = 19.sp
     ),
-    // Unterpunkte
     bodyMedium = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Normal,
@@ -67,7 +71,6 @@ val LiloTypography = Typography(
         fontSize = 11.sp,
         lineHeight = 17.sp
     ),
-    // Beschriftungen, z. B. für Buttons oder kleine Labels
     labelLarge = TextStyle(
         fontFamily = LiloFontFamily2,
         fontWeight = FontWeight.Bold,
@@ -98,19 +101,19 @@ val LiloTypography = Typography(
         letterSpacing = 0.5.sp
     )
     */
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+/* Other default text styles to override
+titleLarge = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Normal,
+    fontSize = 22.sp,
+    lineHeight = 28.sp,
+    letterSpacing = 0.sp
+),
+labelSmall = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Medium,
+    fontSize = 11.sp,
+    lineHeight = 16.sp,
+    letterSpacing = 0.5.sp
+)
+*/

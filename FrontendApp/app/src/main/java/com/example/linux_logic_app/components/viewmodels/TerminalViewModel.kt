@@ -8,8 +8,14 @@ import androidx.lifecycle.ViewModel
 import com.example.linux_logic_app.ui.theme.LiloDark
 
 /**
- * Dies ist die Datenklasse für den Linux Logic Terminal Farben
- * Sie nethält alle möglichen Farben zur Gestaltung aller möglichen Komponenten des Terminals
+ * Datenklasse, die alle möglichen Farben für das Linux Logic Terminal kapselt.
+ * Diese Klasse enthält Farbinformationen für:
+ * @property headerColor die Farbe für den Header (headerColor)
+ * @property headerColor die Farbe für den Hauptkörper des Terminals (bodyColor)
+ * @property headerColor die Farbe für den Text im Header (headerTextColor)
+ * @property headerColor die Farbe für den Shell-Prompt (shellPromptColor)
+ * @property headerColor die Farbe für die eingegebenen Befehle (commandColor)
+ * @property headerColor die Farbe für den Cursor (cursorColor)
  */
 data class TerminalColors(
     val headerColor: Color,
@@ -20,7 +26,7 @@ data class TerminalColors(
     val cursorColor: Color
 )
 
-// Festlegen der Default-Farben als Konstante
+// Festlegen der Default-Farben als Konstante, die als Ausgangswert für das Terminal genutzt werden
 val defaultTerminalColors = TerminalColors(
     headerColor = Color.Black,
     bodyColor = LiloDark,
@@ -31,23 +37,29 @@ val defaultTerminalColors = TerminalColors(
 )
 
 /**
- * Das TerminalViewModel verwaltet den Zustand der aktuellen Farben für jeden Benutzer individuell.
- * Es stellt Methoden zum Updaten der Farben und die Default-Farben zur Verfügung und managed
- * den State der Farben des Users.
+ * Das TerminalViewModel verwaltet den Zustand der aktuellen Terminalfarben,
+ * die individuell für jeden Benutzer festgelegt werden können.
+ * Es ermöglicht das Aktualisieren der Farben und das Umschalten zwischen benutzerdefinierten
+ * Farben und den Default-Farben.
+ * @param terminalColors Die anfänglichen Terminalfarben. Standardmäßig werden die Default-Farben genutzt.
  */
 class TerminalViewModel(terminalColors: TerminalColors = defaultTerminalColors) : ViewModel() {
-    // Der aktuell verwendete Farb-State (initial die Default-Farben)
+
+    // Der aktuell verwendete Farb-State wird reaktiv gehalten,
+    // sodass Änderungen automatisch in der UI reflektiert werden.
     var terminalColors by mutableStateOf(terminalColors)
         private set
 
-    // Wenn Default-Farben verwendet werden
+    // Flag, das angibt, ob die Default-Farben aktiv sind.
+    // Wird initial gesetzt, indem geprüft wird, ob die initialen Farben den Default-Farben entsprechen.
     var useDefaultColors by mutableStateOf(terminalColors == defaultTerminalColors)
         private set
 
     /**
-     * Aktualisiert den Farb-State.
-     * Wenn [newColors] exakt den Default-Farben entspricht,
-     * wird [useDefaultColors] auf true gesetzt.
+     * Aktualisiert den Farb-State des Terminals.
+     * Wenn [newColors] exakt den Default-Farben entspricht, wird [useDefaultColors] auf true gesetzt.
+     * Andernfalls werden die benutzerdefinierten Farben übernommen.
+     * @param newColors Neue Farbwerte, die angewendet werden sollen.
      */
     fun updateColors(newColors: TerminalColors) {
         terminalColors = newColors
@@ -55,10 +67,10 @@ class TerminalViewModel(terminalColors: TerminalColors = defaultTerminalColors) 
     }
 
     /**
-     * Schaltet explizit in den Default-Modus oder lässt benutzerdefinierte Farben zu.
-     *
-     * Wird [useDefault] auf true gesetzt, werden die Default-Farben aktiv.
-     * Bei false bleiben die aktuellen, benutzerdefinierten Farben erhalten.
+     * Schaltet explizit in den Default-Modus oder erlaubt benutzerdefinierte Farben.
+     * Wird [useDefault] auf true gesetzt, so werden die Default-Farben aktiv und als Farb-State gesetzt.
+     * Andernfalls bleiben die aktuell gesetzten, benutzerdefinierten Farben erhalten.
+     * @param useDefault Boolean, der angibt, ob die Default-Farben genutzt werden sollen.
      */
     fun updateDefaultMode(useDefault: Boolean) {
         useDefaultColors = useDefault
@@ -67,3 +79,4 @@ class TerminalViewModel(terminalColors: TerminalColors = defaultTerminalColors) 
         }
     }
 }
+

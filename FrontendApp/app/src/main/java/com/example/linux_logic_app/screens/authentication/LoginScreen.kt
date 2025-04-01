@@ -58,6 +58,19 @@ import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 
+/**
+ * LoginScreen - Der Anmeldebildschirm der App.
+ * Dieses Composable implementiert den Login-Flow, indem es ein Formular mit E-Mail- und Passwortfeldern darstellt.
+ * Es validiert die Eingaben in Echtzeit und zeigt entsprechende Fehlermeldungen an.
+ * Zudem ermöglicht es das Umschalten der Passwortsichtbarkeit über ein Toggle-Icon.
+ * Bei erfolgreicher Authentifizierung wird der Benutzer zum MainScreen navigiert.
+ * Wichtige Aspekte:
+ * - Validierung der Eingabefelder mit Anzeige von Fehlertexten.
+ * - Dynamische Passwortanzeige (sichtbar/unsichtbar) mittels eines Trailing-Icons.
+ * - Navigation basierend auf Login-Erfolg und Integration alternativer Login-Optionen.
+ * @param navController Steuert die Navigation zwischen den Screens.
+ * @param userViewModel Verwaltet den Zustand und die Logik der Benutzeranmeldung.
+ */
 @Composable
 fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
     // Ideen: https://medium.com/@ramadan123sayed/comprehensive-guide-to-textfields-in-jetpack-compose-f009c4868c54
@@ -82,6 +95,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Obere Box mit Bild und Begrüßung
         Box(
             modifier = Modifier
                 .weight(0.25f)
@@ -125,6 +139,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
             }
         }
 
+        // Box für das Formular
         Box(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
@@ -148,6 +163,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // E-Mail Eingabefeld
                 OutlinedTextField(
                     value = email,
                     onValueChange = { userViewModel.onEmailChange(it) },
@@ -190,6 +206,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     }
                 )
 
+                // Passwort Eingabefeld
                 OutlinedTextField(
                     value = password,
                     onValueChange = { userViewModel.onPasswordChange(it) },
@@ -220,9 +237,10 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
                     singleLine = true, // Verhindert den Zeilenumbruch
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als Passwortfeld genutzt wird
                         imeAction = ImeAction.Done // Es wird Das Formular abgeschickt
                     ),
+                    // Sichtbarkeit des Passworts wird dynamisch geändert
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         val image =
@@ -251,6 +269,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Spacer(modifier = Modifier.height(2.dp))
 
+                // "Passwort vergessen?" Link
                 Text(
                     text = "Passwort vergessen?",
                     modifier = Modifier
@@ -266,6 +285,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+                // Anmelde-Button
                 Button(
                     onClick = {
                         if (userViewModel.login(email.trim(), password.trim())) {
@@ -296,8 +316,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     )
                 }
 
-                //Spacer(modifier = Modifier.height(16.dp))
-
+                // Row für alternative Login-Optionen
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -342,6 +361,7 @@ fun LoginScreen(navController: NavController, userViewModel: UserViewModel) {
                     )*/
                 }
 
+                // Row für Navigation zur Registrierung
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier

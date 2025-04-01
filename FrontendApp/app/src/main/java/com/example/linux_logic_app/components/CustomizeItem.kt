@@ -9,8 +9,7 @@ import com.example.linux_logic_app.R
 /**
  * Diese Datenklasse CustomizeItem, stellt eine Anpassungseinstellung für die App dar.
  * Jede Anpassung hat einen Namen, ein Icon (über eine Ressourcen-ID)
- * und eine optionale Beschreibung.
- *
+ * und eine optionale Beschreibung. (Für zukünftige Customization-Options)
  * @property name Der Name der Anpassung, z. B. "Farbe anpassen".
  * @property backgroundImage Eine optionale Ressourcen-ID des Icons, das für diese Anpassung verwendet wird.
  * @property description Eine optionale Beschreibung, die zusätzliche Informationen zu dieser Anpassung liefert.
@@ -25,7 +24,6 @@ data class CustomizationItem(
 /**
  * Eine Liste von `CustomizationItem`-Objekten, die verschiedene Anpassungen
  * für die App darstellen.
- *
  * Diese Liste kann als Datenquelle für die Anzeige von Anpassungsoptionen
  * in der Benutzeroberfläche verwendet werden. Jede Anpassung hat einen Namen,
  * ein optionales Icon und eine optionale Beschreibung.

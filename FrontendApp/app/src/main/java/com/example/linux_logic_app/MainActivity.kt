@@ -11,11 +11,19 @@ import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.ui.theme.Linux_logic_appTheme
 import com.example.linux_logic_app.navigation.*
 
+/**
+ * MainActivity - Die Hauptaktivität der Anwendung.
+ * Diese Klasse setzt das Composable LinuxLogicNavigator mit einem UserViewModel.
+ * Es wird sichergestellt, dass das Design mit dem App-Theme übereinstimmt.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // Aktiviert Edge-to-Edge-Rendering für modernes UI-Design.
             enableEdgeToEdge()
+
+            // Setzt das Theme für die gesamte App.
             Linux_logic_appTheme {
                 val userViewModel: UserViewModel = viewModel()
                 LinuxLogicNavigator(userViewModel = userViewModel)
@@ -24,6 +32,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * LinuxLogicAppPreview - Eine Vorschau der Anwendung im Compose-Preview-Modus.
+ * Hier wird das gleiche Design und Theme verwendet wie in der MainActivity,
+ * um eine genaue Vorschau innerhalb des Android Studios zu ermöglichen.
+ */
 @Preview(showBackground = true)
 @Composable
 fun LinuxLogicAppPreview() {
