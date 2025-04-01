@@ -100,7 +100,7 @@ export default {
   computed: {
     backgroundStyle() {
       return {
-        height: '100vh',
+        minHeight: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -141,7 +141,7 @@ export default {
 .all {
   min-height: fit-content;
   padding-bottom: 18rem;
-  justify-content: center;
+  justify-content: space-between;
   background-color: #569191;
   background-image: url('@/assets/abstract_background_3.webp');
   background-size: cover;
