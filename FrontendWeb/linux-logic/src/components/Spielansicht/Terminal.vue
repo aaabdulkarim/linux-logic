@@ -16,6 +16,7 @@
     </div>
   </div>
   <div class="terminal-bottom">
+    </div>
     <div class="icon-container">
       <div class="left-icons">
         <i class="pi pi-sign-out icon" title="Zurück zum enü" @click="exitToMenu"></i>
@@ -41,7 +42,6 @@
         <span class="close" @click="closeModal">&times;</span>
         <p>{{ modalContent }}</p>
       </div>
-    </div>
   
   </div>
 </template>
