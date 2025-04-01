@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     navigate() {
-      this.$router.push("/login");
+      this.$router.push("/auswahl");
     },
   },
 };

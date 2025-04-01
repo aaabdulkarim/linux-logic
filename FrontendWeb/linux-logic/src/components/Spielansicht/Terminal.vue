@@ -1,9 +1,9 @@
 <template>
   <div class="content">
 
-  <h2>Beschreibung</h2>
-      <p>{{ aufgabe }}
-      </p>
+    <h2>Beschreibung</h2>
+    <p>{{ aufgabe }}
+    </p>
 
   </div>
 
@@ -16,33 +16,34 @@
     </div>
   </div>
   <div class="terminal-bottom">
+  </div>
+  <div class="icon-container">
+    <div class="left-icons">
+      <i class="pi pi-sign-out icon" title="Zurück zum enü" @click="exitToMenu"></i>
     </div>
-    <div class="icon-container">
-      <div class="left-icons">
-        <i class="pi pi-sign-out icon" title="Zurück zum enü" @click="exitToMenu"></i>
-      </div>
-      <div class="right-icons">
-        <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="showModal('hint')"></i>
-        <i class="pi pi-key icon" title="Lösung anzeigen" @click="showModal('key')"></i>
-        <i class="pi pi-angle-right icon" title="Aufgabe abgeben" @click="submitLevel"></i>
-      </div>
+    <div class="right-icons">
+      <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="showModal('hint')"></i>
+      <i class="pi pi-key icon" title="Lösung anzeigen" @click="showModal('key')"></i>
+      <!-- TODO: -->
+      <i class="pi pi-check icon" title="Aufgabe abgeben" @click="submitLevel"></i>
     </div>
-    <div v-if="showRating" class="rating-popup">
-      <h2>Level abgeschlossen!</h2>
-      <h5>Deine Bewertung</h5>
-      <div class="stars">
-        <i class="pi pi-star" @click="rateLevel(1)" :class="{ 'pi-star-filled': rating >= 1 }"></i>
-        <i class="pi pi-star" @click="rateLevel(2)" :class="{ 'pi-star-filled': rating >= 2 }"></i>
-        <i class="pi pi-star" @click="rateLevel(3)" :class="{ 'pi-star-filled': rating >= 3 }"></i>
-      </div>
-      <Button label="Nächstes Level" @click="nextLevel" severity="success" class="w-full" />
+  </div>
+  <div v-if="showRating" class="rating-popup">
+    <h2>Level abgeschlossen!</h2>
+    <h5>Deine Bewertung</h5>
+    <div class="stars">
+      <i class="pi pi-star" @click="rateLevel(1)" :class="{ 'pi-star-filled': rating >= 1 }"></i>
+      <i class="pi pi-star" @click="rateLevel(2)" :class="{ 'pi-star-filled': rating >= 2 }"></i>
+      <i class="pi pi-star" @click="rateLevel(3)" :class="{ 'pi-star-filled': rating >= 3 }"></i>
     </div>
-    <div v-if="isModalVisible" class="modal">
-      <div class="modal-content">
-        <span class="close" @click="closeModal">&times;</span>
-        <p>{{ modalContent }}</p>
-      </div>
-  
+    <Button label="Nächstes Level" @click="nextLevel" severity="success" class="w-full" />
+  </div>
+  <div v-if="isModalVisible" class="modal">
+    <div class="modal-content">
+      <span class="close" @click="closeModal">&times;</span>
+      <p>{{ modalContent }}</p>
+    </div>
+
   </div>
 </template>
 
@@ -62,16 +63,31 @@ export default {
       socketClient: null,
       promptLength: 14,
       socketUrl: "http://localhost:8000/ws",
-      aufgabe: "",
+
       isModalVisible: false,
       modalContent: '',
       showRating: false,
       rating: 0,
       stars: 3,
-      aufgabe: ""
+
+      aufgabe: "",
+
+      profileName: "",
     };
   },
   mounted() {
+    api.get('/me')
+      .then(response => {
+        const data = response.data;
+        console.log(data);
+
+        this.profileName = data.username;
+
+        this.initWebSocket()
+      })
+      .catch(error => {
+        console.error('Fehler beim Abrufen der Benutzerdaten:', error);
+      });
 
     this.terminal = new Terminal({
       cursorBlink: true,
@@ -91,54 +107,28 @@ export default {
     this.terminal.open(this.$refs.terminalContainer);
     this.fitAddon.fit();
 
-    // WebSocket Initialization (Move this above onmessage assignment)
-    this.socketClient = new WebSocket(this.socketUrl);
 
-    // WebSocket event handlers must be assigned AFTER initialization
-    this.socketClient.onopen = () => {
-      console.log("WebSocket connection established.");
-      this.socketClient.send("username");
-      const scenarioIdFromQuery = this.$route.query.scenario_id;
-      this.socketClient.send("scenario" + scenarioIdFromQuery)
-
-
-    };
-
-    this.socketClient.onmessage = (event) => {
-
-      this.terminal.write(`\r\n${event.data}`);
-      this.writePrompt();
-    };
-
-    this.socketClient.onerror = (error) => {
-      console.error("WebSocket Error:", error);
-    };
-
-    this.socketClient.onclose = () => {
-      console.warn("WebSocket connection closed.");
-
-      // setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
-
-    };
-
-    this.terminal.onData(this.handleInput);
   },
-  
-  
+
+
   methods: {
     initWebSocket() {
       this.socketClient = new WebSocket(this.socketUrl);
 
+
       this.socketClient.onopen = () => {
         console.log("WebSocket connection established.");
-        
+        this.socketClient.send(this.profileName);
+        const scenarioIdFromQuery = this.$route.query.scenario_id;
+        this.socketClient.send("scenario" + scenarioIdFromQuery)
+
+
       };
 
       this.socketClient.onmessage = (event) => {
-        console.log(event.data)
+
         this.terminal.write(`\r\n${event.data}`);
         this.writePrompt();
-        // TODO: Aufgabenwechsel wird hier erkannt. und dementsprechend verarbeitet
       };
 
       this.socketClient.onerror = (error) => {
@@ -146,12 +136,16 @@ export default {
       };
 
       this.socketClient.onclose = () => {
-        console.warn("WebSocket connection closed. Reconnecting...");
-      };      
-      
-      // TODO: Username und Scenario auswahl schicken
+        console.warn("WebSocket connection closed.");
 
-    },  
+        // setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
+
+      };
+
+      this.terminal.onData(this.handleInput);
+
+
+    },
 
 
     writePrompt() {
@@ -165,26 +159,26 @@ export default {
         console.log("Line Object:", line);
 
         if (line) {
-            const lineText = line.translateToString();
-            console.log("Full Line Text:", lineText);
-            console.log("Prompt Length:", this.promptLength);
-            console.log("Extracted Input:", lineText.slice(this.promptLength));
-            this.respondToInput(lineText.slice(14));
+          const lineText = line.translateToString();
+          console.log("Full Line Text:", lineText);
+          console.log("Prompt Length:", this.promptLength);
+          console.log("Extracted Input:", lineText.slice(this.promptLength));
+          this.respondToInput(lineText.slice(14));
 
         }
-        
+
       } else if (char === 127) { // Backspace
         if (this.userInput.length > 0) {
-            this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
-            this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
+          this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
+          this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
         }
-    } else {
+      } else {
         this.userInput += data; // Zeichen zum User-Input hinzufügen
         this.terminal.write(data)
       }
     },
     respondToInput(input) {
-      
+
       if (input.toLowerCase() == "clear") {
         this.terminal.clear();
         this.writePrompt();
@@ -203,12 +197,12 @@ export default {
         this.terminal.write("\r\n[Error] WebSocket not connected.");
       }
     },
-      showModal(type) {
+    showModal(type) {
       if (type === 'hint' && this.stars > 0) {
         this.stars--;
         this.socketClient.send(">clue")
       } else if (type === 'key' && this.stars > 0) {
-        this.stars = Math.max(0, this.stars - 2); // Minimum 0 Sterne
+        this.socketClient.send(">solution")
       }
       this.isModalVisible = true;
       this.modalContent = type === 'hint' ? 'Der Hinweiß der Aufgabe!' : 'Die Lösung der Aufgabe!';
@@ -218,11 +212,9 @@ export default {
       this.modalContent = '';
     },
     submitLevel() {
-      if (this.stars > 0) {
-        this.showRatingPopup();
-      } else {
-        alert("Du hast keine Sterne erreicht! Versuche es noch einmal.");
-      }
+      this.socketClient.send(">check")
+
+      this.showRatingPopup();
     },
     showRatingPopup() {
       this.showRating = true;
@@ -240,15 +232,14 @@ export default {
 
 
 
-      
+
     },
-    
+
   }
 };
 </script>
 
 <style scoped>
-
 .icon-container {
   display: flex;
   justify-content: space-between;
@@ -259,43 +250,55 @@ export default {
   padding: 0 0;
   transition: transform 0.2s ease;
 }
+
 .left-icons {
   transform: rotate(180deg);
   transition: transform 0.2s ease;
 }
+
 .left-icons:hover {
   transform: translateX(-5px) rotate(180deg);
 }
+
 .right-icons {
   display: flex;
   gap: 15px;
   transition: transform 0.2s ease;
 }
+
 .right-icons {
   display: flex;
   gap: 15px;
 }
 
-.right-icons >>> .pi-angle-right {
+.right-icons>>>.pi-angle-right {
   transition: transform 0.2s ease-in-out;
 }
-.right-icons >>> .pi-angle-right:hover {
+
+.right-icons>>>.pi-angle-right:hover {
   transform: translateX(5px);
 }
 
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
-.right-icons >>> .pi-lightbulb,
-.right-icons >>> .pi-key {
+.right-icons>>>.pi-lightbulb,
+.right-icons>>>.pi-key {
   transition: transform 0.3s ease-in-out;
 }
 
-.right-icons >>> .pi-lightbulb:hover,
-.right-icons >>> .pi-key:hover {
+.right-icons>>>.pi-lightbulb:hover,
+.right-icons>>>.pi-key:hover {
   animation: bounce 0.4s ease-in-out;
 }
 
@@ -323,9 +326,11 @@ export default {
   cursor: pointer;
   color: gold;
 }
-.pi-star-filled{
+
+.pi-star-filled {
   color: gold;
 }
+
 button {
   margin-top: 10px;
   padding: 0.6rem;
@@ -333,6 +338,7 @@ button {
   color: #569191;
   background-color: transparent;
 }
+
 button:hover {
   border: 1px solid white !important;
   color: white !important;
@@ -355,9 +361,10 @@ button:hover {
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 .terminal-header {
   font-family: 'Courier New', Courier, monospace;
-  background-color: #111; 
+  background-color: #111;
   color: #fff;
   padding-left: 10px;
   padding-top: 4px;
@@ -367,14 +374,16 @@ button:hover {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
+
 .terminal-output {
   color: #dcdcdc;
   padding-top: 0px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+
 .terminal-bottom {
-  background-color: #1e1e1e; 
+  background-color: #1e1e1e;
   padding-top: 12px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -386,5 +395,3 @@ button:hover {
   padding-left: 10px;
 }
 </style>
-
-

@@ -59,6 +59,11 @@ export default {
 
     if (scenarioIdFromQuery) {
       this.scenario_id = parseInt(scenarioIdFromQuery); // Konvertieren in eine Zahl
+      if(scenarioIdFromQuery > 5){
+        alert("Scenario ID nicht gefunden");
+        this.$router.push("/auswahl")
+
+      }
     } else {
       
       alert("Keine Scenario ID im URL gefunden");
