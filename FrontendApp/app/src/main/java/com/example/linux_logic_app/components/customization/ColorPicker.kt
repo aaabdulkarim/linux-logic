@@ -1,4 +1,4 @@
-package com.example.linux_logic_app.components
+package com.example.linux_logic_app.components.customization
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
