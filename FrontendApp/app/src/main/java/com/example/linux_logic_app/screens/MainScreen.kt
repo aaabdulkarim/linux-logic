@@ -64,7 +64,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.components.UserViewModel
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.screens.gamification.CustomizationScreen
 import com.example.linux_logic_app.screens.gamification.PlayScreen
@@ -641,7 +641,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         composable(
                             route = Screen.Play.route
                         ) {
-                            PlayScreen(navController = navController)
+                            PlayScreen(navController = navController, userViewModel = userViewModel)
                         }
                     }
                 }

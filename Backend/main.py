@@ -10,23 +10,19 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from models.UserModels import *
 from models.ProgressModels import *
+from models.ScenarioModels import *
 
 import uuid
 from datetime import datetime, timedelta, timezone
+
+
+from passlib.context import CryptContext
+import os
+
 
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
 # sqlmodel docs: https://sqlmodel.tiangolo.com/tutorial/where/#where-land
 
-import uuid
-from datetime import datetime, timedelta, timezone
-from fastapi import FastAPI, Depends, HTTPException, Response
-from sqlmodel import SQLModel, Field, Session, select
-from passlib.context import CryptContext
-from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-from email_validator import validate_email
-from typing import Annotated
-import os
 
 # Laden des Connection Strings
 load_dotenv()
@@ -44,12 +40,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 # Datenbank-Engine erstellen
 engine = create_engine(connectionString, pool_pre_ping=True)
 
-class Bewertung(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: int = Field(index=True)
-    scenario_id: int = Field(index=True)
-    bewertung: int
-    kommentar: str = None  
 
 # FastAPI App
 app = FastAPI()
@@ -57,7 +47,7 @@ app = FastAPI()
 origins = ["http://localhost", "http://localhost:8080", "http://localhost:8081"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -72,7 +62,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 @app.post("/login/")
 async def login(response: Response, userModel: UserRead, session: SessionDep):
     user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
-    if not user or not verify_password(userModel.password, user.password_hash):
+    if not user or not verify_password(userModel.password, user.password):
         raise HTTPException(status_code=401, detail="Login fehlgeschlagen")
     
     session_id = str(uuid.uuid4())
@@ -84,7 +74,7 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     session.commit()
     
     response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True, samesite="Strict")
-    return {"message": "Login erfolgreich", "user_id": user.id}
+    return {"message": "Login erfolgreich"}
 
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
@@ -95,27 +85,42 @@ async def register(userModel: UserRead, session: SessionDep):
     if existing_user:
         raise HTTPException(status_code=400, detail="E-Mail bereits registriert")
     
-    if len(userModel.password_hash) < 8:
+    if len(userModel.password) < 8:
         raise HTTPException(status_code=400, detail="Passwort muss mindestens 8 Zeichen lang sein")
     
-    hashed_password = hash_password(userModel.password_hash)
-    new_user = UserDB(username=userModel.username, email=userModel.email, password_hash=hashed_password)
+    hashed_password = hash_password(userModel.password)
+    new_user = UserDB(username=userModel.username, email=userModel.email, password=hashed_password)
     session.add(new_user)
     session.commit()
     
     return {"message": "Registrierung erfolgreich"}
-
+ 
 @app.put("/edit")
-async def editPassword(userId: int, userPassword: str, session: SessionDep):
-    user = session.get(UserDB, userId)
+async def editPassword(request: Request, editBody : UserEdit, session: SessionDep):
+    session_id = request.cookies.get("session_id")  
+
+    print(session_id)
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
+
+    # Benutzer per session id finden
+    user_statement = select(UserDB).where(UserDB.session_id == session_id)
+    user = session.exec(user_statement).first()
+
     if not user:
-        raise HTTPException(status_code=404, detail=f"User mit ID {userId} nicht gefunden")
+        raise HTTPException(status_code=401, detail="Ungültige Session-ID")
+
+    if user.session_expiry < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Anmeldung notwendig")
     
-    user.password_hash = hash_password(userPassword)
+
+    user.password = hash_password(editBody.newPassword)
     session.add(user)
     session.commit()
     
     return {"message": "Passwort erfolgreich geändert"}
+
+
 # @app.post("/bewertung") - Ausgeschlossene Funktion
 async def addBewertung(userId : int, levelId : int, value : int, kommentar : str, session: SessionDep):
     bewertung = Bewertung()
@@ -174,7 +179,6 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
 
     else:
         new_progress = ProgressDB(
-            user_id=user.id,
             scenario_id=progressBody.scenario_id,
             loesungen_verwendet = progressBody.loesungen_verwendet,
             hints_verwendet = progressBody.hints_verwendet
@@ -185,7 +189,34 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
     session.commit()
     return {"message": "Progress erfolgreich gespeichert oder aktualisiert"}
 
+
+@app.get("/me")
+async def userData(request: Request, session: SessionDep):
+    session_id = request.cookies.get("session_id")  
+
+
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Kein gültiges Session-Cookie gefunden")
+
+
+    # Benutzer per session id finden
+    user_statement = select(UserDB).where(UserDB.session_id == session_id)
+    user = session.exec(user_statement).first()
+
+
+    if not user:
+        raise HTTPException(status_code=401, detail="Ungültige Session-ID")
     
+    if user.session_expiry < datetime.now(timezone.utc):
+        raise HTTPException(status_code=401, detail="Anmeldung notwendig")
+
+
+    return {
+        "username": user.username,
+        "email" : user.email
+    }
+
+
 
 @app.get("/progress")
 async def getProgress(request: Request, session: SessionDep):
@@ -213,17 +244,28 @@ async def getProgress(request: Request, session: SessionDep):
     progress_statement = select(ProgressDB).where(ProgressDB.user_id == user.id)
     progress_results = session.exec(progress_statement).all()
 
+
     # Fortschritt zusammenstellen
-    progress_list = [
-        ProgressBase(
+    progress_list = []
+
+    highest_scenario_id = 0
+    for progress in progress_results:
+        item = ProgressBase(
             loesungen_verwendet=progress.loesungen_verwendet,
             hints_verwendet=progress.hints_verwendet,
-            scenario_id=progress.scenario_id,
+            scenario_id=progress.scenario_id
         )
-        for progress in progress_results
-    ]
+        if progress.scenario_id > highest_scenario_id:
+            highest_scenario_id = progress.scenario_id
 
-    return progress_list
+        progress_list.append(item)
+
+
+    nextCourse = -1
+    if highest_scenario_id < 5:
+        nextCourse = highest_scenario_id + 1
+    
+    return {"completedCourses" : progress_list, "currentCourse" : highest_scenario_id, "nextCourse" : nextCourse}
 
 
 @app.get("/sterne")

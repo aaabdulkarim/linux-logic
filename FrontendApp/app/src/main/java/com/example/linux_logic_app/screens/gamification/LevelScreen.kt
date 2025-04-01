@@ -1,5 +1,6 @@
 package com.example.linux_logic_app.screens.gamification
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -15,49 +16,79 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.twotone.ArrowBackIosNew
+import androidx.compose.material.icons.twotone.CheckCircle
+import androidx.compose.material.icons.twotone.EmojiEvents
+import androidx.compose.material.icons.twotone.Info
+import androidx.compose.material.icons.twotone.Lightbulb
 import androidx.compose.material.icons.twotone.SportsEsports
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.components.terminal.Terminal
-import com.example.linux_logic_app.components.UserViewModel
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
+import com.example.linux_logic_app.ui.theme.LiloOrange
+import com.example.linux_logic_app.ui.theme.LiloSuccess
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
+    val levelViewModel = userViewModel.levelViewModel!!  // Ist garantiert nicht null
+    val sublevelName = levelViewModel.getCurrentLevelName()
+    val sublevelDesc = levelViewModel.getCurrentSublevelDescription()
+
+    var showCompletionDialog by remember { mutableStateOf(false) }
+
+    val snackbarHostState = remember { SnackbarHostState() }  // Snackbar State
+    val coroutineScope = rememberCoroutineScope()  // Coroutine für Snackbar
+
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                CustomSnackbar(data)
+            }
+        },  // Snackbar im Scaffold einfügen
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -68,11 +99,15 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                             painter = painterResource(id = R.drawable.linux_logic_pinguin),
                             contentDescription = "Linux Logic Pinguin",
                         )
-
-                        Text(
-                            text = "Level x",
-                            style = MaterialTheme.typography.labelMedium
-                        )
+                        AnimatedContent(
+                            targetState = sublevelName,
+                            label = "Sublevel Name Transition"
+                        ) { sublevelName ->
+                            Text(
+                                text = sublevelName,
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
                     }
                 },
                 navigationIcon = {
@@ -122,23 +157,10 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 1: ") }
-                        append("Beschreibung in der Card lesen\n")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 2: ") }
-                        append("Mit dem Terminal interagieren\n")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Schritt 3: ") }
-                        append("Ihre Ergebnisse überprüfen lassen")
-                    },
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                LevelCard()
+                LevelCard(sublevelName, sublevelDesc)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -146,16 +168,92 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    Terminal("ws://10.0.107.7:8000/ws", preview = false, userViewModel = userViewModel)
+                    Terminal(
+                        "ws://10.0.107.7:8000/ws",
+                        preview = false,
+                        userViewModel = userViewModel
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .weight(0.5f),
+                        onClick = {
+                            // ToDo
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.TwoTone.Lightbulb,
+                                contentDescription = "Login Icon for Start",
+                                tint = Color.White
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = "Hinweise",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White
+                            )
+                        },
+                        containerColor = LiloOrange,
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    ExtendedFloatingActionButton(
+                        modifier = Modifier
+                            .weight(0.5f),
+                        onClick = {
+                            // Checken ob die Eingabe valide ist.
+                            if (!levelViewModel.nextSublevel()) {
+                                showCompletionDialog = true
+                            } else {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "$sublevelName geschafft!",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            }
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.TwoTone.CheckCircle,
+                                contentDescription = "PersonAdd Icon for Start",
+                                tint = Color.White
+                            )
+                        },
+                        text = {
+                            Text(
+                                text = "Prüfen",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White
+                            )
+                        },
+                        containerColor = LiloMain
+                    )
                 }
             }
         }
     }
+    if (showCompletionDialog) {
+        CompletionDialog {
+            showCompletionDialog = false
+            navController.navigateUp()  // Navigation erst nach Bestätigun
+        }
+    }
 }
 
-
 @Composable
-fun LevelCard() {
+fun LevelCard(sublevelName: String, sublevelDesc: String) {
     var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f,
@@ -163,7 +261,9 @@ fun LevelCard() {
     )
 
     Card(
-        colors = CardDefaults.cardColors(containerColor = LiloBlue)
+        colors = CardDefaults.cardColors(
+            containerColor = LiloBlue
+        )
     ) {
         Column(
             modifier = Modifier
@@ -177,25 +277,29 @@ fun LevelCard() {
                 .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Icon(
-                    imageVector = Icons.TwoTone.SportsEsports,
+                    imageVector = Icons.TwoTone.Info,
                     contentDescription = "SportsEsports Icon for Level",
-                    tint = LiloMain
+                    tint = LiloOrange
                 )
+
                 Text(
-                    text = "Level x: Beschreibung",
+                    text = "$sublevelName: Beschreibung",
                     color = Color.White,
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold
                 )
+
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = if (expanded) "Collapse" else "Expand",
-                    modifier = Modifier.graphicsLayer(rotationZ = rotationAngle),
+                    modifier = Modifier
+                        .graphicsLayer(rotationZ = rotationAngle),
                     tint = Color.White
                 )
             }
@@ -204,10 +308,107 @@ fun LevelCard() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Beschreibungs Text hier",
-                    color = MaterialTheme.colorScheme.onBackground,
+                    text = sublevelDesc,
+                    textAlign = TextAlign.Justify,
                     style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Justify
+                    color = Color.White
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CompletionDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        containerColor = MaterialTheme.colorScheme.background,
+        titleContentColor = MaterialTheme.colorScheme.onBackground,
+        textContentColor = MaterialTheme.colorScheme.onBackground,
+        onDismissRequest = {},
+        confirmButton = {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 32.dp, end = 32.dp),
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LiloSuccess,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(
+                    text = "Juhu!",
+                    color = Color.White
+                )
+            }
+        },
+        title = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = Icons.TwoTone.EmojiEvents,
+                    contentDescription = "Completion Icon",
+                    tint = LiloMain,
+                    modifier = Modifier.size(64.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Glückwunsch!",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            }
+        },
+        text = {
+            Text(
+                text = "Sie haben alle Sublevels erfolgreich abgeschlossen, super gemacht! \uD83C\uDF89",
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
+        modifier = Modifier
+            .padding(16.dp)
+    )
+}
+
+@Composable
+fun CustomSnackbar(data: SnackbarData) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Card(
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.background
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.TwoTone.CheckCircle,
+                    contentDescription = "Success Icon for Level",
+                    tint = LiloSuccess,
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = data.visuals.message,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }

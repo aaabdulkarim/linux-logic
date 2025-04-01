@@ -39,6 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.navigation.Screen
+import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloMain
+import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
 fun StartScreen(navController: NavController) {
@@ -48,7 +51,7 @@ fun StartScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF569191))
+            .background(LiloMain)
     ) {
         Image(
             alignment = Alignment.TopCenter,
@@ -131,7 +134,8 @@ fun StartScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ExtendedFloatingActionButton(
-                        modifier = Modifier,
+                        modifier = Modifier
+                            .weight(0.5f),
                         onClick = {
                             navController.navigate(Screen.Login.route)
                             Log.i("StartScreen", "User is performing - Action: \"Login\" -")
@@ -150,13 +154,14 @@ fun StartScreen(navController: NavController) {
                                 color = Color.White
                             )
                         },
-                        containerColor = Color(0xFF445a65),
+                        containerColor = LiloBlue,
                     )
 
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     ExtendedFloatingActionButton(
-                        modifier = Modifier,
+                        modifier = Modifier
+                            .weight(0.5f),
                         onClick = {
                             navController.navigate(Screen.Register.route)
                             Log.i("StartScreen", "User is performing - Action: \"Register\" -")
@@ -175,7 +180,7 @@ fun StartScreen(navController: NavController) {
                                 color = Color.White
                             )
                         },
-                        containerColor = Color(0xFFFF8c00)
+                        containerColor = LiloOrange
                     )
                 }
             }

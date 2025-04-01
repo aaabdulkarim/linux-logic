@@ -3,7 +3,7 @@
 
     </div>
     <div class="copyright grid">
-        <p>© Copyright 2024 </p>
+        <p>© Copyright 2025 </p>
         <p><router-link to="/about"> Linux Logic</router-link></p>
     </div>
 </template>

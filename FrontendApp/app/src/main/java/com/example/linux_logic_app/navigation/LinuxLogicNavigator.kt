@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.linux_logic_app.components.UserViewModel
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.screens.FeedbackScreen
 import com.example.linux_logic_app.screens.HelpScreen
 import com.example.linux_logic_app.screens.gamification.LevelScreen

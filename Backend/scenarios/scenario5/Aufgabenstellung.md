@@ -6,35 +6,35 @@ Das wertvolle königliche Artefakt wurde gestohlen und versteckt. Es ist von Sch
 
 ### 1. Spurensuche beginnen
 
-Um das Artefakt zu finden, müssen erste Hinweise gesammelt und analysiert werden.
+!!Um das Artefakt zu finden, müssen erste Hinweise gesammelt und analysiert werden.
 
 \_- Wechsel in das Verzeichnis des königlichen Archivs mit `cd /home/Archiv`.
 \_- Suche nach Hinweisen in Dokumenten mit `grep "Artefakt" *`.
 
 ### 2. Verschlüsselte Botschaften entschlüsseln
 
-Die Hinweise sind in einem geheimen Code verfasst und müssen entschlüsselt werden.
+!!Die Hinweise sind in einem geheimen Code verfasst und müssen entschlüsselt werden.
 
 \_- Entschlüssele die Nachricht mit `gpg -d geheime_nachricht.txt.gpg`.
 \_- Speichere den entschlüsselten Inhalt in `artefakt_hinweis.txt`.
 
 ### 3. Geheime Kammer betreten
 
-Das Artefakt ist in einer verborgenen Kammer eingeschlossen. Zugang erhält nur, wer die richtigen Schalter betätigt.
+!!Das Artefakt ist in einer verborgenen Kammer eingeschlossen. Zugang erhält nur, wer die richtigen Schalter betätigt.
 
 \_- Wechsle in das Kammer-Verzeichnis mit `cd /home/GeheimeKammer`.
 \_- Aktiviere den geheimen Mechanismus mit `bash schalter_aktivieren.sh`.
 
 ### 4. Artefakt bergen
 
-Nachdem der Mechanismus deaktiviert wurde, kann das Artefakt entnommen und gesichert werden.
+!!Nachdem der Mechanismus deaktiviert wurde, kann das Artefakt entnommen und gesichert werden.
 
 \_- Verschiebe das Artefakt in den königlichen Tresor mit `mv artefakt.txt /home/Tresor`.
 \_- Stelle sicher, dass das Artefakt gesperrt ist mit `chmod 400 /home/Tresor/artefakt.txt`.
 
 ### 5. Sicherheitsmaßnahmen erhöhen
 
-Um zukünftige Diebstähle zu verhindern, müssen neue Schutzmaßnahmen implementiert werden.
+!!Um zukünftige Diebstähle zu verhindern, müssen neue Schutzmaßnahmen implementiert werden.
 
 \_- Erstelle eine Protokolldatei über den Vorfall mit `nano sicherheitsprotokoll.txt`.
 \_- Aktiviere das Alarmsystem mit `bash aktivieren_alarm.sh`.

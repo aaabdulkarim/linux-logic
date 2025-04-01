@@ -26,9 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.components.terminal.Terminal
-import com.example.linux_logic_app.components.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
+import com.example.linux_logic_app.ui.theme.LiloOrange
 
 @Composable
 fun HomeScreen(userViewModel: UserViewModel) {
@@ -62,7 +63,9 @@ fun HomeScreen(userViewModel: UserViewModel) {
                     Icon(
                         imageVector = Icons.TwoTone.History,
                         contentDescription = "History Icon for Home",
-                        modifier = Modifier.align(Alignment.CenterVertically)
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
+                        tint = LiloOrange
                     )
 
                     Spacer(modifier = Modifier.weight(1f)) // Lässt den Text mittig ausrichten
@@ -70,7 +73,8 @@ fun HomeScreen(userViewModel: UserViewModel) {
                     Text(
                         text = "Nahtlos weiterspielen",
                         style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier.align(Alignment.CenterVertically)
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
                     )
 
                     Spacer(modifier = Modifier.weight(1f)) // Platzhalter, um den Button-Inhalt ausgewogen zu halten

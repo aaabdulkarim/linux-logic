@@ -64,7 +64,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
-import com.example.linux_logic_app.components.UserViewModel
+import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDanger
 import com.example.linux_logic_app.ui.theme.LiloMain
@@ -215,7 +215,7 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 Icon(
                     imageVector = Icons.TwoTone.Security,
                     contentDescription = "Security Icon for Customization",
-                    tint = LiloMain
+                    tint = LiloOrange
                 )
                 Text(
                     text = "Account Informationen",

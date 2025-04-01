@@ -58,14 +58,15 @@ fun HyperlinkText(
         text = annotatedString,
         style = MaterialTheme.typography.bodyLarge, // Nutzt die gleiche Schriftart wie `Text`
         modifier = Modifier.clickable {
-            annotatedString.getStringAnnotations("URL", 0, annotatedString.length).firstOrNull()?.let { annotation ->
-                // Öffnet den Link
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
-                context.startActivity(intent)
+            annotatedString.getStringAnnotations("URL", 0, annotatedString.length).firstOrNull()
+                ?.let { annotation ->
+                    // Öffnet den Link
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
+                    context.startActivity(intent)
 
-                // Log-Ereignis hinzufügen
-                Log.i("HyperlinkText Linux Logic", onLinkClickLogMessage)
-            }
+                    // Log-Ereignis hinzufügen
+                    Log.i("HyperlinkText Linux Logic", onLinkClickLogMessage)
+                }
         },
         color = textColor
     )

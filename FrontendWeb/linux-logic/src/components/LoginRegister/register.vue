@@ -44,7 +44,7 @@ import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
-import axios from 'axios';
+import api from '@/api';
 
 export default {
   components: { 
@@ -62,7 +62,6 @@ export default {
       password: '',
       password_2: '',
       stayLoggedIn: false,
-      base_url: "http://10.0.107.220:8001"
     };
   },
   computed: {
@@ -86,15 +85,13 @@ export default {
       }
 
       const userData = {
-        firstName: this.firstName,
-        lastName: this.lastName,
         email: this.email,
         username: this.username,
         password: this.password,
         stayLoggedIn: this.stayLoggedIn
       };
 
-      axios.post(`${this.base_url}/api/register`, userData)
+      api.post('/register', userData)
         .then(response => {
           alert("Registrierung erfolgreich!");
           this.$router.push('/login');

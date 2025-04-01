@@ -1,12 +1,10 @@
-package com.example.linux_logic_app.components
+package com.example.linux_logic_app.components.viewmodels
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.linux_logic_app.components.terminal.TerminalColors
-import com.example.linux_logic_app.components.terminal.TerminalViewModel
-import com.example.linux_logic_app.components.terminal.defaultTerminalColors
+import com.example.linux_logic_app.components.scenario.Scenario
 
 /**
  * Dies ist die Datenklasse für den Linux Logic Benutzer.
@@ -16,7 +14,7 @@ data class User(
     val username: String,
     val email: String,
     val password: String, // Passwort verschlüsseln, hashen usw. falls derartige komplexe Vorgänge realistisch sind
-    val terminalColors: TerminalColors = defaultTerminalColors // Terminalfarben für den Benutzer
+    val terminalColors: TerminalColors = defaultTerminalColors, // Terminalfarben für den Benutzer
 )
 
 /**
@@ -78,7 +76,7 @@ class UserViewModel : ViewModel() {
             User(
                 username = "Admin",
                 email = "admin@test.com",
-                password = "Admin123#"
+                password = "Admin123#",
             )
         )
         add(
@@ -92,9 +90,18 @@ class UserViewModel : ViewModel() {
 
     //var terminalViewModel by mutableStateOf(TerminalViewModel()) // Das terminalViewModel kann nicht null sein
 
-    // Verwaltet den TerminalViewModel für den aktuell angemeldeten Benutzer
+    // TerminalViewModel für den aktuell angemeldeten Benutzer
     private var _terminalViewModel: TerminalViewModel = TerminalViewModel(defaultTerminalColors)
+
+    /**
+     * Liefert den aktuell verwendeten TerminalViewModel.
+     * @return Das TerminalViewModel, welches die Terminalfarben und -logik enthält.
+     */
     val terminalViewModel: TerminalViewModel get() = _terminalViewModel
+
+    // Das LevelViewModel – wird initialisiert, sobald ein Scenario ausgewählt wird
+    private var _levelViewModel by mutableStateOf<LevelViewModel?>(null)
+    val levelViewModel: LevelViewModel? get() = _levelViewModel
 
     fun onUsernameChange(newUsername: String) {
         _username = newUsername
@@ -191,6 +198,9 @@ class UserViewModel : ViewModel() {
 
         // Initialisiere das TerminalViewModel mit den Terminalfarben des Benutzers
         _terminalViewModel = TerminalViewModel(registeredUser.terminalColors)
+
+        // LevelViewModel bleibt zunächst null, bis ein Scenario ausgewählt wird
+        _levelViewModel = null
 
         return true
     }
@@ -396,5 +406,15 @@ class UserViewModel : ViewModel() {
         }
 
         _terminalViewModel.updateDefaultMode(useDefault) // Wenn terminalViewModel null ist, Standardwert true
+    }
+
+    /**
+     * Setzt das aktuelle Scenario und initialisiert das LevelViewModel.
+     * Diese Methode kapselt die gesamte Logik zur Szenario-Auswahl.
+     *
+     * @param scenario Das vom Benutzer ausgewählte Scenario.
+     */
+    fun selectScenarioForUser(scenario: Scenario?) {
+        _levelViewModel = scenario?.let { LevelViewModel(it) }
     }
 }
