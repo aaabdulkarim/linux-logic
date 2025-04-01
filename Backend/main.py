@@ -363,15 +363,14 @@ dm = DockerManager()
 @app.websocket("/ws")
 async def websocket(mainsocket: WebSocket):
     await mainsocket.accept()
-    
 
     session_id = str(uuid.uuid4())
-    frontend_user_name = await mainsocket.receive_text()    
-    
+    frontend_user_name = await mainsocket.receive_text()
+
     print(frontend_user_name)
-    
+
     frontend_container_choice = await mainsocket.receive_text()
-    
+
     print(frontend_container_choice)
 
     container_name = await dm.add_connection(
@@ -380,60 +379,48 @@ async def websocket(mainsocket: WebSocket):
         frontendChoice=frontend_container_choice
     )
 
-    # TODO: Graceful Closure
-
     if container_name:
-
         scm = await dm.get_scm(frontend_user_name, frontend_container_choice)
 
-        # TODO: Nach 1h Inaktivität automatisch schließen 
         while await dm.get_container_health(container_name) != "healthy":
             print(await dm.get_container_health(container_name))
             await asyncio.sleep(2)
-            
-        await mainsocket.send_text("Container Startup successful")
+
+        await mainsocket.send_json({"output": "Container Startup successful"}) # Changed to send_json
         container_socket_port = await dm.get_dynamic_port(container_name)
         print("Das isses: ", container_socket_port)
 
-        # Connection mit dem docker socket mit dem modul websockets
         container_socket_url = f"ws://127.0.0.1:{container_socket_port}/dockersocket"
         try:
             async with websockets.connect(container_socket_url) as container_socket:
                 print("connected to external")
                 while True:
-
-                    # Interaktion mit Frontend Socket
                     frontend_cmd = await mainsocket.receive_text()
 
                     try:
                         if ">clue" == frontend_cmd:
-                            # TODO: SCM Korrekt mit User Connection identifizieren 
-                            # TODO: Update Progress wird nur bei einem Check ausgeführt
                             clues = "".join(scm.get_clue())
+                            await mainsocket.send_json({"hint": clues}) # Changed to send_json
 
-                            await mainsocket.send_text(clues)
-                        
                         if ">solution" == frontend_cmd:
                             solution = "".join(scm.get_solution())
-                            await mainsocket.send_text(solution)
-
-
+                            await mainsocket.send_json({"solution": solution}) # Changed to send_json
 
                         if ">check" == frontend_cmd:
                             await container_socket.send("bash /app/checks_fun.sh")
                             data = await container_socket.recv()
-                            await mainsocket.send_text(data)
+                            await mainsocket.send_json({"check": data}) # Changed to send_json
                             print(data)
-
-                            
 
                         else:
                             await container_socket.send(frontend_cmd)
                             data = await container_socket.recv()
-                            await mainsocket.send_text(data)
+                            await mainsocket.send_json({"output": data}) # Changed to send_json
                             print(data)
 
-                
+                        desc = "".join(scm.get_desc())
+                        await mainsocket.send_json({"description": desc}) 
+                    
                     except WebSocketDisconnect:
                         print("WebSocket client disconnected")
                         break
@@ -443,16 +430,10 @@ async def websocket(mainsocket: WebSocket):
 
         finally:
             await mainsocket.close()
-            # if container:
-            #     container.stop()
-            #     container.remove()
-            #     print("WebSocket stopped and container removed")
-        
             await dm.close(container_name)
 
     else:
         print("Help")
-
     
 
 

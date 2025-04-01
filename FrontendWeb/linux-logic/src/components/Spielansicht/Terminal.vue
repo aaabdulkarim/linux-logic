@@ -121,14 +121,30 @@ export default {
         this.socketClient.send(this.profileName);
         const scenarioIdFromQuery = this.$route.query.scenario_id;
         this.socketClient.send("scenario" + scenarioIdFromQuery)
-
+        this.socketClient.send("")
 
       };
 
       this.socketClient.onmessage = (event) => {
-
-        this.terminal.write(`\r\n${event.data}`);
-        this.writePrompt();
+        try {
+          const message = JSON.parse(event.data);
+          if (message.output) {
+            this.terminal.write(`\r\n${message.output}`);
+          } else if (message.hint) {
+            this.terminal.write(`\r\nHint: ${message.hint}`);
+          } else if (message.solution) {
+            this.terminal.write(`\r\nSolution: ${message.solution}`);
+          } else if (message.description) {
+            this.aufgabe = message.description
+          } else if (message.check) {
+            this.terminal.write(`\r\nCheck Result: ${message.check}`);
+          }
+          this.writePrompt();
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+          this.terminal.write(`\r\n${event.data}`); // Fallback to plain text
+          this.writePrompt();
+        }
       };
 
       this.socketClient.onerror = (error) => {

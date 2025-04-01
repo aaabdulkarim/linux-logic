@@ -26,6 +26,8 @@ class ScenarioTrack:
                 if l.startswith("\_"):
                     if "`" in l:
                         current_solution = l.split("`", 2)[1]
+                        print(current_solution)
+                        l = l.replace(current_solution, "***redacted***")
                     current_hint += l.lstrip("\_")
                     prev_row_hint = True
                     prev_row_desc = False
