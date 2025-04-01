@@ -194,12 +194,14 @@ export default {
         }
         
       } else if (char === 127) { // Backspace
-        if (this.terminal.buffer.active.cursorX > this.promptLength) {
-          this.terminal.write('\b \b');
+        if (this.userInput.length > 0) {
+            this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
+            this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
         }
-      } else {
-        this.terminal.write(data);
-      }
+    } else {
+        this.userInput += data; // Zeichen zum User-Input hinzufügen
+        this.terminal.write(data)
+    }
     },
     respondToInput(input) {
       
