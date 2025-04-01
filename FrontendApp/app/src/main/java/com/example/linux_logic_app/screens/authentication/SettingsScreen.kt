@@ -71,6 +71,18 @@ import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 import com.example.linux_logic_app.ui.theme.LiloSuccess
 
+/**
+ * SettingsScreen - Der Einstellungsbildschirm der App.
+ * Dieses Composable zeigt den Bildschirm zur Verwaltung der Benutzereinstellungen.
+ * Es verwendet ein Scaffold mit einer TopAppBar und einem scrollbaren Inhalt, der
+ * unter anderem die AccountSettingsCard enthält.
+ * Wichtige Aspekte:
+ * - Die TopAppBar implementiert Navigation (zurück) und Aktionen (Einstellungen).
+ * - Der Inhalt wird in einer scrollbaren Column dargestellt, um auch bei vielen Inhalten
+ *   eine gute Benutzererfahrung zu gewährleisten.
+ * @param navController Steuert die Navigation zwischen den Screens.
+ * @param userViewModel Verwaltet den Zustand und die Logik des aktuell angemeldeten Benutzers.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController, userViewModel: UserViewModel) {
@@ -167,6 +179,17 @@ fun SettingsScreen(navController: NavController, userViewModel: UserViewModel) {
     }
 }
 
+/**
+ * AccountSettingsCard - Eine Karte zur Anzeige und Bearbeitung von Account-Informationen.
+ * Dieses Composable zeigt die aktuellen Benutzerdaten an und ermöglicht es dem Nutzer,
+ * in den Bearbeitungsmodus zu wechseln, um seine Account-Informationen zu aktualisieren.
+ * Beim Klick auf die Karte wird diese erweitert, um Eingabefelder anzuzeigen, die direkt
+ * mit dem UserViewModel synchronisiert werden.
+ * Wichtige Aspekte:
+ * - Verwendung von animateContentSize(), um sanfte Übergänge beim Erweitern und Reduzieren zu ermöglichen.
+ * - Dynamische Anzeige eines Passwort-Bestätigungsdialogs, wenn der Bearbeitungsmodus aktiviert wird.
+ * @param userViewModel Verwaltet den Zustand und die Logik des aktuell angemeldeten Benutzers.
+ */
 @Composable
 fun AccountSettingsCard(userViewModel: UserViewModel) {
     var expanded by remember { mutableStateOf(false) }
@@ -496,6 +519,17 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
     }
 }
 
+/**
+ * PasswordConfirmDialog - Ein AlertDialog (nach Material3-Schema) zur Bestätigung des Passworts.
+ * Dieses Composable zeigt einen AlertDialog, in dem der Nutzer sein Passwort zur Bestätigung eingeben muss.
+ * Es ermöglicht dem Nutzer, die Eingabe des Passworts zu überprüfen und zu bestätigen oder abzubrechen.
+ * Wichtige Aspekte:
+ * - Verwendung eines OutlinedTextField für die Passworteingabe mit dynamischer Sichtbarkeit.
+ * - Anzeige von Fehlermeldungen, falls die Validierung fehlschlägt.
+ * @param userViewModel Verwaltet den Zustand und die Logik der Nutzeranmeldung.
+ * @param onConfirm Wird aufgerufen, wenn die Passwortbestätigung erfolgreich ist.
+ * @param onDismiss Wird aufgerufen, wenn der Dialog abgebrochen wird.
+ */
 @Composable
 fun PasswordConfirmDialog(
     userViewModel: UserViewModel,

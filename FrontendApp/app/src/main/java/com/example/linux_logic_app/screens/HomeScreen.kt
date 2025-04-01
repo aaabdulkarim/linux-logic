@@ -31,6 +31,16 @@ import com.example.linux_logic_app.components.terminal.Terminal
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloOrange
 
+/**
+ * HomeScreen - Zeigt den Fortschritt des Nutzers, Mitteilungen und ermöglicht nahtloses Weiterspielen.
+ * Dieses Composable stellt einen Bildschirminhalt dar, der einen Button zum Weiterspielen,
+ * einen Fortschrittstitel und eine Terminalanzeige umfasst.
+ * Wichtige Aspekte:
+ * - Verwendung eines scrollbaren Column-Layouts, um auch auf kleineren Bildschirmen alle Inhalte anzuzeigen.
+ * - Der "Nahtlos weiterspielen" Button nutzt Spacer mit weight, um den Inhalt ausgewogen zu zentrieren.
+ * - Integration des Terminal-Composables zur Darstellung von Live-Terminal-Inhalten.
+ * @param userViewModel Verwaltet den Zustand und die Logik des aktuell angemeldeten Nutzers.
+ */
 @Composable
 fun HomeScreen(userViewModel: UserViewModel) {
     Column(

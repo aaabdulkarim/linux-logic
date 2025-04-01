@@ -56,23 +56,30 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+/**
+ * Die Linux_logic_appTheme konfiguriert das gesamte "Thema" der App.
+ * Relevante, komplexe Aspekte:
+ * - Dynamische Farbwahl: Nutzt auf Android 12+ dynamische Farbschemata basierend auf dem System.
+ * - Fallback: Bei älteren Android-Versionen oder ausgeschaltetem Dark Theme wird auf vordefinierte Schemata zurückgegriffen.
+ * @param darkTheme Legt fest, ob das Dark Theme genutzt wird. Standardmäßig wird das System-DarkTheme verwendet.
+ * @param dynamicColor Aktiviert die dynamische Farbwahl, sofern vom System unterstützt (Android 12+).
+ * @param content Der Composable-Inhalt, der im definierten Thema dargestellt wird.
+ */
 @Composable
 fun Linux_logic_appTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    // Auswahl des Farbschemas basierend auf dynamischer Farbwahl und Dark Mode
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        // Standard-Dark-Mode-Farbpalette
-        darkTheme -> DarkColorScheme
-        // Standard-Light-Mode-Farbpalette
-        else -> LightColorScheme
+        darkTheme -> DarkColorScheme  // Feste Dark Mode Farbpalette
+        else -> LightColorScheme        // Feste Light Mode Farbpalette
     }
 
     MaterialTheme(

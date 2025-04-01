@@ -25,6 +25,17 @@ import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
+/**
+ * ColorPicker ist ein Composable zur Auswahl von Farben.
+ * Diese Implementoerung ist inspiriert von: https://www.youtube.com/watch?v=QqcMKQgfzec
+ * Es kombiniert einen HSV-Farbauswahlbereich, einen Alpha-Slider und einen Brightness-Slider.
+ * Der Controller synchronisiert alle Komponenten, und der Callback [onColorSelected] liefert
+ * die aktuell ausgewählte Farbe zurück.
+ * Komplexe Aspekte:
+ * - Der gemeinsam genutzte Controller steuert die Synchronisation der verschiedenen Farbanpassungen.
+ * - Der HSVColorPicker verwendet einen Callback, um bei jeder Farbänderung den lokalen Zustand
+ *   und den Rückruf zu aktualisieren.
+ */
 @Composable
 fun ColorPicker(onColorSelected: (Color) -> Unit) {
     var selectedColor by remember { mutableStateOf(Color.Transparent) }

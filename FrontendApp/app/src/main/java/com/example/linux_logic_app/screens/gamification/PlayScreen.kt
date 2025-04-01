@@ -58,6 +58,19 @@ import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDarkText
 import com.example.linux_logic_app.ui.theme.LiloMain
 
+/**
+ * PlayScreen - Der Bildschirm zum Auswählen und Starten eines Kurses (Scenario).
+ * Dieses Composable zeigt eine Liste aller verfügbaren Kurse (courseList) in einer LazyColumn.
+ * Jeder Kurs wird als CourseCard dargestellt und bei Auswahl animiert eingeblendet/ausgeblendet.
+ * Beim Auswählen eines Kurses wird CourseEditDetails eingeblendet, um weitere Details anzuzeigen
+ * und Optionen wie "Spielen" oder "Zurück" bereitzustellen.
+ * Wichtige Aspekte:
+ * - Verwendung von SharedTransitionLayout und AnimatedVisibility für fließende Übergänge.
+ * - Die Animation der Kurskarten erfolgt mit fadeIn/scaleIn und fadeOut/scaleOut.
+ * - Bei Auswahl eines Kurses wird dieser an das UserViewModel übergeben und der LevelScreen gestartet.
+ * @param navController Steuert die Navigation zwischen den Screens.
+ * @param userViewModel Verwaltet den Zustand des aktuell angemeldeten Nutzers.
+ */
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
@@ -80,6 +93,7 @@ fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
                 ) {
                     Box(
                         modifier = Modifier
+                            // SharedTransition für fließende Übergänge zwischen Kurskarten
                             .sharedBounds(
                                 sharedContentState = rememberSharedContentState(key = "${course.name}-bounds"),
                                 animatedVisibilityScope = this
@@ -104,6 +118,18 @@ fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
     }
 }
 
+/**
+ * CourseEditDetails - Zeigt Detailinformationen zu einem ausgewählten Kurs an.
+ * Dieses Composable wird angezeigt, wenn ein Kurs ausgewählt wurde.
+ * Es zeigt das Kursbild, den Kursnamen und die Kursbeschreibung.
+ * Außerdem stehen Buttons zum Starten des Kurses ("Spielen") und zum Abbrechen der Auswahl ("Zurück") bereit.
+ * Wichtige Aspekte:
+ * - Animierte Erweiterung der Kursdetails durch Klicken, gesteuert über einen Drehwinkel für das Pfeilsymbol.
+ * - Die Kursbeschreibung wird in einer LazyColumn dargestellt, um auch lange Texte anzuzeigen.
+ * @param course Das aktuell ausgewählte Scenario, oder null, wenn kein Kurs ausgewählt wurde.
+ * @param onPlayClick Callback zum Starten des Kurses.
+ * @param onCancelClick Callback zum Abbrechen der Kursauswahl.
+ */
 @Composable
 fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick: () -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -149,16 +175,14 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                     verticalArrangement = Arrangement.Center
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowDropDown,
                             contentDescription = if (isExpanded) "Collapse" else "Expand",
-                            modifier = Modifier
-                                .graphicsLayer(rotationZ = rotationAngle),
+                            modifier = Modifier.graphicsLayer(rotationZ = rotationAngle),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
 
@@ -180,8 +204,7 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                             ) {
                                 Text(
                                     text = it.description,
-                                    modifier = Modifier
-                                        .padding(horizontal = 16.dp),
+                                    modifier = Modifier.padding(horizontal = 16.dp),
                                     maxLines = if (isExpanded) Int.MAX_VALUE else 2,
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onBackground,
@@ -243,6 +266,16 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
     }
 }
 
+/**
+ * CourseCard - Stellt eine einzelne Kurskarte dar.
+ * Dieses Composable zeigt den Kurs als Card mit Hintergrundbild, einem Gradienten-Overlay
+ * und dem Kursnamen. Beim Klicken auf die Card wird der Kurs als ausgewählt markiert.
+ * Wichtige Aspekte:
+ * - Die Card hat abgerundete Ecken und einen leichten Schatten (Elevation).
+ * - Das Bild wird skaliert und mit einem Overlay versehen, um den Text lesbar zu machen.
+ * @param course Das anzuzeigende Scenario.
+ * @param onSelectClick Callback, der beim Klicken auf die Card aufgerufen wird.
+ */
 @Composable
 fun CourseCard(course: Scenario, onSelectClick: () -> Unit) {
     Card(
@@ -297,3 +330,4 @@ fun CourseCard(course: Scenario, onSelectClick: () -> Unit) {
         }
     }
 }
+
