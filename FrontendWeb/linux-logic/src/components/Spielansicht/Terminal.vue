@@ -177,7 +177,7 @@ export default {
 }
 .terminal-output {
   color: #dcdcdc;
-  padding-top: 4px;
+  padding-top: 0px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
