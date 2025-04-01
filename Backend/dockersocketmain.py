@@ -1,10 +1,13 @@
 from fastapi import FastAPI
-from fastapi.websockets import WebSocket
-from fastapi import WebSocketDisconnect
+
+import uuid
+
 
 import websockets
 import time
-import uuid
+
+from fastapi.websockets import WebSocket
+from fastapi import WebSocketDisconnect
 
 from ScenarioTrack import ScenarioTrack
 from DockerManager import DockerManager 

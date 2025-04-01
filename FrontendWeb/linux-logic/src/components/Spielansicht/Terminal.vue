@@ -61,7 +61,7 @@ export default {
       fitAddon: null,
       socketClient: null,
       promptLength: 69,
-      socketUrl: "http://192.168.0.76:8000/ws",
+      socketUrl: "http://localhost:8000/ws",
       aufgabe: "",
       isModalVisible: false,
       modalContent: '',
@@ -139,7 +139,7 @@ export default {
     this.socketClient.onclose = () => {
       console.warn("WebSocket connection closed.");
 
-      setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
+      // setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
 
     };
 
@@ -171,7 +171,10 @@ export default {
       };      
       
       // TODO: Username und Scenario auswahl schicken
-    },
+      this.socketClient.send("username");
+      this.socketClient.send("scenario" + this.scenario_id)
+
+    },  
 
 
     writePrompt() {
@@ -189,7 +192,7 @@ export default {
             console.log("Full Line Text:", lineText);
             console.log("Prompt Length:", this.promptLength);
             console.log("Extracted Input:", lineText.slice(this.promptLength));
-            this.respondToInput(lineText.slice(14));
+            this.respondToInput(lineText.slice(15));
 
         }
         
