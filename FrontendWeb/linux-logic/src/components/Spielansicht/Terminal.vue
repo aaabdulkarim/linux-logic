@@ -105,7 +105,7 @@ export default {
     };
 
     this.socketClient.onmessage = (event) => {
-      console.log(event.data)
+
       this.terminal.write(`\r\n${event.data}`);
       this.writePrompt();
     };
@@ -174,9 +174,6 @@ export default {
         }
         
       } else if (char === 127) { // Backspace
-        if (this.userInput.length > 0) {
-            this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
-            this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
         if (this.userInput.length > 0) {
             this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
             this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
