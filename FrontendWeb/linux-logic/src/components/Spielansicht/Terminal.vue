@@ -50,6 +50,8 @@
 import { Terminal } from "xterm";
 import "xterm/css/xterm.css";
 import { FitAddon } from "xterm-addon-fit";
+import api from "@/api";
+import Button from "primevue/button";
 
 export default {
   name: 'Terminal',
