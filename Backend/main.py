@@ -409,6 +409,8 @@ async def websocket(mainsocket: WebSocket):
                         if ">check" == frontend_cmd:
                             await container_socket.send("bash /app/checks_fun.sh")
                             data = await container_socket.recv()
+                            scm.update_progress()
+                            # TODO: Bash Scripts verbessern
                             await mainsocket.send_json({"check": data}) # Changed to send_json
                             print(data)
 
