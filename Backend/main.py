@@ -71,7 +71,7 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
-@app.post("/login/")
+@app.post("/login")
 async def login(response: Response, userModel: UserRead, session: SessionDep):
     user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
     if not user or not verify_password(userModel.password, user.password):
@@ -409,15 +409,23 @@ async def websocket(mainsocket: WebSocket):
                         if ">clue" == frontend_cmd:
                             # TODO: SCM Korrekt mit User Connection identifizieren 
                             # TODO: Update Progress wird nur bei einem Check ausgeführt
-                            scm.update_progress()
                             clues = "".join(scm.get_clue())
+
                             await mainsocket.send_text(clues)
+                        
+                        if ">solution" == frontend_cmd:
+                            solution = "".join(scm.get_solution())
+                            await mainsocket.send_text(solution)
+
+
 
                         if ">check" == frontend_cmd:
                             await container_socket.send("bash /app/checks_fun.sh")
                             data = await container_socket.recv()
                             await mainsocket.send_text(data)
                             print(data)
+
+                            
 
                         else:
                             await container_socket.send(frontend_cmd)
