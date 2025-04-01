@@ -177,6 +177,9 @@ export default {
         if (this.userInput.length > 0) {
             this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
             this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
+        if (this.userInput.length > 0) {
+            this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
+            this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
         }
     } else {
         this.userInput += data; // Zeichen zum User-Input hinzufügen
