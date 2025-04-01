@@ -19,6 +19,8 @@ from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
 import os
 
+# Websocekt Imports
+import websockets
 
 from fastapi.websockets import WebSocket
 from fastapi import WebSocketDisconnect
@@ -358,8 +360,6 @@ async def logout(response : Response, request: Request,  session : SessionDep):
 dm = DockerManager()
 
 
-
-
 @app.websocket("/ws")
 async def websocket(mainsocket: WebSocket):
     await mainsocket.accept()
@@ -372,6 +372,7 @@ async def websocket(mainsocket: WebSocket):
     
     frontend_container_choice = await mainsocket.receive_text()
     
+    print(frontend_container_choice)
 
     container_name = await dm.add_connection(
         userSessionId=session_id,

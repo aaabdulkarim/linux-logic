@@ -60,7 +60,7 @@ export default {
       terminal: null,
       fitAddon: null,
       socketClient: null,
-      promptLength: 69,
+      promptLength: 14,
       socketUrl: "http://localhost:8000/ws",
       aufgabe: "",
       isModalVisible: false,
@@ -68,35 +68,10 @@ export default {
       showRating: false,
       rating: 0,
       stars: 3,
-      scenario_id: null,
       aufgabe: ""
     };
   },
   mounted() {
-    // Abrufen der scenario_id aus den Query-Parametern
-    const scenarioIdFromQuery = this.$route.query.scenario_id;
-    
-    // TODO: Check if user is Really authorized for this level 
-    api.get('/progress')
-      .then(response => {
-        const data = response.data;
-        if (scenarioIdFromQuery > data.nextCourse){
-          alert("Scenario noch nicht verfügbar, Stelle erst alle notwendigen Aufgaben fertig");
-          this.$router.push("/auswahl")
-
-        }
-      })
-      .catch(error => {
-        console.error('Fehler beim Abrufen der Benutzerdaten:', error);
-      });
-
-    if (scenarioIdFromQuery) {
-      this.scenario_id = parseInt(scenarioIdFromQuery); // Konvertieren in eine Zahl
-    } else {
-      
-      alert("Keine Scenario ID im URL gefunden");
-      this.$router.push("/auswahl")
-    }
 
     this.terminal = new Terminal({
       cursorBlink: true,
@@ -122,12 +97,15 @@ export default {
     // WebSocket event handlers must be assigned AFTER initialization
     this.socketClient.onopen = () => {
       console.log("WebSocket connection established.");
+      this.socketClient.send("username");
+      const scenarioIdFromQuery = this.$route.query.scenario_id;
+      this.socketClient.send("scenario" + scenarioIdFromQuery)
 
 
     };
 
     this.socketClient.onmessage = (event) => {
-
+      console.log(event.data)
       this.terminal.write(`\r\n${event.data}`);
       this.writePrompt();
     };
@@ -157,6 +135,7 @@ export default {
       };
 
       this.socketClient.onmessage = (event) => {
+        console.log(event.data)
         this.terminal.write(`\r\n${event.data}`);
         this.writePrompt();
         // TODO: Aufgabenwechsel wird hier erkannt. und dementsprechend verarbeitet
@@ -171,8 +150,6 @@ export default {
       };      
       
       // TODO: Username und Scenario auswahl schicken
-      this.socketClient.send("username");
-      this.socketClient.send("scenario" + this.scenario_id)
 
     },  
 
@@ -192,16 +169,18 @@ export default {
             console.log("Full Line Text:", lineText);
             console.log("Prompt Length:", this.promptLength);
             console.log("Extracted Input:", lineText.slice(this.promptLength));
-            this.respondToInput(lineText.slice(15));
+            this.respondToInput(lineText.slice(14));
 
         }
         
       } else if (char === 127) { // Backspace
-        if (this.terminal.buffer.active.cursorX > this.promptLength) {
-          this.terminal.write('\b \b');
+        if (this.userInput.length > 0) {
+            this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
+            this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
         }
-      } else {
-        this.terminal.write(data);
+    } else {
+        this.userInput += data; // Zeichen zum User-Input hinzufügen
+        this.terminal.write(data)
       }
     },
     respondToInput(input) {
@@ -227,6 +206,7 @@ export default {
       showModal(type) {
       if (type === 'hint' && this.stars > 0) {
         this.stars--;
+        this.socketClient.send(">clue")
       } else if (type === 'key' && this.stars > 0) {
         this.stars = Math.max(0, this.stars - 2); // Minimum 0 Sterne
       }
