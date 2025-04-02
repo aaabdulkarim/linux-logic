@@ -91,8 +91,8 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
 
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
-    if not validate_email(userModel.email, check_blacklist=False):
-        raise HTTPException(status_code=400, detail="Ungültige E-Mail")
+    # if not validate_email(userModel.email, check_blacklist=False):
+    #     raise HTTPException(status_code=400, detail="Ungültige E-Mail")
     
     existing_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
     if existing_user:
