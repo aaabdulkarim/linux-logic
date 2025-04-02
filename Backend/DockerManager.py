@@ -69,7 +69,7 @@ class DockerManager():
         scm.set_scenario_data("scenarios/"+frontendChoice)
         
 
-        print("Created container : " + container_name)
+        print("Created container : ", container_name)
         if container_name:
             self.userContainerConnections[userName + frontendChoice] = UserDockerConnection(scm, container_name)  
             print(f"Container gestartet: {container_name}")

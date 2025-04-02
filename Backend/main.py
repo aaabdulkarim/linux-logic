@@ -88,10 +88,11 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True, samesite="Strict")
     return {"message": "Login erfolgreich"}
 
+
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
-    if not validate_email(userModel.email, check_blacklist=False):
-        raise HTTPException(status_code=400, detail="Ungültige E-Mail")
+    # if not validate_email(userModel.email, check_blacklist=False):
+    #     raise HTTPException(status_code=400, detail="Ungültige E-Mail")
     
     existing_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
     if existing_user:
@@ -106,6 +107,7 @@ async def register(userModel: UserRead, session: SessionDep):
     session.commit()
     
     return {"message": "Registrierung erfolgreich"}
+ 
  
 @app.put("/edit")
 async def editPassword(request: Request, editBody : UserEdit, session: SessionDep):
@@ -391,14 +393,6 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
         return
 
 
-    # Den Progress Getten
-
-    progressTracking = ProgressBase()
-    progressTracking.scenario_id = int(frontend)
-    progressTracking.hints_verwendet = 0
-    progressTracking.loesungen_verwendet = 0
-
-
     # Starten des normalen Prozedere
     frontend_user_name = await mainsocket.receive_text()
 
@@ -438,18 +432,35 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                     try:
                         if ">clue" == frontend_cmd:
                             clues = "".join(scm.get_clue())
+                            cluesNr = scm.clues_used
+
                             await mainsocket.send_json({"hint": clues}) 
 
                         if ">solution" == frontend_cmd:
                             solution = "".join(scm.get_solution())
+                            solutionNr = scm.solutions_used
+                    
                             await mainsocket.send_json({"solution": solution}) 
 
                         if ">check" == frontend_cmd:
                             await container_socket.send("bash /app/checks_fun.sh")
                             data = await container_socket.recv()
                             scm.update_progress()
-                            # TODO: Bash Scripts verbessern und mit Save Progress darauf reagieren
-                            await mainsocket.send_json({"check": data}) 
+                            
+                            if scm.is_last_level():
+                                await mainsocket.send_json(
+                                    {
+                                        "hints_verwendet": scm.clues_used,
+                                        "loesungen_verwendet" : scm.solutions_used,
+                                    })
+                                await mainsocket.send_json({"description": f"{scm.clues_used} und {scm.solutions_used}"}) 
+
+                                
+
+
+                            else:
+                                # TODO: Bash Scripts verbessern und mit Save Progress darauf reagieren
+                                await mainsocket.send_json({"check": data}) 
                             print(data)
 
                         else:

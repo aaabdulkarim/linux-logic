@@ -71,3 +71,7 @@ class ScenarioTrack:
     def get_solution(self):
         self.solutions_used += 1
         return self.scenario_data[self.subscenario_progress].get("solution", "")
+
+
+    def is_last_level(self):
+        return self.scenario_number == len(self.scenario_data) - 1
