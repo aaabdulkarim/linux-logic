@@ -361,23 +361,61 @@ dm = DockerManager()
 
 
 @app.websocket("/ws")
-async def websocket(mainsocket: WebSocket):
+async def websocket(mainsocket: WebSocket, session: SessionDep):
     await mainsocket.accept()
 
-    session_id = str(uuid.uuid4())
+
+    # Cookie Parsing
+    cookie_header = mainsocket.headers.get("cookie")
+    cookies = {}
+
+    if cookie_header:
+        for cookie in cookie_header.split("; "):
+            key, value = cookie.split("=", 1)
+            cookies[key] = value
+
+    session_id = cookies.get("session_id")
+
+    if not session_id:
+        await mainsocket.send_json({"error": "Session cookie not found"})
+        await mainsocket.close()
+        return
+
+
+    # Verify user session
+    user = session.exec(select(UserDB).where(UserDB.session_id == session_id)).first()
+
+    if not user or user.session_expiry < datetime.now(timezone.utc):
+        await mainsocket.send_json({"error": "Invalid session. Please log in again."})
+        await mainsocket.close()
+        return
+
+
+    # Den Progress Getten
+
+    progressTracking = ProgressBase()
+    progressTracking.scenario_id = int(frontend)
+    progressTracking.hints_verwendet = 0
+    progressTracking.loesungen_verwendet = 0
+
+
+    # Starten des normalen Prozedere
     frontend_user_name = await mainsocket.receive_text()
 
     print(frontend_user_name)
 
-    frontend_container_choice = await mainsocket.receive_text()
-
+    frontend_scenario_id = await mainsocket.receive_text()
+    frontend_container_choice = "scenario" + str(frontend_scenario_id)
     print(frontend_container_choice)
+
 
     container_name = await dm.add_connection(
         userSessionId=session_id,
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
     )
+
+
 
     if container_name:
         scm = await dm.get_scm(frontend_user_name, frontend_container_choice)
@@ -400,24 +438,24 @@ async def websocket(mainsocket: WebSocket):
                     try:
                         if ">clue" == frontend_cmd:
                             clues = "".join(scm.get_clue())
-                            await mainsocket.send_json({"hint": clues}) # Changed to send_json
+                            await mainsocket.send_json({"hint": clues}) 
 
                         if ">solution" == frontend_cmd:
                             solution = "".join(scm.get_solution())
-                            await mainsocket.send_json({"solution": solution}) # Changed to send_json
+                            await mainsocket.send_json({"solution": solution}) 
 
                         if ">check" == frontend_cmd:
                             await container_socket.send("bash /app/checks_fun.sh")
                             data = await container_socket.recv()
                             scm.update_progress()
-                            # TODO: Bash Scripts verbessern
-                            await mainsocket.send_json({"check": data}) # Changed to send_json
+                            # TODO: Bash Scripts verbessern und mit Save Progress darauf reagieren
+                            await mainsocket.send_json({"check": data}) 
                             print(data)
 
                         else:
                             await container_socket.send(frontend_cmd)
                             data = await container_socket.recv()
-                            await mainsocket.send_json({"output": data}) # Changed to send_json
+                            await mainsocket.send_json({"output": data})
                             print(data)
 
                         desc = "".join(scm.get_desc())

@@ -121,7 +121,7 @@ export default {
         console.log("WebSocket connection established.");
         this.socketClient.send(this.profileName);
         const scenarioIdFromQuery = this.$route.query.scenario_id;
-        this.socketClient.send("scenario" + scenarioIdFromQuery)
+        this.socketClient.send(scenarioIdFromQuery)
         this.socketClient.send("")
 
       };
