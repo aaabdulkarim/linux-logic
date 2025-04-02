@@ -124,6 +124,7 @@ export default {
 .beschreibung {
   padding-top: 2rem;
   padding-left: 38px;
+  padding-right: 38px;
   background-color: white;
   justify-content: left;
   text-align: left;

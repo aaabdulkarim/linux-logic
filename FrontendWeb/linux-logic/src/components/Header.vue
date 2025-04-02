@@ -34,6 +34,7 @@ export default {
         });
       } catch (error) {
         if(error.status != 200){
+          // TODO: if at /about page stay there instead of going to login page and dont display star icon
           this.$router.push('/login');
         }
         console.error('Fehler beim Abrufen der Sternanzahl:', error);
@@ -41,6 +42,7 @@ export default {
     }
   },
   mounted() {
+    // if at /about page hide the logo and star icon implement a placeholder
     this.fetchStarCount();
   }
 };
