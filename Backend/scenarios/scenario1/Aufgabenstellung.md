@@ -29,11 +29,11 @@ Der König plant eine große Eröffnung für das neue Schloss und hat dich mit e
 
 ### 4. Das königliche Menü prüfen
 
-!!Gehe in die königliche Küche und erstelle eine Liste der Gerichte. Füge neue Speisen hinzu. Bearbeite dazu menue.txt mit nano und speichere die Änderungen.
+!!Gehe in die königliche Küche und erstelle eine Liste der Gerichte. Füge neue Speisen hinzu.
 
 \_- Gehe in das Verzeichnis der Küche mit `cd /home/Kueche`.
-\_- Öffne die Datei mit `nano menue.txt` und füge ein Gericht hinzu.
-\_- Speichere die Datei mit `STRG + X`, dann `Y` und `Enter`.
+\_- Öffne die Datei `menue.txt` mit `echo` und füge ein Gericht hinzu.
+\_- Stelle sicher, dass die Änderungen in der Datei gespeichert werden.
 
 ### 5. Die Musik vorbereiten
 
