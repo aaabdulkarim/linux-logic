@@ -403,10 +403,11 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
     print(frontend_container_choice)
 
 
-    cont_session = str(uuid.uuid1())
-    
+
+
+    print(f"No existing container found for {session_id}, creating new one...")
     container_name = await dm.add_connection(
-        userSessionId=cont_session,
+        userSessionId=session_id,  # Jetzt die session_id verwenden!
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
     )

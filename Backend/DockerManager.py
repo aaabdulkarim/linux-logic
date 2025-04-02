@@ -56,14 +56,18 @@ class DockerManager():
 
 
     async def reconnect(self, userSessionId, userName, frontendChoice):
-        user_container_connection = self.userContainerConnections.get(userName + frontendChoice)
-        if user_container_connection is not None:
-            return user_container_connection.container_name
+        return self.userContainerConnections.get(userName + frontendChoice)  # Return full connection object
 
 
 
 
     async def add_connection(self, userSessionId, userName, frontendChoice):
+        existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
+        
+        if existing_connection:
+            print(f"Reusing existing container: {existing_connection.container_name}")
+            return existing_connection.container_name  # Keep the same SCM object
+
         container_name  = await self.create_docker_container(userSessionId, userName, frontendChoice)
         scm = ScenarioTrack()
         scm.set_scenario_data("scenarios/"+frontendChoice)
