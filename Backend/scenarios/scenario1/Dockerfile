@@ -1,7 +1,6 @@
 FROM debian:latest
 
 WORKDIR /app
-
 # Install system dependencies and Python
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -50,13 +49,17 @@ COPY checks_fun_6.sh .
 COPY checks_fun_8.sh .
 COPY checks_fun_9.sh .
 
+RUN sed -i 's/\r$//' /app/checks_fun.sh
+
+
+RUN chown -R user:user /app /home
 # Set up Python virtual environment and install dependencies
 RUN python3 -m venv .venv && \
     . .venv/bin/activate && \
     pip install --no-cache-dir 'fastapi[all]'
 
 # Change ownership of the /app directory to the new user
-RUN chown -R user:user /app /home
+
 
 # Switch to the new user
 USER user
