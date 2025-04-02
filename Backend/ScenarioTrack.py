@@ -3,6 +3,8 @@ class ScenarioTrack:
         self.subscenario_progress = 0
         self.scenario_number = 0
         self.scenario_data = []
+        self.clues_used = 0
+        self.solutions_used = 0
 
     def update_progress(self):
         self.subscenario_progress += 1
@@ -60,10 +62,12 @@ class ScenarioTrack:
             print(scenario)
 
     def get_clue(self):
+        self.clues_used += 1
         return self.scenario_data[self.subscenario_progress].get("hint", "")
 
     def get_desc(self):
         return self.scenario_data[self.subscenario_progress].get("description", "")
     
     def get_solution(self):
+        self.solutions_used += 1
         return self.scenario_data[self.subscenario_progress].get("solution", "")
