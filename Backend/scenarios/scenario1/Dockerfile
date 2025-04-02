@@ -42,6 +42,13 @@ COPY healthcheck.py .
 COPY ICHBIN_SCENARIO1 .  
 COPY checks_fun.sh .  
 COPY checks_fun_1.sh .
+COPY checks_fun_2.sh .
+COPY checks_fun_3.sh .
+COPY checks_fun_4.sh .
+COPY checks_fun_5.sh .
+COPY checks_fun_6.sh .
+COPY checks_fun_8.sh .
+COPY checks_fun_9.sh .
 
 # Set up Python virtual environment and install dependencies
 RUN python3 -m venv .venv && \
