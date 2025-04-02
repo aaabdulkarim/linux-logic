@@ -79,4 +79,3 @@ class TerminalViewModel(terminalColors: TerminalColors = defaultTerminalColors) 
         }
     }
 }
-

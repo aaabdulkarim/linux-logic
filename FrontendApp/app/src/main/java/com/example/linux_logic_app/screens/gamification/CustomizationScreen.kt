@@ -583,4 +583,3 @@ fun ColorCustomizationOption(
         }
     }
 }
-
