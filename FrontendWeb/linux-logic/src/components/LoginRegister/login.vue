@@ -53,7 +53,6 @@ export default {
       email: '',
       password: '',
       stayLoggedIn: false,
-      base_url: "http://localhost:8000",
       response: false,
     };
   },

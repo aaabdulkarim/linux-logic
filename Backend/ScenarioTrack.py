@@ -3,6 +3,8 @@ class ScenarioTrack:
         self.subscenario_progress = 0
         self.scenario_number = 0
         self.scenario_data = []
+        self.clues_used = 0
+        self.solutions_used = 0
 
     def update_progress(self):
         self.subscenario_progress += 1
@@ -26,6 +28,8 @@ class ScenarioTrack:
                 if l.startswith("\_"):
                     if "`" in l:
                         current_solution = l.split("`", 2)[1]
+                        print(current_solution)
+                        l = l.replace(current_solution, "***redacted***")
                     current_hint += l.lstrip("\_")
                     prev_row_hint = True
                     prev_row_desc = False
@@ -58,10 +62,16 @@ class ScenarioTrack:
             print(scenario)
 
     def get_clue(self):
+        self.clues_used += 1
         return self.scenario_data[self.subscenario_progress].get("hint", "")
 
     def get_desc(self):
         return self.scenario_data[self.subscenario_progress].get("description", "")
     
     def get_solution(self):
+        self.solutions_used += 1
         return self.scenario_data[self.subscenario_progress].get("solution", "")
+
+
+    def is_last_level(self):
+        return self.scenario_number == len(self.scenario_data) - 1

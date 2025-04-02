@@ -88,10 +88,11 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True, samesite="Strict")
     return {"message": "Login erfolgreich"}
 
+
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
-    if not validate_email(userModel.email, check_blacklist=False):
-        raise HTTPException(status_code=400, detail="Ungültige E-Mail")
+    # if not validate_email(userModel.email, check_blacklist=False):
+    #     raise HTTPException(status_code=400, detail="Ungültige E-Mail")
     
     existing_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
     if existing_user:
@@ -106,6 +107,7 @@ async def register(userModel: UserRead, session: SessionDep):
     session.commit()
     
     return {"message": "Registrierung erfolgreich"}
+ 
  
 @app.put("/edit")
 async def editPassword(request: Request, editBody : UserEdit, session: SessionDep):
@@ -361,18 +363,45 @@ dm = DockerManager()
 
 
 @app.websocket("/ws")
-async def websocket(mainsocket: WebSocket):
+async def websocket(mainsocket: WebSocket, session: SessionDep):
     await mainsocket.accept()
-    
 
-    session_id = str(uuid.uuid4())
-    frontend_user_name = await mainsocket.receive_text()    
-    
+
+    # Cookie Parsing
+    cookie_header = mainsocket.headers.get("cookie")
+    cookies = {}
+
+    if cookie_header:
+        for cookie in cookie_header.split("; "):
+            key, value = cookie.split("=", 1)
+            cookies[key] = value
+
+    session_id = cookies.get("session_id")
+
+    if not session_id:
+        await mainsocket.send_json({"error": "Session cookie not found"})
+        await mainsocket.close()
+        return
+
+
+    # Verify user session
+    user = session.exec(select(UserDB).where(UserDB.session_id == session_id)).first()
+
+    if not user or user.session_expiry < datetime.now(timezone.utc):
+        await mainsocket.send_json({"error": "Invalid session. Please log in again."})
+        await mainsocket.close()
+        return
+
+
+    # Starten des normalen Prozedere
+    frontend_user_name = await mainsocket.receive_text()
+
     print(frontend_user_name)
-    
-    frontend_container_choice = await mainsocket.receive_text()
-    
+
+    frontend_scenario_id = await mainsocket.receive_text()
+    frontend_container_choice = "scenario" + str(frontend_scenario_id)
     print(frontend_container_choice)
+
 
     container_name = await dm.add_connection(
         userSessionId=session_id,
@@ -380,60 +409,69 @@ async def websocket(mainsocket: WebSocket):
         frontendChoice=frontend_container_choice
     )
 
-    # TODO: Graceful Closure
+
 
     if container_name:
-
         scm = await dm.get_scm(frontend_user_name, frontend_container_choice)
 
-        # TODO: Nach 1h Inaktivität automatisch schließen 
         while await dm.get_container_health(container_name) != "healthy":
             print(await dm.get_container_health(container_name))
             await asyncio.sleep(2)
-            
-        await mainsocket.send_text("Container Startup successful")
+
+        await mainsocket.send_json({"output": "Container Startup successful"}) # Changed to send_json
         container_socket_port = await dm.get_dynamic_port(container_name)
         print("Das isses: ", container_socket_port)
 
-        # Connection mit dem docker socket mit dem modul websockets
         container_socket_url = f"ws://127.0.0.1:{container_socket_port}/dockersocket"
         try:
             async with websockets.connect(container_socket_url) as container_socket:
                 print("connected to external")
                 while True:
-
-                    # Interaktion mit Frontend Socket
                     frontend_cmd = await mainsocket.receive_text()
 
                     try:
                         if ">clue" == frontend_cmd:
-                            # TODO: SCM Korrekt mit User Connection identifizieren 
-                            # TODO: Update Progress wird nur bei einem Check ausgeführt
                             clues = "".join(scm.get_clue())
+                            cluesNr = scm.clues_used
 
-                            await mainsocket.send_text(clues)
-                        
+                            await mainsocket.send_json({"hint": clues}) 
+
                         if ">solution" == frontend_cmd:
                             solution = "".join(scm.get_solution())
-                            await mainsocket.send_text(solution)
-
-
+                            solutionNr = scm.solutions_used
+                    
+                            await mainsocket.send_json({"solution": solution}) 
 
                         if ">check" == frontend_cmd:
                             await container_socket.send("bash /app/checks_fun.sh")
                             data = await container_socket.recv()
-                            await mainsocket.send_text(data)
-                            print(data)
-
+                            scm.update_progress()
                             
+                            if scm.is_last_level():
+                                await mainsocket.send_json(
+                                    {
+                                        "hints_verwendet": scm.clues_used,
+                                        "loesungen_verwendet" : scm.solutions_used,
+                                    })
+                                await mainsocket.send_json({"description": f"{scm.clues_used} und {scm.solutions_used}"}) 
+
+                                
+
+
+                            else:
+                                # TODO: Bash Scripts verbessern und mit Save Progress darauf reagieren
+                                await mainsocket.send_json({"check": data}) 
+                            print(data)
 
                         else:
                             await container_socket.send(frontend_cmd)
                             data = await container_socket.recv()
-                            await mainsocket.send_text(data)
+                            await mainsocket.send_json({"output": data})
                             print(data)
 
-                
+                        desc = "".join(scm.get_desc())
+                        await mainsocket.send_json({"description": desc}) 
+                    
                     except WebSocketDisconnect:
                         print("WebSocket client disconnected")
                         break
@@ -443,16 +481,10 @@ async def websocket(mainsocket: WebSocket):
 
         finally:
             await mainsocket.close()
-            # if container:
-            #     container.stop()
-            #     container.remove()
-            #     print("WebSocket stopped and container removed")
-        
             await dm.close(container_name)
 
     else:
         print("Help")
-
     
 
 

@@ -5,7 +5,7 @@
   <div class="all grid">
     <div class="container">
       <div class="beschreibung">
-        <h3>Kapitel I: Mittelalter</h3>
+        <h3>Mittelalter</h3>
         <p>
           Der König plant eine große Eröffnung für das neue Schloss und hat dich mit
           einfachen, aber wichtigen Aufgaben beauftragt, um sicherzustellen, dass alles
@@ -60,11 +60,11 @@ export default {
   data() {
     return {
       levels: [
-        { id: 1, name: "Level I", difficulty: "Einfach", description: "Grundlagen des Navigierens im Linux-Terminal." },
-        { id: 2, name: "Level II", difficulty: "Mittel", description: "Dateien und Verzeichnisse erstellen und verwalten." },
-        { id: 3, name: "Level III", difficulty: "Schwer", description: "Systemprozesse überwachen und konfigurieren." },
-        { id: 4, name: "Level IV", difficulty: "Sehr schwer", description: "Benutzer und Gruppen verwalten." },
-        { id: 5, name: "Level V", difficulty: "Sehr schwer", description: "Netzwerkverbindungen konfigurieren." }
+        { id: 1, name: "Kapitel I", difficulty: "Einfach", description: "Grundlagen des Navigierens im Linux-Terminal." },
+        { id: 2, name: "Kapitel II", difficulty: "Mittel", description: "Dateien und Verzeichnisse erstellen und verwalten." },
+        { id: 3, name: "Kapitel III", difficulty: "Schwer", description: "Systemprozesse überwachen und konfigurieren." },
+        { id: 4, name: "Kapitel IV", difficulty: "Sehr schwer", description: "Benutzer und Gruppen verwalten." },
+        { id: 5, name: "Kapitel V", difficulty: "Sehr schwer", description: "Netzwerkverbindungen konfigurieren." }
       ],
       currentCourse: 1, // Standardwert, wird vom API-Aufruf überschrieben
     };
@@ -124,6 +124,7 @@ export default {
 .beschreibung {
   padding-top: 2rem;
   padding-left: 38px;
+  padding-right: 38px;
   background-color: white;
   justify-content: left;
   text-align: left;
