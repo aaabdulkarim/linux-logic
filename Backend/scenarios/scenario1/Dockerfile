@@ -49,8 +49,8 @@ RUN python3 -m venv .venv && \
     pip install --no-cache-dir 'fastapi[all]'
 
 # Change ownership of the /app directory to the new user
-RUN chown -R user:user /app
-RUN chwon -R user:user /home
+RUN chown -R user:user /app /home
+
 # Switch to the new user
 USER user
 

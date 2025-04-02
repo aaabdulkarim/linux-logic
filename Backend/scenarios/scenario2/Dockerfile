@@ -39,7 +39,7 @@ COPY checks_fun.sh .
 RUN bash -c "python3 -m venv .venv && source .venv/bin/activate && pip install 'fastapi[all]'"
 
 # Setze den Besitzer der Dateien auf den neuen Benutzer
-RUN chown -R user:user /app
+RUN chown -R user:user /app /home
 
 # Wechsel zum Benutzer 'user'  
 USER user
