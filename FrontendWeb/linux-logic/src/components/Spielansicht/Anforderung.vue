@@ -2,7 +2,7 @@
   <div class="all grid " :style="backgroundStyle">
     <div class="container">
       <div class="header ">
-        <h1>Level {{ scenario_id }}</h1>
+        <h1>Kapitel {{ convert(num()) }}</h1>
       </div>
       <div class="content">
       </div>
@@ -26,8 +26,22 @@ export default {
   },
   data() {
     return {
-      scenario_id: null,
+      scenario_id: 0,
     };
+  },
+  methods: {
+    num() {
+      return this.scenario_id;
+    },
+    convert(num) {
+      if (num < 1) { return ""; }
+      if (num >= 40) { return "XL" + this.convert(num - 40); }
+      if (num >= 10) { return "X" + this.convert(num - 10); }
+      if (num >= 9) { return "IX" + this.convert(num - 9); }
+      if (num >= 5) { return "V" + this.convert(num - 5); }
+      if (num >= 4) { return "IV" + this.convert(num - 4); }
+      if (num >= 1) { return "I" + this.convert(num - 1); }
+    }
   },
   computed: {
     backgroundStyle() {
@@ -37,17 +51,19 @@ export default {
         justifyContent: 'center',
         alignItems: 'center',
       };
-    }
+    },
+   
+    
   },
   mounted() {
     // Abrufen der scenario_id aus den Query-Parametern
     const scenarioIdFromQuery = this.$route.query.scenario_id;
-    
+
     // TODO: Check if user is Really authorized for this level 
     api.get('/progress')
       .then(response => {
         const data = response.data;
-        if (scenarioIdFromQuery > data.nextCourse){
+        if (scenarioIdFromQuery > data.nextCourse) {
           alert("Scenario noch nicht verfügbar, Stelle erst alle notwendigen Aufgaben fertig");
           this.$router.push("/auswahl")
 
@@ -59,13 +75,13 @@ export default {
 
     if (scenarioIdFromQuery) {
       this.scenario_id = parseInt(scenarioIdFromQuery); // Konvertieren in eine Zahl
-      if(scenarioIdFromQuery > 5){
+      if (scenarioIdFromQuery > 5) {
         alert("Scenario ID nicht gefunden");
         this.$router.push("/auswahl")
 
       }
     } else {
-      
+
       alert("Keine Scenario ID im URL gefunden");
       this.$router.push("/auswahl")
     }

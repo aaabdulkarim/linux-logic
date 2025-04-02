@@ -1,7 +1,7 @@
 <template>
   <div class="content">
 
-    <h2>Beschreibung</h2>
+    <h2>Level {{ aufgabenId }}</h2>
     <p>{{ aufgabe }}
     </p>
 
@@ -25,7 +25,7 @@
       <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="showModal('hint')"></i>
       <i class="pi pi-key icon" title="Lösung anzeigen" @click="showModal('key')"></i>
       <!-- TODO: -->
-      <i class="pi pi-check icon" title="Aufgabe abgeben" @click="submitLevel"></i>
+      <i class="pi pi-angle-right icon" title="Aufgabe abgeben" @click="submitLevel"></i>
     </div>
   </div>
   <div v-if="showRating" class="rating-popup">
@@ -71,6 +71,7 @@ export default {
       stars: 3,
 
       aufgabe: "",
+      aufgabenId: 0,
 
       profileName: "",
     };
