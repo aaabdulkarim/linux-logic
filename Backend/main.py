@@ -403,8 +403,10 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
     print(frontend_container_choice)
 
 
+    cont_session = str(uuid.uuid1())
+    
     container_name = await dm.add_connection(
-        userSessionId=session_id,
+        userSessionId=cont_session,
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
     )
@@ -432,24 +434,26 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                     try:
                         if ">clue" == frontend_cmd:
                             clues = "".join(scm.get_clue())
-                            cluesNr = scm.clues_used
 
                             await mainsocket.send_json({"hint": clues}) 
 
                         if ">solution" == frontend_cmd:
                             solution = "".join(scm.get_solution())
-                            solutionNr = scm.solutions_used
                     
                             await mainsocket.send_json({"solution": solution}) 
 
                         if ">check" == frontend_cmd:
                             await container_socket.send("bash /app/checks_fun.sh")
                             data = await container_socket.recv()
+
+                            # TODO: if check positiv update progress
                             scm.update_progress()
                             
+                            print(scm.is_last_level())
                             if scm.is_last_level():
                                 await mainsocket.send_json(
                                     {
+                                        "last_level" : True,
                                         "hints_verwendet": scm.clues_used,
                                         "loesungen_verwendet" : scm.solutions_used,
                                     })
