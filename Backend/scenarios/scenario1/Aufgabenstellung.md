@@ -8,30 +8,30 @@ Der König plant eine große Eröffnung für das neue Schloss und hat dich mit e
 
 ### 1. Den roten Teppich ausrollen
 
-!!Begib dich zum Ort der Veranstaltungsvorbereitung mithilfe von cd "Name des Verzeichnisses" und stelle sicher, dass der rote Teppich für den Empfang bereitliegt. (Mit ls sieht man alle Verzeichnisse)
+!!Gehe zum Veranstaltungsordner mit cd "/home/Veranstaltung" und lege den roten Teppich aus. (Erstelle die Datei roter_teppich.txt)
 
-\_- Navigiere zum Veranstaltungsverzeichnis mit `cd /home/Veranstaltung`.
-\_- Erstelle eine Datei für den roten Teppich mit `touch roter_teppich.txt`.
-\_- Überprüfe mit `ls`, ob die Datei korrekt erstellt wurde.
+\_- Wechsle in den Veranstaltungsordner mit cd /home/Veranstaltung.
+\_- Erstelle die Datei für den roten Teppich mit touch roter_teppich.txt.
+\_- Prüfe mit ls, ob die Datei vorhanden ist.
 
 ### 2. Die Einladungen überprüfen
 
-!!Gehe zum Bereich der Einladungen und überprüfe, ob die Gästeliste vollständig ist.
+!!Gehe zum Verzeichniss "Einladungen" und prüfe, ob die Gästeliste komplett ist.
 
 \_- Wechsle ins Einladungsverzeichnis mit `cd /home/Einladungen`.
 \_- Zeige die vorhandenen Dateien an mit `ls`.
-\_- Stelle sicher, dass die Datei `gaesteliste.txt` vorhanden ist.
+\_- Überprüfe, ob die Datei gaesteliste.txt existiert.
 
 ### 3. Das königliche Banner aufhängen
 
-!!Finde das königliche Banner in der Dekorationssammlung und bringe es am Veranstaltungsort an. Mit cp kannst du die Sammlung kopieren.
+!!Hole das königliche Banner aus der Dekorationssammlung und bringe es zum Veranstaltungsort. Du kannst es mit cp kopieren.
 
 \_- Wechsle in das Dekorationsverzeichnis mit `cd /home/Dekoration`.
 \_- Kopiere die Datei `banner.txt` in das Veranstaltungsverzeichnis mit `cp banner.txt /home/Veranstaltung/`.
 
 ### 4. Das königliche Menü prüfen
 
-!!Betrete die königliche Küche und erstelle eine Liste der geplanten Gerichte. Falls erforderlich, füge neue Speisen hinzu. Dafür gehe in die /Kueche und bearbeite das menue.txt mithilfe von nano. Anschließlich speichere alles ab.
+!!Gehe in die königliche Küche und erstelle eine Liste der Gerichte. Füge neue Speisen hinzu. Bearbeite dazu menue.txt mit nano und speichere die Änderungen.
 
 \_- Gehe in das Verzeichnis der Küche mit `cd /home/Kueche`.
 \_- Öffne die Datei mit `nano menue.txt` und füge ein Gericht hinzu.
@@ -66,4 +66,5 @@ Der König plant eine große Eröffnung für das neue Schloss und hat dich mit e
 \_- Wechsle ins Uhrenverzeichnis mit `cd /home/Uhr`.
 \_- Stelle die Uhrzeit in der Datei `zeit.txt` mit `echo "12:00" > zeit.txt` ein.
 \_- Überprüfe den Inhalt der Datei mit `cat zeit.txt`.
+
 # EOF

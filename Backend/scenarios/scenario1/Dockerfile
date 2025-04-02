@@ -30,7 +30,7 @@ RUN mkdir -p /home/Veranstaltung \
     /home/Uhr
 
 # Create the required files
-RUN touch /home/Einladungen/gaesteliste.txt \
+RUN touch /home/Einladungen/gaesteliste.txt && echo "Gast1" >  /home/Einladungen/gaesteliste.txt\
     /home/Dekoration/banner.txt \
     /home/Kueche/menue.txt \
     /home/Musik/musikliste.txt \
@@ -41,6 +41,7 @@ COPY dockersocket.py .
 COPY healthcheck.py .  
 COPY ICHBIN_SCENARIO1 .  
 COPY checks_fun.sh .  
+COPY checks_fun_1.sh .
 
 # Set up Python virtual environment and install dependencies
 RUN python3 -m venv .venv && \
@@ -49,7 +50,7 @@ RUN python3 -m venv .venv && \
 
 # Change ownership of the /app directory to the new user
 RUN chown -R user:user /app
-
+RUN chwon -R user:user /home
 # Switch to the new user
 USER user
 

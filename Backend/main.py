@@ -443,7 +443,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             await mainsocket.send_json({"solution": solution}) 
 
                         if ">check" == frontend_cmd:
-                            await container_socket.send("bash /app/checks_fun.sh")
+                            await container_socket.send("bash /app/checks_fun_1.sh")
                             data = await container_socket.recv()
 
                             # TODO: if check positiv update progress
