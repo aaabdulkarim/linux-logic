@@ -330,4 +330,3 @@ fun CourseCard(course: Scenario, onSelectClick: () -> Unit) {
         }
     }
 }
-

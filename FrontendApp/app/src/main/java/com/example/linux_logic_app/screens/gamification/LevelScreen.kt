@@ -446,4 +446,3 @@ fun CustomSnackbar(data: SnackbarData) {
         }
     }
 }
-
