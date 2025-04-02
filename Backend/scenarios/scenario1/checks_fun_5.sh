@@ -6,10 +6,15 @@ echo "Überprüfung: Musikabteilung..."
 
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
-    local file="$1"
+  local file="$1"
     if [ -f "$file" ]; then
-        echo "✔ Datei existiert: $file"
-        echo "true"
+        if [ -s "$file" ]; then
+            echo "✔ Datei existiert und enthält Inhalt: $file"
+            echo "true"
+        else
+            echo "✖ Datei existiert, aber ist leer: $file"
+            echo "false"
+        fi
     else
         echo "✖ Datei fehlt: $file"
         echo "false"

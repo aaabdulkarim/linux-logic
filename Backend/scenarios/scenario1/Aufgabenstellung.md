@@ -14,11 +14,13 @@ Der König plant eine große Eröffnung für das neue Schloss und hat dich mit e
 \_- Erstelle die Datei für den roten Teppich mit touch roter_teppich.txt.
 \_- Prüfe mit ls, ob die Datei vorhanden ist.
 
-### 2. Die Einladungen überprüfen
+### 2. Die Einladungen schreiben
 
-!!Gehe zum Verzeichnis „Einladungen“ und prüfe, ob die Gästeliste vollständig ist. Wechsel dazu zunächst in das Verzeichnis „Einladungen“ mit dem Befehl Danach kannst du mit dem Befehl ls alle Dateien im Verzeichnis auflisten und sicherstellen, dass die Datei „gaesteliste.txt“ vorhanden ist. Wenn die Datei existiert, füge den Text „ich“ am Ende der Datei hinzu, mit dem Befehl echo
-\_- ls /home
-\_- echo "ich" >> gaesteliste.txt
+!!Gehe zum Verzeichnis „Einladungen“ und prüfe, ob die Gästeliste vollständig ist. Wechsel dazu zunächst in das Verzeichnis „Einladungen“. Wenn die Datei existiert, lade einen Ritter ein, indem du eine neue Datei ritter.txt im gleichen Verzeichnis erstellst.
+
+\_- Wechsel in das Einladungsverzeichnis mit cd /home/Einladungen
+\_- Zeige alle Dateien im Verzeichnis an mit ls /home/Einladungen
+\_- Erstelle eine Datei ritter.txt, um einen Ritter zur Gästeliste hinzuzufügen
 
 ### 3. Das königliche Banner aufhängen
 

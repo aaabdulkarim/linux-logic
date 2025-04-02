@@ -2,7 +2,7 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-echo "Überprüfung: Gästeliste..."
+echo "Überprüfung: Einladungen..."
 
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
@@ -16,37 +16,19 @@ check_file() {
     fi
 }
 
-# Funktion zur Überprüfung, ob das Verzeichnis existiert
-check_directory() {
-    local dir="$1"
-    if [ -d "$dir" ]; then
-        echo "✔ Verzeichnis existiert: $dir"
-        echo "true"
-    else
-        echo "✖ Verzeichnis fehlt: $dir"
-        echo "false"
-    fi
-}
-
-# Funktion zur Überprüfung der Gästeliste
-check_gaesteliste() {
-    # Verzeichnis wechseln
+# Gehe ins Verzeichnis der Einladungen und lade einen Ritter ein
+check_guest_list() {
+    # Wechsel ins Einladungsverzeichnis
     cd /home/Einladungen
     
-    # Überprüfen, ob die Datei "gaesteliste.txt" existiert
-    check_file "/home/Einladungen/gaesteliste.txt"
+    # Zeige alle Dateien im Verzeichnis an
+    ls /home/Einladungen
     
-    # Prüfen, ob der Text "ich" bereits in der Datei vorhanden ist
-    if ! awk '/ich/ {found=1} END {if(found) exit 0; else exit 1}' /home/Einladungen/gaesteliste.txt; then
-        # Text "ich" wird zur Datei hinzugefügt, wenn er noch nicht vorhanden ist
-        echo "Text 'ich' wird zur Datei gaesteliste.txt hinzugefügt..."
-        echo "ich" >> /home/Einladungen/gaesteliste.txt
-    else
-        echo "Der Text 'ich' ist bereits in der Datei."
-    fi
+    # Überprüfen, ob die Gästeliste (gaesteliste.txt) existiert
+    check_file "/home/Einladungen/ritter.txt"
 }
 
 # Hauptüberprüfung
-echo "Starte Überprüfung der Gästeliste..."
-check_gaesteliste
+echo "Starte Überprüfung der Einladungen..."
+check_guest_list
 echo "Überprüfung abgeschlossen."
