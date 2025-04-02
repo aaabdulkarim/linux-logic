@@ -16,11 +16,9 @@ Der König plant eine große Eröffnung für das neue Schloss und hat dich mit e
 
 ### 2. Die Einladungen überprüfen
 
-!!Gehe zum Verzeichniss "Einladungen" und prüfe, ob die Gästeliste komplett ist.
-
-\_- Wechsle ins Einladungsverzeichnis mit `cd /home/Einladungen`.
-\_- Zeige die vorhandenen Dateien an mit `ls`.
-\_- Überprüfe, ob die Datei gaesteliste.txt existiert.
+!!Gehe zum Verzeichnis „Einladungen“ und prüfe, ob die Gästeliste vollständig ist. Wechsel dazu zunächst in das Verzeichnis „Einladungen“ mit dem Befehl Danach kannst du mit dem Befehl ls alle Dateien im Verzeichnis auflisten und sicherstellen, dass die Datei „gaesteliste.txt“ vorhanden ist. Wenn die Datei existiert, füge den Text „ich“ am Ende der Datei hinzu, mit dem Befehl echo
+\_- ls /home
+\_- echo "ich" >> gaesteliste.txt
 
 ### 3. Das königliche Banner aufhängen
 
