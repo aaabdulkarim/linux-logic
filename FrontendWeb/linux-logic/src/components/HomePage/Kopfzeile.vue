@@ -36,7 +36,7 @@ export default {
 
 <style scoped>
   .all {
-    height: 102vh;
+    height: 104vh;
     color: white;
     background-color: #569191;
   }
