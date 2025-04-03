@@ -32,9 +32,9 @@
     <h2>Level abgeschlossen!</h2>
     <h5>Deine Bewertung</h5>
     <div class="stars">
-      <i class="pi pi-star" :class="{ 'pi-star-filled': rating >= 1 }"></i>
-      <i class="pi pi-star" :class="{ 'pi-star-filled': rating >= 2 }"></i>
-      <i class="pi pi-star" :class="{ 'pi-star-filled': rating >= 3 }"></i>
+      <i class="pi" :class="rating >= 1 ? 'pi-star-fill' : 'pi-star'"></i>
+      <i class="pi" :class="rating >= 2 ? 'pi-star-fill' : 'pi-star'"></i>
+      <i class="pi" :class="rating >= 3 ? 'pi-star-fill' : 'pi-star'"></i>
     </div>
     <Button label="Nächstes Level" @click="nextLevel" severity="success" class="w-full" />
   </div>
