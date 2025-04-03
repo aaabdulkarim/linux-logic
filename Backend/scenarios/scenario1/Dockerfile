@@ -26,7 +26,11 @@ RUN mkdir -p /home/Veranstaltung \
     /home/Musik \
     /home/Beleuchtung \
     /home/Reinigung \
-    /home/Uhr
+    /home/Uhr 
+
+RUN chmod -R 777 /home/*
+
+
 
 # Create the required files
 RUN touch /home/Einladungen/gaesteliste.txt && echo "Gast1" >  /home/Einladungen/gaesteliste.txt\
@@ -34,6 +38,8 @@ RUN touch /home/Einladungen/gaesteliste.txt && echo "Gast1" >  /home/Einladungen
     /home/Kueche/menue.txt \
     /home/Musik/musikliste.txt \
     /home/Uhr/zeit.txt && echo "11:00" > /home/Uhr/zeit.txt
+
+RUN touch /home/Dekoration/banner.txt
 
 # Copy the required scripts
 COPY dockersocket.py .  
@@ -45,7 +51,6 @@ COPY checks_fun_2.sh .
 COPY checks_fun_3.sh .
 COPY checks_fun_4.sh .
 COPY checks_fun_5.sh .
-COPY checks_fun_6.sh .
 COPY checks_fun_7.sh .
 COPY checks_fun_8.sh .
 
@@ -55,7 +60,6 @@ RUN sed -i 's/\r$//' /app/checks_fun_2.sh
 RUN sed -i 's/\r$//' /app/checks_fun_3.sh
 RUN sed -i 's/\r$//' /app/checks_fun_4.sh
 RUN sed -i 's/\r$//' /app/checks_fun_5.sh
-RUN sed -i 's/\r$//' /app/checks_fun_6.sh
 RUN sed -i 's/\r$//' /app/checks_fun_7.sh
 RUN sed -i 's/\r$//' /app/checks_fun_8.sh
 
@@ -65,10 +69,12 @@ RUN python3 -m venv .venv && \
     . .venv/bin/activate && \
     pip install --no-cache-dir 'fastapi[all]'
 
-
+    
 
 # Switch to the new user
 USER user
+
+
 
 # Start the application
 CMD ["/bin/bash", "-c", ". .venv/bin/activate && exec uvicorn dockersocket:app --host 0.0.0.0 --port 1000"]

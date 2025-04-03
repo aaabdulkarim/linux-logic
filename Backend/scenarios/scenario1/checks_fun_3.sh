@@ -19,12 +19,9 @@ copy_banner() {
     cd /home/Dekoration
     
     # Überprüfen, ob die Datei banner.txt existiert
-    check_file "/home/Dekoration/banner.txt"
+    check_file "/home/Veranstaltung/banner.txt"
     
-    # Kopiere die Datei in das Veranstaltungsverzeichnis
-    if [ -f "/home/Dekoration/banner.txt" ]; then
-        echo "Das Banner wurde nach /home/Veranstaltung kopiert."
-    fi
+    
 }
 
 # Hauptüberprüfung

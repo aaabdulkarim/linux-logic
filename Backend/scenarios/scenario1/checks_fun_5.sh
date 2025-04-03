@@ -5,27 +5,34 @@ set -e  # Beende das Skript bei Fehlern
 
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
-  local file="$1"
+    local file="$1"
     if [ -f "$file" ]; then
-        if [ -s "$file" ]; then
-            echo "true"
-        else
-            echo "false"
-        fi
+        echo "true"
     else
         echo "false"
     fi
 }
 
-# Wechsel ins Musikverzeichnis und überprüfe, ob Musikdatei existiert
-check_musik() {
-    # Wechsel ins Musikverzeichnis
-    cd /home/Musik
+# Funktion zur Überprüfung, ob das Verzeichnis existiert
+check_directory() {
+    local dir="$1"
+    if [ -d "$dir" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+# Funktion zur Überprüfung und Erstellung der Datei "licht1.txt"
+check_beleuchtung() {
+    # Wechsel ins Beleuchtungsverzeichnis
+    cd /home/Beleuchtung
+    
+    # Überprüfen, ob die Datei "licht1.txt" existiert
+    check_file "/home/Beleuchtung/licht1.txt"
     
     
-    # Überprüfen, ob eine Musikdatei (z.B. musikliste.txt) existiert
-    check_file "/home/Musik/musikliste.txt"
 }
 
 # Hauptüberprüfung
-check_musik
+check_beleuchtung

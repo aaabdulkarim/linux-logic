@@ -149,48 +149,47 @@ export default {
         try {
           const message = JSON.parse(event.data);
           console.log(message)
+
           if (message.output) {
-            const lines = message.output.split("\n");
-              lines.forEach((line) => {
-                this.terminal.write(`\r\n${line}`);
-              });
+            const lines = message.output.trim().split("\n"); // Trim entfernt leere Zeilen
+            lines.forEach((line) => {
+              this.terminal.write(`\r\n${line}`);
+            });
+          }
 
-          } else if (message.hint) {
-            this.terminal.write(`\r\nHint: ${message.hint}`);
-          } else if (message.solution) {
-            this.terminal.write(`\r\nSolution: ${message.solution}`);
-          } else if (message.description) {
-            this.aufgabe = message.description
-          } else if (message.check) {
+          if (message.check) {
             this.terminal.write(`\r\nCheck Result: ${message.check}`);
-          } else if (message.levelNr) {
-            this.aufgabenId = message.levelNr
-          } else if (message.last_level) {
+          }
+          if (message.hint) {
+            this.terminal.write(`\r\nHint: ${message.hint}`);
+          }
+          if (message.solution) {
+            this.terminal.write(`\r\nSolution: ${message.solution}`);
+          }
 
-            // Speicherung an die Datenbank
-            api.post("/progress", {
-              scenario_id: this.scenarioId,
-              hints_verwendet: parseInt(message.hints_verwendet),
-              loesungen_verwendet: parseInt(message.loesungen_verwendet)
-            }).then(response => {
-              const erreichbareSterne = 3;
-              if (message.hints_verwendet > 0) {
-                erreichbareSterne = 2
-              }
-              if (message.loesungen_verwendet > 0) {
-                erreichbareSterne = 1
-              }
-              this.rating = erreichbareSterne
-            })
+          if (message.description) {
+            this.aufgabe = message.description;
+          }
 
+          if (message.levelNr) {
+            this.aufgabenId = message.levelNr;
+          }
+
+          // Falls das letzte Level erreicht wurde, Bewertung anzeigen
+          if (message.last_level) {
             this.showRatingPopup();
           }
-          this.writePrompt();
+
+          // Immer nur einen Prompt setzen, wenn nicht schon einer existiert
+          setTimeout(() => this.writePrompt(), 50);
+
         } catch (error) {
           console.error("Error parsing JSON:", error);
-          this.terminal.write(`\r\n${event.data}`); // Fallback to plain text
+          this.terminal.write(`\r\n${event.data}`); // Fallback zu einfachem Text
+          this.writePrompt();
         }
       };
+
 
       this.socketClient.onerror = (error) => {
         console.error("WebSocket Error:", error);
@@ -212,7 +211,7 @@ export default {
     writePrompt() {
       const lastLine = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY);
       if (!lastLine || !lastLine.translateToString().includes("logic@linux:~$")) {
-          this.terminal.write("\r\nlogic@linux:~$ ");
+        this.terminal.write("\r\nlogic@linux:~$ ");
       }
 
 

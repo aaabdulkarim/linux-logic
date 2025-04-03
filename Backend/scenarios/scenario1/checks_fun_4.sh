@@ -2,31 +2,28 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-
-# Funktion zur Überprüfung, ob eine Datei existiert und Inhalt hat
+# Funktion zur Überprüfung, ob die Datei richtig bearbeitet wurde
 check_file() {
     local file="$1"
-    if [ -f "$file" ]; then
-        if [ -s "$file" ]; then
-            echo "true"
-        else
-            echo "false"
-        fi
+    local content="Neues Gericht"
+    
+    if [ -f "$file" ] && grep -Fxq "$content" "$file"; then
+        echo true
+
     else
-        echo "false"
+        echo false
     fi
 }
 
-# Gehe ins Verzeichnis der Küche und füge ein neues Gericht hinzu
-add_dish() {
+check_dish() {
     # Wechsel ins Küchenverzeichnis
-    cd /home/Kueche
+    cd /home/Kueche || { echo "Verzeichnis /home/Kueche existiert nicht!"; exit 1; }
     
-    # Überprüfen, ob die Datei menue.txt existiert und Inhalt hat
-    check_file "/home/Kueche/menue.txt"
+    local menu_file="menue.txt"
     
-    fi
+    # Überprüfen, ob die Datei richtig bearbeitet wurde
+    check_file "$menu_file"
 }
 
 # Hauptüberprüfung
-add_dish
+check_dish

@@ -24,7 +24,7 @@ Der König plant eine große Eröffnung für das neue Schloss. Deine Aufgabe ist
 
 ### 4. Das königliche Menü prüfen
 
-!! Füge ein neues Gericht namens "Neues Gericht" zur Speisekarte hinzu.
+!! Füge ein neues Gericht zur Speisekarte hinzu.
 \_- Wechsle in die Küche und bearbeite die Datei menue.txt.
 `cd /home/Kueche && echo "Neues Gericht" >> menue.txt`
 
@@ -34,5 +34,17 @@ Der König plant eine große Eröffnung für das neue Schloss. Deine Aufgabe ist
 !! Sorge dafür, dass genug Lichtquellen vorhanden sind.
 \_- Wechsle ins Beleuchtungsverzeichnis und erstelle eine neue Lichtquelle.
 `cd /home/Beleuchtung && touch licht1.txt`
+
+### 7. Das Schloss reinigen
+
+!! Stelle sicher, dass der Boden sauber ist.
+\_- Gehe in das Reinigungsverzeichnis und erstelle eine Datei zur Dokumentation.
+`cd /home/Reinigung && touch boden_sauber.txt`
+
+### 8. Die königliche Uhr stellen
+
+!! Stelle die königliche Uhr auf 12:00 ein.
+\_- Bearbeite die Datei zeit.txt und prüfe den Inhalt.
+`cd /home/Uhr && echo "12:00" > zeit.txt && cat zeit.txt`
 
 # EOF
