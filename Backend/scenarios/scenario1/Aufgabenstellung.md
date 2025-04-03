@@ -12,8 +12,8 @@ Der König plant eine große Eröffnung für das neue Schloss. Deine Aufgabe ist
 
 ### 2. Die Einladungen überprüfen
 
-!! Stelle sicher, dass die Gästeliste vollständig ist.
-\_- Gehe in das Einladungs-Verzeichnis und prüfe, ob die Datei gaesteliste.txt existiert.
+!! Füge dich zur Gästeliste hinzu.
+\_- Gehe in das Einladungs-Verzeichnis und hänge den Text "ich" Datei gaesteliste.txt existiert.
 `cd /home/Einladungen && ls && echo "ich" >> gaesteliste.txt`
 
 ### 3. Das königliche Banner aufhängen
