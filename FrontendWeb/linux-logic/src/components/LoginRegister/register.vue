@@ -88,13 +88,13 @@ export default {
         email: this.email,
         username: this.username,
         password: this.password,
-        stayLoggedIn: this.stayLoggedIn
+        stayLoggedIn: true
       };
 
       api.post('/register', userData)
         .then(response => {
           alert("Registrierung erfolgreich!");
-          this.$router.push('/login');
+          this.$router.push('/auswahl');
         })
         .catch(error => {
           console.error('Fehler bei der Registrierung:', error);

@@ -93,11 +93,7 @@ export default {
     }
   },
   mounted() {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user'));
-    if (user) {
-      this.email = user.email;
-      this.stayLoggedIn = !!localStorage.getItem('user');
-    }
+    
   }
 };
 </script>
