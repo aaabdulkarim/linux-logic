@@ -447,8 +447,11 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             data = await container_socket.recv()
 
                             # TODO: if check positiv update progress
+                            print("Geht nocht vor progress")
                             scm.update_progress()
-                            
+
+
+                            print("Geht nocht vor lastlevel")
                             if scm.is_last_level():
                                 await mainsocket.send_json(
                                     {

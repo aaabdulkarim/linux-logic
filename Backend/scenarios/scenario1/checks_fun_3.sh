@@ -2,7 +2,6 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-echo "Überprüfung: Dekoration..."
 
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {

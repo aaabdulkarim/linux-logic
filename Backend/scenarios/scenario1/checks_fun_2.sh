@@ -2,7 +2,6 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-echo "Überprüfung: Einladungen..."
 
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {

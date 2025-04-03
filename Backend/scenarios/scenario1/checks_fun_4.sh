@@ -2,7 +2,6 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-echo "Überprüfung: Küche..."
 
 # Funktion zur Überprüfung, ob eine Datei existiert und Inhalt hat
 check_file() {

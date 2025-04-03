@@ -31,11 +31,7 @@ check_beleuchtung() {
     # Überprüfen, ob die Datei "licht1.txt" existiert
     check_file "/home/Beleuchtung/licht1.txt"
     
-    # Falls die Datei nicht existiert, erstelle sie
-    if [ ! -f "/home/Beleuchtung/licht1.txt" ]; then
-        echo "Die Datei 'licht1.txt' existiert nicht. Sie wird nun erstellt..."
-        touch /home/Beleuchtung/licht1.txt
-    fi
+    
 }
 
 # Hauptüberprüfung

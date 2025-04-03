@@ -18,48 +18,58 @@ class ScenarioTrack:
             current_hint = ""
             current_description = ""
             current_solution = ""
-
-            prev_row_hint = False
-            prev_row_desc = False
-
+            parsing_solution = False  
+            
             for l in lines:
                 l = l.strip()
-                
-                if l.startswith("\_"):
-                    if "`" in l:
-                        current_solution = l.split("`", 2)[1]
-                        print(current_solution)
-                        l = l.replace(current_solution, "***redacted***")
-                    current_hint += l.lstrip("\_")
-                    prev_row_hint = True
-                    prev_row_desc = False
 
-                elif l.startswith("!!"):
-                    current_description += l[2:] + " "
-                    prev_row_desc = True
-                    prev_row_hint = False
-
-                elif l.startswith("###") or l == "# EOF":
-                    if current_hint or current_description or current_solution:
+                if l.startswith("!!"):
+                    if current_description or current_hint or current_solution:
                         scenario_list.append({
                             "hint": current_hint.strip(),
                             "solution": current_solution.strip(),
                             "description": current_description.strip()
                         })
+                        current_hint = ""
+                        current_solution = ""
                     
-                    if l.startswith("###"):
-                        self.scenario_number += 1
+                    current_description = l[2:].strip()
+                    parsing_solution = False 
 
+                elif l.startswith("\_"):
+                    current_hint = l.lstrip("\_").strip()
+                    parsing_solution = False 
+
+                elif l.startswith("`"):  
+                    current_solution = l.strip()
+                    parsing_solution = True  
+
+                elif l.startswith("###") or l == "# EOF":
+                    # Save last scenario before moving on
+                    if current_description or current_hint or current_solution:
+                        scenario_list.append({
+                            "hint": current_hint.strip(),
+                            "solution": current_solution.strip("`"),
+                            "description": current_description.strip()
+                        })
                     current_hint = ""
                     current_solution = ""
                     current_description = ""
-                    prev_row_hint = False
-                    prev_row_desc = False
+                    parsing_solution = False  
+
+
+            if current_description or current_hint or current_solution:
+                scenario_list.append({
+                    "hint": current_hint.strip(),
+                    "solution": current_solution.strip(),
+                    "description": current_description.strip()
+                })
 
         self.scenario_data = scenario_list
 
         for scenario in self.scenario_data:
             print(scenario)
+
 
     def get_clue(self):
         self.clues_used += 1
