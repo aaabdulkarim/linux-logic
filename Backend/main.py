@@ -403,11 +403,10 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
     print(frontend_container_choice)
 
 
-
-
+    container_session_id = str(uuid.uuid1())
     print(f"No existing container found for {session_id}, creating new one...")
     container_name = await dm.add_connection(
-        userSessionId=session_id,  # Jetzt die session_id verwenden!
+        userSessionId=container_session_id, 
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
     )
@@ -444,13 +443,12 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             await mainsocket.send_json({"solution": solution}) 
 
                         if ">check" == frontend_cmd:
-                            await container_socket.send("bash /app/checks_fun_1.sh")
+                            await container_socket.send(f"bash /app/checks_fun_{scm.subscenario_progress + 1}.sh")
                             data = await container_socket.recv()
 
                             # TODO: if check positiv update progress
                             scm.update_progress()
                             
-                            print(scm.is_last_level())
                             if scm.is_last_level():
                                 await mainsocket.send_json(
                                     {

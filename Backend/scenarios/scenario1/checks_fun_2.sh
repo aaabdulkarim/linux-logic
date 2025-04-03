@@ -8,10 +8,8 @@ echo "Überprüfung: Einladungen..."
 check_file() {
     local file="$1"
     if [ -f "$file" ]; then
-        echo "✔ Datei existiert: $file"
         echo "true"
     else
-        echo "✖ Datei fehlt: $file"
         echo "false"
     fi
 }
@@ -29,6 +27,4 @@ check_guest_list() {
 }
 
 # Hauptüberprüfung
-echo "Starte Überprüfung der Einladungen..."
 check_guest_list
-echo "Überprüfung abgeschlossen."

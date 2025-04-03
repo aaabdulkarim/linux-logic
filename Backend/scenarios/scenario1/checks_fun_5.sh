@@ -9,14 +9,11 @@ check_file() {
   local file="$1"
     if [ -f "$file" ]; then
         if [ -s "$file" ]; then
-            echo "✔ Datei existiert und enthält Inhalt: $file"
             echo "true"
         else
-            echo "✖ Datei existiert, aber ist leer: $file"
             echo "false"
         fi
     else
-        echo "✖ Datei fehlt: $file"
         echo "false"
     fi
 }
@@ -34,6 +31,4 @@ check_musik() {
 }
 
 # Hauptüberprüfung
-echo "Starte Überprüfung der Musikabteilung..."
 check_musik
-echo "Überprüfung abgeschlossen."

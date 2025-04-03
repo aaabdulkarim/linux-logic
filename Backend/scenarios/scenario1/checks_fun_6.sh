@@ -2,16 +2,13 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-echo "Überprüfung: Beleuchtung..."
 
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
     local file="$1"
     if [ -f "$file" ]; then
-        echo "✔ Datei existiert: $file"
         echo "true"
     else
-        echo "✖ Datei fehlt: $file"
         echo "false"
     fi
 }
@@ -20,10 +17,8 @@ check_file() {
 check_directory() {
     local dir="$1"
     if [ -d "$dir" ]; then
-        echo "✔ Verzeichnis existiert: $dir"
         echo "true"
     else
-        echo "✖ Verzeichnis fehlt: $dir"
         echo "false"
     fi
 }
@@ -44,6 +39,4 @@ check_beleuchtung() {
 }
 
 # Hauptüberprüfung
-echo "Starte Überprüfung der Beleuchtung..."
 check_beleuchtung
-echo "Überprüfung abgeschlossen."

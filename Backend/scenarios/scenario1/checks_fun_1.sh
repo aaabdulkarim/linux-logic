@@ -2,7 +2,6 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-echo "Überprüfung: Roter Teppich..."
 
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
@@ -18,10 +17,8 @@ check_file() {
 check_directory() {
     local dir="$1"
     if [ -d "$dir" ]; then
-        echo "✔ Verzeichnis existiert: $dir"
         echo "true"
     else
-        echo "✖ Verzeichnis fehlt: $dir"
         echo "false"
     fi
 }
@@ -29,13 +26,11 @@ check_directory() {
 # Einzelne Überprüfung für den roten Teppich
 check_roter_teppich() {
     # Verzeichnis wechseln
-    cd /home/Veranstaltung
+    cd /home/Veranstaltung || { echo "Verzeichnis /home/Veranstaltung konnte nicht betreten werden"; exit 1; }
     
     # Überprüfen, ob die Datei existiert
     check_file "/home/Veranstaltung/roter_teppich.txt"
 }
 
 # Hauptüberprüfung
-echo "Starte Überprüfung für den roten Teppich..."
 check_roter_teppich
-echo "Überprüfung abgeschlossen."

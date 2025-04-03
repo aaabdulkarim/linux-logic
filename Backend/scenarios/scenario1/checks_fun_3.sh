@@ -8,10 +8,8 @@ echo "Überprüfung: Dekoration..."
 check_file() {
     local file="$1"
     if [ -f "$file" ]; then
-        echo "✔ Datei existiert: $file"
         echo "true"
     else
-        echo "✖ Datei fehlt: $file"
         echo "false"
     fi
 }
@@ -31,6 +29,4 @@ copy_banner() {
 }
 
 # Hauptüberprüfung
-echo "Starte Überprüfung der Dekoration..."
 copy_banner
-echo "Überprüfung abgeschlossen."

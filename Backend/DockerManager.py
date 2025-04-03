@@ -62,8 +62,8 @@ class DockerManager():
 
 
     async def add_connection(self, userSessionId, userName, frontendChoice):
-        existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
-        
+        # existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
+        existing_connection = None
         if existing_connection:
             print(f"Reusing existing container: {existing_connection.container_name}")
             return existing_connection.container_name  # Keep the same SCM object

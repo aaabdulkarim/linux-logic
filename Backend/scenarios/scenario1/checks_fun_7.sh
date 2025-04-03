@@ -20,10 +20,8 @@ check_file() {
 check_directory() {
     local dir="$1"
     if [ -d "$dir" ]; then
-        echo "✔ Verzeichnis existiert: $dir"
         echo "true"
     else
-        echo "✖ Verzeichnis fehlt: $dir"
         echo "false"
     fi
 }

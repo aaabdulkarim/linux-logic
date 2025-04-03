@@ -46,11 +46,18 @@ COPY checks_fun_3.sh .
 COPY checks_fun_4.sh .
 COPY checks_fun_5.sh .
 COPY checks_fun_6.sh .
+COPY checks_fun_7.sh .
 COPY checks_fun_8.sh .
-COPY checks_fun_9.sh .
 
 RUN sed -i 's/\r$//' /app/checks_fun.sh
-
+RUN sed -i 's/\r$//' /app/checks_fun_1.sh
+RUN sed -i 's/\r$//' /app/checks_fun_2.sh
+RUN sed -i 's/\r$//' /app/checks_fun_3.sh
+RUN sed -i 's/\r$//' /app/checks_fun_4.sh
+RUN sed -i 's/\r$//' /app/checks_fun_5.sh
+RUN sed -i 's/\r$//' /app/checks_fun_6.sh
+RUN sed -i 's/\r$//' /app/checks_fun_7.sh
+RUN sed -i 's/\r$//' /app/checks_fun_8.sh
 
 RUN chown -R user:user /app /home
 # Set up Python virtual environment and install dependencies
@@ -58,7 +65,6 @@ RUN python3 -m venv .venv && \
     . .venv/bin/activate && \
     pip install --no-cache-dir 'fastapi[all]'
 
-# Change ownership of the /app directory to the new user
 
 
 # Switch to the new user
