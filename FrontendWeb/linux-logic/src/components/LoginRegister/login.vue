@@ -75,7 +75,7 @@ export default {
         
           username: this.email,
           password: this.password,
-        
+          stayLoggedIn: true
       })
       .then((response) => {
         console.log(response.data);

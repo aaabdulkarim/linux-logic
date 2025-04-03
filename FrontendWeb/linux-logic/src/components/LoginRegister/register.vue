@@ -91,17 +91,21 @@ export default {
         stayLoggedIn: true
       };
 
-      api.post('/register', userData)
-        .then(response => {
-          alert("Registrierung erfolgreich!");
-          this.$router.push('/auswahl');
-        })
-        .catch(error => {
-          console.error('Fehler bei der Registrierung:', error);
-          alert("Fehler bei der Registrierung. Bitte versuchen Sie es erneut.");
-        });
+    api.post('/register', userData)
+    .then(response => {
+      if (response.data.message === "Registrierung erfolgreich") {
+        alert("Registrierung erfolgreich!");
+        this.$router.push('/auswahl');
+      } else {
+        throw new Error("Unerwartete Antwort von der API");
+      }
+    })
+    .catch(error => {
+      console.error('Fehler bei der Registrierung:', error);
+      alert("Fehler bei der Registrierung. Bitte versuchen Sie es erneut.");
+    });
+      }
     }
-  }
 };
 </script>
 

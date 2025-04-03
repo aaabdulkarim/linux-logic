@@ -24,7 +24,7 @@
           <h2>Abgeschlossene Level</h2>
           <div class="course-cards">
             <div class="course-card" v-for="course in completedCourses" :key="course.scenario_id">
-              <div class="course-content">Scenario {{ course.scenario_id }}</div>
+              <div @click="playSelectedLevel(course.scenario_id)"  class="course-content">Scenario {{ course.scenario_id }}</div>
               <div class="course-details">
                 Hinweise verwendet: {{ course.hints_verwendet }} | Lösungen verwendet: {{ course.loesungen_verwendet }}
               </div>
@@ -89,6 +89,10 @@ export default {
     },
     playNextLevel() {
       this.$router.push("/terminal?scenario_id=" + this.nextCourse);
+    },
+    playSelectedLevel(scenario_id){
+      console.log(scenario_id)
+      this.$router.push("/terminal?scenario_id=" + scenario_id);
     },
     fetchProgress() {
       api.get('/progress')

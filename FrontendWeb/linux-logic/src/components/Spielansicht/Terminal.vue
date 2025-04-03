@@ -36,7 +36,9 @@
       <i class="pi" :class="rating >= 2 ? 'pi-star-fill' : 'pi-star'"></i>
       <i class="pi" :class="rating >= 3 ? 'pi-star-fill' : 'pi-star'"></i>
     </div>
-    <Button label="Nächstes Level" @click="nextLevel" severity="success" class="w-full" />
+    <button @click="nextLevel" severity="success" class="w-full">
+        Nächstes Level
+    </button>
   </div>
   <div v-if="isModalVisible" class="modal">
     <div class="modal-content">
@@ -276,8 +278,7 @@ export default {
     },
     nextLevel() {
       this.showRating = false;
-      alert("Hier geht es zum nächsten Level (noch nicht implementiert)"); // Platzhalter
-      // this.$router.push('/level2'); // Beispiel mit Vue Router (entfernt)
+      this.$router.push('/auswahl'); // Beispiel mit Vue Router (entfernt)
     },
     exitToMenu() {
       this.$router.push('/auswahl');
@@ -383,6 +384,7 @@ export default {
   color: gold;
 }
 
+
 button {
   margin-top: 10px;
   padding: 0.6rem;
@@ -396,7 +398,7 @@ button:hover {
   color: white !important;
   background-color: #569191 !important;
 }
-
+ 
 .content {
   justify-content: left;
   text-align: left;
