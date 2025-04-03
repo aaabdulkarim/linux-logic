@@ -62,6 +62,7 @@ class DockerManager():
 
 
     async def add_connection(self, userSessionId, userName, frontendChoice):
+        # TODO: Reconnect function which can hold the scm
         # existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
         existing_connection = None
         if existing_connection:

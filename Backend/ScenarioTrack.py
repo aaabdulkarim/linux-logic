@@ -13,7 +13,7 @@ class ScenarioTrack:
         md_file = docker_dir_path + "/Aufgabenstellung.md"
         scenario_list = []
 
-        with open(md_file) as file:
+        with open(md_file,  encoding="utf-8") as file:
             lines = file.readlines()
             current_hint = ""
             current_description = ""
@@ -84,4 +84,4 @@ class ScenarioTrack:
 
 
     def is_last_level(self):
-        return self.scenario_number == len(self.scenario_data) - 1
+        return self.subscenario_progress == len(self.scenario_data) - 1

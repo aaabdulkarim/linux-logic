@@ -201,7 +201,11 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
         session.add(new_progress)
 
     session.commit()
-    return {"message": "Progress erfolgreich gespeichert oder aktualisiert"}
+    return {
+        "message": "Progress erfolgreich gespeichert oder aktualisiert", 
+        "loesungen_verwendet" : progressBody.loesungen_verwendet, 
+        "hints_verwendet" :  progressBody.hints_verwendet
+    }
 
 
 @app.get("/me")
@@ -443,15 +447,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             await mainsocket.send_json({"solution": solution}) 
 
                         if ">check" == frontend_cmd:
-                            await container_socket.send(f"bash /app/checks_fun_{scm.subscenario_progress + 1}.sh")
-                            data = await container_socket.recv()
 
-                            # TODO: if check positiv update progress
-                            print("Geht nocht vor progress")
-                            scm.update_progress()
-
-
-                            print("Geht nocht vor lastlevel")
                             if scm.is_last_level():
                                 await mainsocket.send_json(
                                     {
@@ -459,15 +455,16 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                                         "hints_verwendet": scm.clues_used,
                                         "loesungen_verwendet" : scm.solutions_used,
                                     })
-                                await mainsocket.send_json({"description": f"{scm.clues_used} und {scm.solutions_used}"}) 
-
-                                
 
 
                             else:
-                                # TODO: Bash Scripts verbessern und mit Save Progress darauf reagieren
+                                await container_socket.send(f"bash /app/checks_fun_{scm.subscenario_progress + 1}.sh")
+                                data = await container_socket.recv()
+
+                                # TODO: if check positiv update progress
+                                scm.update_progress()
                                 await mainsocket.send_json({"check": data}) 
-                            print(data)
+                                print(data)
 
                         else:
                             await container_socket.send(frontend_cmd)
@@ -477,7 +474,8 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
                         desc = "".join(scm.get_desc())
                         await mainsocket.send_json({"description": desc}) 
-                    
+                        await mainsocket.send_json({"levelNr": scm.subscenario_progress + 1}) 
+
                     except WebSocketDisconnect:
                         print("WebSocket client disconnected")
                         break

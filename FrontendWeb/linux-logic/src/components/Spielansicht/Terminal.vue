@@ -32,9 +32,9 @@
     <h2>Level abgeschlossen!</h2>
     <h5>Deine Bewertung</h5>
     <div class="stars">
-      <i class="pi pi-star" @click="rateLevel(1)" :class="{ 'pi-star-filled': rating >= 1 }"></i>
-      <i class="pi pi-star" @click="rateLevel(2)" :class="{ 'pi-star-filled': rating >= 2 }"></i>
-      <i class="pi pi-star" @click="rateLevel(3)" :class="{ 'pi-star-filled': rating >= 3 }"></i>
+      <i class="pi pi-star" :class="{ 'pi-star-filled': rating >= 1 }"></i>
+      <i class="pi pi-star" :class="{ 'pi-star-filled': rating >= 2 }"></i>
+      <i class="pi pi-star" :class="{ 'pi-star-filled': rating >= 3 }"></i>
     </div>
     <Button label="Nächstes Level" @click="nextLevel" severity="success" class="w-full" />
   </div>
@@ -67,13 +67,14 @@ export default {
       isModalVisible: false,
       modalContent: '',
       showRating: false,
-      rating: 0,
+      rating: 1,
       stars: 3,
 
       aufgabe: "",
       aufgabenId: 0,
 
       profileName: "",
+      scenarioId: 0,
     };
   },
   mounted() {
@@ -122,8 +123,8 @@ export default {
         this.socketClient.send(this.profileName);
         const scenarioIdFromQuery = this.$route.query.scenario_id;
         this.socketClient.send(scenarioIdFromQuery)
+        this.scenarioId = parseInt(scenarioIdFromQuery)
         this.socketClient.send("")
-
       };
 
       this.socketClient.onmessage = (event) => {
@@ -139,12 +140,40 @@ export default {
             this.aufgabe = message.description
           } else if (message.check) {
             this.terminal.write(`\r\nCheck Result: ${message.check}`);
+          } else if (message.levelNr) {
+            this.aufgabenId = message.levelNr
+          } else if (message.last_level) {
+            // Handle last level message
+            console.log("Last level reached!");
+            console.log("Hints used:", message.hints_verwendet);
+            console.log("Solutions used:", message.loesungen_verwendet);
+            
+            console.log(typeof this.scenarioIdFromQuery)
+            console.log(typeof message.hints_verwendet)
+            console.log(typeof message.loesungen_verwendet)
+
+            // Speicherung an die Datenbank
+            api.post("/progress", {
+              scenario_id : this.scenarioId,
+              hints_verwendet: parseInt(message.hints_verwendet),
+              loesungen_verwendet : parseInt(message.loesungen_verwendet)
+            }).then(response => {
+                const erreichbareSterne = 3;
+                if (message.hints_verwendet > 0){
+                  erreichbareSterne = 2
+                }
+                if (message.loesungen_verwendet > 0){
+                  erreichbareSterne = 1
+                }
+                this.rating = erreichbareSterne
+            })
+            
+            this.showRatingPopup(); 
           }
           this.writePrompt();
         } catch (error) {
           console.error("Error parsing JSON:", error);
           this.terminal.write(`\r\n${event.data}`); // Fallback to plain text
-          this.writePrompt();
         }
       };
 
@@ -206,19 +235,16 @@ export default {
         console.log("SENDING")
         setTimeout(() => {
           this.socketClient.send(input);
-          console.log("should be send");
         }, 100); // Delay for 100ms
-        console.log("should be send")
 
       } else {
         this.terminal.write("\r\n[Error] WebSocket not connected.");
       }
     },
     showModal(type) {
-      if (type === 'hint' && this.stars > 0) {
-        this.stars--;
+      if (type === 'hint') {
         this.socketClient.send(">clue")
-      } else if (type === 'key' && this.stars > 0) {
+      } else if (type === 'key') {
         this.socketClient.send(">solution")
       }
       this.isModalVisible = true;
@@ -230,14 +256,9 @@ export default {
     },
     submitLevel() {
       this.socketClient.send(">check")
-
-      this.showRatingPopup();
     },
     showRatingPopup() {
       this.showRating = true;
-    },
-    rateLevel() {
-      console.log("Bewertung:", this.stars);
     },
     nextLevel() {
       this.showRating = false;
