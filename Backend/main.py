@@ -459,12 +459,18 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
                             else:
                                 await container_socket.send(f"bash /app/checks_fun_{scm.subscenario_progress + 1}.sh")
-                                data = await container_socket.recv()
+                                bash_check = await container_socket.recv()
 
                                 # TODO: if check positiv update progress
-                                scm.update_progress()
-                                await mainsocket.send_json({"check": data}) 
-                                print(data)
+                                bash_check = bash_check.strip()
+                                print(bash_check)
+                                if bash_check == "true":
+
+                                    scm.update_progress()
+                                    await mainsocket.send_json({"check": "successful"}) 
+
+                                else:
+                                    await mainsocket.send_json({"check": "unsuccessful"}) 
 
                         else:
                             await container_socket.send(frontend_cmd)

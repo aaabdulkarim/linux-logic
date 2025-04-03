@@ -147,28 +147,28 @@ export default {
             console.log("Last level reached!");
             console.log("Hints used:", message.hints_verwendet);
             console.log("Solutions used:", message.loesungen_verwendet);
-            
+
             console.log(typeof this.scenarioIdFromQuery)
             console.log(typeof message.hints_verwendet)
             console.log(typeof message.loesungen_verwendet)
 
             // Speicherung an die Datenbank
             api.post("/progress", {
-              scenario_id : this.scenarioId,
+              scenario_id: this.scenarioId,
               hints_verwendet: parseInt(message.hints_verwendet),
-              loesungen_verwendet : parseInt(message.loesungen_verwendet)
+              loesungen_verwendet: parseInt(message.loesungen_verwendet)
             }).then(response => {
-                const erreichbareSterne = 3;
-                if (message.hints_verwendet > 0){
-                  erreichbareSterne = 2
-                }
-                if (message.loesungen_verwendet > 0){
-                  erreichbareSterne = 1
-                }
-                this.rating = erreichbareSterne
+              const erreichbareSterne = 3;
+              if (message.hints_verwendet > 0) {
+                erreichbareSterne = 2
+              }
+              if (message.loesungen_verwendet > 0) {
+                erreichbareSterne = 1
+              }
+              this.rating = erreichbareSterne
             })
-            
-            this.showRatingPopup(); 
+
+            this.showRatingPopup();
           }
           this.writePrompt();
         } catch (error) {
@@ -195,34 +195,31 @@ export default {
 
 
     writePrompt() {
-      this.terminal.write("\r\nlogic@linux:~$ ");
+      if (!this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY)?.translateToString().includes("logic@linux:~$")) {
+        this.terminal.write("\r\nlogic@linux:~$ ");
+      }
     },
     handleInput(data) {
       const char = data.charCodeAt(0);
 
       if (char === 13) { // Enter key
         const line = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY);
-        console.log("Line Object:", line);
-
         if (line) {
-          const lineText = line.translateToString();
-          console.log("Full Line Text:", lineText);
-          console.log("Prompt Length:", this.promptLength);
-          console.log("Extracted Input:", lineText.slice(this.promptLength));
-          this.respondToInput(lineText.slice(14));
-
+          const lineText = line.translateToString().trim();
+          const userCommand = lineText.slice(this.promptLength).trim();
+          this.respondToInput(userCommand);
         }
-
       } else if (char === 127) { // Backspace
         if (this.userInput.length > 0) {
-          this.userInput = this.userInput.slice(0, -1); // Letztes Zeichen aus userInput entfernen
-          this.terminal.write('\b \b'); // Zeichen aus Terminal löschen
+          this.userInput = this.userInput.slice(0, -1);
+          this.terminal.write('\b \b');
         }
       } else {
-        this.userInput += data; // Zeichen zum User-Input hinzufügen
-        this.terminal.write(data)
+        this.userInput += data;
+        this.terminal.write(data);
       }
-    },
+    }
+    ,
     respondToInput(input) {
 
       if (input.toLowerCase() == "clear") {

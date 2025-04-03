@@ -25,11 +25,6 @@ add_dish() {
     # Überprüfen, ob die Datei menue.txt existiert und Inhalt hat
     check_file "/home/Kueche/menue.txt"
     
-    # Füge ein neues Gericht zum Menü hinzu
-    if [ -s "/home/Kueche/menue.txt" ]; then
-        echo "Das Gericht '' wurde zur Datei hinzugefügt."
-    else
-        echo "Die Datei menue.txt ist leer oder fehlt."
     fi
 }
 

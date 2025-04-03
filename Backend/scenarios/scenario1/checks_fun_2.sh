@@ -18,8 +18,6 @@ check_guest_list() {
     # Wechsel ins Einladungsverzeichnis
     cd /home/Einladungen
     
-    # Zeige alle Dateien im Verzeichnis an
-    ls /home/Einladungen
     
     # Überprüfen, ob die Gästeliste (gaesteliste.txt) existiert
     check_file "/home/Einladungen/ritter.txt"

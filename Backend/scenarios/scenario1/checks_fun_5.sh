@@ -22,8 +22,6 @@ check_musik() {
     # Wechsel ins Musikverzeichnis
     cd /home/Musik
     
-    # Zeige alle Dateien im Musikverzeichnis an
-    ls
     
     # Überprüfen, ob eine Musikdatei (z.B. musikliste.txt) existiert
     check_file "/home/Musik/musikliste.txt"
