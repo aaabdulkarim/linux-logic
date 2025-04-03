@@ -109,6 +109,24 @@ export default {
     this.terminal.open(this.$refs.terminalContainer);
     this.fitAddon.fit();
 
+    this.terminal.onKey((event) => {
+      const { key, domEvent } = event;
+      if (domEvent.key === "Enter") {
+        this.terminal.write("\r\n");
+        this.respondToInput(this.userInput);
+        this.userInput = ""; // Eingabe zurücksetzen
+      } else if (domEvent.key === "Backspace") {
+        if (this.userInput.length > 0) {
+          this.userInput = this.userInput.slice(0, -1);
+          this.terminal.write("\b \b"); // Löscht das letzte Zeichen
+        }
+      } else {
+        this.userInput += key;
+        this.terminal.write(key);
+      }
+    });
+
+
 
   },
 
@@ -130,8 +148,13 @@ export default {
       this.socketClient.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
+          console.log(message)
           if (message.output) {
-            this.terminal.write(`\r\n${message.output}`);
+            const lines = message.output.split("\n");
+              lines.forEach((line) => {
+                this.terminal.write(`\r\n${line}`);
+              });
+
           } else if (message.hint) {
             this.terminal.write(`\r\nHint: ${message.hint}`);
           } else if (message.solution) {
@@ -143,14 +166,6 @@ export default {
           } else if (message.levelNr) {
             this.aufgabenId = message.levelNr
           } else if (message.last_level) {
-            // Handle last level message
-            console.log("Last level reached!");
-            console.log("Hints used:", message.hints_verwendet);
-            console.log("Solutions used:", message.loesungen_verwendet);
-
-            console.log(typeof this.scenarioIdFromQuery)
-            console.log(typeof message.hints_verwendet)
-            console.log(typeof message.loesungen_verwendet)
 
             // Speicherung an die Datenbank
             api.post("/progress", {
@@ -188,16 +203,19 @@ export default {
 
       };
 
-      this.terminal.onData(this.handleInput);
+      // this.terminal.onData(this.handleInput);
 
 
     },
 
 
     writePrompt() {
-      if (!this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY)?.translateToString().includes("logic@linux:~$")) {
-        this.terminal.write("\r\nlogic@linux:~$ ");
+      const lastLine = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY);
+      if (!lastLine || !lastLine.translateToString().includes("logic@linux:~$")) {
+          this.terminal.write("\r\nlogic@linux:~$ ");
       }
+
+
     },
     handleInput(data) {
       const char = data.charCodeAt(0);

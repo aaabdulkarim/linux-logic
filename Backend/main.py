@@ -432,6 +432,11 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
         try:
             async with websockets.connect(container_socket_url) as container_socket:
                 print("connected to external")
+
+                desc = "".join(scm.get_desc())
+                await mainsocket.send_json({"description": desc}) 
+                await mainsocket.send_json({"levelNr": scm.subscenario_progress + 1}) 
+
                 while True:
                     frontend_cmd = await mainsocket.receive_text()
 
@@ -441,12 +446,12 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
                             await mainsocket.send_json({"hint": clues}) 
 
-                        if ">solution" == frontend_cmd:
+                        elif ">solution" == frontend_cmd:
                             solution = "".join(scm.get_solution())
                     
                             await mainsocket.send_json({"solution": solution}) 
 
-                        if ">check" == frontend_cmd:
+                        elif ">check" == frontend_cmd:
 
                             if scm.is_last_level():
                                 await mainsocket.send_json(
@@ -468,6 +473,9 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
                                     scm.update_progress()
                                     await mainsocket.send_json({"check": "successful"}) 
+                                    desc = "".join(scm.get_desc())
+                                    await mainsocket.send_json({"description": desc}) 
+                                    await mainsocket.send_json({"levelNr": scm.subscenario_progress + 1}) 
 
                                 else:
                                     await mainsocket.send_json({"check": "unsuccessful"}) 
@@ -478,9 +486,6 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             await mainsocket.send_json({"output": data})
                             print(data)
 
-                        desc = "".join(scm.get_desc())
-                        await mainsocket.send_json({"description": desc}) 
-                        await mainsocket.send_json({"levelNr": scm.subscenario_progress + 1}) 
 
                     except WebSocketDisconnect:
                         print("WebSocket client disconnected")

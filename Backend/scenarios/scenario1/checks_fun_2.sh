@@ -2,7 +2,6 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
     local file="$1"
@@ -13,14 +12,18 @@ check_file() {
     fi
 }
 
-# Gehe ins Verzeichnis der Einladungen und lade einen Ritter ein
+# Gehe ins Verzeichnis der Einladungen und überprüfe die Gästeliste
 check_guest_list() {
-    # Wechsel ins Einladungsverzeichnis
-    cd /home/Einladungen
-    
-    
-    # Überprüfen, ob die Gästeliste (gaesteliste.txt) existiert
-    check_file "/home/Einladungen/ritter.txt"
+    local invite_dir="/home/Einladungen"
+    local guest_list="$invite_dir/gaesteliste.txt"
+
+    # Prüfen, ob das Verzeichnis existiert
+    if [ ! -d "$invite_dir" ]; then
+        echo "false"
+    fi
+
+    # Prüfen, ob die Gästeliste existiert
+    check_file "$guest_list"
 }
 
 # Hauptüberprüfung
