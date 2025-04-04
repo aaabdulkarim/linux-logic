@@ -88,8 +88,12 @@ async def websocket_endpoint(websocket: WebSocket):
 
         
             output = await bash_runner.run_command(data)
+            current_directory = await bash_runner.run_command("pwd")
             print(output)
-            await websocket.send_text(output)
+            await websocket.send_json({
+                "output": output,
+                "cd" : current_directory
+                })
 
     except Exception as e:
         await websocket.send_text(f"Error: {str(e)}")

@@ -20,6 +20,7 @@ import os
 
 # Websocekt Imports
 import websockets
+import json
 
 from fastapi.websockets import WebSocket
 from fastapi import WebSocketDisconnect
@@ -444,7 +445,12 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                 desc = "".join(scm.get_desc())
                 await mainsocket.send_json({"description": desc}) 
                 await mainsocket.send_json({"levelNr": scm.subscenario_progress + 1}) 
-
+                
+                response_type = ""
+                response_data = ""
+                current_directory = ""
+                description = ""
+                levelNr = 0
                 while True:
                     frontend_cmd = await mainsocket.receive_text()
 
@@ -452,12 +458,14 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                         if ">clue" == frontend_cmd:
                             clues = "".join(scm.get_clue())
 
-                            await mainsocket.send_json({"hint": clues}) 
+                            response_type = "hint"
+                            response_data = clues
 
                         elif ">solution" == frontend_cmd:
                             solution = "".join(scm.get_solution())
-                    
-                            await mainsocket.send_json({"solution": solution}) 
+                            
+                            response_type = "solution"
+                            response_data = solution
 
                         elif ">check" == frontend_cmd:
 
@@ -471,33 +479,59 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
 
                             else:
-                                await container_socket.send(f"bash /app/checks_fun_{scm.subscenario_progress + 1}.sh")
+                                await container_socket.send(f"bash -c /app/checks_fun_{scm.subscenario_progress + 1}.sh")
                                 bash_check = await container_socket.recv()
+
 
                                 # TODO: if check positiv update progress
                                 bash_check = bash_check.strip()
                                 print(bash_check)
                                 if bash_check == "true":
 
+                                    
                                     scm.update_progress()
-                                    await mainsocket.send_json({"check": "successful"}) 
-                                    desc = "".join(scm.get_desc())
-                                    await mainsocket.send_json({"description": desc}) 
-                                    await mainsocket.send_json({"levelNr": scm.subscenario_progress + 1}) 
+                                    response_type = "check"
+                                    response_data = "successful"
+                                    description = "".join(scm.get_desc())
+                                    levelNr = scm.subscenario_progress + 1
 
                                 else:
-                                    await mainsocket.send_json({"check": "unsuccessful"}) 
+                                    response_type = "check"
+                                    response_data = "unsuccessful"
+
 
                         else:
                             await container_socket.send(frontend_cmd)
-                            data = await container_socket.recv()
-                            await mainsocket.send_json({"output": data})
-                            print(data)
+                            output_json = await container_socket.recv()
+                            output_dict = json.loads(output_json) 
+                            response_type = "output"
+                            
+                            # Aus irgendeinem Grund viel langsamer wenn auch das current directory ermittelt wird.
+                            response_data = output_dict["output"]
+                            current_directory = output_dict["cd"].strip()
 
 
-                    except WebSocketDisconnect:
+
+
+                    except WebSocketDisconnect as wbs:
+
                         print("WebSocket client disconnected")
+                        response_type = "error"
+                        response_data = wbs
                         break
+                    
+
+                    # Get Current Directory
+                    # await container_socket.send("pwd")
+                    # current_directory = await container_socket.recv()
+
+                    # Sending response
+                    await mainsocket.send_json({
+                        response_type: response_data,
+                        "current_directory" : current_directory,
+                        "description" : description,
+                        "levelNr" : levelNr
+                        })
 
         except Exception as e:
             print(f"Error with external WebSocket: {e}")

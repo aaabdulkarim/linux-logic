@@ -69,8 +69,9 @@ export default {
       isModalVisible: false,
       modalContent: '',
       showRating: false,
-      rating: 1,
-      stars: 3,
+      rating: 1,  
+      
+      current_directory: "/",
 
       aufgabe: "",
       aufgabenId: 0,
@@ -169,6 +170,10 @@ export default {
             this.terminal.write(`\r\nSolution: ${message.solution}`);
           }
 
+          if (message.current_directory) {
+            this.current_directory = message.current_directory
+          }
+
           if (message.description) {
             this.aufgabe = message.description;
           }
@@ -183,7 +188,8 @@ export default {
           }
 
           // Immer nur einen Prompt setzen, wenn nicht schon einer existiert
-          setTimeout(() => this.writePrompt(), 50);
+          // setTimeout(() => this.writePrompt(), 50);
+          this.writePrompt()
 
         } catch (error) {
           console.error("Error parsing JSON:", error);
@@ -208,13 +214,21 @@ export default {
 
 
     },
+    
+    hexToRgb(hex) {
+      const bigint = parseInt(hex.replace("#", ""), 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 
+    },
 
     writePrompt() {
       const lastLine = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY);
-      if (!lastLine || !lastLine.translateToString().includes("logic@linux:~$")) {
-        this.terminal.write("\r\nlogic@linux:~$ ");
+      if (!lastLine || !lastLine.translateToString().includes("logic@linux:")) {
+        const [r, g, b] = this.hexToRgb("#569191");
+        const coloredPath = `\x1b[1m\x1b[38;2;${r};${g};${b}m${this.current_directory}\x1b[0m`;
+        this.terminal.write(`\r\nlogic@linux:${coloredPath}$ `);
       }
+
 
 
     },
