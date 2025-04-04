@@ -1,5 +1,4 @@
 from typing import Annotated, Optional
-from validate_email import validate_email
 from fastapi import FastAPI, HTTPException, Depends, Response, Cookie, Request
 
 from pydantic import BaseModel
@@ -29,7 +28,9 @@ from ScenarioTrack import ScenarioTrack
 from DockerManager import DockerManager 
 
 import asyncio
+import re
 
+EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
@@ -91,6 +92,10 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
 
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
+
+    if not re.fullmatch(EMAIL_REGEX, userModel.email):
+        raise HTTPException(status_code=400, detail="Ungültiges E-Mail-Format")
+
     # Überprüfen, ob die E-Mail bereits registriert ist
     existing_email_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
     if existing_email_user:
