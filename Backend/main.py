@@ -59,7 +59,7 @@ app = FastAPI()
 origins = ["http://localhost", "http://localhost:8080", "http://localhost:8081"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=["http://localhost:8080"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -91,22 +91,25 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
 
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
-    # if not validate_email(userModel.email, check_blacklist=False):
-    #     raise HTTPException(status_code=400, detail="Ungültige E-Mail")
-    
-    existing_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
-    if existing_user:
+    # Überprüfen, ob die E-Mail bereits registriert ist
+    existing_email_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
+    if existing_email_user:
         raise HTTPException(status_code=400, detail="E-Mail bereits registriert")
-    
+
+    # Überprüfen, ob der Benutzername bereits existiert
+    existing_username_user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
+    if existing_username_user:
+        raise HTTPException(status_code=400, detail="Benutzername bereits vergeben")
+
     if len(userModel.password) < 8:
         raise HTTPException(status_code=400, detail="Passwort muss mindestens 8 Zeichen lang sein")
-    
+
     hashed_password = hash_password(userModel.password)
     new_user = UserDB(username=userModel.username, email=userModel.email, password=hashed_password)
     session.add(new_user)
     session.commit()
-    
-    return {"message": "Registrierung erfolgreich"}
+
+    return {"status": 200, "username": userModel.username, "email": userModel.email}
  
  
 @app.put("/edit")

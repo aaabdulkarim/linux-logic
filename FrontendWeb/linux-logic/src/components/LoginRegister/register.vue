@@ -5,22 +5,40 @@
 
       <form @submit.prevent="onSubmit">
         <div class="name">
-          <label for="firstName"><h5>Vorname</h5></label>
-          <label for="lastName"><h5>Nachname</h5></label>
+          <label for="firstName">
+            <h5>Vorname</h5>
+          </label>
+          <label for="lastName">
+            <h5>Nachname</h5>
+          </label>
         </div>
         <div class="p-field-name">
-          <InputText id="firstName" v-model="firstName"/>
-          <InputText id="lastName" v-model="lastName"/>
+          <InputText id="firstName" v-model="firstName" />
+          <InputText id="lastName" v-model="lastName" />
         </div>
         <div class="p-field">
-          <label for="email"><h5>Email</h5></label>
-          <InputText id="email" v-model="email"/>
-          <label for="username"><h5>Benutzername</h5></label>
-          <InputText id="username" v-model="username"/>
-          <label for="password"><h5>Passwort</h5></label>
-          <Password id="password" v-model="password" :feedback="false" toggleMask/>
-          <label for="password_2"><h5>Passwort bestätigen</h5></label>
-          <Password id="password_2" v-model="password_2" :feedback="false" toggleMask/>
+          <label for="email">
+            <h5>Email</h5>
+          </label>
+          <InputText id="email" v-model="email" />
+          <label for="username">
+            <h5>Benutzername</h5>
+          </label>
+          <InputText id="username" v-model="username" />
+          <label for="password">
+            <h5>Passwort</h5>
+          </label>
+          <Password id="password" v-model="password" :feedback="false" toggleMask />
+          <label for="password_2">
+            <h5>Passwort bestätigen</h5>
+          </label>
+          <Password id="password_2" v-model="password_2" :feedback="false" toggleMask />
+
+
+          <Message v-if="registrationError !== null || registrationError == '' " severity="error" variant="simple">
+            {{ registrationError }}  
+          </Message>
+
         </div>
         <div class="register-actions">
           <div class="stay-logged-in">
@@ -44,14 +62,21 @@ import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
-import api from '@/api';
+import Message from "primevue/message";
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
-  components: { 
-    InputText, 
-    Password, 
-    Checkbox, 
-    Button 
+  components: {
+    InputText,
+    Password,
+    Checkbox,
+    Button,
+    Message
+  },
+  setup() {
+    const router = useRouter();
+    return { router };
   },
   data() {
     return {
@@ -62,6 +87,8 @@ export default {
       password: '',
       password_2: '',
       stayLoggedIn: false,
+      registrationError: null,
+      loginError: null,
     };
   },
   computed: {
@@ -72,15 +99,42 @@ export default {
         justifyContent: 'center',
         alignItems: 'center',
       };
-    }
+    }, 
+    
   },
   methods: {
     onSubmit() {
       this.create();
     },
-    create() {
+    async loginToBackend() {
+      try {
+        const response = await axios.post('http://localhost:8000/login', {
+          username: this.username,
+          password: this.password,
+          stayLoggedIn: true,
+        }, {
+          withCredentials: true,
+        });
+        console.log('Login-Antwort:', response);
+        if (response.status === 200) {
+          this.router.push('/auswahl');
+        } else {
+          this.loginError = "Benutzername oder Passwort ist falsch!";
+          console.error('Login-Fehler:', response);
+          this.email = '';
+          this.password = '';
+        }
+      } catch (error) {
+
+
+        this.loginError = 'Fehler bei der Anmeldung: ' + error.message;
+        console.error('Login-Fehler:', error);
+      }
+    },
+    async create() {
+      this.registrationError = null;
       if (this.password !== this.password_2) {
-        alert("Passwörter stimmen nicht überein!");
+        this.registrationError = "Passwörter stimmen nicht überein!";
         return;
       }
 
@@ -88,26 +142,58 @@ export default {
         email: this.email,
         username: this.username,
         password: this.password,
-        stayLoggedIn: true
       };
 
-    api.post('/register', userData)
-    .then(response => {
-      if (response.data.message === "Registrierung erfolgreich") {
-        alert("Registrierung erfolgreich!");
-        this.$router.push('/auswahl');
-      } else {
-        throw new Error("Unerwartete Antwort von der API");
-      }
-    })
-    .catch(error => {
-      console.error('Fehler bei der Registrierung:', error);
-      alert("Fehler bei der Registrierung. Bitte versuchen Sie es erneut.");
-    });
+      try {
+        const response = await fetch('http://localhost:8000/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          credentials: 'include', // To send cookies
+          body: JSON.stringify(userData),
+        });
+
+
+        // Verarbeitung, wegen eins CORS Errors, wird auch im catch() nach positiven Status Code geprüft
+        if (response.ok) {
+          const data = await response.json();
+          this.username = data.username;
+          this.email = data.email
+          await this.loginToBackend();
+          this.registrationError = null
+
+
+        } else {
+          let errorData;
+          try {
+            errorData = await response.json();
+            if(errorData.status == 200){
+              this.username = data.username;
+              this.email = data.email
+              await this.loginToBackend();
+              this.registrationError = null
+
+            } else{
+              this.registrationError = errorData.detail
+            }
+          } catch (e) {
+            this.registrationError = errorData.detail
+          }
+          console.error('Registrierungs-Fehler:', errorData);
+        }
+
+      } catch (error) {
+        this.registrationError = 'Fehler bei der Registrierung: ' + error.message;
+        console.error('Registrierungs-Fehler:', error);
       }
     }
+
+  }
 };
 </script>
+
 
 <style scoped>
 .register-page {
@@ -129,27 +215,32 @@ export default {
   width: 40%;
   min-width: 420px;
 }
+
 .name {
   margin-bottom: -1rem;
   display: flex;
   flex-direction: row;
   gap: 1.6rem;
 }
+
 .name label {
   width: 50%;
   display: flex;
   align-items: left;
 }
+
 .p-field-name {
   display: flex;
-  flex-direction: row; 
-  align-items: flex-start; 
+  flex-direction: row;
+  align-items: flex-start;
   margin-bottom: 0rem;
   gap: 1.6rem;
 }
+
 .p-field-name label {
   margin-bottom: -2rem;
 }
+
 .p-field-name input {
   padding: 0.8rem;
   background: rgba(255, 255, 255, 0.9);
@@ -157,21 +248,25 @@ export default {
   border: none;
   width: 50%;
 }
+
 .p-field-name input:focus {
   outline: none;
   border: none;
   box-shadow: 0 0 0 1px #569191;
 }
+
 .p-field {
   display: flex;
-  flex-direction: column; 
-  align-items: flex-start; 
+  flex-direction: column;
+  align-items: flex-start;
   margin-top: 0.3rem;
   margin-bottom: 0.3rem;
 }
+
 .p-field label {
   margin-bottom: -1rem;
 }
+
 .p-field input {
   padding: 0.8rem;
   background: rgba(255, 255, 255, 0.9);
@@ -179,14 +274,17 @@ export default {
   border: none;
   width: 100%;
 }
+
 .p-field input:focus {
   outline: none;
   border: none;
   box-shadow: 0 0 0 1px #569191;
 }
+
 ::v-deep .p-password {
   width: 100%;
 }
+
 ::v-deep .p-password .p-inputtext {
   padding: 0.8rem;
   background: rgba(255, 255, 255, 0.9);
@@ -194,23 +292,27 @@ export default {
   border: none;
   width: 100%;
 }
+
 ::v-deep .p-password input:focus {
   outline: none;
   border: none;
-  box-shadow: 0 0 0 1px #569191; /* Fokusrahmen */
+  box-shadow: 0 0 0 1px #569191;
+  /* Fokusrahmen */
 }
 
 .register-actions {
-  font-family: 'Ubuntu', monospace; 
+  font-family: 'Ubuntu', monospace;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
   margin-top: 3rem;
 }
+
 .p-checkbox {
   margin-right: 0.5rem;
 }
+
 ::v-deep .p-checkbox .p-checkbox-box {
   width: 20px;
   height: 20px;
@@ -230,6 +332,7 @@ button {
   height: 46px;
   width: 100%;
 }
+
 button:hover {
   border: none !important;
   background-color: #7eb9b9 !important;
@@ -237,22 +340,26 @@ button:hover {
 }
 
 .forgot-password {
-  font-family: 'Ubuntu', monospace; 
+  font-family: 'Ubuntu', monospace;
   color: #569191;
   text-decoration: none;
 }
+
 .forgot-password:hover {
   text-decoration: underline;
 }
+
 .login-link {
-  font-family: 'Ubuntu', monospace; 
+  font-family: 'Ubuntu', monospace;
   text-align: center;
   margin-top: 1rem;
 }
+
 .login-link a {
   color: #569191;
   text-decoration: none;
 }
+
 .login-link a:hover {
   text-decoration: underline;
 }
