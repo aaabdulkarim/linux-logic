@@ -36,6 +36,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -371,7 +372,8 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = LiloBlue
-        )
+        ),
+        elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(
             modifier = Modifier
@@ -404,131 +406,134 @@ fun ColorCustomizationCard(userViewModel: UserViewModel) {
             }
 
             if (expanded) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Column(modifier = Modifier.padding(top = 12.dp)) {
+                    HorizontalDivider(thickness = 1.dp, color = LiloMain)
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                if (useDefaultColors) {
-                    Text(
-                        text = "Verwendung der Default-Farben",
-                        style = MaterialTheme.typography.bodyLarge,
+                    if (useDefaultColors) {
+                        Text(
+                            text = "Verwendung der Default-Farben",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            textAlign = TextAlign.Center,
+                            color = Color.White
+                        )
+                    } else {
+                        ColorCustomizationOption(
+                            option = "Terminal Kopf:",
+                            selectedColor = currentColors.headerColor,
+                            onColorSelected = {
+                                userViewModel.updateTerminalColors(
+                                    currentColors.copy(headerColor = it)
+                                )
+                            },
+                            defaultColorList = defaultColorList
+                        )
+
+                        ColorCustomizationOption(
+                            option = "Terminal Körper:",
+                            selectedColor = currentColors.bodyColor,
+                            onColorSelected = {
+                                userViewModel.updateTerminalColors(
+                                    currentColors.copy(bodyColor = it)
+                                )
+                            },
+                            defaultColorList = defaultColorList
+                        )
+
+                        ColorCustomizationOption(
+                            option = "Terminal Kopf (Text):",
+                            selectedColor = currentColors.headerTextColor,
+                            onColorSelected = {
+                                userViewModel.updateTerminalColors(
+                                    currentColors.copy(headerTextColor = it)
+                                )
+                            },
+                            defaultColorList = defaultColorList
+                        )
+
+                        ColorCustomizationOption(
+                            option = "Shell Prompt:",
+                            selectedColor = currentColors.shellPromptColor,
+                            onColorSelected = {
+                                userViewModel.updateTerminalColors(
+                                    currentColors.copy(shellPromptColor = it)
+                                )
+                            },
+                            defaultColorList = defaultColorList
+                        )
+
+                        ColorCustomizationOption(
+                            option = "Befehle:",
+                            selectedColor = currentColors.commandColor,
+                            onColorSelected = {
+                                userViewModel.updateTerminalColors(
+                                    currentColors.copy(commandColor = it)
+                                )
+                            },
+                            defaultColorList = defaultColorList
+                        )
+
+                        ColorCustomizationOption(
+                            option = "Cursor:",
+                            selectedColor = currentColors.cursorColor,
+                            onColorSelected = {
+                                userViewModel.updateTerminalColors(
+                                    currentColors.copy(cursorColor = it)
+                                )
+                            },
+                            defaultColorList = defaultColorList
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        textAlign = TextAlign.Center,
-                        color = Color.White
-                    )
-                } else {
-                    ColorCustomizationOption(
-                        option = "Terminal Kopf:",
-                        selectedColor = currentColors.headerColor,
-                        onColorSelected = {
-                            userViewModel.updateTerminalColors(
-                                currentColors.copy(headerColor = it)
-                            )
-                        },
-                        defaultColorList = defaultColorList
-                    )
-
-                    ColorCustomizationOption(
-                        option = "Terminal Körper:",
-                        selectedColor = currentColors.bodyColor,
-                        onColorSelected = {
-                            userViewModel.updateTerminalColors(
-                                currentColors.copy(bodyColor = it)
-                            )
-                        },
-                        defaultColorList = defaultColorList
-                    )
-
-                    ColorCustomizationOption(
-                        option = "Terminal Kopf (Text):",
-                        selectedColor = currentColors.headerTextColor,
-                        onColorSelected = {
-                            userViewModel.updateTerminalColors(
-                                currentColors.copy(headerTextColor = it)
-                            )
-                        },
-                        defaultColorList = defaultColorList
-                    )
-
-                    ColorCustomizationOption(
-                        option = "Shell Prompt:",
-                        selectedColor = currentColors.shellPromptColor,
-                        onColorSelected = {
-                            userViewModel.updateTerminalColors(
-                                currentColors.copy(shellPromptColor = it)
-                            )
-                        },
-                        defaultColorList = defaultColorList
-                    )
-
-                    ColorCustomizationOption(
-                        option = "Befehle:",
-                        selectedColor = currentColors.commandColor,
-                        onColorSelected = {
-                            userViewModel.updateTerminalColors(
-                                currentColors.copy(commandColor = it)
-                            )
-                        },
-                        defaultColorList = defaultColorList
-                    )
-
-                    ColorCustomizationOption(
-                        option = "Cursor:",
-                        selectedColor = currentColors.cursorColor,
-                        onColorSelected = {
-                            userViewModel.updateTerminalColors(
-                                currentColors.copy(cursorColor = it)
-                            )
-                        },
-                        defaultColorList = defaultColorList
-                    )
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .animateContentSize(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "Default",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Switch(
-                        checked = useDefaultColors,
-                        onCheckedChange = {
-                            userViewModel.updateDefaultColors(it)
-                        },
-                        thumbContent = {
-                            if (useDefaultColors) {
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = "Check Icon for Customization",
-                                    modifier = Modifier.size(SwitchDefaults.IconSize),
-                                    tint = Color.White
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.Clear,
-                                    contentDescription = "Clear Icon for Customization",
-                                    modifier = Modifier.size(SwitchDefaults.IconSize),
-                                    tint = Color.White
-                                )
-                            }
-                        },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = LiloOrange,
-                            checkedTrackColor = LiloMain,
-                            uncheckedThumbColor = LiloBlue,
-                            uncheckedTrackColor = LiloMain
+                            .animateContentSize(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Default",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
-                    )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Switch(
+                            checked = useDefaultColors,
+                            onCheckedChange = {
+                                userViewModel.updateDefaultColors(it)
+                            },
+                            thumbContent = {
+                                if (useDefaultColors) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = "Check Icon for Customization",
+                                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                                        tint = Color.White
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.Clear,
+                                        contentDescription = "Clear Icon for Customization",
+                                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                                        tint = Color.White
+                                    )
+                                }
+                            },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = LiloOrange,
+                                checkedTrackColor = LiloMain,
+                                uncheckedThumbColor = LiloBlue,
+                                uncheckedTrackColor = LiloMain
+                            )
+                        )
+                    }
                 }
             }
         }
