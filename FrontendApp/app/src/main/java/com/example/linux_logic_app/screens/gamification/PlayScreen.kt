@@ -131,27 +131,36 @@ fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
  * @param onCancelClick Callback zum Abbrechen der Kursauswahl.
  */
 @Composable
-fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick: () -> Unit) {
-    var isExpanded by remember { mutableStateOf(false) }
+fun CourseEditDetails(
+    course: Scenario?,
+    onPlayClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
-        targetValue = if (isExpanded) 180f else 0f,
+        targetValue = if (expanded) 180f else 0f,
         label = "Rotation of Arrow-Icon"
     )
 
     course?.let {
+        // Äußerer Container: Klickt man hier, soll bei erweitertem Zustand nur geschlossen werden
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0x80000000))
                 .clickable {
-                    onPlayClick()
+                    // Wenn Details expandiert sind, beim Klicken schließen – sonst nichts tun
+                    if (expanded) expanded = false
                 }
                 .padding(16.dp)
         ) {
+            // Die Card selbst soll nicht auf Klicks vom Hintergrund reagieren,
+            // daher verhindern wir die Eventweitergabe mit clickable(enabled = false)
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
-                    .align(Alignment.Center),
+                    .align(Alignment.Center)
+                    .clickable(enabled = false) { },
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
@@ -168,7 +177,8 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                 Column(
                     modifier = Modifier
                         .clickable {
-                            isExpanded = !isExpanded
+                            // Umschalten des expandierten Zustands
+                            expanded = !expanded
                         }
                         .animateContentSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -181,11 +191,10 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = if (isExpanded) "Collapse" else "Expand",
+                            contentDescription = if (expanded) "Collapse" else "Expand",
                             modifier = Modifier.graphicsLayer(rotationZ = rotationAngle),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
-
                         Text(
                             it.name,
                             style = MaterialTheme.typography.labelSmall,
@@ -205,7 +214,7 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                                 Text(
                                     text = it.description,
                                     modifier = Modifier.padding(horizontal = 16.dp),
-                                    maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                                    maxLines = if (expanded) Int.MAX_VALUE else 2,
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onBackground,
                                     textAlign = TextAlign.Justify
@@ -213,6 +222,8 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                             }
                         }
                         item {
+                            // Die Buttons erscheinen innerhalb des expandierten Bereichs
+                            // und lösen hier das jeweilige Callback aus
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -220,7 +231,7 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Button(
-                                    onCancelClick,
+                                    onClick = onCancelClick,
                                     modifier = Modifier
                                         .padding(horizontal = 8.dp)
                                         .weight(1f),
@@ -239,7 +250,7 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                                     )
                                 }
                                 Button(
-                                    onPlayClick,
+                                    onClick = onPlayClick,
                                     modifier = Modifier
                                         .padding(horizontal = 8.dp)
                                         .weight(1f),

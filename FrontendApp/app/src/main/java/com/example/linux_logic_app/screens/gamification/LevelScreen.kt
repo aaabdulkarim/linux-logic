@@ -1,7 +1,7 @@
 package com.example.linux_logic_app.screens.gamification
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +37,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -80,7 +81,7 @@ import kotlinx.coroutines.launch
  * - Zwei ExtendedFloatingActionButtons für "Hinweise" und "Prüfen".
  * - Beim Drücken von "Prüfen" wird der nächste Sublevel geladen; falls es keinen mehr gibt, erscheint ein CompletionDialog.
  * Wichtige Aspekte:
- * - Verwendung von animateContentSize, AnimatedContent und animateFloatAsState für fließende Animationen.
+ * - Verwendung von AnimatedVisibility, AnimatedContent und animateFloatAsState für fließende Animationen.
  * - Nutzung eines SnackbarHost zur Anzeige von Erfolgsmeldungen.
  * @param navController Steuert die Navigation zwischen den Screens.
  * @param userViewModel Verwaltet den Zustand des aktuell angemeldeten Nutzers.
@@ -287,7 +288,8 @@ fun LevelCard(sublevelName: String, sublevelDesc: String) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = LiloBlue
-        )
+        ),
+        elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(
             modifier = Modifier
@@ -297,7 +299,6 @@ fun LevelCard(sublevelName: String, sublevelDesc: String) {
                     expanded = !expanded
                 }
                 .padding(16.dp)
-                .animateContentSize()
                 .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
         ) {
             Row(
@@ -326,14 +327,18 @@ fun LevelCard(sublevelName: String, sublevelDesc: String) {
                 )
             }
 
-            if (expanded) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = sublevelDesc,
-                    textAlign = TextAlign.Justify,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
+
+            AnimatedVisibility(visible = expanded) {
+                Column(modifier = Modifier.padding(top = 12.dp)) {
+                    HorizontalDivider(thickness = 1.dp, color = LiloMain)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = sublevelDesc,
+                        textAlign = TextAlign.Justify,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                }
             }
         }
     }
