@@ -1,7 +1,7 @@
 package com.example.linux_logic_app.screens.authentication
 
 import android.util.Log
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,10 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.twotone.ArrowBackIosNew
@@ -38,6 +36,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -149,7 +148,6 @@ fun SettingsScreen(navController: NavController, userViewModel: UserViewModel) {
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
                     .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
             ) {
                 Text(
                     text = "Verwalten Sie Ihre Einstellungen",
@@ -186,7 +184,7 @@ fun SettingsScreen(navController: NavController, userViewModel: UserViewModel) {
  * Beim Klick auf die Karte wird diese erweitert, um Eingabefelder anzuzeigen, die direkt
  * mit dem UserViewModel synchronisiert werden.
  * Wichtige Aspekte:
- * - Verwendung von animateContentSize(), um sanfte Übergänge beim Erweitern und Reduzieren zu ermöglichen.
+ * - Verwendung von AnimatedVisibility, um sanfte Übergänge beim Erweitern und Reduzieren zu ermöglichen.
  * - Dynamische Anzeige eines Passwort-Bestätigungsdialogs, wenn der Bearbeitungsmodus aktiviert wird.
  * @param userViewModel Verwaltet den Zustand und die Logik des aktuell angemeldeten Benutzers.
  */
@@ -217,7 +215,10 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
     var showPasswordDialog by remember { mutableStateOf(false) }
 
     Card(
-        colors = CardDefaults.cardColors(containerColor = LiloBlue)
+        colors = CardDefaults.cardColors(
+            containerColor = LiloBlue
+        ),
+        elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(
             modifier = Modifier
@@ -227,7 +228,6 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                     expanded = !expanded
                 }
                 .padding(16.dp)
-                .animateContentSize()
                 .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
         ) {
             Row(
@@ -254,249 +254,252 @@ fun AccountSettingsCard(userViewModel: UserViewModel) {
                 )
             }
 
-            if (expanded) {
-                Spacer(modifier = Modifier.height(16.dp))
+            AnimatedVisibility(visible = expanded) {
+                Column(modifier = Modifier.padding(top = 12.dp)) {
+                    HorizontalDivider(thickness = 1.dp, color = LiloMain)
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedTextField(
-                    value = editedUsername,
-                    onValueChange = {
-                        editedUsername = it
-                        userViewModel.onUsernameChange(it) // ViewModel aktualisieren
-                    },
-                    label = {
-                        Text(
-                            text = "Benutzername",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    placeholder = {
-                        Text(
-                            text = "Bitte Benutzernamen eingeben",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.TwoTone.PermIdentity,
-                            contentDescription = "Identity Icon for Register",
-                            tint = LiloMain
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
-                    singleLine = true, // Verhindert den Zeilenumbruch
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als Text-Input genutzt wird
-                        imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
-                    ),
-                    isError = usernameErrorMessage != null,
-                    supportingText = {
-                        usernameErrorMessage?.let {
+                    OutlinedTextField(
+                        value = editedUsername,
+                        onValueChange = {
+                            editedUsername = it
+                            userViewModel.onUsernameChange(it) // ViewModel aktualisieren
+                        },
+                        label = {
                             Text(
-                                text = it,
-                                color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.bodySmall
+                                text = "Benutzername",
+                                style = MaterialTheme.typography.bodyLarge
                             )
-                        }
-                    },
-                    enabled = editingEnabled
-                )
-
-                OutlinedTextField(
-                    value = editedEmail,
-                    onValueChange = {
-                        editedEmail = it
-                        userViewModel.onEmailChange(it) // ViewModel aktualisieren
-                    },
-                    label = {
-                        Text(
-                            text = "E-Mail Adresse",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    placeholder = {
-                        Text(
-                            text = "Bitte E-Mail eingeben",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.TwoTone.Email,
-                            contentDescription = "Email Icon for Register",
-                            tint = LiloMain
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
-                    singleLine = true, // Verhindert den Zeilenumbruch
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
-                        imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
-                    ),
-                    isError = emailErrorMessage != null,
-                    supportingText = {
-                        emailErrorMessage?.let {
+                        },
+                        placeholder = {
                             Text(
-                                text = it,
-                                color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.bodySmall
+                                text = "Bitte Benutzernamen eingeben",
+                                style = MaterialTheme.typography.bodyLarge
                             )
-                        }
-                    },
-                    enabled = editingEnabled
-                )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.TwoTone.PermIdentity,
+                                contentDescription = "Identity Icon for Register",
+                                tint = LiloMain
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
+                        singleLine = true, // Verhindert den Zeilenumbruch
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Text, // Sicherstellen, dass das Textfeld als Text-Input genutzt wird
+                            imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
+                        ),
+                        isError = usernameErrorMessage != null,
+                        supportingText = {
+                            usernameErrorMessage?.let {
+                                Text(
+                                    text = it,
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        },
+                        enabled = editingEnabled
+                    )
 
-                OutlinedTextField(
-                    value = editedPassword,
-                    onValueChange = {
-                        editedPassword = it
-                        userViewModel.onPasswordChange(it) // ViewModel aktualisieren
-                    },
-                    label = {
-                        Text(
-                            text = "Passwort",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    placeholder = {
-                        Text(
-                            text = "Bitte Passwort eingeben",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.TwoTone.Password,
-                            contentDescription = "Password Icon for Register",
-                            tint = LiloMain
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(), // Volle Breite der Box
-                    shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
-                    singleLine = true, // Verhindert den Zeilenumbruch
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als Passwort-Input genutzt wird
-                        imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
-                    ),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-                        if (editingEnabled) {
-                            val image =
-                                if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
-                            val description =
-                                if (passwordVisible) "Showed password" else "Hidden password"
-                            IconButton(
-                                onClick = {
-                                    setPasswordVisible(!passwordVisible)
+                    OutlinedTextField(
+                        value = editedEmail,
+                        onValueChange = {
+                            editedEmail = it
+                            userViewModel.onEmailChange(it) // ViewModel aktualisieren
+                        },
+                        label = {
+                            Text(
+                                text = "E-Mail Adresse",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = "Bitte E-Mail eingeben",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.TwoTone.Email,
+                                contentDescription = "Email Icon for Register",
+                                tint = LiloMain
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(), // Volle Breite der Box
+                        shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
+                        singleLine = true, // Verhindert den Zeilenumbruch
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Email, // Sicherstellen, dass das Textfeld als E-Mail-Input genutzt wird
+                            imeAction = ImeAction.Next // Es wird zum nächsten Input weitergeleitet
+                        ),
+                        isError = emailErrorMessage != null,
+                        supportingText = {
+                            emailErrorMessage?.let {
+                                Text(
+                                    text = it,
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        },
+                        enabled = editingEnabled
+                    )
+
+                    OutlinedTextField(
+                        value = editedPassword,
+                        onValueChange = {
+                            editedPassword = it
+                            userViewModel.onPasswordChange(it) // ViewModel aktualisieren
+                        },
+                        label = {
+                            Text(
+                                text = "Passwort",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        placeholder = {
+                            Text(
+                                text = "Bitte Passwort eingeben",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.TwoTone.Password,
+                                contentDescription = "Password Icon for Register",
+                                tint = LiloMain
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(), // Volle Breite der Box
+                        shape = RoundedCornerShape(8.dp), // Abgerundete Ecken
+                        singleLine = true, // Verhindert den Zeilenumbruch
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Password, // Sicherstellen, dass das Textfeld als Passwort-Input genutzt wird
+                            imeAction = ImeAction.Done // Es wird zum nächsten Input weitergeleitet
+                        ),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            if (editingEnabled) {
+                                val image =
+                                    if (passwordVisible) Icons.TwoTone.Visibility else Icons.TwoTone.VisibilityOff
+                                val description =
+                                    if (passwordVisible) "Showed password" else "Hidden password"
+                                IconButton(
+                                    onClick = {
+                                        setPasswordVisible(!passwordVisible)
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = image,
+                                        contentDescription = description,
+                                        tint = LiloOrange
+                                    )
                                 }
+                            }
+                        },
+                        isError = passwordErrorMessage != null,
+                        supportingText = {
+                            passwordErrorMessage?.let {
+                                Text(
+                                    text = it,
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        },
+                        enabled = editingEnabled
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    if (editingEnabled) {
+                        Column {
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 32.dp, end = 32.dp),
+                                colors = ButtonDefaults.buttonColors().copy(
+                                    containerColor = LiloSuccess,
+                                    contentColor = Color.White,
+                                    disabledContainerColor = Color(0xFFCECECE),
+                                    disabledContentColor = Color(0xFF7F7F7F)
+                                ),
+                                contentPadding = PaddingValues(16.dp),
+                                onClick = {
+                                    // Daten updaten, wenn der Button geklickt wird
+                                    if (userViewModel.updateUserData(
+                                            newUsername = editedUsername.trim(),
+                                            newEmail = editedEmail.trim(),
+                                            newPassword = editedPassword.trim()
+                                        )
+                                    ) {
+                                        userViewModel.clearErrorMessages()
+                                        Log.i(
+                                            "New Credentials",
+                                            "Username: ${editedUsername.trim()}; E-Mail: " +
+                                                    "${editedEmail.trim()}; Password: ${editedPassword.trim()}"
+                                        )
+                                        // Bearbeitung abbrechen
+                                        setEditingEnabled(false)
+                                    }
+                                },
+                                enabled = isFormValid
                             ) {
-                                Icon(
-                                    imageVector = image,
-                                    contentDescription = description,
-                                    tint = LiloOrange
+                                Text(
+                                    text = "Speichern",
+                                    style = MaterialTheme.typography.labelSmall,
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 32.dp, end = 32.dp),
+                                colors = ButtonDefaults.buttonColors().copy(
+                                    containerColor = LiloDanger,
+                                    contentColor = Color.White,
+                                ),
+                                contentPadding = PaddingValues(16.dp),
+                                onClick = {
+                                    userViewModel.cancelChanges()
+                                    setEditingEnabled(false) // Beendet den Bearbeitungsmodus in der UI
+                                },
+                            ) {
+                                Text(
+                                    text = "Abbrechen",
+                                    style = MaterialTheme.typography.labelSmall,
                                 )
                             }
                         }
-                    },
-                    isError = passwordErrorMessage != null,
-                    supportingText = {
-                        passwordErrorMessage?.let {
-                            Text(
-                                text = it,
-                                color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    },
-                    enabled = editingEnabled
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (editingEnabled) {
-                    Column {
+                    } else {
                         Button(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 32.dp, end = 32.dp),
                             colors = ButtonDefaults.buttonColors().copy(
-                                containerColor = LiloSuccess,
-                                contentColor = Color.White,
-                                disabledContainerColor = Color(0xFFCECECE),
-                                disabledContentColor = Color(0xFF7F7F7F)
-                            ),
-                            contentPadding = PaddingValues(16.dp),
-                            onClick = {
-                                // Daten updaten, wenn der Button geklickt wird
-                                if (userViewModel.updateUserData(
-                                        newUsername = editedUsername.trim(),
-                                        newEmail = editedEmail.trim(),
-                                        newPassword = editedPassword.trim()
-                                    )
-                                ) {
-                                    userViewModel.clearErrorMessages()
-                                    Log.i(
-                                        "New Credentials",
-                                        "Username: ${editedUsername.trim()}; E-Mail: " +
-                                                "${editedEmail.trim()}; Password: ${editedPassword.trim()}"
-                                    )
-                                    // Bearbeitung abbrechen
-                                    setEditingEnabled(false)
-                                }
-                            },
-                            enabled = isFormValid
-                        ) {
-                            Text(
-                                text = "Speichern",
-                                style = MaterialTheme.typography.labelSmall,
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 32.dp, end = 32.dp),
-                            colors = ButtonDefaults.buttonColors().copy(
-                                containerColor = LiloDanger,
+                                containerColor = LiloOrange,
                                 contentColor = Color.White,
                             ),
                             contentPadding = PaddingValues(16.dp),
                             onClick = {
-                                userViewModel.cancelChanges()
-                                setEditingEnabled(false) // Beendet den Bearbeitungsmodus in der UI
+                                // Bearbeitung genehmigt
+                                showPasswordDialog = true
                             },
                         ) {
                             Text(
-                                text = "Abbrechen",
+                                text = "Bearbeiten",
                                 style = MaterialTheme.typography.labelSmall,
                             )
                         }
-                    }
-                } else {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 32.dp, end = 32.dp),
-                        colors = ButtonDefaults.buttonColors().copy(
-                            containerColor = LiloOrange,
-                            contentColor = Color.White,
-                        ),
-                        contentPadding = PaddingValues(16.dp),
-                        onClick = {
-                            // Bearbeitung genehmigt
-                            showPasswordDialog = true
-                        },
-                    ) {
-                        Text(
-                            text = "Bearbeiten",
-                            style = MaterialTheme.typography.labelSmall,
-                        )
                     }
                 }
             }

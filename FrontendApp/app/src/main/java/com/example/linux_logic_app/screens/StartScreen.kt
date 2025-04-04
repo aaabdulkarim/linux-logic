@@ -110,7 +110,10 @@ fun StartScreen(navController: NavController) {
                         .fillMaxWidth()
                         .clickable {
                             context.startActivity(liloIntent)
-                            Log.i("StartScreen", "User clicked Link - Action \"open Linux Logic Website\" -")
+                            Log.i(
+                                "StartScreen",
+                                "User clicked Link - Action \"open Linux Logic Website\" -"
+                            )
                         },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
