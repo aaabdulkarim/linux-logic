@@ -36,8 +36,8 @@
       <i class="pi" :class="rating >= 2 ? 'pi-star-fill' : 'pi-star'"></i>
       <i class="pi" :class="rating >= 3 ? 'pi-star-fill' : 'pi-star'"></i>
     </div>
-    <button @click="nextLevel" severity="success" class="w-full">
-        Nächstes Level
+    <button @click="exitToMenu" severity="success" class="w-full">
+      Nächstes Level
     </button>
   </div>
   <div v-if="isModalVisible" class="modal">
@@ -66,11 +66,15 @@ export default {
       promptLength: 14,
       socketUrl: "http://localhost:8000/ws",
 
+      userInput: "",
+      userInputHistory: [],
+      userInputHistoryIndex: 0,
+
       isModalVisible: false,
       modalContent: '',
       showRating: false,
-      rating: 1,  
-      
+      rating: 1,
+
       current_directory: "/",
 
       aufgabe: "",
@@ -78,6 +82,7 @@ export default {
 
       profileName: "",
       scenarioId: 0,
+
     };
   },
   mounted() {
@@ -113,20 +118,7 @@ export default {
     this.fitAddon.fit();
 
     this.terminal.onKey((event) => {
-      const { key, domEvent } = event;
-      if (domEvent.key === "Enter") {
-        this.terminal.write("\r\n");
-        this.respondToInput(this.userInput);
-        this.userInput = ""; // Eingabe zurücksetzen
-      } else if (domEvent.key === "Backspace") {
-        if (this.userInput.length > 0) {
-          this.userInput = this.userInput.slice(0, -1);
-          this.terminal.write("\b \b"); // Löscht das letzte Zeichen
-        }
-      } else {
-        this.userInput += key;
-        this.terminal.write(key);
-      }
+      this.handleInput(event)
     });
 
 
@@ -154,10 +146,13 @@ export default {
           console.log(message)
 
           if (message.output) {
-            const lines = message.output.trim().split("\n"); // Trim entfernt leere Zeilen
-            lines.forEach((line) => {
-              this.terminal.write(`\r\n${line}`);
-            });
+            const trimmedOutput = message.output.trim()
+            if (trimmedOutput != ''){
+              const lines = trimmedOutput.split("\n"); // Trim entfernt leere Zeilen
+              lines.forEach((line) => {
+                this.terminal.write(`\r\n${line}`);
+              });
+            }
           }
 
           if (message.check) {
@@ -214,45 +209,92 @@ export default {
 
 
     },
-    
     hexToRgb(hex) {
       const bigint = parseInt(hex.replace("#", ""), 16);
       return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 
     },
 
-    writePrompt() {
+    writePrompt(newLine = true) {
       const lastLine = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY);
       if (!lastLine || !lastLine.translateToString().includes("logic@linux:")) {
         const [r, g, b] = this.hexToRgb("#569191");
         const coloredPath = `\x1b[1m\x1b[38;2;${r};${g};${b}m${this.current_directory}\x1b[0m`;
-        this.terminal.write(`\r\nlogic@linux:${coloredPath}$ `);
+        if(newLine){
+          this.terminal.write("\r\n\n")
+        }
+        this.terminal.write(`logic@linux:${coloredPath}$ `);
       }
 
 
 
     },
-    handleInput(data) {
-      const char = data.charCodeAt(0);
+    handleInput(event) {
+      const { key, domEvent } = event;
+      console.log("user Input " + this.userInput)
+      console.log("domEvent " + domEvent.key)
 
-      if (char === 13) { // Enter key
-        const line = this.terminal.buffer.active.getLine(this.terminal.buffer.active.cursorY);
-        if (line) {
-          const lineText = line.translateToString().trim();
-          const userCommand = lineText.slice(this.promptLength).trim();
-          this.respondToInput(userCommand);
+      if (domEvent.key === "Enter") {
+        this.terminal.write("\r\n");
+        this.respondToInput(this.userInput);
+        if(this.userInput != ''){
+          this.userInputHistory.push(this.userInput)
+          this.userInputHistoryIndex = this.userInputHistory.length 
         }
-      } else if (char === 127) { // Backspace
+        this.userInput = ""; // Eingabe zurücksetzen
+      } else if (domEvent.key === "Backspace") {
         if (this.userInput.length > 0) {
           this.userInput = this.userInput.slice(0, -1);
-          this.terminal.write('\b \b');
+          this.terminal.write("\b \b"); // Löscht das letzte Zeichen
         }
-      } else {
-        this.userInput += data;
-        this.terminal.write(data);
+      } else if (domEvent.key === "ArrowUp") {
+        console.log(this.userInputHistory)
+        console.log(this.userInputHistoryIndex)
+
+        if (this.userInputHistoryIndex > 0) {
+          this.userInputHistoryIndex -= 1
+          const requestedInp = this.userInputHistory[this.userInputHistoryIndex]
+          if(requestedInp != '') {
+            this.terminal.write("\x1b[2K\r");
+            this.writePrompt(false)
+            this.terminal.write(requestedInp);
+
+          }
+        }
+
+
+        
+
+      } else if (domEvent.key === "ArrowDown") {
+        console.log(this.userInputHistory)
+        console.log(this.userInputHistoryIndex)
+        
+        
+        // Check ob es der Letzt Befehl ist
+        if (this.userInputHistoryIndex < this.userInputHistory.length - 1) {
+          this.userInputHistoryIndex += 1
+          const requestedInp = this.userInputHistory[this.userInputHistoryIndex]
+          if(requestedInp != '' ) {
+            this.terminal.write("\x1b[2K\r");
+            this.writePrompt(false)
+            this.terminal.write(requestedInp);
+
+          }
+        }
+
+        
+
+      } else if (domEvent.key === "ArrowRight") {
+
+      } else if (domEvent.key === "ArrowLeft") {
+
       }
-    }
-    ,
+      else {
+        this.userInput += key;
+        this.terminal.write(key);
+      }
+    },
+
     respondToInput(input) {
 
       if (input.toLowerCase() == "clear") {
@@ -290,16 +332,8 @@ export default {
     showRatingPopup() {
       this.showRating = true;
     },
-    nextLevel() {
-      this.showRating = false;
-      this.$router.push('/auswahl'); // Beispiel mit Vue Router (entfernt)
-    },
     exitToMenu() {
       this.$router.push('/auswahl');
-
-
-
-
     },
 
   }
@@ -412,7 +446,7 @@ button:hover {
   color: white !important;
   background-color: #569191 !important;
 }
- 
+
 .content {
   justify-content: left;
   text-align: left;
