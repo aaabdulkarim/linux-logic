@@ -20,10 +20,11 @@ class UserDB(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     session_id: int | None = Field(default=None, index=True)
     session_expiry: datetime | None = Field(default=None)
-
+    accessgranted: bool
 
 class UserRead(UserBase):
     stayLoggedIn : bool | None = Field(default=False) 
     email: str | None = Field(default=None, index=True)
+    accesscode : str | None = Field(default=None, index=True)
 
     

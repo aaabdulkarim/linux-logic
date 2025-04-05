@@ -22,8 +22,8 @@
       <i class="pi pi-sign-out icon" title="Zurück zum enü" @click="exitToMenu"></i>
     </div>
     <div class="right-icons">
-      <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="showModal('hint')"></i>
-      <i class="pi pi-key icon" title="Lösung anzeigen" @click="showModal('key')"></i>
+      <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="writeClues('hint')"></i>
+      <i class="pi pi-key icon" title="Lösung anzeigen" @click="writeClues('key')"></i>
       <!-- TODO: -->
       <i class="pi pi-angle-right icon" title="Aufgabe abgeben" @click="submitLevel"></i>
     </div>
@@ -40,13 +40,18 @@
       Nächstes Level
     </button>
   </div>
-  <div v-if="isModalVisible" class="modal">
-    <div class="modal-content">
-      <span class="close" @click="closeModal">&times;</span>
-      <p>{{ modalContent }}</p>
-    </div>
+  
 
-  </div>
+  <Dialog v-model:visible="isModalVisible" modal header="Fehler" :style="{ width: '25rem' }">
+    <Message severity="error" variant="simple">
+      {{ modalContent }}
+    </Message>
+    <br>
+    <Button @click="closeModal" label="Verstanden" />
+
+
+  </Dialog>
+
 </template>
 
 <script>
@@ -54,10 +59,16 @@ import { Terminal } from "xterm";
 import "xterm/css/xterm.css";
 import { FitAddon } from "xterm-addon-fit";
 import api from "@/api";
-import Button from "primevue/button";
-
+import Dialog  from 'primevue/dialog';
+import Message from "primevue/message";
+import Button from 'primevue/button';
 export default {
   name: 'Terminal',
+  components: {
+    Dialog,
+    Message,
+    Button
+  },
   data() {
     return {
       terminal: null,
@@ -182,6 +193,11 @@ export default {
             this.showRatingPopup();
           }
 
+          if (message.error) {
+            this.isModalVisible = true
+            this.modalContent = message.error;
+          }
+
           // Immer nur einen Prompt setzen, wenn nicht schon einer existiert
           // setTimeout(() => this.writePrompt(), 50);
           this.writePrompt()
@@ -196,10 +212,15 @@ export default {
 
       this.socketClient.onerror = (error) => {
         console.error("WebSocket Error:", error);
+        this.isModalVisible = true;
+        this.modalContent = "Fehler beim Aufbau der Verbindung zum Server.";
+        console.error("WebSocket Error:", error);
       };
 
       this.socketClient.onclose = () => {
         console.warn("WebSocket connection closed.");
+        this.isModalVisible = true;
+        // this.modalContent = "Die Verbindung zum Server wurde unerwartet getrennt.";
 
         // setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
 
@@ -313,18 +334,17 @@ export default {
         this.terminal.write("\r\n[Error] WebSocket not connected.");
       }
     },
-    showModal(type) {
+    writeClues(type) {
       if (type === 'hint') {
         this.socketClient.send(">clue")
       } else if (type === 'key') {
         this.socketClient.send(">solution")
       }
-      this.isModalVisible = true;
-      this.modalContent = type === 'hint' ? 'Der Hinweiß der Aufgabe!' : 'Die Lösung der Aufgabe!';
     },
     closeModal() {
       this.isModalVisible = false;
       this.modalContent = '';
+      this.$router.push("/login")
     },
     submitLevel() {
       this.socketClient.send(">check")

@@ -10,7 +10,7 @@
           <label for="password"><h5>Passwort</h5></label>
           <Password id="password" v-model="password" :feedback="false" toggleMask/>
           <label for="code"><h5>Access Code (nicht notwendig)</h5></label>
-          <Password id="code" v-model="code" :feedback="false" toggleMask/>
+          <Password id="code" v-model="accesscode" :feedback="false" toggleMask/>
         </div>
 
         <div class="login-actions">
@@ -54,6 +54,7 @@ export default {
       password: '',
       stayLoggedIn: false,
       response: false,
+      accesscode: ''
     };
   },
   computed: {
@@ -75,7 +76,8 @@ export default {
         
           username: this.email,
           password: this.password,
-          stayLoggedIn: true
+          stayLoggedIn: true,
+          accesscode: this.accesscode
       })
       .then((response) => {
         console.log(response.data);
@@ -169,7 +171,17 @@ export default {
 .p-checkbox {
   margin-right: 0.5rem;
 }
+
+.stay-logged-in {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
 ::v-deep .p-checkbox .p-checkbox-box {
+  pointer-events: auto !important;
+
   width: 20px;
   height: 20px;
   border-radius: 6px;

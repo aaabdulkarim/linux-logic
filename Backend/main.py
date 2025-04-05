@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from models.UserModels import *
 from models.ProgressModels import *
 from models.ScenarioModels import *
+from models.AccessModels import *
 
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -84,6 +85,24 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     user.session_id = session_id
     user.session_expiry = session_expiry
     
+    # Grant Access
+    if userModel.accesscode:
+        print("user accescode" + userModel.accesscode)
+        # Check if accesscode is valid
+        accesscode = session.exec(select(AccessCode).where(AccessCode.code == userModel.accesscode)).first()
+        if accesscode and accesscode.used == False:
+            accesscode.used = True
+            user.accessgranted = True
+            session.add(accesscode)
+            session.commit()
+            print("accesscode: " + accesscode.code)
+
+        print("Wenigstens im model")
+
+    else:
+        print("Kein accesscode")
+
+
     session.add(user)
     session.commit()
     
@@ -144,18 +163,6 @@ async def editPassword(request: Request, editBody : UserEdit, session: SessionDe
     return {"message": "Passwort erfolgreich geändert"}
 
 
-# @app.post("/bewertung") - Ausgeschlossene Funktion
-async def addBewertung(userId : int, levelId : int, value : int, kommentar : str, session: SessionDep):
-    bewertung = Bewertung()
-    bewertung.user_id = userId
-    bewertung.scenario_id = levelId
-    bewertung.bewertung = value
-    bewertung.kommentar = kommentar
-
-
-    session.add(bewertung)
-    session.commit()
-    return bewertung
 
 
 @app.post("/progress")
@@ -393,6 +400,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
     if not session_id:
         await mainsocket.send_json({"error": "Session cookie not found"})
+        await asyncio.sleep(0.1)  
         await mainsocket.close()
         return
 
@@ -402,9 +410,15 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
     if not user or user.session_expiry < datetime.now(timezone.utc):
         await mainsocket.send_json({"error": "Invalid session. Please log in again."})
+        await asyncio.sleep(0.1)  
         await mainsocket.close()
-        return
+        return 
 
+    if user.accessgranted == False:
+        await mainsocket.send_json({"error": "Kein Accesscode"})
+        await asyncio.sleep(0.1)  
+        await mainsocket.close()
+        return 
 
     # Starten des normalen Prozedere
     frontend_user_name = await mainsocket.receive_text()
@@ -412,6 +426,13 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
     print(frontend_user_name)
 
     frontend_scenario_id = await mainsocket.receive_text()
+
+    if int(frontend_scenario_id) > 3 and int(frontend_scenario_id) < 1:
+        await mainsocket.send_json({"error": f"Kapitel {frontend_scenario_id} noch nicht verfügbar"})
+        await asyncio.sleep(0.1)  
+        await mainsocket.close()
+
+
     frontend_container_choice = "scenario" + str(frontend_scenario_id)
     print(frontend_container_choice)
 
