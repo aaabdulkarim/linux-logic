@@ -72,10 +72,14 @@ engine = create_engine(connectionString, pool_pre_ping=True)
 # FastAPI App
 app = FastAPI()
 
-origins = ["http://localhost", "http://localhost:8080", "http://localhost:8081"]
+origins = [
+    "http://localhost:8080",   # for dev
+    "https://linux-logic.com",  # production
+    "https://www.linux-logic.com"
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
