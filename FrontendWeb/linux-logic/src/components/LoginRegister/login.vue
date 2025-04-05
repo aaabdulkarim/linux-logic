@@ -95,9 +95,6 @@ export default {
         console.error('Fehler bei der Anmeldung:', error);
       });
     }
-  },
-  mounted() {
-    
   }
 };
 </script>

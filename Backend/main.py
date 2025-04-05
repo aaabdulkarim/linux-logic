@@ -52,6 +52,15 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+
+# Passwort Security check
+def is_strong_password(password: str) -> bool:
+    # Mindestens 8 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen
+    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$'
+    return re.fullmatch(pattern, password) is not None
+
+
+
 # Datenbank-Engine erstellen
 engine = create_engine(connectionString, pool_pre_ping=True)
 
@@ -87,7 +96,7 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     
     # Grant Access
     if userModel.accesscode:
-        print("user accescode" + userModel.accesscode)
+
         # Check if accesscode is valid
         accesscode = session.exec(select(AccessCode).where(AccessCode.code == userModel.accesscode)).first()
         if accesscode and accesscode.used == False:
@@ -95,9 +104,7 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
             user.accessgranted = True
             session.add(accesscode)
             session.commit()
-            print("accesscode: " + accesscode.code)
 
-        print("Wenigstens im model")
 
     else:
         print("Kein accesscode")
@@ -129,6 +136,10 @@ async def register(userModel: UserRead, session: SessionDep):
     if len(userModel.password) < 8:
         raise HTTPException(status_code=400, detail="Passwort muss mindestens 8 Zeichen lang sein")
 
+    if not is_strong_password(userModel.password):
+        raise HTTPException(status_code=400, detail="Passwort muss Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten")
+
+
     hashed_password = hash_password(userModel.password)
     new_user = UserDB(username=userModel.username, email=userModel.email, password=hashed_password)
     session.add(new_user)
@@ -155,6 +166,13 @@ async def editPassword(request: Request, editBody : UserEdit, session: SessionDe
     if user.session_expiry < datetime.now(timezone.utc):
         raise HTTPException(status_code=401, detail="Anmeldung notwendig")
     
+    if len(editBody.newPassword) < 8:
+        raise HTTPException(status_code=400, detail="Passwort muss mindestens 8 Zeichen lang sein")
+
+    if not is_strong_password(editBody.newPassword):
+        raise HTTPException(status_code=400, detail="Passwort muss Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten")
+
+
 
     user.password = hash_password(editBody.newPassword)
     session.add(user)

@@ -151,7 +151,7 @@ export default {
         })
         .catch(error => {
           console.error("Fehler beim Ändern des Passworts:", error);
-          alert("Fehler beim Ändern des Passworts. Bitte versuchen Sie es erneut.");
+          alert("Fehler beim Ändern des Passworts. " + error.response.data.detail);
         });
     },
     num() {

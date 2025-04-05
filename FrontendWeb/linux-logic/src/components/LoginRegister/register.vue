@@ -42,8 +42,8 @@
         </div>
         <div class="register-actions">
           <div class="stay-logged-in">
-            <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" />
-            <label for="stayLoggedIn">Angemeldet bleiben</label>
+            <Checkbox v-model="stayLoggedIn" id="stayloggedin" name="stayloggedin" binary="true" />
+            <label for="stayloggedin">Angemeldet bleiben</label>
           </div>
         </div>
         <Button @click="create" label="Registrieren" />
