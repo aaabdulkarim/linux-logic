@@ -15,8 +15,8 @@
 
         <div class="login-actions">
           <div class="stay-logged-in">
-            <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" :disabled="false" />
-            <label for="stayLoggedIn">Angemeldet bleiben</label>
+            <Checkbox v-model="stayLoggedIn" id="stayloggedin" name="stayloggedin" binary="true" />
+            <label for="stayloggedin">Angemeldet bleiben</label>
           </div>
           <!-- <div class="forgot-password">
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
@@ -72,11 +72,13 @@ export default {
       this.check();
     },
     check() {
+      console.log(this.stayLoggedIn);
+      
       api.post('/login', {
         
           username: this.email,
           password: this.password,
-          stayLoggedIn: true,
+          stayLoggedIn: this.stayLoggedIn,
           accesscode: this.accesscode
       })
       .then((response) => {
@@ -179,19 +181,6 @@ export default {
   z-index: 10;
 }
 
-::v-deep .p-checkbox .p-checkbox-box {
-  pointer-events: auto !important;
-
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  border: 1px solid #569191;
-  background-color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: auto;
-}
 
 button {
   margin-right: 1rem;

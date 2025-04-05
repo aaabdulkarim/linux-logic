@@ -59,8 +59,6 @@ class DockerManager():
         return self.userContainerConnections.get(userName + frontendChoice)  # Return full connection object
 
 
-
-
     async def add_connection(self, userSessionId, userName, frontendChoice):
         # TODO: Reconnect function which can hold the scm
         # existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
