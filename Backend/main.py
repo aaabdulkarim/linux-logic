@@ -236,16 +236,27 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
         new_progress = ProgressDB(
             scenario_id=progressBody.scenario_id,
             loesungen_verwendet = progressBody.loesungen_verwendet,
-            hints_verwendet = progressBody.hints_verwendet
-
+            hints_verwendet = progressBody.hints_verwendet,
+            user_id = user.id
         )
         session.add(new_progress)
 
     session.commit()
+
+    anzahl_sterne = 3
+
+    if new_progress.hints_verwendet > 0:
+        anzahl_sterne = 2
+
+    if new_progress.loesungen_verwendet > 0:
+        anzahl_sterne = 1
+
+    
     return {
         "message": "Progress erfolgreich gespeichert oder aktualisiert", 
         "loesungen_verwendet" : progressBody.loesungen_verwendet, 
-        "hints_verwendet" :  progressBody.hints_verwendet
+        "hints_verwendet" :  progressBody.hints_verwendet,
+        "sterne" : anzahl_sterne
     }
 
 
@@ -440,7 +451,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
         return 
 
     if user.accessgranted != True:
-        await mainsocket.send_json({"error": "Kein Accesscode"})
+        await mainsocket.send_json({"error": "Kein Accesscode. Erneut anmelden mit Access Code"})
         await asyncio.sleep(0.1)  
         await mainsocket.close()
         return 
@@ -531,12 +542,10 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             else:
                                 await container_socket.send(f"bash -c /app/checks_fun_{scm.subscenario_progress + 1}.sh")
                                 bash_check = await container_socket.recv()
-
-
-                                # TODO: if check positiv update progress
-                                bash_check = bash_check.strip()
                                 print(bash_check)
-                                if bash_check == "true":
+                                check_json = json.loads(bash_check)
+
+                                if check_json["output"].strip() == "true":
 
                                     
                                     scm.update_progress()

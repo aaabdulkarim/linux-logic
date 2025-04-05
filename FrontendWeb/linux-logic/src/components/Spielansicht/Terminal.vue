@@ -190,6 +190,15 @@ export default {
 
           // Falls das letzte Level erreicht wurde, Bewertung anzeigen
           if (message.last_level) {
+            api.post("/progress", {
+                scenario_id: this.scenarioId,
+                hints_verwendet: message.hints_verwendet,
+                loesungen_verwendet: message.loesungen_verwendet
+            })
+            .then((response) => {
+              this.rating = response.data.sterne
+            })
+
             this.showRatingPopup();
           }
 
