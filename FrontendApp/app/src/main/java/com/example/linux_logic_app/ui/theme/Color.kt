@@ -30,6 +30,7 @@ val LiloDarkText = Color(0XFFFFFFFF)
 
 // Erfolg / Misserfolg Farben
 val LiloSuccess = Color(0xFF218938)
+val LiloPending = Color(0xFFDCC635)
 val LiloDanger = Color(0xFFdc3545)
 
 // Neues

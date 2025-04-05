@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -269,7 +268,6 @@ fun HelpCard(cardTitle: String, cardDesc: String, cardIcon: ImageVector) {
                     expanded = !expanded
                 }
                 .padding(16.dp)
-                .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -306,7 +304,6 @@ fun HelpCard(cardTitle: String, cardDesc: String, cardIcon: ImageVector) {
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White,
                         textAlign = TextAlign.Justify,
-                        modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
             }
