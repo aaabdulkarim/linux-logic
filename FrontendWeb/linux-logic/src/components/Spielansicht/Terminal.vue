@@ -344,7 +344,7 @@ export default {
     closeModal() {
       this.isModalVisible = false;
       this.modalContent = '';
-      this.$router.push("/login")
+      this.$router.push("/auswahl")
     },
     submitLevel() {
       this.socketClient.send(">check")
