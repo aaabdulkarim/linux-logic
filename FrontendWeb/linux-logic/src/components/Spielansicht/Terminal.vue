@@ -75,7 +75,7 @@ export default {
       showRating: false,
       rating: 1,
 
-      current_directory: "/",
+      current_directory: "/home",
 
       aufgabe: "",
       aufgabenId: 0,
@@ -137,7 +137,7 @@ export default {
         const scenarioIdFromQuery = this.$route.query.scenario_id;
         this.socketClient.send(scenarioIdFromQuery)
         this.scenarioId = parseInt(scenarioIdFromQuery)
-        this.socketClient.send("")
+        this.socketClient.send("cd /home")
       };
 
       this.socketClient.onmessage = (event) => {

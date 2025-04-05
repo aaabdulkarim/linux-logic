@@ -442,9 +442,13 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
             async with websockets.connect(container_socket_url) as container_socket:
                 print("connected to external")
 
+                # User soll im home Directory anfangen
+                # await container_socket.send("cd /home")
                 desc = "".join(scm.get_desc())
-                await mainsocket.send_json({"description": desc}) 
-                await mainsocket.send_json({"levelNr": scm.subscenario_progress + 1}) 
+                await mainsocket.send_json({
+                    "description": desc,
+                    "levelNr": scm.subscenario_progress + 1}
+                ) 
                 
                 response_type = ""
                 response_data = ""
