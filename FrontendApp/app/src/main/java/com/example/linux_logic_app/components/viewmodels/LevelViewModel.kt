@@ -73,5 +73,7 @@ class LevelViewModel(private val scenario: Scenario) : ViewModel() {
             false
         }
     }
+
+    fun getScenarioAmount(): Int = getScenarioAmount()
 }
 

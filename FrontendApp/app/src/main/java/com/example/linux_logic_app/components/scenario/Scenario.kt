@@ -63,6 +63,8 @@ data class Scenario(
      * @return Das letzte Sublevel, falls vorhanden, sonst null.
      */
     fun getLastSublevel(): Sublevel? = sublevels.values.lastOrNull()
+
+    fun getAmountOfScenarios(): Int = scenarioList.size
 }
 
 /**
@@ -71,7 +73,7 @@ data class Scenario(
  * auch eine Sammlung von Sublevels enthält. Diese Sammlung ist in einer LinkedHashMap organisiert, um die Reihenfolge
  * der Lernmodule beizubehalten.
  */
-val courseList = listOf(
+val scenarioList = listOf(
     Scenario(
         id = 1,
         name = "Linux Grundlagen",
