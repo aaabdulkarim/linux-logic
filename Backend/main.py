@@ -60,6 +60,10 @@ def is_strong_password(password: str) -> bool:
     return re.fullmatch(pattern, password) is not None
 
 
+def is_valid_username(username: str) -> bool:
+    return re.fullmatch(r'^[a-zA-Z0-9]+$', username) is not None
+
+
 
 # Datenbank-Engine erstellen
 engine = create_engine(connectionString, pool_pre_ping=True)
@@ -122,6 +126,9 @@ async def register(userModel: UserRead, session: SessionDep):
 
     if not re.fullmatch(EMAIL_REGEX, userModel.email):
         raise HTTPException(status_code=400, detail="Ungültiges E-Mail-Format")
+
+    if not is_valid_username(userModel.username):
+        raise HTTPException(status_code=400, detail="Benutzername darf nur Buchstaben und Zahlen enthalten")
 
     # Überprüfen, ob die E-Mail bereits registriert ist
     existing_email_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
@@ -432,7 +439,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
         await mainsocket.close()
         return 
 
-    if user.accessgranted == False:
+    if user.accessgranted != True:
         await mainsocket.send_json({"error": "Kein Accesscode"})
         await asyncio.sleep(0.1)  
         await mainsocket.close()
@@ -445,7 +452,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
     frontend_scenario_id = await mainsocket.receive_text()
 
-    if int(frontend_scenario_id) > 3 and int(frontend_scenario_id) < 1:
+    if int(frontend_scenario_id) != 1:
         await mainsocket.send_json({"error": f"Kapitel {frontend_scenario_id} noch nicht verfügbar"})
         await asyncio.sleep(0.1)  
         await mainsocket.close()
@@ -585,6 +592,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
     else:
         print("Help")
+        return
     
 
 
