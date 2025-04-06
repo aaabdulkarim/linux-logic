@@ -19,7 +19,8 @@
     </div>
     <div class="icon-container">
       <div class="left-icons">
-        <i class="pi pi-sign-out icon" title="Zurück zum enü" @click="exitToMenu"></i>
+        <i class="pi pi-sign-out icon" title="Zurück zum Menü" @click="exitToMenu"></i>
+        <i class="pi pi-refresh icon" title="Neu Laden"</i>
       </div>
       <div class="right-icons">
         <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="showModal('hint')"></i>
