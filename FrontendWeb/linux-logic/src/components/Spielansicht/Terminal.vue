@@ -24,7 +24,7 @@
     <div class="right-icons">
       <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="writeClues('hint')"></i>
       <i class="pi pi-key icon" title="Lösung anzeigen" @click="writeClues('key')"></i>
-      <!-- TODO: -->
+      <i class="pi pi-refresh icon" title="Neu Laden"></i>
       <i class="pi pi-angle-right icon" title="Aufgabe abgeben" @click="submitLevel"></i>
     </div>
   </div>
@@ -190,6 +190,15 @@ export default {
 
           // Falls das letzte Level erreicht wurde, Bewertung anzeigen
           if (message.last_level) {
+            api.post("/progress", {
+                scenario_id: this.scenarioId,
+                hints_verwendet: message.hints_verwendet,
+                loesungen_verwendet: message.loesungen_verwendet
+            })
+            .then((response) => {
+              this.rating = response.data.sterne
+            })
+
             this.showRatingPopup();
           }
 

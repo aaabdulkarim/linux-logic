@@ -60,6 +60,10 @@ def is_strong_password(password: str) -> bool:
     return re.fullmatch(pattern, password) is not None
 
 
+def is_valid_username(username: str) -> bool:
+    return re.fullmatch(r'^[a-zA-Z0-9]+$', username) is not None
+
+
 
 # Datenbank-Engine erstellen
 engine = create_engine(connectionString, pool_pre_ping=True)
@@ -68,10 +72,14 @@ engine = create_engine(connectionString, pool_pre_ping=True)
 # FastAPI App
 app = FastAPI()
 
-origins = ["http://localhost", "http://localhost:8080", "http://localhost:8081"]
+origins = [
+    "http://localhost:8080",   # for dev
+    "https://linux-logic.com",  # production
+    "https://www.linux-logic.com"
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -122,6 +130,9 @@ async def register(userModel: UserRead, session: SessionDep):
 
     if not re.fullmatch(EMAIL_REGEX, userModel.email):
         raise HTTPException(status_code=400, detail="Ungültiges E-Mail-Format")
+
+    if not is_valid_username(userModel.username):
+        raise HTTPException(status_code=400, detail="Benutzername darf nur Buchstaben und Zahlen enthalten")
 
     # Überprüfen, ob die E-Mail bereits registriert ist
     existing_email_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
@@ -229,16 +240,27 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
         new_progress = ProgressDB(
             scenario_id=progressBody.scenario_id,
             loesungen_verwendet = progressBody.loesungen_verwendet,
-            hints_verwendet = progressBody.hints_verwendet
-
+            hints_verwendet = progressBody.hints_verwendet,
+            user_id = user.id
         )
         session.add(new_progress)
 
     session.commit()
+
+    anzahl_sterne = 3
+
+    if new_progress.hints_verwendet > 0:
+        anzahl_sterne = 2
+
+    if new_progress.loesungen_verwendet > 0:
+        anzahl_sterne = 1
+
+    
     return {
         "message": "Progress erfolgreich gespeichert oder aktualisiert", 
         "loesungen_verwendet" : progressBody.loesungen_verwendet, 
-        "hints_verwendet" :  progressBody.hints_verwendet
+        "hints_verwendet" :  progressBody.hints_verwendet,
+        "sterne" : anzahl_sterne
     }
 
 
@@ -432,8 +454,8 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
         await mainsocket.close()
         return 
 
-    if user.accessgranted == False:
-        await mainsocket.send_json({"error": "Kein Accesscode"})
+    if user.accessgranted != True:
+        await mainsocket.send_json({"error": "Kein Accesscode. Erneut anmelden mit Access Code"})
         await asyncio.sleep(0.1)  
         await mainsocket.close()
         return 
@@ -445,7 +467,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
     frontend_scenario_id = await mainsocket.receive_text()
 
-    if int(frontend_scenario_id) > 3 and int(frontend_scenario_id) < 1:
+    if int(frontend_scenario_id) != 1:
         await mainsocket.send_json({"error": f"Kapitel {frontend_scenario_id} noch nicht verfügbar"})
         await asyncio.sleep(0.1)  
         await mainsocket.close()
@@ -524,12 +546,10 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             else:
                                 await container_socket.send(f"bash -c /app/checks_fun_{scm.subscenario_progress + 1}.sh")
                                 bash_check = await container_socket.recv()
-
-
-                                # TODO: if check positiv update progress
-                                bash_check = bash_check.strip()
                                 print(bash_check)
-                                if bash_check == "true":
+                                check_json = json.loads(bash_check)
+
+                                if check_json["output"].strip() == "true":
 
                                     
                                     scm.update_progress()
@@ -585,6 +605,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
     else:
         print("Help")
+        return
     
 
 

@@ -95,7 +95,7 @@ export default {
 
         },
         {
-          date: "01.04.25",
+          date: "06.04.25",
           status: "DIPLOMARBEIT VOLLSTÄNDIG",
           event: "Diplomarbeit",
           details: "Die Diplomarbeit vollständig schriftlich festgehalten und bereit für Einreichung",

@@ -1,30 +1,33 @@
 #!/bin/bash
 
-set -e  # Beende das Skript bei Fehlern
+set -e # Beende das Skript bei Fehlern
 
-# Funktion zur Überprüfung, ob eine Datei existiert
-check_file() {
+# Funktion zur Überprüfung, ob eine Datei eine bestimmte Zeile enthält (gibt nur true/false zurück)
+check_file_contains_line() {
     local file="$1"
-    if [ -f "$file" ]; then
+    local line="$2"
+    if grep -qF "$line" "$file"; then
         echo "true"
     else
         echo "false"
     fi
 }
 
-# Gehe ins Verzeichnis der Einladungen und überprüfe die Gästeliste
+# Hauptüberprüfung der Gästeliste (fokusiert auf den Inhalt)
 check_guest_list() {
     local invite_dir="/home/Einladungen"
     local guest_list="$invite_dir/gaesteliste.txt"
+    local expected_line="ich"
 
     # Prüfen, ob das Verzeichnis existiert
     if [ ! -d "$invite_dir" ]; then
         echo "false"
+        return 1
     fi
 
-    # Prüfen, ob die Gästeliste existiert
-    check_file "$guest_list"
+    # Überprüfen, ob die Gästeliste die erwartete Zeile enthält
+    check_file_contains_line "$guest_list" "$expected_line"
 }
 
-# Hauptüberprüfung
+# Führe die Hauptüberprüfung aus
 check_guest_list

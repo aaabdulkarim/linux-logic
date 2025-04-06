@@ -1,6 +1,8 @@
 import docker
 from ScenarioTrack import ScenarioTrack
 from UserDockerConnection import UserDockerConnection
+from datetime import datetime, timedelta
+
 
 class DockerManager():
 
@@ -18,7 +20,6 @@ class DockerManager():
     userContainerConnections = {} 
     client = docker.from_env()
 
-    
     async def create_docker_container(self, userSessionId, userName, frontendChoice):
 
         docker_dir_path = f"scenarios/{frontendChoice}"
@@ -101,3 +102,7 @@ class DockerManager():
         container = self.client.containers.get(container_name)
         container.stop()
         container.remove()
+
+
+    async def start_auto_delete_containers(self):
+        print(self.userContainerConnections)
