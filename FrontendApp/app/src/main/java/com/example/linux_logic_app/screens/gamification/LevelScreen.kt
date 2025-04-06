@@ -1,7 +1,7 @@
 package com.example.linux_logic_app.screens.gamification
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +37,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -71,6 +72,20 @@ import com.example.linux_logic_app.ui.theme.LiloOrange
 import com.example.linux_logic_app.ui.theme.LiloSuccess
 import kotlinx.coroutines.launch
 
+/**
+ * LevelScreen - Zeigt den aktuellen Lernfortschritt (Sublevel) eines ausgewählten Scenarios an.
+ * Dieses Composable zeigt in einer Scaffold-Struktur:
+ * - Eine TopAppBar, die den aktuellen Sublevel-Namen anzeigt (mit animiertem Übergang).
+ * - Den LevelCard, der die Details des aktuellen Sublevels (Name und Beschreibung) darstellt.
+ * - Ein Terminal, das als interaktives Element den Fortschritt visualisiert.
+ * - Zwei ExtendedFloatingActionButtons für "Hinweise" und "Prüfen".
+ * - Beim Drücken von "Prüfen" wird der nächste Sublevel geladen; falls es keinen mehr gibt, erscheint ein CompletionDialog.
+ * Wichtige Aspekte:
+ * - Verwendung von AnimatedVisibility, AnimatedContent und animateFloatAsState für fließende Animationen.
+ * - Nutzung eines SnackbarHost zur Anzeige von Erfolgsmeldungen.
+ * @param navController Steuert die Navigation zwischen den Screens.
+ * @param userViewModel Verwaltet den Zustand des aktuell angemeldeten Nutzers.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
@@ -160,6 +175,7 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // LevelCard zeigt die aktuelle Sublevel-Information (Name und Beschreibung)
                 LevelCard(sublevelName, sublevelDesc)
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -184,10 +200,9 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ExtendedFloatingActionButton(
-                        modifier = Modifier
-                            .weight(0.5f),
+                        modifier = Modifier.weight(0.5f),
                         onClick = {
-                            // ToDo
+                            // ToDo: Hinweise anzeigen
                         },
                         icon = {
                             Icon(
@@ -209,8 +224,7 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                     Spacer(modifier = Modifier.width(8.dp))
 
                     ExtendedFloatingActionButton(
-                        modifier = Modifier
-                            .weight(0.5f),
+                        modifier = Modifier.weight(0.5f),
                         onClick = {
                             // Checken ob die Eingabe valide ist.
                             if (!levelViewModel.nextSublevel()) {
@@ -247,11 +261,22 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
     if (showCompletionDialog) {
         CompletionDialog {
             showCompletionDialog = false
-            navController.navigateUp()  // Navigation erst nach Bestätigun
+            navController.navigateUp()  // Navigation erst nach Bestätigung
         }
     }
 }
 
+/**
+ * LevelCard - Zeigt die Details des aktuellen Sublevels an.
+ * Dieses Composable stellt eine Card dar, die den Namen und die Beschreibung des aktuellen Sublevels zeigt.
+ * Über eine Klickaktion kann der Card-Content erweitert bzw. reduziert werden, wobei ein Pfeilsymbol
+ * animiert rotiert, um den Zustand (erweitert/kompakt) anzuzeigen.
+ * Wichtige Aspekte:
+ * - Animierte Rotation des Pfeilsymbols mittels animateFloatAsState.
+ * - AnimateContentSize sorgt für einen fließenden Übergang bei der Größenänderung der Card.
+ * @param sublevelName Name des aktuellen Sublevels.
+ * @param sublevelDesc Beschreibung des aktuellen Sublevels.
+ */
 @Composable
 fun LevelCard(sublevelName: String, sublevelDesc: String) {
     var expanded by remember { mutableStateOf(false) }
@@ -263,7 +288,8 @@ fun LevelCard(sublevelName: String, sublevelDesc: String) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = LiloBlue
-        )
+        ),
+        elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(
             modifier = Modifier
@@ -273,12 +299,10 @@ fun LevelCard(sublevelName: String, sublevelDesc: String) {
                     expanded = !expanded
                 }
                 .padding(16.dp)
-                .animateContentSize()
                 .imePadding(),  // Dieser Modifier fügt weiteren Platz hinzu, falls die Tastatur eingeblendet wird.
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -298,26 +322,36 @@ fun LevelCard(sublevelName: String, sublevelDesc: String) {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = if (expanded) "Collapse" else "Expand",
-                    modifier = Modifier
-                        .graphicsLayer(rotationZ = rotationAngle),
+                    modifier = Modifier.graphicsLayer(rotationZ = rotationAngle),
                     tint = Color.White
                 )
             }
 
-            if (expanded) {
-                Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = sublevelDesc,
-                    textAlign = TextAlign.Justify,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
+            AnimatedVisibility(visible = expanded) {
+                Column(modifier = Modifier.padding(top = 12.dp)) {
+                    HorizontalDivider(thickness = 1.dp, color = LiloMain)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = sublevelDesc,
+                        textAlign = TextAlign.Justify,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                }
             }
         }
     }
 }
 
+/**
+ * CompletionDialog - Zeigt einen Dialog an, wenn alle Sublevels abgeschlossen sind.
+ * Dieses Composable zeigt einen AlertDialog, der dem Nutzer gratuliert und eine Bestätigung bietet.
+ * Nach Bestätigung wird der Dialog geschlossen und die Navigation erfolgt.
+ * Wichtige Aspekte:
+ * - Der Dialog verwendet eine vollständige Breite mit Padding und ist in der Farbe an das Thema angepasst.
+ * @param onDismiss Callback, der aufgerufen wird, wenn der Dialog bestätigt wird.
+ */
 @Composable
 fun CompletionDialog(onDismiss: () -> Unit) {
     AlertDialog(
@@ -353,9 +387,7 @@ fun CompletionDialog(onDismiss: () -> Unit) {
                     tint = LiloMain,
                     modifier = Modifier.size(64.dp)
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
                     text = "Glückwunsch!",
                     style = MaterialTheme.typography.headlineMedium,
@@ -371,11 +403,18 @@ fun CompletionDialog(onDismiss: () -> Unit) {
                 style = MaterialTheme.typography.bodyLarge
             )
         },
-        modifier = Modifier
-            .padding(16.dp)
+        modifier = Modifier.padding(16.dp)
     )
 }
 
+/**
+ * CustomSnackbar - Ein benutzerdefinierter Snackbar-Stil.
+ * Dieses Composable rendert eine Snackbar innerhalb einer Card, die
+ * eine Erfolgsmeldung anzeigt. Es wird als Host im Scaffold verwendet.
+ * Wichtige Aspekte:
+ * - Nutzung eines Row-Layouts zur Anzeige eines Icons und des Nachrichten-Textes.
+ * @param data Enthält die Snackbar-Daten, wie die Nachricht.
+ */
 @Composable
 fun CustomSnackbar(data: SnackbarData) {
     Box(
@@ -401,9 +440,7 @@ fun CustomSnackbar(data: SnackbarData) {
                     contentDescription = "Success Icon for Level",
                     tint = LiloSuccess,
                 )
-
                 Spacer(modifier = Modifier.width(8.dp))
-
                 Text(
                     text = data.visuals.message,
                     style = MaterialTheme.typography.labelSmall,

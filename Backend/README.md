@@ -80,11 +80,10 @@ CONNECTION_STRING="DEIN NEON CONNECTION STRING"
 
 # Ausführen der API
 
-Solange man im Backend Folder ist, die Virtual Environment mit ihren requirements installiert hat, sollte man fastapi dev main.py ausführen können
 
-**Alternativ mit uvicorn starten:**
+**Mit uvicorn starten:**
 
-*uvicorn dockersocketmain:app --host {IP vom Computer} --port 8000*
+*uvicorn main:app --host localhost --port 8000*
 
 # Test - Infos
 

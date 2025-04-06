@@ -1,16 +1,15 @@
 package com.example.linux_logic_app.navigation
 
 /**
- * Screen ist eine sealed class (Versiegelte Klasse), welche die verfügbaren Bildschirme (Screens) in unserer App definiert.
- * Durch die Verwendung einer sealed class wird die Navigation typsicher gestaltet, da alle möglichen
- * Routen der App explizit als Subklasse von Screen definiert werden. Dies minimiert Fehler und
- * erleichtert die Wartung der Navigation in der App.
+ * Screen ist eine sealed class (Versiegelte Klasse), welche die verfügbaren Bildschirme (Screens)
+ * in unserer App definiert. Durch die Verwendung einer sealed class wird die Navigation typsicher
+ * gestaltet, da alle möglichen Routen der App explizit als Subklasse von Screen definiert werden.
+ * Dies minimiert Fehler und erleichtert die Wartung der Navigation in der App.
  *
  * Vorteile dieser Struktur:
  * - Typsicherheit: Fehlerhafte Routen werden zur Kompilierzeit erkannt.
  * - Erweiterbarkeit: Neue Bildschirme können durch Hinzufügen weiterer Subklassen problemlos integriert werden.
  * - Zentrale Verwaltung: Alle Routen der App sind an einem Ort definiert.
- *
  * Jede Subklasse von Screen repräsentiert eine eindeutige Route in der Navigation der App.
  *
  * Konstruktor:

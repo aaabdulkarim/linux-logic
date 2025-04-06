@@ -51,13 +51,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.components.scenario.Scenario
-import com.example.linux_logic_app.components.scenario.courseList
+import com.example.linux_logic_app.components.scenario.scenarioList
 import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.navigation.Screen
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDarkText
 import com.example.linux_logic_app.ui.theme.LiloMain
 
+/**
+ * PlayScreen - Der Bildschirm zum Auswählen und Starten eines Kurses (Scenario).
+ * Dieses Composable zeigt eine Liste aller verfügbaren Kurse (courseList) in einer LazyColumn.
+ * Jeder Kurs wird als CourseCard dargestellt und bei Auswahl animiert eingeblendet/ausgeblendet.
+ * Beim Auswählen eines Kurses wird CourseEditDetails eingeblendet, um weitere Details anzuzeigen
+ * und Optionen wie "Spielen" oder "Zurück" bereitzustellen.
+ * Wichtige Aspekte:
+ * - Verwendung von SharedTransitionLayout und AnimatedVisibility für fließende Übergänge.
+ * - Die Animation der Kurskarten erfolgt mit fadeIn/scaleIn und fadeOut/scaleOut.
+ * - Bei Auswahl eines Kurses wird dieser an das UserViewModel übergeben und der LevelScreen gestartet.
+ * @param navController Steuert die Navigation zwischen den Screens.
+ * @param userViewModel Verwaltet den Zustand des aktuell angemeldeten Nutzers.
+ */
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
 fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
@@ -71,7 +84,7 @@ fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            itemsIndexed(courseList) { _, course ->
+            itemsIndexed(scenarioList) { _, course ->
                 AnimatedVisibility(
                     visible = course != selectedScenario,
                     enter = fadeIn() + scaleIn(),
@@ -80,6 +93,7 @@ fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
                 ) {
                     Box(
                         modifier = Modifier
+                            // SharedTransition für fließende Übergänge zwischen Kurskarten
                             .sharedBounds(
                                 sharedContentState = rememberSharedContentState(key = "${course.name}-bounds"),
                                 animatedVisibilityScope = this
@@ -104,28 +118,49 @@ fun PlayScreen(navController: NavController, userViewModel: UserViewModel) {
     }
 }
 
+/**
+ * CourseEditDetails - Zeigt Detailinformationen zu einem ausgewählten Kurs an.
+ * Dieses Composable wird angezeigt, wenn ein Kurs ausgewählt wurde.
+ * Es zeigt das Kursbild, den Kursnamen und die Kursbeschreibung.
+ * Außerdem stehen Buttons zum Starten des Kurses ("Spielen") und zum Abbrechen der Auswahl ("Zurück") bereit.
+ * Wichtige Aspekte:
+ * - Animierte Erweiterung der Kursdetails durch Klicken, gesteuert über einen Drehwinkel für das Pfeilsymbol.
+ * - Die Kursbeschreibung wird in einer LazyColumn dargestellt, um auch lange Texte anzuzeigen.
+ * @param course Das aktuell ausgewählte Scenario, oder null, wenn kein Kurs ausgewählt wurde.
+ * @param onPlayClick Callback zum Starten des Kurses.
+ * @param onCancelClick Callback zum Abbrechen der Kursauswahl.
+ */
 @Composable
-fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick: () -> Unit) {
-    var isExpanded by remember { mutableStateOf(false) }
+fun CourseEditDetails(
+    course: Scenario?,
+    onPlayClick: () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
     val rotationAngle by animateFloatAsState(
-        targetValue = if (isExpanded) 180f else 0f,
+        targetValue = if (expanded) 180f else 0f,
         label = "Rotation of Arrow-Icon"
     )
 
     course?.let {
+        // Äußerer Container: Klickt man hier, soll bei erweitertem Zustand nur geschlossen werden
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0x80000000))
                 .clickable {
-                    onPlayClick()
+                    // Wenn Details expandiert sind, beim Klicken schließen – sonst nichts tun
+                    if (expanded) expanded = false
                 }
                 .padding(16.dp)
         ) {
+            // Die Card selbst soll nicht auf Klicks vom Hintergrund reagieren,
+            // daher verhindern wir die Eventweitergabe mit clickable(enabled = false)
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
-                    .align(Alignment.Center),
+                    .align(Alignment.Center)
+                    .clickable(enabled = false) { },
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
@@ -142,26 +177,24 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                 Column(
                     modifier = Modifier
                         .clickable {
-                            isExpanded = !isExpanded
+                            // Umschalten des expandierten Zustands
+                            expanded = !expanded
                         }
                         .animateContentSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = if (isExpanded) "Collapse" else "Expand",
-                            modifier = Modifier
-                                .graphicsLayer(rotationZ = rotationAngle),
+                            contentDescription = if (expanded) "Collapse" else "Expand",
+                            modifier = Modifier.graphicsLayer(rotationZ = rotationAngle),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
-
                         Text(
                             it.name,
                             style = MaterialTheme.typography.labelSmall,
@@ -180,9 +213,8 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                             ) {
                                 Text(
                                     text = it.description,
-                                    modifier = Modifier
-                                        .padding(horizontal = 16.dp),
-                                    maxLines = if (isExpanded) Int.MAX_VALUE else 2,
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    maxLines = if (expanded) Int.MAX_VALUE else 2,
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onBackground,
                                     textAlign = TextAlign.Justify
@@ -190,6 +222,8 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                             }
                         }
                         item {
+                            // Die Buttons erscheinen innerhalb des expandierten Bereichs
+                            // und lösen hier das jeweilige Callback aus
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -197,7 +231,7 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Button(
-                                    onCancelClick,
+                                    onClick = onCancelClick,
                                     modifier = Modifier
                                         .padding(horizontal = 8.dp)
                                         .weight(1f),
@@ -216,7 +250,7 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
                                     )
                                 }
                                 Button(
-                                    onPlayClick,
+                                    onClick = onPlayClick,
                                     modifier = Modifier
                                         .padding(horizontal = 8.dp)
                                         .weight(1f),
@@ -243,6 +277,16 @@ fun CourseEditDetails(course: Scenario?, onPlayClick: () -> Unit, onCancelClick:
     }
 }
 
+/**
+ * CourseCard - Stellt eine einzelne Kurskarte dar.
+ * Dieses Composable zeigt den Kurs als Card mit Hintergrundbild, einem Gradienten-Overlay
+ * und dem Kursnamen. Beim Klicken auf die Card wird der Kurs als ausgewählt markiert.
+ * Wichtige Aspekte:
+ * - Die Card hat abgerundete Ecken und einen leichten Schatten (Elevation).
+ * - Das Bild wird skaliert und mit einem Overlay versehen, um den Text lesbar zu machen.
+ * @param course Das anzuzeigende Scenario.
+ * @param onSelectClick Callback, der beim Klicken auf die Card aufgerufen wird.
+ */
 @Composable
 fun CourseCard(course: Scenario, onSelectClick: () -> Unit) {
     Card(

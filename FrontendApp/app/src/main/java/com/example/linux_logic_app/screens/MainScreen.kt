@@ -73,11 +73,8 @@ import com.example.linux_logic_app.ui.theme.LiloMain
 import com.example.linux_logic_app.ui.theme.LiloOrange
 import kotlinx.coroutines.launch
 
-/*
-https://stackoverflow.com/questions/67025228/how-to-create-a-second-drawer-in-jetpack-compose
-Probleme beim implementieren eines rechtbündigen Navigation Drawers
- */
 
+// Die Datenklasse für ein Item in der Bottom Navigation
 data class BottomNavigationItem(
     val title: String,
     val selectedIcon: ImageVector,
@@ -86,9 +83,31 @@ data class BottomNavigationItem(
     val badgeCount: Int? = null
 )
 
+/**
+ * MainScreen - Der zentrale Bildschirm der App.
+ *
+ * Dieses Composable integriert mehrere Navigationselemente:
+ * - Zwei ModalNavigationDrawers: Einer für Shortcut- und Kontoinformationen (linker Drawer)
+ *   und ein weiterer für Einstellungen, Mitteilungen, Feedback, Hilfe und Logout (rechter Drawer).
+ * - Ein Scaffold, das eine TopAppBar und eine BottomNavigationBar umfasst.
+ * - Ein interner NavHost, der die Hauptinhalte (Home, Customize, Play) verwaltet.
+ *
+ * Probleme beim Implementieren eines rechtbündigen Navigation Drawers:
+ * https://stackoverflow.com/questions/67025228/how-to-create-a-second-drawer-in-jetpack-compose
+ *
+ * Wichtige Aspekte:
+ * - Die Verwendung von zwei ModalNavigationDrawers zur Trennung von navigationsbezogenen
+ *   Inhalten (Shortcuts) und accountbezogenen Aktionen.
+ * - Dynamische Anzeige von Badges in der BottomNavigationBar über BadgedBox.
+ * - Separater NavController (navControllerMain) für die Verwaltung der inneren Navigation.
+ *
+ * @param navController Steuert die Navigation zwischen den Screens.
+ * @param userViewModel Verwaltet den Zustand des aktuell angemeldeten Benutzers.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
+    // Zustände für die Drawer und den internen NavController
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val endDrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -119,9 +138,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
         )
     )
 
-    //val terminalViewModel: TerminalViewModel = viewModel()
-    //val settingsViewModel: SettingsViewModel = viewModel()
-
+    // Linker Drawer: Enthält Shortcuts und grundlegende Navigationsoptionen
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = drawerState.isOpen,
@@ -145,7 +162,6 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         contentDescription = "Shortcut Icon for Main",
                         tint = LiloMain
                     )
-
                     Text(
                         text = "Shortcuts",
                         modifier = Modifier
@@ -153,12 +169,10 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         style = MaterialTheme.typography.labelLarge,
                     )
                 }
-
                 HorizontalDivider(
                     thickness = 5.dp,
                     color = LiloOrange
                 )
-
                 NavigationDrawerItem(
                     label = {
                         Text(
@@ -180,12 +194,10 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                         navController.navigate(Screen.Settings.route)
                     }
                 )
-
                 HorizontalDivider(
                     thickness = 1.dp,
                     color = LiloBlue
                 )
-
                 NavigationDrawerItem(
                     label = {
                         Text(
@@ -206,12 +218,10 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
 
                     }
                 )
-
                 HorizontalDivider(
                     thickness = 1.dp,
                     color = LiloBlue
                 )
-
                 NavigationDrawerItem(
                     label = {
                         Text(
@@ -235,6 +245,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
             }
         }
     ) {
+        // Rechter Drawer: Enthält accountbezogene Optionen und Logout
         ModalNavigationDrawer(
             drawerState = endDrawerState,
             gesturesEnabled = endDrawerState.isOpen,
@@ -266,13 +277,10 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
-
-
                     HorizontalDivider(
                         thickness = 5.dp,
                         color = LiloOrange
                     )
-
                     NavigationDrawerItem(
                         label = {
                             Text(
@@ -289,16 +297,12 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                                 tint = LiloMain
                             )
                         },
-                        onClick = {
-                            navController.navigate(Screen.Settings.route)
-                        }
+                        onClick = { navController.navigate(Screen.Settings.route) }
                     )
-
                     HorizontalDivider(
                         thickness = 1.dp,
                         color = LiloBlue
                     )
-
                     NavigationDrawerItem(
                         label = {
                             Text(
@@ -315,16 +319,12 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                                 tint = LiloMain
                             )
                         },
-                        onClick = {
-                            navController.navigate(Screen.Notifications.route)
-                        }
+                        onClick = { navController.navigate(Screen.Notifications.route) }
                     )
-
                     HorizontalDivider(
                         thickness = 1.dp,
                         color = LiloBlue
                     )
-
                     NavigationDrawerItem(
                         label = {
                             Text(
@@ -341,16 +341,12 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                                 tint = LiloMain
                             )
                         },
-                        onClick = {
-                            navController.navigate(Screen.Feedback.route)
-                        }
+                        onClick = { navController.navigate(Screen.Feedback.route) }
                     )
-
                     HorizontalDivider(
                         thickness = 1.dp,
                         color = LiloBlue
                     )
-
                     NavigationDrawerItem(
                         label = {
                             Text(
@@ -367,16 +363,12 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                                 tint = LiloMain
                             )
                         },
-                        onClick = {
-                            navController.navigate(Screen.Help.route)
-                        }
+                        onClick = { navController.navigate(Screen.Help.route) }
                     )
-
                     HorizontalDivider(
                         thickness = 1.dp,
                         color = LiloBlue
                     )
-
                     NavigationDrawerItem(
                         label = {
                             Text(
@@ -406,6 +398,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                 }
             },
         ) {
+            // Hauptinhalt in einem Scaffold mit TopAppBar und BottomNavigationBar
             Scaffold(
                 topBar = {
                     CenterAlignedTopAppBar(
@@ -539,7 +532,7 @@ fun MainScreen(navController: NavController, userViewModel: UserViewModel) {
                                             } else {
                                                 item.unselectedIcon
                                             },
-                                            contentDescription = item.title + "for Main"
+                                            contentDescription = item.title + " for Main"
                                         )
                                     }
                                 }

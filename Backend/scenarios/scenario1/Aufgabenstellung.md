@@ -1,69 +1,38 @@
-Hier stehen Beschreibungen, Sublevels und die unterkategorisierten Aufgaben
-
 # Szenario 1: Die königliche Eröffnung
 
-Der König plant eine große Eröffnung für das neue Schloss und hat dich mit einfachen, aber wichtigen Aufgaben beauftragt, um sicherzustellen, dass alles perfekt vorbereitet ist.
+Der König plant eine große Eröffnung für das neue Schloss. Deine Aufgabe ist es, sicherzustellen, dass alles perfekt vorbereitet ist.
 
 ## Subszenarien
 
 ### 1. Den roten Teppich ausrollen
 
-!!Begib dich zum Ort der Veranstaltungsvorbereitung mithilfe von cd "Name des Verzeichnisses" und stelle sicher, dass der rote Teppich für den Empfang bereitliegt. (Mit ls sieht man alle Verzeichnisse)
-
-\_- Navigiere zum Veranstaltungsverzeichnis mit `cd /home/Veranstaltung`.
-\_- Erstelle eine Datei für den roten Teppich mit `touch roter_teppich.txt`.
-\_- Überprüfe mit `ls`, ob die Datei korrekt erstellt wurde.
+!! Gehe zum Veranstaltungsraum und lege den roten Teppich aus.
+\_- Wechsle zum Veranstaltungsordner und erstelle eine Datei namens roter_teppich.txt.
+`cd /home/Veranstaltung && touch roter_teppich.txt`
 
 ### 2. Die Einladungen überprüfen
 
-!!Gehe zum Bereich der Einladungen und überprüfe, ob die Gästeliste vollständig ist.
-
-\_- Wechsle ins Einladungsverzeichnis mit `cd /home/Einladungen`.
-\_- Zeige die vorhandenen Dateien an mit `ls`.
-\_- Stelle sicher, dass die Datei `gaesteliste.txt` vorhanden ist.
+!! Füge dich zur Gästeliste hinzu.
+\_- Gehe in das Einladungs-Verzeichnis und hänge den Text "ich" Datei gaesteliste.txt existiert.
+`cd /home/Einladungen && ls && echo "ich" >> gaesteliste.txt`
 
 ### 3. Das königliche Banner aufhängen
 
-!!Finde das königliche Banner in der Dekorationssammlung und bringe es am Veranstaltungsort an. Mit cp kannst du die Sammlung kopieren.
-
-\_- Wechsle in das Dekorationsverzeichnis mit `cd /home/Dekoration`.
-\_- Kopiere die Datei `banner.txt` in das Veranstaltungsverzeichnis mit `cp banner.txt /home/Veranstaltung/`.
+!! Bringe das königliche Banner zum Veranstaltungsort.
+\_- Kopiere die Datei banner.txt aus dem Dekorationsverzeichnis zum Veranstaltungsort.
+`cd /home/Dekoration && cp banner.txt /home/Veranstaltung/`
 
 ### 4. Das königliche Menü prüfen
 
-!!Betrete die königliche Küche und erstelle eine Liste der geplanten Gerichte. Falls erforderlich, füge neue Speisen hinzu. Dafür gehe in die /Kueche und bearbeite das menue.txt mithilfe von nano. Anschließlich speichere alles ab.
+!! Füge ein neues Gericht namens "Neues Gericht" zur Speisekarte hinzu.
+\_- Wechsle in die Küche und bearbeite die Datei menue.txt.
+`cd /home/Kueche && echo "Neues Gericht" >> menue.txt`
 
-\_- Gehe in das Verzeichnis der Küche mit `cd /home/Kueche`.
-\_- Öffne die Datei mit `nano menue.txt` und füge ein Gericht hinzu.
-\_- Speichere die Datei mit `STRG + X`, dann `Y` und `Enter`.
 
-### 5. Die Musik vorbereiten
+### 5. Die Beleuchtung überprüfen
 
-!!Wechsle zur Musikabteilung und stelle sicher, dass eine Liste der gespielten Stücke existiert. Gibt es Musik?
+!! Sorge dafür, dass genug Lichtquellen vorhanden sind.
+\_- Wechsle ins Beleuchtungsverzeichnis und erstelle eine neue Lichtquelle.
+`cd /home/Beleuchtung && touch licht1.txt`
 
-\_- Wechsle ins Musikverzeichnis mit `cd /home/Musik`.
-\_- Zeige die vorhandenen Dateien mit `ls` an.
-
-### 6. Die Beleuchtung überprüfen
-
-!!Überprüfe die Lichter in der Veranstaltungsstätte und ergänze zusätzliche Lichtquellen, falls notwendig. Finde /Beleuchtung und erstelle licht1.txt
-
-\_- Navigiere ins Beleuchtungsverzeichnis mit `cd /home/Beleuchtung`.
-\_- Zeige die vorhandenen Dateien mit `ls` an.
-\_- Erstelle eine neue Datei für eine zusätzliche Lichtquelle mit `touch licht1.txt`.
-
-### 7. Das Schloss reinigen
-
-!!Stelle sicher, dass der Boden des Schlosses für die Eröffnung sauber ist. Wechsel in das Reinigungsverzeichnis und erstelle "boden_sauber.txt"
-
-\_- Wechsle ins Reinigungsverzeichnis mit `cd /home/Reinigung`.
-\_- Erstelle eine Datei zur Darstellung der Bodenreinigung mit `touch boden_sauber.txt`.
-
-### 8. Die königliche Uhr stellen
-
-!!Sorge dafür, dass die königliche Uhr korrekt eingestellt ist, damit die Veranstaltung pünktlich beginnt. Benutze dafür die "zeit.txt" und den Befehl echo. Sie muss auf 12:00 eingestellt sein.
-
-\_- Wechsle ins Uhrenverzeichnis mit `cd /home/Uhr`.
-\_- Stelle die Uhrzeit in der Datei `zeit.txt` mit `echo "12:00" > zeit.txt` ein.
-\_- Überprüfe den Inhalt der Datei mit `cat zeit.txt`.
 # EOF

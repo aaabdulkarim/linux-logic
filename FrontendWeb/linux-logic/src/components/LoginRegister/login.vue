@@ -10,13 +10,13 @@
           <label for="password"><h5>Passwort</h5></label>
           <Password id="password" v-model="password" :feedback="false" toggleMask/>
           <label for="code"><h5>Access Code (nicht notwendig)</h5></label>
-          <Password id="code" v-model="code" :feedback="false" toggleMask/>
+          <Password id="code" v-model="accesscode" :feedback="false" toggleMask/>
         </div>
 
         <div class="login-actions">
           <div class="stay-logged-in">
-            <Checkbox v-model="stayLoggedIn" id="stayLoggedIn" :disabled="false" />
-            <label for="stayLoggedIn">Angemeldet bleiben</label>
+            <Checkbox v-model="stayLoggedIn" id="stayloggedin" name="stayloggedin" binary="true" />
+            <label for="stayloggedin">Angemeldet bleiben</label>
           </div>
           <!-- <div class="forgot-password">
             <router-link to="/forgot-password" class="forgot-password">Passwort Vergessen</router-link>
@@ -53,8 +53,8 @@ export default {
       email: '',
       password: '',
       stayLoggedIn: false,
-      base_url: "http://localhost:8000",
       response: false,
+      accesscode: ''
     };
   },
   computed: {
@@ -72,11 +72,14 @@ export default {
       this.check();
     },
     check() {
+      console.log(this.stayLoggedIn);
+      
       api.post('/login', {
         
           username: this.email,
           password: this.password,
-        
+          stayLoggedIn: this.stayLoggedIn,
+          accesscode: this.accesscode
       })
       .then((response) => {
         console.log(response.data);
@@ -91,13 +94,6 @@ export default {
       .catch((error) => {
         console.error('Fehler bei der Anmeldung:', error);
       });
-    }
-  },
-  mounted() {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user'));
-    if (user) {
-      this.email = user.email;
-      this.stayLoggedIn = !!localStorage.getItem('user');
     }
   }
 };
@@ -174,17 +170,14 @@ export default {
 .p-checkbox {
   margin-right: 0.5rem;
 }
-::v-deep .p-checkbox .p-checkbox-box {
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  border: 1px solid #569191;
-  background-color: #fff;
+
+.stay-logged-in {
   display: flex;
-  justify-content: center;
   align-items: center;
-  pointer-events: auto;
+  gap: 0.5rem;
+  z-index: 10;
 }
+
 
 button {
   margin-right: 1rem;

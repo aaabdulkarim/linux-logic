@@ -7,14 +7,15 @@
           <p class="profile-title">Profil</p>
           <h1 class="profile-name">{{ profileName }}</h1>
           <h6 class="profile-email">{{ email }} </h6>
-          <p class="profile-progress">Fortschritt: <span class="level">{{ progressLevel }}</span></p>
+          <p class="profile-progress">Erledigte Kapitel: <span class="level">{{ progressLevel }}</span></p>
           <a class="change-password" @click="showPasswordPopup = true">Passwort ändern</a>
           <button class="log-out" @click="logout">Abmelden</button>
         </div>
       </div>
       <div class="next-course">
-        <h2 style="margin-top: 0px;"> Next:  {{ nextCourse }}</h2>
-        <button class="next-level" @click="playNextLevel">Nächstes Level</button>
+        <h2 style="margin-top: 0px;"> Kapitel  {{ convert(num()) }}</h2>
+        <button class="next-level" @click="playNextLevel">Nächstes Kapitel</button>
+        <button class="to-menu" @click="navigateToMenu">Zurück zur Auswahl</button>
       </div>
     </div>
     <div class="course-progress">
@@ -22,8 +23,8 @@
         <div class="completed-levels">
           <h2>Abgeschlossene Level</h2>
           <div class="course-cards">
-            <div class="course-card" v-for="course in completedCourses" :key="course.scenario_id">
-              <div class="course-content">Scenario {{ course.scenario_id }}</div>
+            <div @click="playSelectedLevel(course.scenario_id)" class="course-card" v-for="course in completedCourses" :key="course.scenario_id">
+              <div  class="course-content">Scenario {{ course.scenario_id }}</div>
               <div class="course-details">
                 Hinweise verwendet: {{ course.hints_verwendet }} | Lösungen verwendet: {{ course.loesungen_verwendet }}
               </div>
@@ -89,6 +90,10 @@ export default {
     playNextLevel() {
       this.$router.push("/terminal?scenario_id=" + this.nextCourse);
     },
+    playSelectedLevel(scenario_id){
+      console.log(scenario_id)
+      this.$router.push("/terminal?scenario_id=" + scenario_id);
+    },
     fetchProgress() {
       api.get('/progress')
         .then(response => {
@@ -146,8 +151,20 @@ export default {
         })
         .catch(error => {
           console.error("Fehler beim Ändern des Passworts:", error);
-          alert("Fehler beim Ändern des Passworts. Bitte versuchen Sie es erneut.");
+          alert("Fehler beim Ändern des Passworts. " + error.response.data.detail);
         });
+    },
+    num() {
+      return this.nextCourse;
+    },
+    convert(num) {
+      if (num < 1) { return ""; }
+      if (num >= 40) { return "XL" + this.convert(num - 40); }
+      if (num >= 10) { return "X" + this.convert(num - 10); }
+      if (num >= 9) { return "IX" + this.convert(num - 9); }
+      if (num >= 5) { return "V" + this.convert(num - 5); }
+      if (num >= 4) { return "IV" + this.convert(num - 4); }
+      if (num >= 1) { return "I" + this.convert(num - 1); }
     }
   },
   mounted() {
@@ -294,9 +311,26 @@ export default {
   transition: background-color 0.3s ease;
   width: 200px;
   height: 46px;
+  margin-bottom: 85px;
 }
 
 .next-level:hover {
+  color: #569191;
+  background-color: white;
+  border: 2px solid #569191;
+}
+
+.to-menu {
+  color: white;
+  background-color: #569191;
+  border: 2px solid #569191;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  width: 200px;
+  height: 46px;
+}
+
+.to-menu:hover {
   color: #569191;
   background-color: white;
   border: 2px solid #569191;

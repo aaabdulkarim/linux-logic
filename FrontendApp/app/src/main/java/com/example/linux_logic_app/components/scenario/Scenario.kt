@@ -3,15 +3,19 @@ package com.example.linux_logic_app.components.scenario
 import com.example.linux_logic_app.R
 
 /**
- * Diese Datenklasse namens Scenario repräsentiert die Attribute eines Kurses mit dem Kurstitel, der
- * Beschreibung und dem zugehörigen Bild, sowie einer LinkedHashMap aus Subleveln.
- * Da die Level eine feste Reihenfolge haben (Level 1 → Level 2 → ... → Level 10), ist eine
- * LinkedHashMap ideal. Sie speichert die Einträge in der Reihenfolge, in der sie hinzugefügt wurden.
- * Zudem ist bietet sie einen schnellen Zugriff, ist einfach zu implementieren, jedoch performancelastig.
- * Jeder Kurs enthält einen Namen, eine Beschreibung und eine Referenz auf ein Bildressourcen-Element.
- * @property name Der Name des Kurses.
- * @property description Eine kurze Beschreibung des Kurses.
- * @property imageRes Die ID der Bildressource, die mit diesem Kurs verknüpft ist.
+ * Diese Datenklasse namens Scenario repräsentiert die Attribute eines Kurses mit der ID, dem Kurstitel,
+ * der Beschreibung, dem zugehörigen Bild, sowie einer LinkedHashMap aus Subleveln. Da die Level eine
+ * feste Reihenfolge haben (Level 1 → Level 2 → ... → Level 10), ist eine LinkedHashMap ideal.
+ * Sie speichert die Einträge in der Reihenfolge, in der sie hinzugefügt wurden. Zudem ist bietet sie
+ * einen schnellen Zugriff, ist einfach zu implementieren, jedoch performancelastig.
+ * - Beibehaltung der Einfügereihenfolge: Die Lernmodule (Sublevels) sollen in einer festen Sequenz (z. B. Level 1 → Level 2 → …) dargestellt werden.
+ * - Schneller Zugriff: Wie bei einer HashMap erfolgt der Zugriff in konstanter Zeit (O(1)).
+ * - Vermeidung unerwünschter Sortierung: Im Gegensatz zu anderen Collections wie TreeMap, die die Elemente sortieren, bleibt die ursprüngliche Reihenfolge erhalten.
+ * @property id Eindeutige Identifikationsnummer des Kurses.
+ * @property name Name des Kurses.
+ * @property description Beschreibung des Kurses.
+ * @property imageRes Referenz zur Bildressource, die den Kurs visuell repräsentiert.
+ * @property sublevels Geordnete Sammlung der Sublevels, in der Reihenfolge ihres Auftretens.
  */
 data class Scenario(
     val id: Int,
@@ -20,31 +24,56 @@ data class Scenario(
     val imageRes: Int,
     val sublevels: LinkedHashMap<Int, Sublevel>
 ) {
-    /** Prüft, ob ein bestimmtes Sublevel existiert */
+    /**
+     * Überprüft, ob ein Sublevel mit der angegebenen ID existiert.
+     * @param id ID des zu prüfenden Sublevels.
+     * @return true, wenn das Sublevel existiert, sonst false.
+     */
     fun hasSublevel(id: Int): Boolean = sublevels.containsKey(id)
 
-    /** Prüft, ob das Szenario Sublevels enthält */
+    /**
+     * Überprüft, ob das Szenario mindestens ein Sublevel enthält.
+     * @return true, wenn Sublevels vorhanden sind, sonst false.
+     */
     fun hasSublevels(): Boolean = sublevels.isNotEmpty()
 
-    /** Prüft, ob ein weiteres Sublevel existiert */
+    /**
+     * Überprüft, ob ein Sublevel existiert, das direkt auf das aktuelle folgt.
+     * @param currentId ID des aktuellen Sublevels.
+     * @return true, wenn das nächste Sublevel vorhanden ist, sonst false.
+     */
     fun hasNextSublevel(currentId: Int): Boolean = sublevels.containsKey(currentId + 1)
 
-    /** Gibt ein Sublevel anhand der ID zurück */
+    /**
+     * Liefert das Sublevel anhand der angegebenen ID.
+     * @param id ID des gewünschten Sublevels.
+     * @return Das Sublevel, falls vorhanden, sonst null.
+     */
     fun getSublevel(id: Int): Sublevel? = sublevels[id]
 
-    /** Gibt das nächste Sublevel zurück, falls vorhanden */
+    /**
+     * Liefert das nächste Sublevel, basierend auf der aktuellen ID.
+     * @param currentId ID des aktuellen Sublevels.
+     * @return Das nächste Sublevel, falls vorhanden, sonst null.
+     */
     fun getNextSublevel(currentId: Int): Sublevel? = sublevels[currentId + 1]
 
-    /** Gibt das letzte Sublevel des Szenarios zurück */
+    /**
+     * Liefert das letzte Sublevel im Szenario.
+     * @return Das letzte Sublevel, falls vorhanden, sonst null.
+     */
     fun getLastSublevel(): Sublevel? = sublevels.values.lastOrNull()
+
+    fun getAmountOfScenarios(): Int = scenarioList.size
 }
 
 /**
- * Eine vordefinierte Liste von Kursen, die für die Darstellung in der App verwendet wird.
- * Diese Liste enthält mehrere Kursobjekte mit spezifischen Informationen zu jedem Kurs, wie
- * Namen, Beschreibungen und zugehörigen Bildressourcen.
+ * Eine vordefinierte Liste von Kursen (Scenarios), die in der App zur Darstellung verwendet werden (temporär).
+ * Jeder Kurs wird durch ein Scenario-Objekt repräsentiert, das neben dem Namen, der Beschreibung und der Bildreferenz
+ * auch eine Sammlung von Sublevels enthält. Diese Sammlung ist in einer LinkedHashMap organisiert, um die Reihenfolge
+ * der Lernmodule beizubehalten.
  */
-val courseList = listOf(
+val scenarioList = listOf(
     Scenario(
         id = 1,
         name = "Linux Grundlagen",

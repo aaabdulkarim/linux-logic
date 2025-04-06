@@ -1,5 +1,4 @@
 from typing import Annotated, Optional
-from validate_email import validate_email
 from fastapi import FastAPI, HTTPException, Depends, Response, Cookie, Request
 
 from pydantic import BaseModel
@@ -11,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from models.UserModels import *
 from models.ProgressModels import *
 from models.ScenarioModels import *
+from models.AccessModels import *
 
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -21,6 +21,7 @@ import os
 
 # Websocekt Imports
 import websockets
+import json
 
 from fastapi.websockets import WebSocket
 from fastapi import WebSocketDisconnect
@@ -29,7 +30,9 @@ from ScenarioTrack import ScenarioTrack
 from DockerManager import DockerManager 
 
 import asyncio
+import re
 
+EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
 # docs: https://fastapi.tiangolo.com/tutorial/sql-databases/
@@ -49,6 +52,19 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+
+# Passwort Security check
+def is_strong_password(password: str) -> bool:
+    # Mindestens 8 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen
+    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$'
+    return re.fullmatch(pattern, password) is not None
+
+
+def is_valid_username(username: str) -> bool:
+    return re.fullmatch(r'^[a-zA-Z0-9]+$', username) is not None
+
+
+
 # Datenbank-Engine erstellen
 engine = create_engine(connectionString, pool_pre_ping=True)
 
@@ -56,10 +72,14 @@ engine = create_engine(connectionString, pool_pre_ping=True)
 # FastAPI App
 app = FastAPI()
 
-origins = ["http://localhost", "http://localhost:8080", "http://localhost:8081"]
+origins = [
+    "http://localhost:8080",   # for dev
+    "https://linux-logic.com",  # production
+    "https://www.linux-logic.com"
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,7 +91,7 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
-@app.post("/login/")
+@app.post("/login")
 async def login(response: Response, userModel: UserRead, session: SessionDep):
     user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
     if not user or not verify_password(userModel.password, user.password):
@@ -82,30 +102,62 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     user.session_id = session_id
     user.session_expiry = session_expiry
     
+    # Grant Access
+    if userModel.accesscode:
+
+        # Check if accesscode is valid
+        accesscode = session.exec(select(AccessCode).where(AccessCode.code == userModel.accesscode)).first()
+        if accesscode and accesscode.used == False:
+            accesscode.used = True
+            user.accessgranted = True
+            session.add(accesscode)
+            session.commit()
+
+
+    else:
+        print("Kein accesscode")
+
+
     session.add(user)
     session.commit()
     
     response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True, samesite="Strict")
     return {"message": "Login erfolgreich"}
 
+
 @app.post("/register")
 async def register(userModel: UserRead, session: SessionDep):
-    if not validate_email(userModel.email, check_blacklist=False):
-        raise HTTPException(status_code=400, detail="Ungültige E-Mail")
-    
-    existing_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
-    if existing_user:
+
+    if not re.fullmatch(EMAIL_REGEX, userModel.email):
+        raise HTTPException(status_code=400, detail="Ungültiges E-Mail-Format")
+
+    if not is_valid_username(userModel.username):
+        raise HTTPException(status_code=400, detail="Benutzername darf nur Buchstaben und Zahlen enthalten")
+
+    # Überprüfen, ob die E-Mail bereits registriert ist
+    existing_email_user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
+    if existing_email_user:
         raise HTTPException(status_code=400, detail="E-Mail bereits registriert")
-    
+
+    # Überprüfen, ob der Benutzername bereits existiert
+    existing_username_user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
+    if existing_username_user:
+        raise HTTPException(status_code=400, detail="Benutzername bereits vergeben")
+
     if len(userModel.password) < 8:
         raise HTTPException(status_code=400, detail="Passwort muss mindestens 8 Zeichen lang sein")
-    
+
+    if not is_strong_password(userModel.password):
+        raise HTTPException(status_code=400, detail="Passwort muss Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten")
+
+
     hashed_password = hash_password(userModel.password)
     new_user = UserDB(username=userModel.username, email=userModel.email, password=hashed_password)
     session.add(new_user)
     session.commit()
-    
-    return {"message": "Registrierung erfolgreich"}
+
+    return {"status": 200, "username": userModel.username, "email": userModel.email}
+ 
  
 @app.put("/edit")
 async def editPassword(request: Request, editBody : UserEdit, session: SessionDep):
@@ -125,6 +177,13 @@ async def editPassword(request: Request, editBody : UserEdit, session: SessionDe
     if user.session_expiry < datetime.now(timezone.utc):
         raise HTTPException(status_code=401, detail="Anmeldung notwendig")
     
+    if len(editBody.newPassword) < 8:
+        raise HTTPException(status_code=400, detail="Passwort muss mindestens 8 Zeichen lang sein")
+
+    if not is_strong_password(editBody.newPassword):
+        raise HTTPException(status_code=400, detail="Passwort muss Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen enthalten")
+
+
 
     user.password = hash_password(editBody.newPassword)
     session.add(user)
@@ -133,18 +192,6 @@ async def editPassword(request: Request, editBody : UserEdit, session: SessionDe
     return {"message": "Passwort erfolgreich geändert"}
 
 
-# @app.post("/bewertung") - Ausgeschlossene Funktion
-async def addBewertung(userId : int, levelId : int, value : int, kommentar : str, session: SessionDep):
-    bewertung = Bewertung()
-    bewertung.user_id = userId
-    bewertung.scenario_id = levelId
-    bewertung.bewertung = value
-    bewertung.kommentar = kommentar
-
-
-    session.add(bewertung)
-    session.commit()
-    return bewertung
 
 
 @app.post("/progress")
@@ -193,13 +240,28 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
         new_progress = ProgressDB(
             scenario_id=progressBody.scenario_id,
             loesungen_verwendet = progressBody.loesungen_verwendet,
-            hints_verwendet = progressBody.hints_verwendet
-
+            hints_verwendet = progressBody.hints_verwendet,
+            user_id = user.id
         )
         session.add(new_progress)
 
     session.commit()
-    return {"message": "Progress erfolgreich gespeichert oder aktualisiert"}
+
+    anzahl_sterne = 3
+
+    if new_progress.hints_verwendet > 0:
+        anzahl_sterne = 2
+
+    if new_progress.loesungen_verwendet > 0:
+        anzahl_sterne = 1
+
+    
+    return {
+        "message": "Progress erfolgreich gespeichert oder aktualisiert", 
+        "loesungen_verwendet" : progressBody.loesungen_verwendet, 
+        "hints_verwendet" :  progressBody.hints_verwendet,
+        "sterne" : anzahl_sterne
+    }
 
 
 @app.get("/me")
@@ -361,90 +423,189 @@ dm = DockerManager()
 
 
 @app.websocket("/ws")
-async def websocket(mainsocket: WebSocket):
+async def websocket(mainsocket: WebSocket, session: SessionDep):
     await mainsocket.accept()
-    
 
-    session_id = str(uuid.uuid4())
-    frontend_user_name = await mainsocket.receive_text()    
-    
+
+    # Cookie Parsing
+    cookie_header = mainsocket.headers.get("cookie")
+    cookies = {}
+
+    if cookie_header:
+        for cookie in cookie_header.split("; "):
+            key, value = cookie.split("=", 1)
+            cookies[key] = value
+
+    session_id = cookies.get("session_id")
+
+    if not session_id:
+        await mainsocket.send_json({"error": "Session cookie not found"})
+        await asyncio.sleep(0.1)  
+        await mainsocket.close()
+        return
+
+
+    # Verify user session
+    user = session.exec(select(UserDB).where(UserDB.session_id == session_id)).first()
+
+    if not user or user.session_expiry < datetime.now(timezone.utc):
+        await mainsocket.send_json({"error": "Invalid session. Please log in again."})
+        await asyncio.sleep(0.1)  
+        await mainsocket.close()
+        return 
+
+    if user.accessgranted != True:
+        await mainsocket.send_json({"error": "Kein Accesscode. Erneut anmelden mit Access Code"})
+        await asyncio.sleep(0.1)  
+        await mainsocket.close()
+        return 
+
+    # Starten des normalen Prozedere
+    frontend_user_name = await mainsocket.receive_text()
+
     print(frontend_user_name)
-    
-    frontend_container_choice = await mainsocket.receive_text()
-    
+
+    frontend_scenario_id = await mainsocket.receive_text()
+
+    if int(frontend_scenario_id) != 1:
+        await mainsocket.send_json({"error": f"Kapitel {frontend_scenario_id} noch nicht verfügbar"})
+        await asyncio.sleep(0.1)  
+        await mainsocket.close()
+
+
+    frontend_container_choice = "scenario" + str(frontend_scenario_id)
     print(frontend_container_choice)
 
+
+    container_session_id = str(uuid.uuid1())
+    print(f"No existing container found for {session_id}, creating new one...")
     container_name = await dm.add_connection(
-        userSessionId=session_id,
+        userSessionId=container_session_id, 
         userName=frontend_user_name,
         frontendChoice=frontend_container_choice
     )
 
-    # TODO: Graceful Closure
+
 
     if container_name:
-
         scm = await dm.get_scm(frontend_user_name, frontend_container_choice)
 
-        # TODO: Nach 1h Inaktivität automatisch schließen 
         while await dm.get_container_health(container_name) != "healthy":
             print(await dm.get_container_health(container_name))
             await asyncio.sleep(2)
-            
-        await mainsocket.send_text("Container Startup successful")
+
+        await mainsocket.send_json({"output": "Container Startup successful"}) # Changed to send_json
         container_socket_port = await dm.get_dynamic_port(container_name)
         print("Das isses: ", container_socket_port)
 
-        # Connection mit dem docker socket mit dem modul websockets
         container_socket_url = f"ws://127.0.0.1:{container_socket_port}/dockersocket"
         try:
             async with websockets.connect(container_socket_url) as container_socket:
                 print("connected to external")
-                while True:
 
-                    # Interaktion mit Frontend Socket
+                # User soll im home Directory anfangen
+                # await container_socket.send("cd /home")
+                desc = "".join(scm.get_desc())
+                await mainsocket.send_json({
+                    "description": desc,
+                    "levelNr": scm.subscenario_progress + 1}
+                ) 
+                
+                response_type = ""
+                response_data = ""
+                current_directory = ""
+                description = ""
+                levelNr = 0
+                while True:
                     frontend_cmd = await mainsocket.receive_text()
 
                     try:
                         if ">clue" == frontend_cmd:
-                            # TODO: SCM Korrekt mit User Connection identifizieren 
-                            # TODO: Update Progress wird nur bei einem Check ausgeführt
-                            scm.update_progress()
                             clues = "".join(scm.get_clue())
-                            await mainsocket.send_text(clues)
 
-                        if ">check" == frontend_cmd:
-                            await container_socket.send("bash /app/checks_fun.sh")
-                            data = await container_socket.recv()
-                            await mainsocket.send_text(data)
-                            print(data)
+                            response_type = "hint"
+                            response_data = clues
+
+                        elif ">solution" == frontend_cmd:
+                            solution = "".join(scm.get_solution())
+                            
+                            response_type = "solution"
+                            response_data = solution
+
+                        elif ">check" == frontend_cmd:
+
+                            if scm.is_last_level():
+                                await mainsocket.send_json(
+                                    {
+                                        "last_level" : True,
+                                        "hints_verwendet": scm.clues_used,
+                                        "loesungen_verwendet" : scm.solutions_used,
+                                    })
+
+
+                            else:
+                                await container_socket.send(f"bash -c /app/checks_fun_{scm.subscenario_progress + 1}.sh")
+                                bash_check = await container_socket.recv()
+                                print(bash_check)
+                                check_json = json.loads(bash_check)
+
+                                if check_json["output"].strip() == "true":
+
+                                    
+                                    scm.update_progress()
+                                    response_type = "check"
+                                    response_data = "successful"
+                                    description = "".join(scm.get_desc())
+                                    levelNr = scm.subscenario_progress + 1
+
+                                else:
+                                    response_type = "check"
+                                    response_data = "unsuccessful"
+
 
                         else:
                             await container_socket.send(frontend_cmd)
-                            data = await container_socket.recv()
-                            await mainsocket.send_text(data)
-                            print(data)
+                            output_json = await container_socket.recv()
+                            output_dict = json.loads(output_json) 
+                            response_type = "output"
+                            
+                            # Aus irgendeinem Grund viel langsamer wenn auch das current directory ermittelt wird.
+                            response_data = output_dict["output"]
+                            current_directory = output_dict["cd"].strip()
 
-                
-                    except WebSocketDisconnect:
+
+
+
+                    except WebSocketDisconnect as wbs:
+
                         print("WebSocket client disconnected")
+                        response_type = "error"
+                        response_data = wbs
                         break
+                    
+
+                    # Get Current Directory
+                    # await container_socket.send("pwd")
+                    # current_directory = await container_socket.recv()
+
+                    # Sending response
+                    await mainsocket.send_json({
+                        response_type: response_data,
+                        "current_directory" : current_directory,
+                        "description" : description,
+                        "levelNr" : levelNr
+                        })
 
         except Exception as e:
             print(f"Error with external WebSocket: {e}")
 
         finally:
             await mainsocket.close()
-            # if container:
-            #     container.stop()
-            #     container.remove()
-            #     print("WebSocket stopped and container removed")
-        
             await dm.close(container_name)
 
     else:
         print("Help")
-
+        return
     
 
 

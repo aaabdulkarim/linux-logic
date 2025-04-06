@@ -18,11 +18,6 @@ check_directory() {
     fi
 }
 
-# Funktion zur Überprüfung, ob der Garten existiert
-check_garten() {
-    check_directory "/home/Garten"
-}
-
 # Funktion zur Überprüfung, ob Unkraut entfernt wurde
 check_unkraut() {
     if ls /home/Garten/Unkraut*.txt 2>/dev/null; then

@@ -1,9 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+    Android Manifest-Datei für die Linux Logic App.
+    Diese Datei definiert grundlegende App-Einstellungen, Berechtigungen und den Einstiegspunkt.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+        Definieren der benötigten Berechtigungen.
+        INTERNET: Erlaubt den Zugriff auf das Internet, erforderlich für netzwerkbasierte Funktionen.
+    -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--
+        Anwendungsdeklaration.
+        Legt globale Eigenschaften der App fest, wie Backup-Verhalten, Icons, Label und Theme.
+    -->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,16 +26,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Linux_logic_app"
         tools:targetApi="31">
+
+        <!--
+            Definition der MainActivity.
+            Dies ist der Einstiegspunkt der App und wird beim Starten der App als Hauptbildschirm geladen.
+        -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Linux_logic_app">
+            <!-- Erzwingt die Portrait-Ausrichtung für die Activity. -->
+
+            <!--
+                Intent-Filter: Definiert, wie diese Activity gestartet wird.
+                MAIN: Kennzeichnet den Haupteinstiegspunkt der App.
+                LAUNCHER: Zeigt das App-Symbol im Launcher an.
+            -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

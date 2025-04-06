@@ -1,0 +1,253 @@
+@startuml
+' ============================================================
+' Package: Main
+' ============================================================
+package "Main" {
+  class MainActivity {
+    + onCreate(savedInstanceState: Bundle?) : Unit
+  }
+}
+
+' ============================================================
+' Package: Navigation
+' ============================================================
+package "Navigation" {
+  class LinuxLogicNavigator {
+    - navController: NavController
+    + LinuxLogicNavigator(userViewModel: UserViewModel)
+    + navigateTo(screen: Screen): Unit
+  }
+
+  enum Screen {
+    Start
+    Login
+    Register
+    Main
+    Settings
+    Notifications
+    Feedback
+    Help
+    Level
+    Customize
+    Home
+    Play
+  }
+
+  class HyperlinkText {
+    + displayLink(link: String) : Unit
+  }
+}
+
+' ============================================================
+' Package: ViewModels
+' ============================================================
+package "ViewModels" {
+  class UserViewModel {
+    - _username: String
+    - _email: String
+    - _password: String
+    - _confirmPassword: String
+    - _verifyPassword: String
+    - _user: User?
+    - registeredUsers: List<User>
+    - _terminalViewModel: TerminalViewModel
+    - _levelViewModel: LevelViewModel?
+    + login(email: String, password: String) : Boolean
+    + register(username: String, email: String, password: String) : Boolean
+    + updateUserData(newUsername: String?, newEmail: String?, newPassword: String?) : Boolean
+    + logout() : Unit
+    + selectScenarioForUser(scenario: Scenario?) : Unit
+    + onUsernameChange(newUsername: String) : Unit
+    + onEmailChange(newEmail: String) : Unit
+    + onPasswordChange(newPassword: String) : Unit
+    + onConfirmPasswordChange(newConfirmPassword: String) : Unit
+    + onVerifyPasswordChange(verifyPassword: String) : Unit
+    + clearErrorMessages() : Unit
+    + clearAllFields() : Unit
+    + verifyPassword(verifyPassword: String) : Boolean
+    + cancelChanges() : Unit
+    + updateTerminalColors(newColors: TerminalColors) : Unit
+    + updateDefaultColors(useDefault: Boolean) : Unit
+  }
+
+  class LevelViewModel {
+    - currentLevel: Int
+    - scenario: Scenario
+    + getCurrentSublevel() : Sublevel?
+    + getCurrentLevelName() : String
+    + getCurrentSublevelDescription() : String
+    + hasNextSublevel() : Boolean
+    + isLastSublevel() : Boolean
+    + nextSublevel() : Boolean
+  }
+
+  class TerminalViewModel {
+    - terminalColors: TerminalColors
+    - useDefaultColors: Boolean
+    + updateColors(newColors: TerminalColors) : Unit
+    + updateDefaultMode(useDefault: Boolean) : Unit
+  }
+}
+
+' ============================================================
+' Package: Components
+' ============================================================
+package "Components" {
+  package "Scenario" {
+    class Scenario {
+      - id: Int
+      - name: String
+      - description: String
+      - imageRes: Int
+      - sublevels: LinkedHashMap<Int, Sublevel>
+      + hasSublevel(id: Int) : Boolean
+      + hasSublevels() : Boolean
+      + hasNextSublevel(currentId: Int) : Boolean
+      + getSublevel(id: Int) : Sublevel?
+      + getNextSublevel(currentId: Int) : Sublevel?
+      + getLastSublevel() : Sublevel?
+    }
+
+    class Sublevel {
+      - id: Int
+      - description: String
+      - done: Boolean
+      + complete() : Unit
+    }
+  }
+
+  package "Terminal" {
+    class Terminal {
+      - socketUrl: String
+      + Terminal(socketUrl: String, preview: Boolean, userViewModel: UserViewModel)
+      + connectWebSocket(url: String) : Unit
+      + sendCommand(command: String) : Unit
+      + receiveOutput() : String
+    }
+  }
+
+  package "Customization" {
+    class ColorPicker {
+      + ColorPicker(onColorSelected: (Color) -> Unit) : Unit
+    }
+    class ColorPickerDialog {
+      + ColorPickerDialog(initialColor: Color, onDismiss: () -> Unit, onConfirm: (Color) -> Unit) : Unit
+    }
+    class ColorCustomizer {
+      + ColorCustomizer(selectedColor: Color, onColorSelected: (Color) -> Unit, defaultColorList: List<Pair<Color,String>>) : Unit
+    }
+    class ColorCustomizationCard {
+      + ColorCustomizationCard(userViewModel: UserViewModel) : Unit
+    }
+    class ColorCustomizationOption {
+      + ColorCustomizationOption(option: String, selectedColor: Color, onColorSelected: (Color)-> Unit, defaultColorList: List<Pair<Color,String>>) : Unit
+    }
+  }
+}
+
+' ============================================================
+' Package: Screens
+' ============================================================
+package "Screens" {
+  package "Authentication" {
+    class LoginScreen {
+      + LoginScreen(navController: NavController, userViewModel: UserViewModel) : Unit
+    }
+    class RegisterScreen {
+      + RegisterScreen(navController: NavController, userViewModel: UserViewModel) : Unit
+    }
+    class SettingsScreen {
+      + SettingsScreen(navController: NavController, userViewModel: UserViewModel) : Unit
+    }
+  }
+
+  package "Gamification" {
+    class CustomizationScreen {
+      + CustomizationScreen(userViewModel: UserViewModel) : Unit
+    }
+    class LevelScreen {
+      + LevelScreen(navController: NavController, userViewModel: UserViewModel) : Unit
+    }
+    class PlayScreen {
+      + PlayScreen(navController: NavController, userViewModel: UserViewModel) : Unit
+    }
+  }
+
+  class FeedbackScreen {
+    + FeedbackScreen(navController: NavController) : Unit
+  }
+  class HelpScreen {
+    + HelpScreen(navController: NavController) : Unit
+  }
+  class HomeScreen {
+    + HomeScreen(userViewModel: UserViewModel) : Unit
+  }
+  class MainScreen {
+    + MainScreen(navController: NavController, userViewModel: UserViewModel) : Unit
+  }
+  class NotificationScreen {
+    + NotificationScreen(navController: NavController) : Unit
+  }
+  class StartScreen {
+    + StartScreen(navController: NavController) : Unit
+  }
+}
+
+' ============================================================
+' Package: UI.Theme
+' ============================================================
+package "UI.Theme" {
+  class Color {
+    - value: Int
+  }
+  class Theme {
+    + applyTheme() : Unit
+  }
+  class Type {
+    + applyTypography() : Unit
+  }
+}
+
+' ============================================================
+' Beziehungen und Abhängigkeiten
+' ============================================================
+
+MainActivity ..> LinuxLogicNavigator : uses
+LinuxLogicNavigator ..> Screen : navigates
+
+UserViewModel o--> TerminalViewModel : aggregation (1:1)
+UserViewModel o--> LevelViewModel : aggregation (1:0..1)
+
+LevelViewModel *--> Scenario : composition (1:1)
+Scenario o--> Sublevel : aggregation (1:1..*)
+
+TerminalViewModel --> Terminal : uses
+
+CustomizationScreen ..> ColorCustomizationCard : uses
+ColorCustomizationCard ..> ColorCustomizationOption : contains
+ColorCustomizationOption ..> ColorCustomizer : uses
+
+' Screens haben Abhängigkeiten zu UserViewModel
+LoginScreen --> UserViewModel : uses
+RegisterScreen --> UserViewModel : uses
+SettingsScreen --> UserViewModel : uses
+CustomizationScreen --> UserViewModel : uses
+LevelScreen --> UserViewModel : uses
+PlayScreen --> UserViewModel : uses
+HomeScreen --> UserViewModel : uses
+MainScreen --> UserViewModel : uses
+
+' Navigation: LinuxLogicNavigator navigiert zu den einzelnen Screens
+LinuxLogicNavigator --> LoginScreen : navigatesTo
+LinuxLogicNavigator --> RegisterScreen : navigatesTo
+LinuxLogicNavigator --> StartScreen : navigatesTo
+LinuxLogicNavigator --> MainScreen : navigatesTo
+LinuxLogicNavigator --> LevelScreen : navigatesTo
+LinuxLogicNavigator --> SettingsScreen : navigatesTo
+LinuxLogicNavigator --> NotificationScreen : navigatesTo
+LinuxLogicNavigator --> FeedbackScreen : navigatesTo
+LinuxLogicNavigator --> HelpScreen : navigatesTo
+
+"UI.Theme" --> MainActivity : uses
+
+@enduml
