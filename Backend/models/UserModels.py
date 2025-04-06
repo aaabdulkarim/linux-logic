@@ -8,14 +8,13 @@ class UserEdit(SQLModel):
 
 
 class UserBase(SQLModel):
-    username: str = Field(index=True)
     password: str
 
 class UserDB(UserBase, table=True):
 
     __tablename__ = "user" 
     
-    
+    username: str | None = Field(default=None, index=True)
     email: str | None = Field(default=None, index=True)
     id: int | None = Field(default=None, primary_key=True)
     session_id: int | None = Field(default=None, index=True)
@@ -25,6 +24,7 @@ class UserDB(UserBase, table=True):
 class UserRead(UserBase):
     stayLoggedIn : bool | None = Field(default=False) 
     email: str | None = Field(default=None, index=True)
+    username: str | None = Field(default=None, index=True)
     accesscode : str | None = Field(default=None, index=True)
 
     

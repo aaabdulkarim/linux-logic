@@ -93,7 +93,13 @@ SessionDep = Annotated[Session, Depends(get_session)]
 
 @app.post("/login")
 async def login(response: Response, userModel: UserRead, session: SessionDep):
-    user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
+
+    if userModel.username:
+        user = session.exec(select(UserDB).where(UserDB.username == userModel.username)).first()
+    elif userModel.email:
+        user = session.exec(select(UserDB).where(UserDB.email == userModel.email)).first()
+
+
     if not user or not verify_password(userModel.password, user.password):
         raise HTTPException(status_code=401, detail="Login fehlgeschlagen")
     
@@ -122,7 +128,7 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
     session.commit()
     
     response.set_cookie(key="session_id", value=session_id, httponly=True, secure=True, samesite="Strict")
-    return {"message": "Login erfolgreich"}
+    return {"message": "Login erfolgreich", "username" : user.username, "email" : user.email}
 
 
 @app.post("/register")
