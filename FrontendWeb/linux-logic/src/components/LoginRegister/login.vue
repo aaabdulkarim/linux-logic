@@ -171,13 +171,18 @@ export default {
   margin-right: 0.5rem;
 }
 
+::v-deep .p-checkbox-box {
+  background-color: white !important;
+  border: 1px solid #569191 !important;
+  border-radius: 0.25rem !important;
+}
+
 .stay-logged-in {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   z-index: 10;
 }
-
 
 button {
   margin-right: 1rem;

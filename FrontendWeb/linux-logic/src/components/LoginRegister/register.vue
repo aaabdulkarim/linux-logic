@@ -313,6 +313,12 @@ export default {
   margin-right: 0.5rem;
 }
 
+::v-deep .p-checkbox-box {
+  background-color: white !important;
+  border: 1px solid #569191 !important;
+  border-radius: 0.25rem !important;
+}
+
 button {
   margin-right: 1rem;
   background-color: #569191;
