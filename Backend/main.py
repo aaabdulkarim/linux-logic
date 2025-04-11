@@ -251,14 +251,14 @@ async def saveProgress(progressBody : ProgressBase, request: Request, session: S
         )
         session.add(new_progress)
 
-    session.commit()
+        session.commit()
 
     anzahl_sterne = 3
 
-    if new_progress.hints_verwendet > 0:
+    if progressBody.hints_verwendet > 0:
         anzahl_sterne = 2
 
-    if new_progress.loesungen_verwendet > 0:
+    if progressBody.loesungen_verwendet > 0:
         anzahl_sterne = 1
 
     
