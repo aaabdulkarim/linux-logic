@@ -538,6 +538,11 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             response_type = "solution"
                             response_data = solution
 
+                        elif ">reset" == frontend_cmd:
+                            await dm.close(frontend_user_name, frontend_container_choice)
+                            response_type = "reset"
+                            response_data = "Der Container wurde neu gestartet, laden Sie die Seite neu"
+
                         elif ">check" == frontend_cmd:
 
                             if scm.is_last_level():
@@ -607,7 +612,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
         finally:
             await mainsocket.close()
-            await dm.close(container_name)
+            await dm.close(frontend_user_name, frontend_container_choice)
 
     else:
         print("Help")

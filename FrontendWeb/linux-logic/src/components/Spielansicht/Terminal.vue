@@ -22,9 +22,9 @@
       <i class="pi pi-sign-out icon" title="Zurück zum enü" @click="exitToMenu"></i>
     </div>
     <div class="right-icons">
-      <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="writeClues('hint')"></i>
-      <i class="pi pi-key icon" title="Lösung anzeigen" @click="writeClues('key')"></i>
-      <i class="pi pi-refresh icon" title="Neu Laden"></i>
+      <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="specialCmd('clue')"></i>
+      <i class="pi pi-key icon" title="Lösung anzeigen" @click="specialCmd('solution')"></i>
+      <i class="pi pi-refresh icon" title="Neu Laden" @click="specialCmd('reset')"></i>
       <i class="pi pi-angle-right icon" title="Aufgabe abgeben" @click="submitLevel"></i>
     </div>
   </div>
@@ -83,6 +83,7 @@ export default {
 
       isModalVisible: false,
       modalContent: '',
+      
       showRating: false,
       rating: 1,
 
@@ -155,6 +156,10 @@ export default {
         try {
           const message = JSON.parse(event.data);
           console.log(message)
+          if (message.reset) {
+            this.showModal(message.reset)
+          }
+
 
           if (message.output) {
             const trimmedOutput = message.output.trim()
@@ -171,9 +176,13 @@ export default {
           }
           if (message.hint) {
             this.terminal.write(`\r\nHint: ${message.hint}`);
+            this.writePrompt()
+
           }
           if (message.solution) {
             this.terminal.write(`\r\nSolution: ${message.solution}`);
+            this.writePrompt()
+
           }
 
           if (message.current_directory) {
@@ -203,8 +212,7 @@ export default {
           }
 
           if (message.error) {
-            this.isModalVisible = true
-            this.modalContent = message.error;
+            this.showModal(message.error)
           }
 
           // Immer nur einen Prompt setzen, wenn nicht schon einer existiert
@@ -221,14 +229,13 @@ export default {
 
       this.socketClient.onerror = (error) => {
         console.error("WebSocket Error:", error);
-        this.isModalVisible = true;
-        this.modalContent = "Fehler beim Aufbau der Verbindung zum Server.";
+        this.showModal("Fehler beim Aufbau der Verbindung zum Server.")
         console.error("WebSocket Error:", error);
       };
 
       this.socketClient.onclose = () => {
         console.warn("WebSocket connection closed.");
-        this.isModalVisible = true;
+        this.showModal()
         // this.modalContent = "Die Verbindung zum Server wurde unerwartet getrennt.";
 
         // setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
@@ -343,12 +350,9 @@ export default {
         this.terminal.write("\r\n[Error] WebSocket not connected.");
       }
     },
-    writeClues(type) {
-      if (type === 'hint') {
-        this.socketClient.send(">clue")
-      } else if (type === 'key') {
-        this.socketClient.send(">solution")
-      }
+    specialCmd(type) {
+      this.socketClient.send(">" + type)
+
     },
     closeModal() {
       this.isModalVisible = false;
@@ -364,6 +368,11 @@ export default {
     exitToMenu() {
       this.$router.push('/auswahl');
     },
+    showModal(modalContent){
+      this.isModalVisible = true;
+      this.modalContent = modalContent;
+
+    }
 
   }
 };

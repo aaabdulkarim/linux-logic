@@ -61,9 +61,8 @@ class DockerManager():
 
 
     async def add_connection(self, userSessionId, userName, frontendChoice):
-        # TODO: Reconnect function which can hold the scm
-        # existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
-        existing_connection = None
+        existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
+
         if existing_connection:
             print(f"Reusing existing container: {existing_connection.container_name}")
             return existing_connection.container_name  # Keep the same SCM object
@@ -95,14 +94,26 @@ class DockerManager():
 
 
 
-    async def close(self, container_name):
+    async def close(self, userName, frontendChoice):
         """
         Schließt Container und löscht Connection in der Liste
         """
-        container = self.client.containers.get(container_name)
-        container.stop()
-        container.remove()
+        try:
+            connectionKey = userName + frontendChoice
+            # Get Container name
+            userDockerConnection = self.userContainerConnections.get(connectionKey)
 
+            # Get Container
+            container = self.client.containers.get(userDockerConnection.container_name)
+
+            # Remove Container from Connection Dictionary and Stop with docker client
+            container.stop()
+            container.remove()
+            self.userContainerConnections.pop(connectionKey)
+
+        except Exception as e:
+            print(e)
+            print("Couldn't find container or it was found and couldn't be stopped/removed")
 
     async def start_auto_delete_containers(self):
         print(self.userContainerConnections)
