@@ -176,13 +176,9 @@ export default {
           }
           if (message.hint) {
             this.terminal.write(`\r\nHint: ${message.hint}`);
-            this.writePrompt()
-
           }
           if (message.solution) {
             this.terminal.write(`\r\nSolution: ${message.solution}`);
-            this.writePrompt()
-
           }
 
           if (message.current_directory) {
