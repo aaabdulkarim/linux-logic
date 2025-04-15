@@ -391,10 +391,10 @@ export default {
       this.$router.push('/auswahl');
     },
     showModal(modalContent, hasSecondButton){
+      this.isModalVisible = true;
+      this.modalContent = modalContent;
 
       if (hasSecondButton){
-        this.isModalVisible = true;
-        this.modalContent = modalContent;
         this.isRestartButtonVisible = false;
       }
 

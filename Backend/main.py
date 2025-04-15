@@ -1,9 +1,8 @@
 from typing import Annotated, Optional
 from fastapi import FastAPI, HTTPException, Depends, Response, Cookie, Request
 
-from pydantic import BaseModel
-from dotenv import load_dotenv, get_key
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from dotenv import load_dotenv
+from sqlmodel import Session, create_engine, select
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -31,6 +30,9 @@ from DockerManager import DockerManager
 
 import asyncio
 import re
+
+from collections import deque
+from datetime import datetime, timedelta
 
 EMAIL_REGEX = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
@@ -530,8 +532,26 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                 current_directory = ""
                 description = ""
                 levelNr = 0
+
+                command_timestamps = deque(maxlen=10)
+
                 while True:
+
+                    # TODO: Schutz gegen Inaktivität 
+
                     frontend_cmd = await mainsocket.receive_text()
+
+                    now = datetime.now()
+                    command_timestamps.append(now)
+                    if len(command_timestamps) >= 5:
+                        if (now - command_timestamps[0]) < timedelta(seconds=10):
+                            await mainsocket.send_json({
+                                "output": "Das sind viele Befehle, komm mal runter",
+                                "current_directory": current_directory,
+                                "description": description,
+                                "levelNr": levelNr
+                            })
+                            continue
 
                     try:
                         if ">clue" == frontend_cmd:

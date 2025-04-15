@@ -30,12 +30,18 @@ class DockerManager():
         try:
             self.client.images.build(path=docker_dir_path, tag=container_tag)
             
-            # TODO: Dynamische Ports
             container = self.client.containers.run(
-                container_tag, 
-                name=container_name, 
-                ports={1000: None}, 
-                detach=True)
+                container_tag,
+                name=container_name,
+                ports={"1000/tcp": None},  
+                detach=True,
+                privileged=False,
+                mem_limit="512m",
+                nano_cpus=500_000_000,
+                pids_limit=100,
+                security_opt=["no-new-privileges"],
+                # Kein network_mode hier
+            )
             return container_name  
 
 
