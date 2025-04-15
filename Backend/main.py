@@ -492,9 +492,17 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
     )
 
 
-
     if container_name:
         scm = await dm.get_scm(frontend_user_name, frontend_container_choice)
+        
+        # Falls reconnected wird und der das SCM schon beim Letzten level ist. 
+        if scm.is_last_level():
+            await mainsocket.send_json(
+                {
+                    "last_level" : True,
+                    "hints_verwendet": scm.clues_used,
+                    "loesungen_verwendet" : scm.solutions_used,
+                })
 
         while await dm.get_container_health(container_name) != "healthy":
             print(await dm.get_container_health(container_name))

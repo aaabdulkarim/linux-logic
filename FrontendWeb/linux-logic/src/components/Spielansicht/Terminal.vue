@@ -24,7 +24,12 @@
     <div class="right-icons">
       <i class="pi pi-lightbulb icon" title="Hinweiß anzeigen" @click="specialCmd('clue')"></i>
       <i class="pi pi-key icon" title="Lösung anzeigen" @click="specialCmd('solution')"></i>
-      <i class="pi pi-refresh icon" title="Neu Laden" @click="specialCmd('reset')"></i>
+      <Transition name="bounce">
+        <i v-if="isRestartButtonVisible" class="pi pi-refresh icon" title="Neu Laden" @click="specialCmd('reset')"></i>
+      
+      </Transition>
+
+      
       <i class="pi pi-angle-right icon" title="Aufgabe abgeben" @click="submitLevel"></i>
     </div>
   </div>
@@ -38,6 +43,9 @@
     </div>
     <button @click="exitToMenu" severity="success" class="w-full">
       Nächstes Level
+    </button>
+    <button @click="specialCmd('reset')"  severity="success" class="w-full">
+      Neustarten
     </button>
   </div>
   
@@ -83,7 +91,7 @@ export default {
 
       isModalVisible: false,
       modalContent: '',
-      
+      isRestartButtonVisible: true,
       showRating: false,
       rating: 1,
 
@@ -157,7 +165,7 @@ export default {
           const message = JSON.parse(event.data);
           console.log(message)
           if (message.reset) {
-            this.showModal(message.reset)
+            this.showModal(message.reset, true)
           }
 
 
@@ -351,8 +359,11 @@ export default {
 
     },
     closeModal() {
+      
       this.isModalVisible = false;
+      this.isRestartButtonVisible = true;
       this.modalContent = '';
+
       this.$router.push("/auswahl")
     },
     submitLevel() {
@@ -360,13 +371,24 @@ export default {
     },
     showRatingPopup() {
       this.showRating = true;
+      this.isRestartButtonVisible = false;
+
+    },
+    closeRatingPopup(){
+      this.showRating = false;
+      this.isRestartButtonVisible = true;
+
     },
     exitToMenu() {
       this.$router.push('/auswahl');
     },
-    showModal(modalContent){
-      this.isModalVisible = true;
-      this.modalContent = modalContent;
+    showModal(modalContent, hasSecondButton){
+
+      if (hasSecondButton){
+        this.isModalVisible = true;
+        this.modalContent = modalContent;
+        this.isRestartButtonVisible = false;
+      }
 
     }
 
@@ -414,6 +436,25 @@ export default {
   transform: translateX(5px);
 }
 
+
+/* Restart Button verschwindet - Animation */
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
 @keyframes bounce {
 
