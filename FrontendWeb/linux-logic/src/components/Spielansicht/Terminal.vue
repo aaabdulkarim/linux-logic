@@ -86,6 +86,7 @@ export default {
       socketUrl: "http://localhost:8000/ws",
 
       userInput: "",
+      // Das letzte Element ist immer das neueste
       userInputHistory: [],
       userInputHistoryIndex: 0,
 
@@ -351,7 +352,14 @@ export default {
         }, 100); // Delay for 100ms
 
       } else {
-        this.terminal.write("\r\n[Error] WebSocket not connected.");
+        if (this.userInputHistory[this.userInputHistory.length -1].includes("rm")){
+          this.terminal.write("\r\n[Huh?] Anscheinend hast du Unfug bei deinem System gemacht, hättest das ein oder andere lieber nicht löschen sollen...");
+
+        } else {
+
+          this.terminal.write("\r\n[Error] WebSocket not connected.");
+        }
+
       }
     },
     specialCmd(type) {
