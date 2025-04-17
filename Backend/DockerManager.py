@@ -1,4 +1,5 @@
 import docker
+
 from ScenarioTrack import ScenarioTrack
 from UserDockerConnection import UserDockerConnection
 from datetime import datetime, timedelta
@@ -19,6 +20,17 @@ class DockerManager():
     
     userContainerConnections = {} 
     client = docker.from_env()
+
+
+    def get_connection_by_key(self, connectionKey):
+        try:
+            user_container_connection = self.userContainerConnections[connectionKey]
+            return user_container_connection
+
+
+        except KeyError:
+            print("Couldn't find connection with connection key: " + connectionKey)
+
 
     async def create_docker_container(self, userSessionId, userName, frontendChoice):
 
@@ -46,24 +58,37 @@ class DockerManager():
 
 
         except docker.errors.DockerException as e:
+            # TODO: Löschen vom Dictionary Eintrag
             print(f"Error: {e}")
 
     async def get_dynamic_port(self, container_name):
-        container = self.client.containers.get(container_name)
-        ports = container.attrs['NetworkSettings']['Ports']
-        print(ports)
-        return ports['1000/tcp'][0]['HostPort']
+        try:
+
+            container = self.client.containers.get(container_name)
+            ports = container.attrs['NetworkSettings']['Ports']
+            print(ports)
+            return ports['1000/tcp'][0]['HostPort']
+        
+        except docker.errors.DockerException as e:
+            # TODO: Löschen vom Dictionary Eintrag
+
+            print(f"Error: {e}")
 
 
     # https://stackoverflow.com/questions/60291082/wait-for-docker-container-healthcheck-to-succeed-before-detaching
     async def get_container_health(self, container_name):
-        api_client = docker.APIClient()
-        inspect_results = api_client.inspect_container(container_name)
-        return inspect_results['State']['Health']['Status']
+        try:
+            api_client = docker.APIClient()
+            inspect_results = api_client.inspect_container(container_name)
+            return inspect_results['State']['Health']['Status']
+        
+        except docker.errors.DockerException as e:
+            # TODO: Löschen vom Dictionary Eintrag
 
+            print(f"Error: {e}")
 
     async def reconnect(self, userSessionId, userName, frontendChoice):
-        return self.userContainerConnections.get(userName + frontendChoice)  # Return full connection object
+        return self.get_connection_by_key(userName+frontendChoice)
 
 
     async def add_connection(self, userSessionId, userName, frontendChoice):
@@ -89,14 +114,9 @@ class DockerManager():
 
 
     async def get_scm(self, userName, frontendChoice):
-        connectionKey = userName + frontendChoice
-        try:
-            user_container_connection = self.userContainerConnections[connectionKey]
-            return user_container_connection.scm
+        user_container_connection = self.get_connection_by_key(userName+frontendChoice)
+        return user_container_connection.scm
 
-
-        except Exception:
-            print("Couldn't find connection with connection key: " + connectionKey)
 
 
     async def close_by_key(self, connectionKey):
@@ -119,8 +139,10 @@ class DockerManager():
             print(e)
             print("Couldn't find container or it was found and couldn't be stopped/removed")
 
+
+
     async def close(self, userName, frontendChoice):
-        self.close_by_key(userName+frontendChoice)
+        await self.close_by_key(userName+frontendChoice)
 
 
     async def start_auto_delete_containers(self):
@@ -144,6 +166,6 @@ class DockerManager():
     async def update_last_interaction(self, userName, frontendChoice):
         connectionKey = userName + frontendChoice
         # Get Container name
-        userDockerConnection = self.userContainerConnections.get(connectionKey)
+        userDockerConnection = self.get_connection_by_key(connectionKey)
 
         userDockerConnection.update_interaction()
