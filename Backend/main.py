@@ -425,9 +425,11 @@ async def logout(response : Response, request: Request,  session : SessionDep):
         response.delete_cookie("session_id", httponly=False, secure=False)
         return {"message": "Logout successful"}
 
-
-
 dm = DockerManager()
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(dm.start_auto_delete_containers())
 
 
 @app.websocket("/ws")
@@ -486,7 +488,6 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
 
     container_session_id = str(uuid.uuid1())
-    print(f"No existing container found for {session_id}, creating new one...")
     container_name = await dm.add_connection(
         userSessionId=container_session_id, 
         userName=frontend_user_name,
@@ -537,10 +538,12 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
                 while True:
 
-                    # TODO: Schutz gegen Inaktivität 
+                    # TODO: Schutz gegen While True Commands
 
                     frontend_cmd = await mainsocket.receive_text()
+                    await dm.update_last_interaction(frontend_user_name, frontend_container_choice)
 
+                    # Das ist der Schutz gegen Spam
                     now = datetime.now()
                     command_timestamps.append(now)
                     if len(command_timestamps) >= 5:
@@ -613,7 +616,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
                             current_directory = output_dict["cd"].strip()
 
 
-
+                        
 
                     except WebSocketDisconnect as wbs:
 

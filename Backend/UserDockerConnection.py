@@ -1,9 +1,12 @@
 from dataclasses import dataclass
 from ScenarioTrack import ScenarioTrack
-import datetime
+from datetime import datetime
 
 @dataclass
 class UserDockerConnection:
     scm: ScenarioTrack
     container_name: str
-    # created_at : datetime.datetime
+    last_interaction = datetime.now()
+
+    def update_interaction(self):
+        self.last_interaction = datetime.now()

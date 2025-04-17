@@ -2,7 +2,7 @@ import docker
 from ScenarioTrack import ScenarioTrack
 from UserDockerConnection import UserDockerConnection
 from datetime import datetime, timedelta
-
+import asyncio
 
 class DockerManager():
 
@@ -99,13 +99,11 @@ class DockerManager():
             print("Couldn't find connection with connection key: " + connectionKey)
 
 
-
-    async def close(self, userName, frontendChoice):
+    async def close_by_key(self, connectionKey):
         """
         Schließt Container und löscht Connection in der Liste
         """
         try:
-            connectionKey = userName + frontendChoice
             # Get Container name
             userDockerConnection = self.userContainerConnections.get(connectionKey)
 
@@ -121,5 +119,31 @@ class DockerManager():
             print(e)
             print("Couldn't find container or it was found and couldn't be stopped/removed")
 
+    async def close(self, userName, frontendChoice):
+        self.close_by_key(userName+frontendChoice)
+
+
     async def start_auto_delete_containers(self):
-        print(self.userContainerConnections)
+        print("Starting Task, check for obsolete Container")
+        while True:
+            try:
+                now = datetime.now()
+                to_delete = []
+                
+                for key, conn in list(self.userContainerConnections.items()):
+                    if (now - conn.last_interaction) > timedelta(hours=3):
+                        print(f"Auto-deleting inactive container: {conn.container_name}")
+                        await self.close(key)
+                        to_delete.append(key)
+
+                await asyncio.sleep(600)  
+            except Exception as e:
+                print(f"Error in auto-delete task: {e}")
+
+
+    async def update_last_interaction(self, userName, frontendChoice):
+        connectionKey = userName + frontendChoice
+        # Get Container name
+        userDockerConnection = self.userContainerConnections.get(connectionKey)
+
+        userDockerConnection.update_interaction()
