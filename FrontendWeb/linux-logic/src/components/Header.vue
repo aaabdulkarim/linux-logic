@@ -41,7 +41,7 @@ export default {
       }
     }
   },
-  mounted() {
+  beforeMount() {
     // if at /about page hide the logo and star icon implement a placeholder
     this.fetchStarCount();
   }
