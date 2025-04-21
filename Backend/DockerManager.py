@@ -5,6 +5,9 @@ from UserDockerConnection import UserDockerConnection
 from datetime import datetime, timedelta
 import asyncio
 
+
+RUNNING_CONTAINER_LIMIT = 100
+
 class DockerManager():
 
     """
@@ -20,7 +23,7 @@ class DockerManager():
     
     userContainerConnections = {} 
     client = docker.from_env()
-
+    
 
     def get_connection_by_key(self, connectionKey):
         try:
@@ -92,6 +95,10 @@ class DockerManager():
 
 
     async def add_connection(self, userSessionId, userName, frontendChoice):
+        if len(self.userContainerConnections) >= RUNNING_CONTAINER_LIMIT:
+            return None
+        
+        # Before adding or reconnect, check if number of already running containers is exceeding the RUNNING_CONTAINER_LIMIT
         existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
 
         if existing_connection:
