@@ -160,7 +160,8 @@ class DockerManager():
                 to_delete = []
                 
                 for key, conn in list(self.userContainerConnections.items()):
-                    if (now - conn.last_interaction) > timedelta(minutes=2):
+                    # 60*24 ist ein
+                    if (now - conn.last_interaction) > timedelta(days=2):
                         print(f"Auto-deleting inactive container: {conn.container_name}")
                         print(key)
                         await self.close_by_key(key)
