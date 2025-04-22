@@ -512,7 +512,6 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
             print(await dm.get_container_health(container_name))
             await asyncio.sleep(2)
 
-        # TODO: Für Szenario 2: RuntimeError: Cannot call "send" once a close message has been sent.
         await mainsocket.send_json({"output": "Container Startup successful"}) 
         container_socket_port = await dm.get_dynamic_port(container_name)
         print("Das isses: ", container_socket_port)

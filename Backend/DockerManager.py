@@ -125,6 +125,18 @@ class DockerManager():
         return user_container_connection.scm
 
 
+    async def close_container(self, container):
+            
+        try:
+            # Remove Container from Connection Dictionary and Stop with docker client
+            container.stop()
+            container.remove()
+            self.userContainerConnections.pop(container)
+
+
+        except Exception as e:
+            print(e)
+            print("Couldn't find container or it was found and couldn't be stopped/removed")
 
     async def close_by_key(self, connectionKey):
         """
@@ -137,10 +149,7 @@ class DockerManager():
             # Get Container
             container = self.client.containers.get(userDockerConnection.container_name)
 
-            # Remove Container from Connection Dictionary and Stop with docker client
-            container.stop()
-            container.remove()
-            self.userContainerConnections.pop(connectionKey)
+            self.close_container(container)
 
         except Exception as e:
             print(e)
@@ -157,25 +166,38 @@ class DockerManager():
         while True:
             try:
                 now = datetime.now()
-                to_delete = []
-                
+                container_list_names = [] # Speichert alle container namen die existieren sollen
                 for key, conn in list(self.userContainerConnections.items()):
-                    # 60*24 ist ein
+
+                    container_list_names.append(conn.container_name)
                     if (now - conn.last_interaction) > timedelta(days=2):
                         print(f"Auto-deleting inactive container: {conn.container_name}")
                         print(key)
                         await self.close_by_key(key)
-                        to_delete.append(key)
+               
+                await self.delete_container_not_in_userlist(container_list_names)
 
-            
+
                 await asyncio.sleep(600)  
             except Exception as e:
                 print(f"Error in auto-delete task: {e}")
+                await asyncio.sleep(600)
 
 
-    async def delete_containers_not_in_userlist(self):
-        # TODO: Implement function reading all containers and deleting unneccessary ones
-        pass
+    async def delete_container_not_in_userlist(self, container_list_names):
+        """
+        function reading all containers and deleting the ones not in the user list. 
+        They could be unneccassry byproducts of previous operations
+        """
+        # TODO: Testen ob unnötige Container gelöscht werden
+        containers = self.client.containers.list(all=True)
+
+        for container in containers:
+            names = container.name if hasattr(container, "name") else None
+
+            if names not in container_list_names:
+                await self.close_container(container)
+        
 
     async def update_last_interaction(self, userName, frontendChoice):
         connectionKey = userName + frontendChoice

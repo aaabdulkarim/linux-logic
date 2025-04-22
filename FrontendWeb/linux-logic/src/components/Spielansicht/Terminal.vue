@@ -351,6 +351,7 @@ export default {
         }, 100); // Delay for 100ms
 
       } else {
+        // EASTER EGG
         if (this.userInputHistory[this.userInputHistory.length -1].includes("rm")){
           this.terminal.write("\r\n[Huh?] Anscheinend hast du Unfug bei deinem System gemacht, hättest das ein oder andere lieber nicht löschen sollen...");
 
