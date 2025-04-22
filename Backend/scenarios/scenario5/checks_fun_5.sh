@@ -22,41 +22,17 @@ check_directory() {
     fi
 }
 
-# Überprüfung: Archiv
-check_artefakt_hinweis() {
-    cd /home/Archiv || { echo "Verzeichnis /home/Archiv konnte nicht betreten werden"; exit 1; }
-    check_file "/home/Archiv/artefakt_hinweis.txt"
-}
-
-# Überprüfung: Entschlüsselung
-check_geheime_nachricht() {
-    cd /home/Archiv || { echo "Verzeichnis /home/Archiv konnte nicht betreten werden"; exit 1; }
-    check_file "/home/Archiv/geheime_nachricht.txt.gpg"
-}
-
-# Überprüfung: Geheime Kammer
-check_geheime_kammer() {
-    check_directory "/home/GeheimeKammer"
-}
-
-# Überprüfung: Artefakt
-check_artefakt() {
+# Einzelne Überprüfung: Sicherheitsmaßnahmen
+check_sicherheitsmassnahmen() {
+    # Überprüfung der Artefaktdatei im Tresor
     cd /home/Tresor || { echo "Verzeichnis /home/Tresor konnte nicht betreten werden"; exit 1; }
     check_file "/home/Tresor/artefakt.txt"
-}
 
-# Überprüfung: Sicherheitsmaßnahmen
-check_sicherheitsmassnahmen() {
+    # Überprüfung von Dateien in der geheimen Kammer
     cd /home/GeheimeKammer || { echo "Verzeichnis /home/GeheimeKammer konnte nicht betreten werden"; exit 1; }
     check_file "/home/GeheimeKammer/sicherheitsprotokoll.txt"
     check_file "/home/GeheimeKammer/aktivieren_alarm.sh"
 }
 
 # Hauptüberprüfung
-check_artefakt_hinweis
-check_geheime_nachricht
-check_geheime_kammer
-check_artefakt
 check_sicherheitsmassnahmen
-
-echo "Überprüfung abgeschlossen!"

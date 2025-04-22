@@ -51,8 +51,6 @@ COPY checks_fun_2.sh .
 COPY checks_fun_3.sh .
 COPY checks_fun_4.sh .
 COPY checks_fun_5.sh .
-COPY checks_fun_7.sh .
-COPY checks_fun_8.sh .
 
 RUN sed -i 's/\r$//' /app/checks_fun.sh
 RUN sed -i 's/\r$//' /app/checks_fun_1.sh
