@@ -477,7 +477,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
     frontend_scenario_id = await mainsocket.receive_text()
 
-    if int(frontend_scenario_id) >= 3:
+    if int(frontend_scenario_id) > 3:
         await mainsocket.send_json({"error": f"Kapitel {frontend_scenario_id} noch nicht verfügbar"})
         await asyncio.sleep(0.1)  
         await mainsocket.close()
