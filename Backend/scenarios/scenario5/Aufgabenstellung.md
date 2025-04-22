@@ -6,38 +6,33 @@ Das wertvolle königliche Artefakt wurde gestohlen und versteckt. Es ist von Sch
 
 ### 1. Spurensuche beginnen
 
-!!Um das Artefakt zu finden, müssen erste Hinweise gesammelt und analysiert werden.
-
-\_- Wechsel in das Verzeichnis des königlichen Archivs mit `cd /home/Archiv`.
-\_- Suche nach Hinweisen in Dokumenten mit `grep "Artefakt" *`.
+!! suche nach dem Artefakt
+\_- In /home/Archiv grep nach einem Artefakt File.
+`cd /home/Archiv && grep "Artefakt" *`
 
 ### 2. Verschlüsselte Botschaften entschlüsseln
 
-!!Die Hinweise sind in einem geheimen Code verfasst und müssen entschlüsselt werden.
-
-\_- Entschlüssele die Nachricht mit `gpg -d geheime_nachricht.txt.gpg`.
-\_- Speichere den entschlüsselten Inhalt in `artefakt_hinweis.txt`.
+!! Die Hinweise sind in einem geheimen Code verfasst und müssen entschlüsselt(gpg -d) werden. 
+\_- Mit `gpg -d geheime_nachricht.txt.gpg` speicher in der Hinweis Datei dies ab
+`gpg -d geheime_nachricht.txt.gpg && echo geheime_nachricht.txt.gpg >> artefakt_hinweis.txt`
 
 ### 3. Geheime Kammer betreten
 
-!!Das Artefakt ist in einer verborgenen Kammer eingeschlossen. Zugang erhält nur, wer die richtigen Schalter betätigt.
-
-\_- Wechsle in das Kammer-Verzeichnis mit `cd /home/GeheimeKammer`.
-\_- Aktiviere den geheimen Mechanismus mit `bash schalter_aktivieren.sh`.
+!! Das Artefakt ist in einer verborgenen Kammer eingeschlossen. Aktiviere den schalter
+\_- In /home/GeheimeKammer bash den Schalter
+`cd /home/GeheimeKammer && bash schalter_aktivieren.sh`
 
 ### 4. Artefakt bergen
 
-!!Nachdem der Mechanismus deaktiviert wurde, kann das Artefakt entnommen und gesichert werden.
-
-\_- Verschiebe das Artefakt in den königlichen Tresor mit `mv artefakt.txt /home/Tresor`.
-\_- Stelle sicher, dass das Artefakt gesperrt ist mit `chmod 400 /home/Tresor/artefakt.txt`.
+!! Nachdem der Mechanismus deaktiviert wurde, kann das Artefakt entnommen und gesichert werden. (400)
+\_- Verschiebe mit mv den artefakt zum tresor danach chmod 400 diesen.
+`mv artefakt.txt /home/Tresor && chmod 400 /home/Tresor/artefakt.txt`
 
 ### 5. Sicherheitsmaßnahmen erhöhen
 
-!!Um zukünftige Diebstähle zu verhindern, müssen neue Schutzmaßnahmen implementiert werden.
-
-\_- Erstelle eine Protokolldatei über den Vorfall mit `nano sicherheitsprotokoll.txt`.
-\_- Aktiviere das Alarmsystem mit `bash aktivieren_alarm.sh`.
+!! Um zukünftige Diebstähle zu verhindern, müssen neue Schutzmaßnahmen implementiert werden. sicherheitsprotokoll.txt erstellen und alarmsystem muss aktiviert werden
+\_- Mit touch sicherheitsprotokoll.txt` erstellen und alarm aktivieren mit bash
+`touch sicherheitsprotokoll.txt && bash aktivieren_alarm.sh`
 
 Das königliche Artefakt ist nun sicher verwahrt, und das Schloss wurde mit neuen Schutzmaßnahmen verstärkt!
 # EOF

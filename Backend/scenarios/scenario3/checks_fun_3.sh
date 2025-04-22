@@ -1,21 +1,36 @@
 #!/bin/bash
-set -e  # Beende das Skript bei Fehlern
 
-# Wechsel in das Mauer-Verzeichnis
-cd /home/Burgmauer || { echo "❌ Verzeichnis /home/Burgmauer konnte nicht betreten werden"; exit 1; }
+set -e # Beende das Skript bei Fehlern
 
-# Überprüfen, ob die Datei existiert
-file="sicherung_sicher.txt"
-if [ ! -f "$file" ]; then
-    echo "false"
-    exit 1
-fi
+# Funktion zur Überprüfung, ob eine Datei existiert und bestimmte Rechte hat
+check_file_with_permissions() {
+    local file="$1"
+    local expected_perm="600"
 
-# Überprüfen, ob die Datei die Berechtigung 600 hat
-perm=$(stat -c %a "$file")
-if [ "$perm" != "600" ]; then
-    echo "❌ Datei $file hat nicht die Berechtigung 600 (aktuell: $perm)!"
-    exit 1
-fi
+    if [ -f "$file" ] && [ "$(stat -c %a "$file")" = "$expected_perm" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
 
-echo "Datei $file existiert und hat die Berechtigung 600."
+# Hauptüberprüfung der Backup-Datei mit spezifischen Berechtigungen
+check_backup_permissions() {
+    local wall_dir="/home/Burgmauer"
+    local backup_file="sicherung_sicher.txt"
+
+    # Prüfen, ob das Verzeichnis existiert
+    if [ ! -d "$wall_dir" ]; then
+        echo "false"
+        return 1
+    fi
+
+    # Wechsel ins Verzeichnis
+    cd "$wall_dir"
+
+    # Überprüfen, ob die Datei existiert und die richtigen Rechte hat
+    check_file_with_permissions "$backup_file"
+}
+
+# Führe die Hauptüberprüfung aus
+check_backup_permissions
