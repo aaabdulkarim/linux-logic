@@ -1,8 +1,9 @@
 #!/bin/bash
 
-set -e
+set -e # Beende das Skript bei Fehlern
 
-check_file() {
+# Funktion zur Überprüfung, ob eine bestimmte Datei existiert (gibt nur true/false zurück)
+check_file_exists() {
     local file="$1"
     if [ -f "$file" ]; then
         echo "true"
@@ -11,9 +12,23 @@ check_file() {
     fi
 }
 
+# Hauptüberprüfung der Backup-Datei
 check_backup() {
-    cd /home/Burgmauer || { echo "❌ Verzeichnis nicht gefunden"; exit 1; }
-    check_file "sicherung_sicher.txt"
+    local wall_dir="/home/Burgmauer"
+    local backup_file="sicherung_sicher.txt"
+
+    # Prüfen, ob das Verzeichnis existiert
+    if [ ! -d "$wall_dir" ]; then
+        echo "false"
+        return 1
+    fi
+
+    # Wechsel ins Verzeichnis
+    cd "$wall_dir"
+
+    # Überprüfen, ob die Backup-Datei existiert
+    check_file_exists "$backup_file"
 }
 
+# Führe die Hauptüberprüfung aus
 check_backup

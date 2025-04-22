@@ -6,64 +6,48 @@ Das Königreich ist im Notfall! Die Sicherheit unter Angriff und seine Untertane
 
 ### 1. Den königlichen Kommunikationskanal sichern
 
-!!Wechsle ins Kommunikationsverzeichnis, um die Sicherheit der Nachrichten zu gewährleisten.
-
-\_- Navigiere ins Kommunikationsverzeichnis mit `cd /home/Kommunikation`.
-\_- Finde sensible Dateien, indem du nach Schlüsselwörtern wie "geheim" suchst mit `grep -r "geheim" *`.
-\_- Verschlüssele die Datei `nachricht_geheim.txt` mit einem Schlüssel: `gpg -c nachricht_geheim.txt`.
+!! Wechsle ins Kommunikationsverzeichnis, um die Sicherheit der Nachrichten zu gewährleisten. (mit gpg)
+\_- In /home/Kommunikation suche nach "geheim" in Dateien mit grep, verschlüssel diese mit gpg -c
+`cd /home/Kommunikation && grep -r "geheim" * && gpg -c nachricht_geheim.txt`
 
 ### 2. Verdächtige Aktivitäten überwachen
 
-!!Überwache die Sicherheitsprotokolle, um verdächtige Aktivitäten zu erkennen.
-
-\_- Gehe ins Sicherheitsverzeichnis mit `cd /home/Sicherheit`.
-\_- Analysiere die Logdateien nach verdächtigen Zugriffen mit `grep "Fehler" system.log`.
-\_- Entferne Zugriffe aus der Blacklist mit `rm blacklist_ip.txt`.
+!! Überwache die Sicherheitsprotokolle, um verdächtige Aktivitäten zu erkennen. Analyse ..Fehler..
+\_- In /home/Sicherheit grep nach Fehler in system.log danach rm die blackliste_ip
+`cd /home/Sicherheit && grep "Fehler" system.log && rm blacklist_ip.txt`
 
 ### 3. Das königliche Hauptquartier wiederherstellen
 
-!!Stelle gelöschte Dateien im königlichen Hauptquartier wieder her.
-
-\_- Wechsel in das Verzeichnis des Hauptquartiers mit `cd /home/Hauptquartier`.
-\_- Stelle versehentlich gelöschte Dateien wieder her mit `mv backup_bericht.txt bericht.txt`.
+!! Stelle gelöschte Dateien im königlichen Hauptquartier wieder her (Backup).
+\_- In /home/Hauptquartier move den backup ins normale file
+`cd /home/Hauptquartier && mv backup_bericht.txt bericht.txt`
 
 ### 4. Die königliche Schatzkammer sichern
 
-!!Erstelle ein Backup der Schatzkammer, um wertvolle Daten zu schützen.
-
-\_- Gehe ins Schatzkammer-Verzeichnis mit `cd /home/Schatzkammer`.
-\_- Komprimiere alle Dateien für eine Sicherung mit `tar -czvf schatzkammer_backup.tar.gz *`.
-\_- Verschiebe das Backup in das Sicherheitsverzeichnis mit `mv schatzkammer_backup.tar.gz /home/Sicherheit`.
-
+!! Erstelle ein Backup der Schatzkammer in /home/Sicherheit, um wertvolle Daten zu schützen.
+\_- In /home/Schatzkammer, tarre also tar -czvf das backup gz file alles also mit Stern. mv danach das getarrtet in /home/Sicherheit
+`cd /home/Schatzkammer && tar -czvf schatzkammer_backup.tar.gz * && mv schatzkammer_backup.tar.gz /home/Sicherheit`
 ### 5. Die Burgmauern auf Exploits prüfen
 
-!!Überprüfe die Burgmauern auf potenzielle Sicherheitslücken.
-
-\_- Wechsle ins Burgmauer-Verzeichnis mit `cd /home/Burgmauer`.
-\_- Suche nach Dateien mit ungewöhnlichen Berechtigungen mit `find . -perm 777`.
-\_- Entferne unsichere Dateien mit `rm exploit.txt`.
-
+!! Überprüfe die Burgmauern auf potenzielle Sicherheitslücken (-perm 777). lösche solch eine datei
+\_- In home/Burgmauer, finde Dateien mit -perm 777 und lösche mit rm
+`cd /home/Burgmauer && find . -perm 777 && rm exploit.txt`
 ### 6. Den königlichen Geheimdienst aktivieren
 
-!!Starte den königlichen Geheimdienst, um Bedrohungen zu scannen.
-
-\_- Gehe ins Geheimdienstverzeichnis mit `cd /home/Geheimdienst`.
-\_- Führe ein Skript aus, um Bedrohungen zu scannen mit `bash scan_bedrohungen.sh`.
-\_- Leite die Ergebnisse in eine Datei um mit `bash scan_bedrohungen.sh > ergebnisse.txt`.
+!! Starte den königlichen in /home/Geheimdienst, um Bedrohungen zu scannen. Fphre die sh datei aus. gib diese in ergebnisse.txt aus.
+\_- in cd `/home/Geheimdienst`, bash scan_bedrohungen.sh und leite mit > an die ergebnisse textdatei.
+`cd /home/Geheimdienst && bash scan_bedrohungen.sh > ergebnisse.txt`
 
 ### 7. Das Versorgungssystem reparieren
 
-!!Überprüfe die Netzwerkinfrastruktur und konfiguriere sie neu.
-
-\_- Wechsel in das Verzeichnis der Versorgung mit `cd /home/Versorgung`.
-\_- Überprüfe Verbindungsfehler mit `ping -c 4 192.168.1.1`.
-\_- Füge eine neue Konfigurationsdatei hinzu mit `nano config_neu.txt`.
+!! Überprüfe die Netzwerkinfrastruktur und konfiguriere sie neu.
+\_- In `/home/Versorgung`, pinge -c 4 192.168.1.1. und füge ein config_neu.txt
+`cd /home/Versorgung && ping -c 4 192.168.1.1 && touch config_neu.txt`
 
 ### 8. Das königliche Archiv retten
 
-!!Sichere die wichtigsten Dokumente im königlichen Archiv.
+!! Sichere die wichtigsten Dokumente im königlichen Archiv.
+\_- In /home/Archiv, rsync -av wichtige_daten zu /mnt/externer_speicher. Und schütze mit chmod 700 den /home/Archiv
+`cd /home/Archiv && rsync -av wichtige_daten /mnt/externer_speicher && chmod -R 700 /home/Archiv`
 
-\_- Gehe ins Archivverzeichnis mit `cd /home/Archiv`.
-\_- Kopiere die wichtigsten Dokumente in ein externes Speicherverzeichnis mit `rsync -av wichtige_daten /mnt/externer_speicher`.
-\_- Ändere die Zugriffsrechte, um Daten zu schützen mit `chmod -R 700 /home/Archiv`.
 # EOF
