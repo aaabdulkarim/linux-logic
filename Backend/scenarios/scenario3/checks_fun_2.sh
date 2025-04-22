@@ -2,25 +2,22 @@
 
 set -e  # Beende das Skript bei Fehlern
 
-echo "Überprüfung: Reparaturdokumentation im aktuellen Verzeichnis..."
-
 # Funktion zur Überprüfung, ob eine Datei existiert
 check_file() {
     local file="$1"
     if [ -f "$file" ]; then
-        echo "✔ Datei existiert: $file"
         echo "true"
     else
-        echo "✖ Datei fehlt: $file"
         echo "false"
     fi
 }
 
-# Hauptüberprüfung für die Reparaturdatei im aktuellen Verzeichnis
+# Hauptüberprüfung für die Reparaturdatei im Verzeichnis /home/Burgmauer
 check_reparatur_dokument() {
+    local burgmauer_dir="/home/Burgmauer"
     local file="reparatur.txt"
 
-    echo "🔍 Suche nach $file im aktuellen Verzeichnis: $(pwd)"
+    # Überprüfung der Datei
     check_file "$file"
 }
 

@@ -32,13 +32,11 @@ RUN touch /home/Garten/Loewenzahn.txt \
 # Skripte und Dateien kopieren
 COPY dockersocket.py .  
 COPY healthcheck.py .  
-COPY ICHBIN_SCENARIO2 .  
-COPY checks_fun.sh .  
+COPY ICHBIN_SCENARIO2 . 
 COPY checks_fun_1.sh .
 COPY checks_fun_2.sh .
 COPY checks_fun_3.sh .
 
-RUN sed -i 's/\r$//' /app/checks_fun.sh
 RUN sed -i 's/\r$//' /app/checks_fun_1.sh
 RUN sed -i 's/\r$//' /app/checks_fun_2.sh
 RUN sed -i 's/\r$//' /app/checks_fun_3.sh

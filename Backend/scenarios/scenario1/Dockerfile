@@ -44,8 +44,7 @@ RUN touch /home/Dekoration/banner.txt
 # Copy the required scripts
 COPY dockersocket.py .  
 COPY healthcheck.py .  
-COPY ICHBIN_SCENARIO1 .  
-COPY checks_fun.sh .  
+COPY ICHBIN_SCENARIO1 .
 COPY checks_fun_1.sh .
 COPY checks_fun_2.sh .
 COPY checks_fun_3.sh .
@@ -54,7 +53,6 @@ COPY checks_fun_5.sh .
 COPY checks_fun_7.sh .
 COPY checks_fun_8.sh .
 
-RUN sed -i 's/\r$//' /app/checks_fun.sh
 RUN sed -i 's/\r$//' /app/checks_fun_1.sh
 RUN sed -i 's/\r$//' /app/checks_fun_2.sh
 RUN sed -i 's/\r$//' /app/checks_fun_3.sh

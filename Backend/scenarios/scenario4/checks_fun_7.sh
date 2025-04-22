@@ -2,7 +2,7 @@
 
 set -e
 
-DATEI="/home/Hauptquartier/bericht.txt"
+DATEI="/home/Versorgung/config_neu.txt"
 
 if [ -f "$DATEI" ]; then
     echo "true"
