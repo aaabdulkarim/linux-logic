@@ -36,7 +36,7 @@ class BashRunner:
                 while True:
                     print(str(loop_c + 1) + " noch nd gelesen")
                     try:
-                        line = await asyncio.wait_for(self.process.stdout.readline(), timeout=2)
+                        line = await asyncio.wait_for(self.process.stdout.readline(), timeout=0.5)
                         print("JO, gelesen")
 
                         if not line:
@@ -86,10 +86,14 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             data = await websocket.receive_text()
 
-            
+        
             output = await bash_runner.run_command(data)
+            current_directory = await bash_runner.run_command("pwd")
             print(output)
-            await websocket.send_text(output)
+            await websocket.send_json({
+                "output": output,
+                "cd" : current_directory
+                })
 
     except Exception as e:
         await websocket.send_text(f"Error: {str(e)}")
