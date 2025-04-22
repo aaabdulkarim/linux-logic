@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \  
     python3 \  
     python3-pip \  
-    python3-venv \  
+    python3-venv \
+    sudo \   
     && apt-get clean && rm -rf /var/lib/apt/lists/*  
 
 # Create a user 'user' with password 'password'  
@@ -32,10 +33,6 @@ COPY checks_fun.sh .
 COPY checks_fun_1.sh .
 COPY checks_fun_2.sh .
 COPY checks_fun_3.sh .
-COPY checks_fun_4.sh .
-COPY checks_fun_5.sh .
-COPY checks_fun_7.sh .
-COPY checks_fun_8.sh .
 
 RUN sed -i 's/\r$//' /app/checks_fun.sh
 RUN sed -i 's/\r$//' /app/checks_fun_1.sh
