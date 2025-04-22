@@ -167,10 +167,15 @@ class DockerManager():
                         await self.close_by_key(key)
                         to_delete.append(key)
 
+            
                 await asyncio.sleep(600)  
             except Exception as e:
                 print(f"Error in auto-delete task: {e}")
 
+
+    async def delete_containers_not_in_userlist(self):
+        # TODO: Implement function reading all containers and deleting unneccessary ones
+        pass
 
     async def update_last_interaction(self, userName, frontendChoice):
         connectionKey = userName + frontendChoice

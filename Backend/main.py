@@ -477,10 +477,11 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
     frontend_scenario_id = await mainsocket.receive_text()
 
-    if int(frontend_scenario_id) != 1:
+    if int(frontend_scenario_id) >= 3:
         await mainsocket.send_json({"error": f"Kapitel {frontend_scenario_id} noch nicht verfügbar"})
         await asyncio.sleep(0.1)  
         await mainsocket.close()
+        return
 
 
     frontend_container_choice = "scenario" + str(frontend_scenario_id)
@@ -511,7 +512,8 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
             print(await dm.get_container_health(container_name))
             await asyncio.sleep(2)
 
-        await mainsocket.send_json({"output": "Container Startup successful"}) # Changed to send_json
+        # TODO: Für Szenario 2: RuntimeError: Cannot call "send" once a close message has been sent.
+        await mainsocket.send_json({"output": "Container Startup successful"}) 
         container_socket_port = await dm.get_dynamic_port(container_name)
         print("Das isses: ", container_socket_port)
 
