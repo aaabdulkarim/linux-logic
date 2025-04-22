@@ -5,6 +5,9 @@ from UserDockerConnection import UserDockerConnection
 from datetime import datetime, timedelta
 import asyncio
 
+
+RUNNING_CONTAINER_LIMIT = 100
+
 class DockerManager():
 
     """
@@ -20,7 +23,7 @@ class DockerManager():
     
     userContainerConnections = {} 
     client = docker.from_env()
-
+    
 
     def get_connection_by_key(self, connectionKey):
         try:
@@ -92,6 +95,10 @@ class DockerManager():
 
 
     async def add_connection(self, userSessionId, userName, frontendChoice):
+        if len(self.userContainerConnections) >= RUNNING_CONTAINER_LIMIT:
+            return None
+        
+        # Before adding or reconnect, check if number of already running containers is exceeding the RUNNING_CONTAINER_LIMIT
         existing_connection = await self.reconnect(userSessionId, userName, frontendChoice)
 
         if existing_connection:
@@ -153,9 +160,10 @@ class DockerManager():
                 to_delete = []
                 
                 for key, conn in list(self.userContainerConnections.items()):
-                    if (now - conn.last_interaction) > timedelta(hours=3):
+                    if (now - conn.last_interaction) > timedelta(minutes=2):
                         print(f"Auto-deleting inactive container: {conn.container_name}")
-                        await self.close(key)
+                        print(key)
+                        await self.close_by_key(key)
                         to_delete.append(key)
 
                 await asyncio.sleep(600)  
