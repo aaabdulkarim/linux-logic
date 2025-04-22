@@ -240,7 +240,6 @@ export default {
 
       this.socketClient.onclose = () => {
         console.warn("WebSocket connection closed.");
-        this.showModal()
         // this.modalContent = "Die Verbindung zum Server wurde unerwartet getrennt.";
 
         // setTimeout(() => this.initWebSocket(), 2000); // Reconnect after 2 seconds
@@ -394,9 +393,7 @@ export default {
       this.isModalVisible = true;
       this.modalContent = modalContent;
 
-      if (hasSecondButton){
-        this.isRestartButtonVisible = false;
-      }
+      this.isRestartButtonVisible = !hasSecondButton;
 
     }
 

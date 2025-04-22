@@ -64,7 +64,7 @@ export default {
       .then(response => {
         const data = response.data;
         if (scenarioIdFromQuery > data.nextCourse) {
-          alert("Scenario noch nicht verfügbar, Stelle erst alle notwendigen Aufgaben fertig");
+          alert("Kapitel noch nicht Spielbar, Stelle erst alle notwendigen Aufgaben fertig");
           this.$router.push("/auswahl")
 
         }
