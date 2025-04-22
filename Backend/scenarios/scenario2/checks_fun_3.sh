@@ -20,18 +20,30 @@ check_verzauberung() {
     local z1="Zauberblume1.txt"
     local z2="Zauberblume2.txt"
 
+    # Gewünschte Berechtigungen – z.B. 600 (rw-------)
+    local required_perms="-rw-------"
+
     # Prüfen, ob das Verzeichnis existiert
     if [ ! -d "$garden_dir" ]; then
-        echo "false"
         return 1
     fi
 
     # Wechsel ins Verzeichnis
-    cd "$garden_dir"
+    cd "$garden_dir" || return 1
 
-    # Überprüfen, ob beide Dateien mit den richtigen Rechten existieren
-    check_file_with_permissions "$z1"
-    check_file_with_permissions "$z2"
+    # Prüfen, ob beide Dateien existieren und die richtigen Rechte haben
+    if [ -f "$z1" ] && [ -f "$z2" ]; then
+        local perms1 perms2
+        perms1=$(stat -c "%A" "$z1")
+        perms2=$(stat -c "%A" "$z2")
+
+        if [ "$perms1" = "$required_perms" ] && [ "$perms2" = "$required_perms" ]; then
+            echo "true"
+            return 0
+        fi
+    fi
+
+    return 1
 }
 
 # Führe die Hauptüberprüfung aus

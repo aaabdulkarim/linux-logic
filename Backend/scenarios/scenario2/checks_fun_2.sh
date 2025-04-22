@@ -20,17 +20,21 @@ check_magische_blumen() {
 
     # Prüfen, ob das Verzeichnis existiert
     if [ ! -d "$garden_dir" ]; then
-        echo "false"
         return 1
     fi
 
     # Wechsel ins Verzeichnis
-    cd "$garden_dir"
+    cd "$garden_dir" || return 1
 
-    # Überprüfen, ob beide Dateien existieren
-    check_file_exists "$flower1"
-    check_file_exists "$flower2"
+    # Prüfen, ob beide Dateien existieren
+    if [ -f "$flower1" ] && [ -f "$flower2" ]; then
+        echo "true"
+        return 0
+    else
+        return 1
+    fi
 }
+
 
 # Führe die Hauptüberprüfung aus
 check_magische_blumen
