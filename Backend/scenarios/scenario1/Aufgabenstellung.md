@@ -28,10 +28,9 @@ Der König plant eine große Eröffnung für das neue Schloss. Deine Aufgabe ist
 \_- Wechsle in die Küche und bearbeite die Datei menue.txt.
 `cd /home/Kueche && echo "Neues Gericht" >> menue.txt`
 
-
 ### 5. Die Beleuchtung überprüfen
 
-!! Sorge dafür, dass genug Lichtquellen vorhanden sind.
+!! Sorge dafür, dass genug Lichtquellen vorhanden sind. (licht1.txt)
 \_- Wechsle ins Beleuchtungsverzeichnis und erstelle eine neue Lichtquelle.
 `cd /home/Beleuchtung && touch licht1.txt`
 
