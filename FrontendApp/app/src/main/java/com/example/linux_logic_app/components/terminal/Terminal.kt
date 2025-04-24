@@ -39,6 +39,9 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 
+
+
+
 class WebSocketClient(url: String) {
     private val client = OkHttpClient()
     private val request = Request.Builder().url(url).build()
@@ -102,7 +105,7 @@ class WebSocketClient(url: String) {
  * @param userViewModel ViewModel, welches u.a. Terminal-Farben und Logik bereitstellt.
  */
 @Composable
-fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserViewModel) {
+fun Terminal(preview: Boolean = false, userViewModel: UserViewModel, webSocketClient: WebSocketClient) {
     // Terminal-Farben aus dem UserViewModel beziehen
     val terminalColors = userViewModel.terminalViewModel.terminalColors
 
@@ -112,7 +115,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
     val scrollState = rememberScrollState()
 
     // WebSocketClient wird nur erstellt, wenn nicht im Preview-Modus, um unnötige Verbindungen zu vermeiden
-    val webSocketClient = remember { if (!preview) WebSocketClient(socketUrl) else null }
+    val webSocketClient = remember { if (!preview) webSocketClient else null }
 
     // Im Live-Modus wird der WebSocket-Client beim Start verbunden
     if (!preview) {
@@ -190,6 +193,7 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                                         append("ls\n__pycache__    scenario_x.txt\n")
                                     }
                                 },
+
                                 fontSize = 14.sp,
                                 fontFamily = FontFamily.Monospace
                             )
@@ -268,5 +272,5 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
  */
 @Composable
 fun PreviewTerminal(userViewModel: UserViewModel) {
-    Terminal("ws://172.20.10.2:8000/ws", preview = true, userViewModel = userViewModel)
+    Terminal(preview = true, userViewModel = userViewModel, webSocketClient = WebSocketClient("ws://172.20.10.2:8000/ws"))
 }
