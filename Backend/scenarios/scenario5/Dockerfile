@@ -30,6 +30,8 @@ RUN touch /home/Archiv/artefakt_hinweis.txt
 RUN touch /home/GeheimeKammer/schalter_aktivieren.sh 
 RUN touch /home/aktivieren_alarm.sh  
 
+COPY schalter_aktivieren.sh /home/Archiv/schalter_aktivieren.sh
+
 # Skripte und Dateien kopieren  
 COPY dockersocket.py .  
 COPY healthcheck.py .  

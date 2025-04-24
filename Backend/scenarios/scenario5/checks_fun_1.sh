@@ -12,10 +12,10 @@ check_file() {
 }
 
 # Überprüfung starten
-if cd /home/Archiv 2>/dev/null && check_file "/home/Archiv/artefakt_hinweis.txt"; then
+if cd /home/Archiv 2>/dev/null && check_file "/home/Archiv/info_artefakt.txt"; then
     echo "true"
     exit 0
 else
-    echo "false"
+    echo "Die Datei info_artefakt.txt existiert nicht."
     exit 1
 fi

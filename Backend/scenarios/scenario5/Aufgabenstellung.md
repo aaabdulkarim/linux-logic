@@ -6,9 +6,9 @@ Das wertvolle königliche Artefakt wurde gestohlen und versteckt. Es ist von Sch
 
 ### 1. Spurensuche beginnen
 
-!! suche nach dem Artefakt
-\_- In /home/Archiv grep nach einem Artefakt File.
-`cd /home/Archiv && grep "Artefakt" *`
+!! Suche nach dem Artefakt im Archiv indem du infos ausliest und diese dann in info_artefakt abspeicherst
+\_- In /home/Archiv cat die Info und schreibe diese in info_artefakt.txt
+`cd /home/Archiv && cat info.txt > info_artefakt.txt`
 
 ### 2. Verschlüsselte Botschaften entschlüsseln
 
