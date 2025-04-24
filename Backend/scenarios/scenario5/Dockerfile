@@ -27,9 +27,7 @@ RUN mkdir -p /home/Archiv \
 # Beispiel-Dateien erstellen (leer)  
 RUN touch /home/Archiv/geheime_nachricht.txt.gpg  
 RUN touch /home/Archiv/artefakt_hinweis.txt  
-RUN touch /home/GeheimeKammer/schalter_aktivieren.sh  
-RUN touch /home/Tresor/artefakt.txt  
-RUN touch /home/sicherheitsprotokoll.txt  
+RUN touch /home/GeheimeKammer/schalter_aktivieren.sh 
 RUN touch /home/aktivieren_alarm.sh  
 
 # Skripte und Dateien kopieren  
