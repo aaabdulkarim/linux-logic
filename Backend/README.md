@@ -85,6 +85,11 @@ CONNECTION_STRING="DEIN NEON CONNECTION STRING"
 
 *uvicorn main:app --host localhost --port 8000*
 
+**Mit guvicorn für production starten:**
+
+
+*gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind localhost:8000 --daemon*
+
 # Test - Infos
 
 Um die Websocket Verbindung zu testen gibt es folgende Voraussetzungen
