@@ -6,9 +6,9 @@ Das Königreich ist im Notfall! Die Sicherheit unter Angriff und seine Untertane
 
 ### 1. Den königlichen Kommunikationskanal sichern
 
-!! Wechsle ins Kommunikationsverzeichnis, um die Sicherheit der Nachrichten zu gewährleisten. (mit gpg)
-\_- In /home/Kommunikation suche nach "geheim" in Dateien mit grep, verschlüssel diese mit gpg -c
-`cd /home/Kommunikation && grep -r "geheim" * && gpg -c nachricht_geheim.txt`
+!! Wechsle ins Kommunikationsverzeichnis, um die Sicherheit der Nachrichten zu gewährleisten. (Magische numer 700)
+\_- In /home/Kommunikation suche nach geheimer nachricht in Dateien und versichere mit chmod diese
+`cd /home/Kommunikation && chmod 700 nachricht_geheim.txt`
 
 ### 2. Verdächtige Aktivitäten überwachen
 
@@ -24,29 +24,29 @@ Das Königreich ist im Notfall! Die Sicherheit unter Angriff und seine Untertane
 
 ### 4. Die königliche Schatzkammer sichern
 
-!! Erstelle ein Backup der Schatzkammer in /home/Sicherheit, um wertvolle Daten zu schützen.
+!! Erstelle ein Backup der Schatzkammer in /home/Sicherheit, um wertvolle Daten zu schützen. (nutze tar)
 \_- In /home/Schatzkammer, tarre also tar -czvf das backup gz file alles also mit Stern. mv danach das getarrtet in /home/Sicherheit
 `cd /home/Schatzkammer && tar -czvf schatzkammer_backup.tar.gz * && mv schatzkammer_backup.tar.gz /home/Sicherheit`
 ### 5. Die Burgmauern auf Exploits prüfen
 
-!! Überprüfe die Burgmauern auf potenzielle Sicherheitslücken (-perm 777). lösche solch eine datei
-\_- In home/Burgmauer, finde Dateien mit -perm 777 und lösche mit rm
-`cd /home/Burgmauer && find . -perm 777 && rm exploit.txt`
+!! Überprüfe die Burgmauern auf potenzielle Sicherheitslücken oder etwas was für das System schlecht ist. LÖSCHE solch eine Datei
+\_- In home/Burgmauer, finde eine schlechte Datei und lösche mit rm
+`cd /home/Burgmauer && rm exploit.txt`
 ### 6. Den königlichen Geheimdienst aktivieren
 
-!! Starte den königlichen in /home/Geheimdienst, um Bedrohungen zu scannen. Fphre die sh datei aus. gib diese in ergebnisse.txt aus.
-\_- in cd `/home/Geheimdienst`, bash scan_bedrohungen.sh und leite mit > an die ergebnisse textdatei.
+!! Starte eine Pruefung in /home/Geheimdienst, um Bedrohungen zu scannen. Fuehre die sh datei aus. gib diese in ergebnisse.txt aus.
+\_- in cd /home/Geheimdienst, bash scan_bedrohungen.sh und leite mit > an die ergebnisse textdatei.
 `cd /home/Geheimdienst && bash scan_bedrohungen.sh > ergebnisse.txt`
 
 ### 7. Das Versorgungssystem reparieren
 
-!! Überprüfe die Netzwerkinfrastruktur und konfiguriere sie neu.
-\_- In `/home/Versorgung`, pinge -c 4 192.168.1.1. und füge ein config_neu.txt
-`cd /home/Versorgung && ping -c 4 192.168.1.1 && touch config_neu.txt`
+!! Überprüfe die Netzwerkinfrastruktur bei der Versorgung und konfiguriere sie neu indem du eine neue config_neu.txt erstellst
+\_- In /home/Versorgung und füge ein config_neu.txt
+`cd /home/Versorgung && touch config_neu.txt`
 
 ### 8. Das königliche Archiv retten
 
-!! Sichere die wichtigsten Dokumente im königlichen Archiv.
+!! Sichere die wichtigsten Dokumente im königlichen Archiv mit rsync zu /mnt/externer_speicher. Danach verschlüssel mit Magie(700) den Archiv
 \_- In /home/Archiv, rsync -av wichtige_daten zu /mnt/externer_speicher. Und schütze mit chmod 700 den /home/Archiv
 `cd /home/Archiv && rsync -av wichtige_daten /mnt/externer_speicher && chmod -R 700 /home/Archiv`
 

@@ -10,15 +10,16 @@ check_file() {
 
 # Hauptüberprüfung: Sicherheitsmaßnahmen
 check_sicherheitsmassnahmen() {
-    if check_file "/home/Tresor/artefakt.txt" && \
-       check_file "/home/GeheimeKammer/sicherheitsprotokoll.txt" && \
-       check_file "/home/GeheimeKammer/aktivieren_alarm.sh"; then
+    # Überprüfen, ob die sicherheitsprotokoll.txt erstellt wurde
+    if check_file "/home/GeheimeKammer/sicherheitsprotokoll.txt" && \
+       check_file "/home/GeheimeKammer/sicher_ist_sicher.zip"; then
         echo "true"
         return 0
     else
-        echo "false"
+        echo "Fehler: Eine oder beide Dateien wurden nicht erstellt!"
         return 1
     fi
 }
 
+# Hauptfunktion aufrufen
 check_sicherheitsmassnahmen

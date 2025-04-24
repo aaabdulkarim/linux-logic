@@ -38,8 +38,15 @@ RUN touch /home/Schatzkammer/schatz.txt
 RUN touch /home/Burgmauer/exploit.txt  
 RUN touch /home/Geheimdienst/scan_bedrohungen.sh  
 RUN touch /home/Geheimdienst/ergebnisse.txt  
-RUN touch /home/Versorgung/config_neu.txt  
 RUN touch /home/Archiv/wichtige_daten  
+
+# Skript scan_bedrohungen.sh ins Verzeichnis /home/Geheimdienst kopieren
+COPY scan_bedrohungen.sh /home/Geheimdienst/scan_bedrohungen.sh
+
+# Skript ausführbar machen
+RUN chmod +x /home/Geheimdienst/scan_bedrohungen.sh
+
+RUN echo "Fehler: Verdächtige Aktivität erkannt in blacklist_ip" >> /home/Sicherheit/system.log
 
 # Skripte und Dateien kopieren  
 COPY dockersocket.py .  
