@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://5.182.204.159/api',  
+  baseURL: 'https://www.linux-logic.com/api',  
   withCredentials: true             
 });
 
