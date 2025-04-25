@@ -63,7 +63,7 @@ export default {
     api.get('/progress')
       .then(response => {
         const data = response.data;
-        if (scenarioIdFromQuery > data.nextCourse) {
+        if (scenarioIdFromQuery > data.nextCourse && data.nextCourse != -1) {
           alert("Kapitel noch nicht Spielbar, Stelle erst alle notwendigen Aufgaben fertig");
           this.$router.push("/auswahl")
 

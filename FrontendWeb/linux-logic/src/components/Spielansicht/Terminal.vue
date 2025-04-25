@@ -83,7 +83,7 @@ export default {
       fitAddon: null,
       socketClient: null,
       promptLength: 14,
-      socketUrl: "http://localhost:8000/ws",
+      socketUrl: "https://www.linux-logic.com/api/ws",
 
       userInput: "",
       // Das letzte Element ist immer das neueste
