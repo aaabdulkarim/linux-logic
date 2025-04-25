@@ -92,7 +92,9 @@ export default {
         }
       })
       .catch((error) => {
-        console.error('Fehler bei der Anmeldung:', error);
+        alert("Benutzername oder Passwort ist falsch!");
+          this.email = '';
+          this.password = '';
       });
     }
   }

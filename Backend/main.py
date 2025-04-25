@@ -103,7 +103,7 @@ async def login(response: Response, userModel: UserRead, session: SessionDep):
 
 
     if not user or not verify_password(userModel.password, user.password):
-        raise HTTPException(status_code=401, detail="Login fehlgeschlagen")
+        raise HTTPException(status_code=401, detail="Anmeldedaten nicht richtig")
     
     session_id = str(uuid.uuid4())
     session_expiry = datetime.now(timezone.utc) + (timedelta(days=30) if userModel.stayLoggedIn else timedelta(minutes=15))
