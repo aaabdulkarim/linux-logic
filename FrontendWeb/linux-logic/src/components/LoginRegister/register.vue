@@ -145,7 +145,7 @@ export default {
       };
 
       try {
-        const response = await fetch('http://localhost:8000/register', {
+        const response = await fetch('http://5.182.204.159/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

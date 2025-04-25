@@ -72,7 +72,7 @@ engine = create_engine(connectionString, pool_pre_ping=True)
 
 
 # FastAPI App
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 origins = [
     "http://localhost:8080",   # for dev
