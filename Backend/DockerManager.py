@@ -134,7 +134,7 @@ class DockerManager():
 
 
         except Exception as e:
-            print("Error" + e)
+            print("Error", e)
             print("Container was found and couldn't be stopped/removed")
 
     async def close_by_key(self, connectionKey):
