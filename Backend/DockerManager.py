@@ -153,7 +153,7 @@ class DockerManager():
 
 
         except Exception as e:
-            print("Error:" + e)
+            print("Error:", e)
             print("Couldn't find container")
 
 
