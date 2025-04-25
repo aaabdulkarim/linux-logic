@@ -145,7 +145,7 @@ export default {
       };
 
       try {
-        const response = await fetch('http://5.182.204.159/register', {
+        const response = await fetch('https://www.linux-logic.com/api/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
