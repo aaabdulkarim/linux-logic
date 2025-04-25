@@ -587,7 +587,7 @@ async def websocket(mainsocket: WebSocket, session: SessionDep):
 
 
                             else:
-                                await container_socket.send(f"bash -c /app/checks_fun_{scm.subscenario_progress + 1}.sh")
+                                await container_socket.send(f"bash /app/checks_fun_{scm.subscenario_progress + 1}.sh")
                                 bash_check = await container_socket.recv()
                                 print(bash_check)
                                 check_json = json.loads(bash_check)

@@ -131,7 +131,6 @@ class DockerManager():
             # Remove Container from Connection Dictionary and Stop with docker client
             container.stop()
             container.remove()
-            self.userContainerConnections.pop(container)
 
 
         except Exception as e:
@@ -149,7 +148,9 @@ class DockerManager():
             # Get Container
             container = self.client.containers.get(userDockerConnection.container_name)
 
+            self.userContainerConnections.pop(container)
             self.close_container(container)
+
 
         except Exception as e:
             print(e)
