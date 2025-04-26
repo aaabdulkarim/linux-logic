@@ -149,7 +149,7 @@ class DockerManager():
             # Get Container
             container = self.client.containers.get(userDockerConnection.container_name)
 
-            self.close_container(container)
+            await self.close_container(container)
 
         except Exception as e:
             print(e)
