@@ -131,11 +131,12 @@ class DockerManager():
             # Remove Container from Connection Dictionary and Stop with docker client
             container.stop()
             container.remove()
+            self.userContainerConnections.pop(container)
 
 
         except Exception as e:
-            print("Error", e)
-            print("Container was found and couldn't be stopped/removed")
+            print(e)
+            print("Couldn't find container or it was found and couldn't be stopped/removed")
 
     async def close_by_key(self, connectionKey):
         """
@@ -148,13 +149,11 @@ class DockerManager():
             # Get Container
             container = self.client.containers.get(userDockerConnection.container_name)
 
-            self.userContainerConnections.pop(container)
-            self.close_container(container)
-
+            await self.close_container(container)
 
         except Exception as e:
-            print("Error:", e)
-            print("Couldn't find container")
+            print(e)
+            print("Couldn't find container or it was found and couldn't be stopped/removed")
 
 
 
