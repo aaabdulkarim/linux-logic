@@ -83,7 +83,7 @@ export default {
       fitAddon: null,
       socketClient: null,
       promptLength: 14,
-      socketUrl: "https://www.linux-logic.com/api/ws",
+      socketUrl: "http://localhost:8000/ws",
 
       userInput: "",
       // Das letzte Element ist immer das neueste
@@ -280,7 +280,8 @@ export default {
         this.respondToInput(this.userInput);
         if(this.userInput != ''){
           this.userInputHistory.push(this.userInput)
-          this.userInputHistoryIndex = this.userInputHistory.length 
+          // .length ohne minus, damit bei einem "ArrowUp" Event wirklich das letzte Element ausgewählt wird
+          this.userInputHistoryIndex = this.userInputHistory.length
         }
         this.userInput = ""; // Eingabe zurücksetzen
       } else if (domEvent.key === "Backspace") {
@@ -299,7 +300,7 @@ export default {
             this.terminal.write("\x1b[2K\r");
             this.writePrompt(false)
             this.terminal.write(requestedInp);
-
+            this.userInput = requestedInp
           }
         }
 
@@ -319,6 +320,7 @@ export default {
             this.terminal.write("\x1b[2K\r");
             this.writePrompt(false)
             this.terminal.write(requestedInp);
+            this.userInput = requestedInp
 
           }
         }
