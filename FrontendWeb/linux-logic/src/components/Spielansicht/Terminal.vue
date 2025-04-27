@@ -280,7 +280,8 @@ export default {
         this.respondToInput(this.userInput);
         if(this.userInput != ''){
           this.userInputHistory.push(this.userInput)
-          this.userInputHistoryIndex = this.userInputHistory.length 
+          // .length ohne minus, damit bei einem "ArrowUp" Event wirklich das letzte Element ausgewählt wird
+          this.userInputHistoryIndex = this.userInputHistory.length
         }
         this.userInput = ""; // Eingabe zurücksetzen
       } else if (domEvent.key === "Backspace") {
@@ -299,7 +300,7 @@ export default {
             this.terminal.write("\x1b[2K\r");
             this.writePrompt(false)
             this.terminal.write(requestedInp);
-
+            this.userInput = requestedInp
           }
         }
 
@@ -319,6 +320,7 @@ export default {
             this.terminal.write("\x1b[2K\r");
             this.writePrompt(false)
             this.terminal.write(requestedInp);
+            this.userInput = requestedInp
 
           }
         }
