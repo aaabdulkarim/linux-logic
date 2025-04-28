@@ -63,8 +63,9 @@ import Password from 'primevue/password';
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import Message from "primevue/message";
-import axios from 'axios';
 import { useRouter } from 'vue-router';
+import api from '@/api';
+
 
 export default {
   components: {
