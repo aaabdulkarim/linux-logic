@@ -6,7 +6,7 @@ Das Königreich ist im Notfall! Die Sicherheit unter Angriff und seine Untertane
 
 ### 1. Den königlichen Kommunikationskanal sichern
 
-!! Wechsle ins Kommunikationsverzeichnis, um die Sicherheit der Nachrichten zu gewährleisten. (Magische numer 700)
+!! Wechsle ins Kommunikationsverzeichnis, um die Sicherheit der Nachrichten zu gewährleisten. (Magische Nummer 700)
 \_- In /home/Kommunikation suche nach geheimer nachricht in Dateien und versichere mit chmod diese
 `cd /home/Kommunikation && chmod 700 nachricht_geheim.txt`
 
@@ -36,7 +36,7 @@ Das Königreich ist im Notfall! Die Sicherheit unter Angriff und seine Untertane
 
 !! Starte eine Pruefung in /home/Geheimdienst, um Bedrohungen zu scannen. Fuehre die sh datei aus. gib diese in ergebnisse.txt aus.
 \_- in cd /home/Geheimdienst, bash scan_bedrohungen.sh und leite mit > an die ergebnisse textdatei.
-`cd /home/Geheimdienst && bash scan_bedrohungen.sh > ergebnisse.txt`
+`cd /home/Geheimdienst && bash scan_bedrohungen.sh >> ergebnisse.txt`
 
 ### 7. Das Versorgungssystem reparieren
 
