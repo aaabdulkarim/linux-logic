@@ -63,8 +63,9 @@ import Password from 'primevue/password';
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import Message from "primevue/message";
-import axios from 'axios';
 import { useRouter } from 'vue-router';
+import api from '@/api';
+
 
 export default {
   components: {
@@ -108,7 +109,7 @@ export default {
     },
     async loginToBackend() {
       try {
-        const response = await axios.post('http://localhost:8000/login', {
+        const response = await api.post('/login', {
           username: this.username,
           password: this.password,
           stayLoggedIn: true,
