@@ -99,7 +99,7 @@ export default {
           status: "DIPLOMARBEIT VOLLSTÄNDIG",
           event: "Diplomarbeit",
           details: "Die Diplomarbeit vollständig schriftlich festgehalten und bereit für Einreichung",
-          color: "#808080",
+          color: "#569191",
           icon: "pi pi-check",
           direction: "normal", 
 
@@ -109,7 +109,7 @@ export default {
           status: "PROJEKTABSCHLUSS",
           event: "Projektabschluss",
           details: "Abschluss des Projekts, Einreichung der Diplomarbeit",
-          color: "#808080",
+          color: "#569191",
           icon: "pi pi-check",
           direction: "opposite", 
         },
