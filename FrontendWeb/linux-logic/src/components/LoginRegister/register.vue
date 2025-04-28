@@ -108,7 +108,7 @@ export default {
     },
     async loginToBackend() {
       try {
-        const response = await axios.post('http://www.linux-logic/api/login', {
+        const response = await api.post('/login', {
           username: this.username,
           password: this.password,
           stayLoggedIn: true,
@@ -145,7 +145,7 @@ export default {
       };
 
       try {
-        const response = await fetch('http://localhost:8000/register', {
+        const response = await fetch('https://www.linux-logic.com/api/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
