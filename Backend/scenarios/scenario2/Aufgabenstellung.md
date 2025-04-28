@@ -8,7 +8,7 @@ den Garten zu reinigen und seine magischen Eigenschaften wiederherzustellen.
 
 ### 1. Wechsel in den Gartenbereich
 
-!! Betrete den Garten und entferne die Unkraut.
+!! Betrete den Garten und entferne den Unkraut.
 \_- Navigiere zum Gartenverzeichnis mit `cd /home/Garten` und rm Umkraut.
 `cd /home/Garten && rm Unkraut*.txt`
 

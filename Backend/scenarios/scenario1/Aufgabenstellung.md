@@ -6,7 +6,7 @@ Der König plant eine große Eröffnung für das neue Schloss. Deine Aufgabe ist
 
 ### 1. Den roten Teppich ausrollen
 
-!! Gehe zum Veranstaltungsraum und lege den roten Teppich aus.
+!! Gehe zum Veranstaltungsraum und lege den roten Teppich ("roter_teppich.txt") aus.
 \_- Wechsle zum Veranstaltungsordner und erstelle eine Datei namens roter_teppich.txt.
 `cd /home/Veranstaltung && touch roter_teppich.txt`
 
@@ -24,7 +24,7 @@ Der König plant eine große Eröffnung für das neue Schloss. Deine Aufgabe ist
 
 ### 4. Das königliche Menü prüfen
 
-!! Füge ein neues Gericht namens "Neues Gericht" zur Speisekarte hinzu.
+!! Die Küche wird gerade renoviert und benötigt eine Speisekarte. Erstelle diese ("menue.txt") und füge ein neues Gericht namens "Neues Gericht" zur Speisekarte hinzu.
 \_- Wechsle in die Küche und bearbeite die Datei menue.txt.
 `cd /home/Kueche && echo "Neues Gericht" >> menue.txt`
 
