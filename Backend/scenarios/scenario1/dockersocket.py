@@ -83,8 +83,8 @@ async def websocket_endpoint(websocket: WebSocket):
             data = await websocket.receive_text()
 
         
-            current_directory = await bash_runner.run_command("pwd")
             output = await bash_runner.run_command(data)
+            current_directory = await bash_runner.run_command("pwd")
             print(output)
             await websocket.send_json({
                 "output": output,
@@ -95,10 +95,10 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_text(f"Error: {str(e)}")
         print(f"WebSocket error: {e}")
 
-    # finally:
-    #     print("Connection closed")
-    #     await bash_runner.close()
-    #     await websocket.close()
+    finally:
+        print("Connection closed")
+        await bash_runner.close()
+        await websocket.close()
 
 
 @app.get("/")
