@@ -21,45 +21,41 @@ class BashRunner:
         )
 
     async def run_command(self, command: str) -> str:
-        """
-        Run a command on the bash subprocess and return its output.
-        """
-        if self.process and self.process.stdin and self.process.stdout:
+        if self.process and self.process.stdin and self.process.stdout and self.process.stderr:
             try:
+                marker = "__CMD_DONE__"
+
                 # Befehl wird in die "inputschleife geschickt"
-                self.process.stdin.write((command + "\n").encode("utf-8"))
+                full_command = f"{command}\necho {marker}\n"
+                self.process.stdin.write(full_command.encode("utf-8"))
                 await self.process.stdin.drain()
 
-                # Line by Line gelesen, damit der Befehl vollständig ausgefürht wird
                 output = []
-                loop_c = 0
                 while True:
-                    print(str(loop_c + 1) + " noch nd gelesen")
+                    line = await asyncio.wait_for(self.process.stdout.readline(), timeout=2)
+                    decoded = line.decode("utf-8").strip()
+                    if decoded == marker:
+                        break
+                    output.append(decoded)
+
+                # Drain stderr *after* command finishes
+                error_output = []
+                while True:
                     try:
-                        line = await asyncio.wait_for(self.process.stdout.readline(), timeout=0.5)
-                        print("JO, gelesen")
-
-                        if not line:
-                            print("ich bin gebrochen")
-                            break  
-
-                        print("noch nd appended")
-                        output.append(line.decode("utf-8"))  
-                        # await asyncio.sleep(0.01)
-
-                        print("Der line: ", line)
-                        print("Der output: ", output)
-                    
+                        err_line = await asyncio.wait_for(self.process.stderr.readline(), timeout=0.1)
+                        if not err_line:
+                            break
+                        error_output.append(err_line.decode("utf-8").strip())
                     except asyncio.TimeoutError:
                         break
 
-                print("es wird geschickt")
-                return "".join(output)
-           
-           
+                return "\n".join(output + error_output)
+
             except Exception as e:
-                print("leider nicht geschickt")
-                return f"Error bei command {command}: {e}"
+                return f"Fehler bei Befehl '{command}'"
+        
+        return "Subprozess nicht korrekt initialisiert."
+
 
 
     async def close(self):
@@ -87,8 +83,8 @@ async def websocket_endpoint(websocket: WebSocket):
             data = await websocket.receive_text()
 
         
-            output = await bash_runner.run_command(data)
             current_directory = await bash_runner.run_command("pwd")
+            output = await bash_runner.run_command(data)
             print(output)
             await websocket.send_json({
                 "output": output,
@@ -99,10 +95,10 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.send_text(f"Error: {str(e)}")
         print(f"WebSocket error: {e}")
 
-    finally:
-        print("Connection closed")
-        await bash_runner.close()
-        await websocket.close()
+    # finally:
+    #     print("Connection closed")
+    #     await bash_runner.close()
+    #     await websocket.close()
 
 
 @app.get("/")
