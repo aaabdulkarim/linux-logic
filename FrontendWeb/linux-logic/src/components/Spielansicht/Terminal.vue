@@ -277,11 +277,14 @@ export default {
 
       if (domEvent.key === "Enter") {
         this.terminal.write("\r\n");
-        this.respondToInput(this.userInput);
         if(this.userInput != ''){
+          this.respondToInput(this.userInput);
+
           this.userInputHistory.push(this.userInput)
           // .length ohne minus, damit bei einem "ArrowUp" Event wirklich das letzte Element ausgewählt wird
           this.userInputHistoryIndex = this.userInputHistory.length
+        } else {
+          this.writePrompt(true)
         }
         this.userInput = ""; // Eingabe zurücksetzen
       } else if (domEvent.key === "Backspace") {
