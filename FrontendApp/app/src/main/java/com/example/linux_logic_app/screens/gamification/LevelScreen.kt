@@ -185,7 +185,7 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                         .weight(1f)
                 ) {
                     Terminal(
-                        "ws://10.0.107.7:8000/ws",
+                        "wss://www.linux-logic.com/api/ws",
                         preview = false,
                         userViewModel = userViewModel
                     )
