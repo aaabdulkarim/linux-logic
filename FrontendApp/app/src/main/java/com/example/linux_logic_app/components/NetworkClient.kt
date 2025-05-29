@@ -2,6 +2,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.client.engine.okhttp.*
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -25,7 +26,7 @@ data class ClientUserRead(
 
 
 class NetworkClient {
-    private val client = HttpClient(CIO) {
+    private val client = HttpClient(OkHttp) {
         install(ContentNegotiation) {
             json()
         }
@@ -33,7 +34,7 @@ class NetworkClient {
             storage = AcceptAllCookiesStorage()
         }
     }
-    private val serverurl = "http://192.168.0.75:8000"
+    private val serverurl = "https://www.linux-logic.com/api"
 
 
     suspend fun makeGetRequest(path: String, params: Map<String, String> = emptyMap()): String? {
@@ -45,6 +46,7 @@ class NetworkClient {
             }
             response.bodyAsText()
         } catch (e: Exception) {
+            e.printStackTrace()
             println("Error during GET request: ${e.message}")
             null
         }
@@ -63,6 +65,7 @@ class NetworkClient {
             println("Brooo $text")
             text
         } catch (e: Exception) {
+            e.printStackTrace()
             println("Error during POST request: ${e.message}")
             null
         }

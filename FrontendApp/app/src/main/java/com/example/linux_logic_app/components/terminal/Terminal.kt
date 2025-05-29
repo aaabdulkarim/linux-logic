@@ -39,9 +39,6 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 
-
-
-
 class WebSocketClient(url: String) {
     private val client = OkHttpClient()
     private val request = Request.Builder().url(url).build()
@@ -105,7 +102,7 @@ class WebSocketClient(url: String) {
  * @param userViewModel ViewModel, welches u.a. Terminal-Farben und Logik bereitstellt.
  */
 @Composable
-fun Terminal(preview: Boolean = false, userViewModel: UserViewModel, webSocketClient: WebSocketClient) {
+fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserViewModel) {
     // Terminal-Farben aus dem UserViewModel beziehen
     val terminalColors = userViewModel.terminalViewModel.terminalColors
 
@@ -115,7 +112,7 @@ fun Terminal(preview: Boolean = false, userViewModel: UserViewModel, webSocketCl
     val scrollState = rememberScrollState()
 
     // WebSocketClient wird nur erstellt, wenn nicht im Preview-Modus, um unnötige Verbindungen zu vermeiden
-    val webSocketClient = remember { if (!preview) webSocketClient else null }
+    val webSocketClient = remember { if (!preview) WebSocketClient(socketUrl) else null }
 
     // Im Live-Modus wird der WebSocket-Client beim Start verbunden
     if (!preview) {
@@ -193,7 +190,6 @@ fun Terminal(preview: Boolean = false, userViewModel: UserViewModel, webSocketCl
                                         append("ls\n__pycache__    scenario_x.txt\n")
                                     }
                                 },
-
                                 fontSize = 14.sp,
                                 fontFamily = FontFamily.Monospace
                             )
@@ -240,9 +236,9 @@ fun Terminal(preview: Boolean = false, userViewModel: UserViewModel, webSocketCl
                                                 webSocketClient?.sendMessage(userInput)
 
                                                 // Temporärer Fix: Warte, bis der Client keine weitere Nachricht erwartet
-                                                while (webSocketClient?.waiting() == true) {
+                                                /*while (webSocketClient?.waiting() == true) {
                                                     continue
-                                                }
+                                                }*/
 
                                                 // Füge die Eingabe und die Antwort des Servers dem Terminal-Output hinzu
                                                 terminalOutput = terminalOutput +
@@ -272,5 +268,5 @@ fun Terminal(preview: Boolean = false, userViewModel: UserViewModel, webSocketCl
  */
 @Composable
 fun PreviewTerminal(userViewModel: UserViewModel) {
-    Terminal(preview = true, userViewModel = userViewModel, webSocketClient = WebSocketClient("ws://172.20.10.2:8000/ws"))
+    Terminal("ws://172.20.10.2:8000/ws", preview = true, userViewModel = userViewModel)
 }

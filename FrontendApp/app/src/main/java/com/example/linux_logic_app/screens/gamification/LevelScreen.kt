@@ -65,7 +65,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.linux_logic_app.R
 import com.example.linux_logic_app.components.terminal.Terminal
-import com.example.linux_logic_app.components.terminal.WebSocketClient
 import com.example.linux_logic_app.components.viewmodels.UserViewModel
 import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloMain
@@ -98,14 +97,6 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
 
     val snackbarHostState = remember { SnackbarHostState() }  // Snackbar State
     val coroutineScope = rememberCoroutineScope()  // Coroutine für Snackbar
-
-    val webSocketClient = remember { WebSocketClient("http://192.168.0.75/ws")}
-    userViewModel.user?.let { webSocketClient.sendMessage(it.username) }
-
-    // Für Konfiguration
-    webSocketClient.sendMessage(levelViewModel.getCurrentLevelName())
-    webSocketClient.sendMessage(levelViewModel.getScenarioId().toString())
-
 
     Scaffold(
         snackbarHost = {
@@ -194,10 +185,9 @@ fun LevelScreen(navController: NavController, userViewModel: UserViewModel) {
                         .weight(1f)
                 ) {
                     Terminal(
-
+                        "wss://www.linux-logic.com/api/ws",
                         preview = false,
-                        userViewModel = userViewModel,
-                        webSocketClient = WebSocketClient("http://192.168.0.75/ws")
+                        userViewModel = userViewModel
                     )
                 }
 

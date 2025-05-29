@@ -34,8 +34,6 @@ import com.example.linux_logic_app.ui.theme.LiloBlue
 import com.example.linux_logic_app.ui.theme.LiloDanger
 import com.example.linux_logic_app.ui.theme.LiloOrange
 import com.example.linux_logic_app.ui.theme.LiloSuccess
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
 
 /**
  * HomeScreen - Zeigt den Fortschritt des Nutzers, Mitteilungen und ermöglicht nahtloses Weiterspielen.
@@ -49,25 +47,6 @@ import kotlinx.serialization.json.Json
  */
 @Composable
 fun HomeScreen(userViewModel: UserViewModel) {
-    val result = runBlocking {
-        try {
-            val response: String = NetworkService.client.makeGetRequest(
-                path = "/progress",
-            ).toString()
-
-            println("Result $response")
-            val responseMap: Map<String, String> = Json.decodeFromString(response)
-            responseMap
-        } catch (e: Exception) {
-            println("Fehler beim Login: ${e.message}")
-            null
-        }
-    }
-    val currentScenarioId = if (result?.get("currentCourse") == null)  0.0 else result.get("currentCourse")!!
-        .toInt()
-
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -145,7 +124,7 @@ fun HomeScreen(userViewModel: UserViewModel) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        UserProgressBar(currentScenarioId = currentScenarioId, userViewModel = userViewModel)
+        UserProgressBar(progress = 0.98F, userViewModel = userViewModel)
 
         /*Box(
             modifier = Modifier
@@ -157,7 +136,7 @@ fun HomeScreen(userViewModel: UserViewModel) {
 }
 
 @Composable
-fun UserProgressBar(currentScenarioId: Number, userViewModel: UserViewModel) {
+fun UserProgressBar(progress: Float, userViewModel: UserViewModel) {
     /*
     val scenarioAmount = userViewModel.levelViewModel?.getScenarioAmount()
     Das muss das Backend übernehmen, weil das LevelViewModel auf dem Progress basiert und dieses die Anzahl
@@ -167,7 +146,6 @@ fun UserProgressBar(currentScenarioId: Number, userViewModel: UserViewModel) {
     // Farben für den fertigen und den noch ausstehenden Teil
     val finishedColor = LiloSuccess
     val remainingColor = LiloDanger
-    val progress = (currentScenarioId.toDouble()) / 5
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -184,7 +162,7 @@ fun UserProgressBar(currentScenarioId: Number, userViewModel: UserViewModel) {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(progress.coerceIn(0.0, 1.0).toFloat())
+                    .fillMaxWidth(progress.coerceIn(0f, 1f))
                     .background(finishedColor)
             )
 
@@ -210,7 +188,7 @@ fun UserProgressBar(currentScenarioId: Number, userViewModel: UserViewModel) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Szenarien  gelöst: $currentScenarioId/5",
+            text = "Szenarien  gelöst: 6/7",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )

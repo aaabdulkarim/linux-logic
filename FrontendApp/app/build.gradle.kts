@@ -76,6 +76,7 @@ dependencies {
 
     implementation("io.ktor:ktor-client-core:2.0.0")
     implementation("io.ktor:ktor-client-cio:2.0.0")
+    implementation("io.ktor:ktor-client-okhttp:2.0.0")
     implementation("io.ktor:ktor-client-android:2.0.0")
     implementation("io.ktor:ktor-client-content-negotiation:2.0.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0")
