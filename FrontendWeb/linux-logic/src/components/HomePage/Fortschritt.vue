@@ -181,6 +181,18 @@ Die Authentifizierung und Navigation wurden weiter verfeinert. Die Logik für da
 
 Web:
 Die Profilseite wurde umfassend überarbeitet, optisch ansprechender gestaltet und für verschiedene Bildschirmgrößen optimiert. Auch der Header erhielt ein visuelles Update mit festen Positionierungen und ansprechenden Effekten. Zudem wurde ein Download-Button als Floating Action Button integriert – derzeit jedoch ohne verfügbare APK.`
+                },
+                {
+                    "berichtName": "Bericht 11",
+                    "datum": "18.03 - 08.04",
+                    "text": `Backend:
+Im Backend wurden gezielte Optimierungsmaßnahmen umgesetzt, die zu einer Reduktion der Ausführungszeit führten. Durch verbesserte Verarbeitungspipelines konnte die durchschnittliche Ausführungsdauer zentraler Befehle um etwa 50 % gesenkt werden. Diese Maßnahmen tragen maßgeblich zur Skalierbarkeit und Systemstabilität unter hoher Last bei.
+
+App:
+Die App befindet sich in der finalen Entwicklungsphase. Der Fokus liegt derzeit auf der finalen Implementierung und dem Feinschliff des Frontends sowie auf der Integration nutzerfreundlicher Mitteilungsfunktionen. Zusätzlich wurde ein kontextsensitives, direkt in die App eingebettetes Benutzerhandbuch entwickelt, das die Usability insbesondere für neue Nutzer deutlich erhöht. Die grafische und strukturelle Darstellung der Sublevel wurde überarbeitet und auf Konsistenz, Verständlichkeit und Skalierbarkeit überprüft.
+
+Web:
+Im Web-Frontend wurden weitere umfangreiche Accessibility-Tests durchgeführt, um die Anwendung besser an die WCAG-Richtlinien (Web Content Accessibility Guidelines) anzupassen. Dabei wurden unter anderem Tastatur-Navigation, Screenreader-Kompatibilität sowie Farbkontraste optimiert. Darüber hinaus konnten mehrere Layout-Probleme im Bereich des responsiven Designs behoben werden, insbesondere im Zusammenhang mit unterschiedlichen Viewport-Größen und Endgeräten. Parallel erfolgten gezielte Bugfixes und eine Überarbeitung des Fehler-Handling-Mechanismus, um während der Spielphase präzisere und benutzerfreundlichere Fehlermeldungen auszugeben.`
                 } 
             ]
         };
