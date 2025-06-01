@@ -236,9 +236,9 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                                                 webSocketClient?.sendMessage(userInput)
 
                                                 // Temporärer Fix: Warte, bis der Client keine weitere Nachricht erwartet
-                                                while (webSocketClient?.waiting() == true) {
+                                                /*while (webSocketClient?.waiting() == true) {
                                                     continue
-                                                }
+                                                }*/
 
                                                 // Füge die Eingabe und die Antwort des Servers dem Terminal-Output hinzu
                                                 terminalOutput = terminalOutput +
