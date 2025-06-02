@@ -3,7 +3,9 @@
         <h1>App Download</h1>
     <div class="qr-container">
         <img class="qr-code" src="@/assets/QR_Code.png" alt="QR Code" />
-        <button class="action-button p-3 mb-3 text-lg font-bold">Download App</button>
+        <a href="https://www.linux-logic.com/linuxlogic.apk">
+          <button class="action-button p-3 mb-3 text-lg font-bold">Download App</button>
+        </a>
     </div>
     </div>
 </template>
