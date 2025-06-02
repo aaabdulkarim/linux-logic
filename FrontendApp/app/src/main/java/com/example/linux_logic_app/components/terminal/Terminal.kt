@@ -32,15 +32,21 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.linux_logic_app.components.viewmodels.UserViewModel
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonObject
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import sharedCookieJar
 
 class WebSocketClient(url: String) {
-    private val client = OkHttpClient()
+    private val client = OkHttpClient.Builder()
+        .cookieJar(sharedCookieJar)
+        .build()
     private val request = Request.Builder().url(url).build()
     private lateinit var webSocket: WebSocket
     var output = ""
@@ -56,7 +62,8 @@ class WebSocketClient(url: String) {
             override fun onMessage(webSocket: WebSocket, text: String) {
                 println("Received message: $text")
                 messageReceived = true
-                output = text
+                val jsonMap: Map<String, JsonElement> = Json.parseToJsonElement(text).jsonObject
+                output = jsonMap.get("output").toString().trim()
 
             }
 
@@ -118,6 +125,8 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
     if (!preview) {
         LaunchedEffect(Unit) {
             webSocketClient?.connect()
+            webSocketClient?.sendMessage(userViewModel.username)
+            webSocketClient?.sendMessage("1")
         }
     }
 
@@ -236,9 +245,9 @@ fun Terminal(socketUrl: String, preview: Boolean = false, userViewModel: UserVie
                                                 webSocketClient?.sendMessage(userInput)
 
                                                 // Temporärer Fix: Warte, bis der Client keine weitere Nachricht erwartet
-                                                /*while (webSocketClient?.waiting() == true) {
+                                                while (webSocketClient?.waiting() == true) {
                                                     continue
-                                                }*/
+                                                }
 
                                                 // Füge die Eingabe und die Antwort des Servers dem Terminal-Output hinzu
                                                 terminalOutput = terminalOutput +

@@ -80,6 +80,8 @@ dependencies {
     implementation("io.ktor:ktor-client-android:2.0.0")
     implementation("io.ktor:ktor-client-content-negotiation:2.0.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0")
+    // Für JavaNetCookieJar
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.12.0") // or latest compatible
 
     //https://developer.android.com/training/dependency-injection/hilt-android?hl=de#kts
     //implementation("com.google.dagger:hilt-android:2.51.1")
