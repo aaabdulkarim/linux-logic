@@ -1,12 +1,9 @@
-import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.client.engine.okhttp.*
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
@@ -14,6 +11,9 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import okhttp3.JavaNetCookieJar
+import java.net.CookieManager
+import java.net.CookiePolicy
 
 
 @Serializable
@@ -24,9 +24,19 @@ data class ClientUserRead(
     val stayLoggedIn: Boolean = false,
 )
 
+val cookieManager = CookieManager().apply {
+    setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+}
+val sharedCookieJar = JavaNetCookieJar(cookieManager)
+
 
 class NetworkClient {
-    private val client = HttpClient(OkHttp) {
+    val client = HttpClient(OkHttp) {
+        engine {
+            config {
+                cookieJar(sharedCookieJar)
+            }
+        }
         install(ContentNegotiation) {
             json()
         }
@@ -73,5 +83,5 @@ class NetworkClient {
 }
 
 object NetworkService {
-    val client = NetworkClient()
+    val networkClient = NetworkClient()
 }

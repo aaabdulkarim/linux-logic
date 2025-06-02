@@ -9,8 +9,6 @@ import com.example.linux_logic_app.components.scenario.Scenario
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
-import kotlinx.serialization.Serializable
-
 
 /**
  * Dies ist die Datenklasse für den Linux Logic Benutzer.
@@ -167,7 +165,7 @@ class UserViewModel : ViewModel() {
         val result = runBlocking {
             try {
                 val requestBody = ClientUserRead(email = email, password = password)
-                val response: String = NetworkService.client.makePostRequest(
+                val response: String = NetworkService.networkClient.makePostRequest(
                     path = "/login",
                     body = requestBody
                 ).toString()
@@ -225,7 +223,7 @@ class UserViewModel : ViewModel() {
         val result = runBlocking {
             try {
                 val requestBody = ClientUserRead(username = username, email=email, password = password)
-                val response: String = NetworkService.client.makePostRequest(
+                val response: String = NetworkService.networkClient.makePostRequest(
                     path = "/register",
                     body = requestBody
                 ).toString()
@@ -334,7 +332,7 @@ class UserViewModel : ViewModel() {
     fun logout() {
         runBlocking {
             try {
-                val response: String = NetworkService.client.makeGetRequest(
+                val response: String = NetworkService.networkClient.makeGetRequest(
                     path = "/logout"
                 ).toString()
 
